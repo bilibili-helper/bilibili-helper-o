@@ -21,11 +21,10 @@
       "16": "imgs/icon-16.png",
       "32": "imgs/icon-32.png"
    },
-   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDd/wqh8sN1lnVWVGyKqhGM0Zz0ZuY3Dq5hNK3qNBw1/+B/XGe+zzwe7aSyr0qikd8pkN5HpoDvEDdkFHcdhPwXWoQGKiNAnKtohuz/2+g5YzLYzQg2bRqKdYJebEoCoiHtoSNS/HRtUeg483ypAH26LLyD6p+ykwQNo9DvtBo0kwIDAQAB",
    "manifest_version": 2,
    "name": "__MSG_extName__",
    "options_page": "options.html",
-   "permissions": [ "alarms", "contextMenus", "cookies", "notifications", "storage", "tabs", "webRequest", "webRequestBlocking", "http://*/", "https://*/" ],
+   "permissions": [ "alarms", "contextMenus", "cookies", "notifications", "storage", "tabs", "webRequest", "webRequestBlocking", "*://*.bilibili.com/*", "*://*.bilibili.tv/*", "*://*.letv.cn/*", "*://*.guguke.net/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "0.6.9",
    "web_accessible_resources": [ "bilibili-helper.woff", "template.html", "imgs/icon-32.png", "imgs/loading.gif" ]
