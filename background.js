@@ -67,7 +67,7 @@ function notifyAllTabs(message) {
 
 function setIcon() {
 	chrome.browserAction.setIcon({
-		path: "imgs/icon-19.png"
+		path: "img/icon-19.png"
 	});
 }
 
@@ -106,7 +106,7 @@ function checkDynamic() {
 							notification = (new Date()).getTime();
 							chrome.notifications.create("bh-" + notification, {
 								type: "basic",
-								iconUrl: "imgs/icon-32.png",
+								iconUrl: "img/icon-32.png",
 								title: chrome.i18n.getMessage('noticeficationTitle'),
 								message: chrome.i18n.getMessage('followingUpdateMessage').replace('%n', cookie.value),
 								isClickable: false

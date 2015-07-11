@@ -1,31 +1,55 @@
 {
-   "background": {
-      "page": "background.html",
-      "persistent": true
-   },
-   "browser_action": {
-      "default_icon": "imgs/icon-19.png",
-      "default_popup": "popup.html",
-      "default_title": "__MSG_extName__"
-   },
-   "content_scripts": [ {
-      "all_frames": true,
-      "js": [ "jq.bilibili.js", "bilibili_injected.js", "ColPick.js", "CommentCoreLibrary.min.js", "ABPlayer.min.js" ],
-      "matches": [ "*://*.bilibili.com/*" ],
-      "run_at": "document_start"
-   } ],
-   "default_locale": "zh_CN",
-   "description": "哔哩哔哩(bilibili.com)辅助工具，可以替换播放器、去广告、推送通知并进行一些快捷操作",
-   "icons": {
-      "128": "imgs/icon-128.png",
-      "16": "imgs/icon-16.png",
-      "32": "imgs/icon-32.png"
-   },
-   "manifest_version": 2,
-   "name": "__MSG_extName__",
-   "options_page": "options.html",
-   "permissions": [ "alarms", "contextMenus", "cookies", "notifications", "storage", "tabs", "webRequest", "webRequestBlocking", "*://*.bilibili.com/*", "*://*.bilibili.tv/*", "*://*.letv.cn/*", "*://*.guguke.net/*" ],
-   "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.7.0",
-   "web_accessible_resources": [ "bilibili-helper.woff", "template.html", "imgs/icon-32.png", "imgs/loading.gif" ]
+  "background": {
+    "scripts": ["resource.js", "background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "img/icon-19.png",
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extName__"
+  },
+  "content_scripts": [ {
+    "all_frames": true,
+    "js": [ 
+	  "jq.bilibili.js", 
+	  "bilibili_injected.js", 
+	  "com.colpick/ColPick.js", 
+	  "org.kanoha/CommentCoreLibrary.min.js", 
+	  "org.kanoha/ABPlayer.min.js"
+	],
+    "matches": [ "*://*.bilibili.com/*" ],
+    "run_at": "document_start"
+  } ],
+  "default_locale": "zh_CN",
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "128": "img/icon-128.png",
+    "16": "img/icon-16.png",
+    "32": "img/icon-32.png"
+  },
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "options_page": "options.html",
+  "permissions": [
+    "alarms", 
+	"contextMenus", 
+	"cookies", 
+	"notifications", 
+	"storage", 
+	"tabs", 
+	"webRequest", 
+	"webRequestBlocking", 
+	"*://*.bilibili.com/*", 
+	"*://*.bilibili.tv/*", 
+	"*://*.letv.cn/*", 
+	"*://*.guguke.net/*" 
+  ],
+  "update_url": "https://clients2.google.com/service/update2/crx",
+  "version": "0.1.0",
+  "web_accessible_resources": [ 
+    "bilibili-helper.woff", 
+	"template.html", 
+	"img/icon-32.png", 
+	"img/loading.gif"
+  ]
 }

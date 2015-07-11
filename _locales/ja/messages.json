@@ -1,62 +1,66 @@
 {
   "extName": {
-    "message": "Bilibili Helper",
+    "message": "ビリビリ助手（低い権限モード）",
     "description": "Extension: Name"
   },
+  "extDescription": {
+    "message": "かなり低い権限で実行するのビリビリ助手。最大限度でユーザーのプライバシーを保障する！",
+    "description": "Description of extension"
+  },
   "goBili": {
-    "message": "Navigate to bilibili.com",
+    "message": "今すぐイキマス！",
     "description": "Popup Button: go_bili"
   },
   "cssSwitchOff": {
-    "message": "Enable Beautifier",
+    "message": "自定義スタイルなし",
     "description": "Popup Button: css_switch_off"
   },
   "cssSwitchOn": {
-    "message": "Disable Beautifier",
+    "message": "自定義スタイルあり",
     "description": "Popup Button: css_switch_on"
   },
   "goVideo": {
-    "message": "GO!",
+    "message": "転移する",
     "description": "Popup Button: go_video"
   },
   "goDynamic": {
-    "message": "Followings",
+    "message": "マイフォロー",
     "description": "Popup Button: go_dynamic"
   },
   "goFavorite": {
-    "message": "Favorites",
+    "message": "お気に入り",
     "description": "Popup Button: go_favorite"
   },
   "notLogged": {
-    "message": " (Not Logged In)",
+    "message": "（未登録）",
     "description": "Popup Button: not_logged"
   },
   "nNewUpdate": {
-    "message": " (%n New)",
+    "message": "予約アイテム%n個更新された",
     "description": "Popup Button: new_update"
   },
   "goSubscription": {
-    "message": "Subscriptions",
+    "message": "予約アイテム",
     "description": "Popup Button: go_subscription"
   },
   "goOption": {
-    "message": "Options",
+    "message": "設定",
     "description": "Popup Button: go_option"
   },
   "searchBili": {
-    "message": "Search Bilibili for '%s'",
+    "message": "ビリビリを使って“%s”を検索する",
     "description": "Context Menu: Title"
   },
   "optionPage": {
-    "message": "Options",
+    "message": "設定ページ",
     "description": "Option Page: Title"
   },
   "noticeficationTitle": {
-    "message": "Bilibili Helper Noticefication",
+    "message": "ビリビリ助手へのメーセージ",
     "description": "Noticefication: Title"
   },
   "followingUpdateMessage": {
-    "message": "Your bilibili followings have %n new updates!",
+    "message": "您的账户收到了%n个关注推送!",
     "description": "Noticefication: Following Update Message"
   }
 }

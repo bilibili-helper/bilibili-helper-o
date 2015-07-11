@@ -1,7 +1,11 @@
 {
   "extName": {
-    "message": "哔哩哔哩助手",
+    "message": "哔哩哔哩助手（低权限版）",
     "description": "Extension: Name"
+  },
+  "extDescription": {
+    "message": "运作在最低权限下的哔哩哔哩助手",
+    "description": "Description of extension"
   },
   "goBili": {
     "message": "一键前往bilibili.com",

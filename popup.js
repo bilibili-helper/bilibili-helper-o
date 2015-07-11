@@ -1,19 +1,5 @@
 var bkg_page = chrome.extension.getBackgroundPage();
 
-function adModeFunction(cmd) {
-	chrome.tabs.getSelected(null, function(tab) {
-		chrome.tabs.sendMessage(tab.id, {
-			command: cmd,
-			css: bkg_page.ad_mode
-		}, function(response) {
-			if(typeof response !== "undefined") {
-				if((response.mode) == false) $('#ad_mode').html(chrome.i18n.getMessage('adModeOff'));
-				else if((response.mode) == true) $('#ad_mode').html(chrome.i18n.getMessage('adModeOn'));
-			}
-		})
-	});
-}
-
 function getDynamic() {
 	bkg_page.chrome.cookies.get({
 		url: "http://interface.bilibili.com/nav.js",
@@ -72,9 +58,6 @@ $(document).ready(function() {
 			url: chrome.extension.getURL('options.html')
 		});
 		return false;
-	});
-	$('#ad_mode').click(function() {
-		adModeFunction("adMode");
 	});
 	$('#video_id').keyup(function (e) {
     	if (e.keyCode == 13) {
