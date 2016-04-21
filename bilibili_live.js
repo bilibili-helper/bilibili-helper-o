@@ -79,9 +79,20 @@
                 if (Live.get('helper_doSign', 'today') == false || Live.get('helper_doSign', 'signDate') != date) {
                     $.get("/sign/doSign", function (data) {
                         var e = JSON.parse(data);
+                        //    {
+                        //    "code": 0,
+                        //    "msg": "ok",
+                        //    "data": {
+                        //        "text": "200\u94f6\u74dc\u5b50,3000\u7528\u6237\u7ecf\u9a8c\u503c",
+                        //        "lottery": {"status": false, "lottery": {"id": "", "data": ""}},
+                        //        "allDays": "30",
+                        //        "hadSignDays": 22,
+                        //        "remindDays": 8
+                        //    }
+                        //};
                         if (e.code == 0) {
                             var msg = new Notification(eval("'" + e.msg + "'"), {
-                                body: "签到成功",
+                                body: "您获得了" + e.data.text,
                                 icon: "//static.hdslb.com/live-static/images/7.png"
                             });
                             Live.set('helper_doSign', 'today', true);
@@ -179,7 +190,7 @@
                         $('<div class="quiz_helper">').append($('<span class="number_title">').text('数额'), Live.bet.quiz_number),
                         Live.bet.quiz_btns
                     )
-                    Live.bet.quiz_panel.append(Live.bet.quiz_helper,Live.bet.version);
+                    Live.bet.quiz_panel.append(Live.bet.quiz_helper, Live.bet.version);
                 }
                 /*change default style*/
                 $('.bet-buy-ctnr.dp-none').children('.bet-buy-btns').addClass('hide');
