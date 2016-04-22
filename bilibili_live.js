@@ -11,7 +11,7 @@
         Live.set = function (n, k, v) {
             if (!window.localStorage || !n) return;
 
-            if (window.localStorage[n] == 'undefined')window.localStorage[n] = JSON.stringify({});
+            if (!window.localStorage[n])window.localStorage[n] = JSON.stringify({});
             var l = JSON.parse(window.localStorage[n]);
             if (!k) window.localStorage[n] = JSON.stringify(v);
             else {
@@ -22,7 +22,7 @@
         Live.get = function (n, k) {
             if (!window.localStorage || !n) return;
 
-            if (window.localStorage[n] == 'undefined')window.localStorage[n] = JSON.stringify({});
+            if (!window.localStorage[n])window.localStorage[n] = JSON.stringify({});
             var l = JSON.parse(window.localStorage[n]);
             if (!k) return l;
             return l[k];
@@ -30,7 +30,7 @@
         Live.del = function (n, k) {
             if (!window.localStorage || !n || !k) return;
 
-            if (window.localStorage[n] == 'undefined')window.localStorage[n] = JSON.stringify({});
+            if (!window.localStorage[n])window.localStorage[n] = JSON.stringify({});
 
             var l = JSON.parse(window.localStorage[n]);
             delete l[k];
@@ -64,8 +64,8 @@
         Live.getRoomId = function () {
             return Live.get('helper_live_roomId', location.pathname.substr(1));
         }
-        Live.set('helper_live_check', Live.getRoomId(), null);
-        Live.set('helper_live_bet', Live.getRoomId(), null);
+        Live.set('helper_live_check', Live.getRoomId(), JSON.stringify({}));
+        Live.set('helper_live_bet', Live.getRoomId(), JSON.stringify({}));
         Live.set('helper_userInfo', 'login', false);
 
         Live.initUserInfo();
