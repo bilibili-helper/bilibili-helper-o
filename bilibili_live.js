@@ -262,8 +262,12 @@
                 Live.bet.getBet().done(function (bet) {
                     bet = bet.data;
 
-                    if (!Live.bet.canBet(bet)) return;//none bet permission
-                    if (!Live.bet.betOn(bet)) return;//bet is not on
+                    if (!Live.bet.canBet(bet) || !Live.bet.betOn(bet)) {
+                        Live.bet.cancel(true);
+                        return;
+                    }
+
+                    //none bet permission ||bet is not on
 
                     var w = Live.get('helper_live_which', Live.getRoomId()) == '"a"' ? 'a' : 'b';
                     var bankerId = bet.silver[w].id;
