@@ -31,7 +31,8 @@ var defaultOptions = {
 	"displayOption":"[]",
 	"versionNotify":"on",
 	"watcher":"off",
-	"watchList":"[]"
+	"watchList":"[]",
+	"danmaku_filter":"[]"
 };
 var cidCache = {};
 if(localStorage.getItem('cidCache') != null) {

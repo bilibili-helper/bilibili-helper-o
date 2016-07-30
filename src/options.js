@@ -170,6 +170,10 @@ $(document).ready(function () {
         bkg_page.setOption("rel_search", $(this).attr("option"));
         // updatepreview();
     });
+    $('.danmaku_filter').click(function() {
+        $('#main_panel>div').css('display','none');
+        $('#main_panel>#danmaku_filter_settings').css('display','block');
+    });
     $('.doSign').click(function () {
         if ($(this).hasClass('on')) return false;
         $('.doSign').removeClass('on');
@@ -234,6 +238,10 @@ $(document).ready(function () {
         bkg_page.setOption("watcher", $(this).attr("option"));
         // updatepreview();
     });
+    $('.close-panel').click(function() {
+        $('#main_panel>div').css('display','none');
+        $('#main_panel>#about').css('display','block');
+    });
     $('.watcher-options .watcher-option .option .button').click(function(){
         var classes = $(this).attr('class').split(' ')[1];
         if ($(this).hasClass('on')) return false;
@@ -250,6 +258,206 @@ $(document).ready(function () {
         }
         bkg_page.setOption("watchList", JSON.stringify(watchList));
     });
+
+    // Danmaku-filter control script
+    var danmaku_filter = {
+        list: document.querySelector('#df_rulelist'),
+        filters: JSON.parse(bkg_page.getOption('danmaku_filter')), // Array of rule objects
+        selected: [], // Array of selected indexes in `filters`
+        Rule: function(type, content) { // Rule Constructor (just a struct though...)
+            this.type = type;
+            this.active = true;
+            if (content) {
+                this.content = content;
+            } else {
+                this.content = "";
+            }
+            return this;
+        },
+        updateList: function() {
+            // Re-render the filter list HTML element
+            danmaku_filter.list.innerHTML = '';
+            var type_names = {"text":"文本","color":"颜色","user":"用户"};
+            for (var i=0; i<danmaku_filter.filters.length; i++) {
+                var rule = danmaku_filter.filters[i];
+                var row = document.createElement('tr'),
+                    cell_type = document.createElement('td'),
+                    cell_content = document.createElement('td'),
+                    cell_operations = document.createElement('td');
+                if (!rule.active) {
+                    row.style.background = '#eee';
+                }
+
+                var select_checkbox = document.createElement('input');
+                select_checkbox.type='checkbox';
+                if (danmaku_filter.selected.indexOf(i)!=-1) {
+                    select_checkbox.checked = true;
+                }
+                select_checkbox.addEventListener('change', danmaku_filter.selectItem.bind(select_checkbox, i));
+                var text_type = document.createElement('span');
+                text_type.innerText = type_names[rule.type]
+                cell_type.appendChild(select_checkbox);
+                cell_type.appendChild(text_type);
+
+                var edit_content = document.createElement('input');
+                edit_content.type='text';
+                edit_content.value = rule.content;
+                edit_content.addEventListener('input', danmaku_filter.setItemContent.bind(edit_content, i));
+                cell_content.appendChild(edit_content);
+
+                var btn_enable = document.createElement('div');
+                btn_enable.className = 'button';
+                if (rule.active) {
+                    btn_enable.innerText = '禁用';
+                    btn_enable.addEventListener('click', danmaku_filter.enableItem.bind(btn_enable, [i], false));
+                } else {
+                    btn_enable.innerText = '启用';
+                    btn_enable.addEventListener('click', danmaku_filter.enableItem.bind(btn_enable, [i], true));
+                }
+                var btn_delete = document.createElement('div');
+                btn_delete.className = 'button';
+                btn_delete.innerText = '删除';
+                btn_delete.addEventListener('click', danmaku_filter.deleteItem.bind(btn_delete, [i]));
+                cell_operations.appendChild(btn_enable);
+                cell_operations.appendChild(btn_delete);
+
+                row.appendChild(cell_type);
+                row.appendChild(cell_content);
+                row.appendChild(cell_operations);
+                danmaku_filter.list.appendChild(row);
+
+                bkg_page.setOption('danmaku_filter', JSON.stringify(danmaku_filter.filters));
+            };
+        },
+        selectItem: function(index) {
+            var i = danmaku_filter.selected.indexOf(index);
+            if (this.checked && i == -1) {
+                danmaku_filter.selected.push(index);
+            }
+            if (!this.checked && i != -1) {
+                danmaku_filter.selected.splice(i, 1);
+            }
+        },
+        setItemContent: function(index) {
+            danmaku_filter.filters[index].content = this.value;
+        },
+        enableItem: function(indexes, enable) {
+            indexes.forEach(function(index) {
+                danmaku_filter.filters[index].active = enable;
+            });
+            danmaku_filter.updateList();
+        },
+        deleteItem: function(indexes) {
+            indexes.sort(function(a,b){return b-a;});
+            indexes.forEach(function(index) {
+                danmaku_filter.filters.splice(index, 1);
+            });
+            danmaku_filter.selected = [];
+            danmaku_filter.updateList();
+        },
+        importXML: function(xmlData) {
+            var parser = document.createElement('div');
+            parser.innerHTML = xmlData;
+            if (danmaku_filter.filters.length>0 && confirm('是否清空当前列表?\n\n确认: 清空'+danmaku_filter.filters.length+'条规则并导入XML规则\n取消: 将XML规则添加在当前规则后')) {
+                danmaku_filter.filters = [];
+            }
+            parser.querySelectorAll('filters>item').forEach(function(item) {
+                var content = item.innerHTML;
+                switch(content.substr(0,2)) {
+                    case 't=':
+                        var rule = new danmaku_filter.Rule('text', content.substr(2));
+                        break;
+                    case 'c=':
+                        var rule = new danmaku_filter.Rule('color', content.substr(2));
+                        break;
+                    case 'u=':
+                        var rule = new danmaku_filter.Rule('user', content.substr(2));
+                        break;
+                    default:
+                        // This should not happen!
+                        console.warn('Unrecognized entry: `'+content+'\'. It is processed as text');
+                        var rule = new danmaku_filter.Rule('text', content);
+                }
+                danmaku_filter.filters.push(rule);
+            });
+            danmaku_filter.updateList();
+        },
+        importBili: function() {
+            var type_values = {"keyword":"text","user":"user","color":"color"};
+            $.get('http://interface.bilibili.com/blocklist?random='+Math.random(), function(xmlData) {
+                danmaku_filter.filters = [];
+                xmlData.querySelectorAll('filter>f').forEach(function(rule) {
+                    danmaku_filter.filters.push(new danmaku_filter.Rule(type_values[rule.getAttribute('t')], rule.innerHTML));
+                });
+                danmaku_filter.updateList();
+            });
+        },
+        exportXML: function() {
+            var data = "<filters>\n";
+            var type_symbols = {"text":"t","color":"c","user":"u"};
+            danmaku_filter.filters.forEach(function(rule) {
+                data += "\t<item enabled=\""+rule.active+"\">"+type_symbols[rule.type]+"="+rule.content+"</item>\n";
+            });
+            data += "</filters>";
+            return data;
+        },
+        insertEntry: function(type) {
+            danmaku_filter.filters.push(new danmaku_filter.Rule(type));
+            danmaku_filter.updateList();
+        },
+        init: function() {
+            // Add event listeners to controls
+            // Render list HTML element
+            danmaku_filter.updateList();
+            $('#df_save').click(function() {
+                bkg_page.setOption('danmaku_filter', JSON.stringify(danmaku_filter.filters));
+            });
+            $('#df_export').click(function() {
+                var xmlBlob = new Blob([danmaku_filter.exportXML()],{type:'text/xml'});
+                chrome.downloads.download({url:URL.createObjectURL(xmlBlob),filename:'tv.bilibili.player.xml'});
+            });
+            document.querySelector('#df_import').addEventListener('change', function(evt) {
+                var reader = new FileReader();
+                reader.onload = function(loadEvt) {
+                    danmaku_filter.importXML(loadEvt.target.result);
+                };
+                reader.readAsText(evt.target.files[0]);
+            });
+            $('#df_download').click(function() {
+                danmaku_filter.importBili();
+            });
+            $('#df_insert_regex').click(function() {
+                danmaku_filter.insertEntry('text');
+            });
+            $('#df_insert_color').click(function() {
+                danmaku_filter.insertEntry('color');
+            });
+            $('#df_insert_user').click(function() {
+                danmaku_filter.insertEntry('user');
+            });
+            $('#df_batch_delete').click(function() {
+                danmaku_filter.deleteItem(danmaku_filter.selected);
+            });
+            $('#df_batch_enable').click(function() {
+                danmaku_filter.enableItem(danmaku_filter.selected, true);
+            });
+            $('#df_batch_disable').click(function() {
+                danmaku_filter.enableItem(danmaku_filter.selected, false);
+            });
+            document.querySelector('#df_selectall').addEventListener('change', function(evt) {
+                $('#df_rulelist input[type=checkbox]').attr('checked', this.checked);
+                danmaku_filter.selected = []
+                if (this.checked) {
+                    for (var i = 0; i < danmaku_filter.filters.length; i++) {
+                        danmaku_filter.selected.push(i);
+                    }
+                }
+            });
+        }
+    };
+    danmaku_filter.init();
+    // End Danmaku-filter control script
+
     function initUpList() {
         var list    = Live.get('favouritesList');
         var idList  = Live.get('favouritesIdList');
