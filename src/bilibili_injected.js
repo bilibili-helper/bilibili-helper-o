@@ -236,7 +236,39 @@
 			$('#loading-notice').fadeOut(300);
 			if (biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') != 'force' && biliHelper.cid && biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1 && biliHelper.playbackUrls[0].url.indexOf('m3u8') < 0) {
 				$('#loading-notice').fadeOut(300, function() {
-					biliHelper.switcher.html5();
+					chrome.extension.sendMessage({
+						command: 'getCommentFilter'
+					}, function(response){
+						try {
+							filters = JSON.parse(response);
+						} catch(e) {
+							filters = [];
+							console.warn("Invalid filter record: "+response+"\n"+e);
+						}
+						var filters_categorized = {regex:[],text:[],color:[],user:[]};
+						for (var i = filters.length-1; i >= 0; i--) {
+							if (!filters[i].active) {
+								// Remove inactive
+								filters.splice(i,1);
+								continue;
+							}
+							// Use regex engine only when regex to speed up
+							if (filters[i].type=='text' && /\.|\[|\]|\(|\)|\*|\?|\||\\|\^|\$|\{|\}/.exec(filters[i].content)) {
+								try {
+									filters[i].content = new RegExp(filters[i].content);
+									filters[i].type='regex';
+								} catch (e) {
+									console.warn("Invalid regex `"+filters[i].content+"' treated as text\n"+e);
+								}
+							}
+							if (filters[i].type=='color') {
+								filters[i].content = 1*('0x'+filters[i].content);
+							}
+							filters_categorized[filters[i].type].push(filters[i]);
+						}
+						filters = filters_categorized;
+						biliHelper.switcher.html5();
+					});
 				});
 			} else if (biliHelper.replacePlayer) {
 				$('#loading-notice').fadeOut(300, function() {
@@ -438,6 +470,8 @@
 			biliHelper.mainBlock.append(biliHelper.mainBlock.switcherSection);
 			biliHelper.mainBlock.downloaderSection = $('<div class="section downloder"><h3>视频下载</h3><p><span></span>视频地址获取中，请稍等…</p></div>');
 			biliHelper.mainBlock.append(biliHelper.mainBlock.downloaderSection);
+			biliHelper.mainBlock.filterSection = $('<div class="section filter"><h3>弹幕屏蔽</h3><p><span></span>请前往助手<a href="chrome-extension://kpbnombpnpcffllnianjibmpadjolanh/options.html" target="_blank">设置</a>页编辑屏蔽列表</p></div>');
+			biliHelper.mainBlock.append(biliHelper.mainBlock.filterSection);
 			biliHelper.mainBlock.querySection = $('<div class="section query"><h3>弹幕发送者查询</h3><p><span></span>正在加载全部弹幕, 请稍等…</p></div>');
 			biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 

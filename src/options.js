@@ -285,7 +285,8 @@ $(document).ready(function () {
                     cell_content = document.createElement('td'),
                     cell_operations = document.createElement('td');
                 if (!rule.active) {
-                    row.style.background = '#eee';
+                    row.style.background = '#ccc';
+                    row.style.opacity = '0.4';
                 }
 
                 var select_checkbox = document.createElement('input');
@@ -436,7 +437,9 @@ $(document).ready(function () {
                 danmaku_filter.insertEntry('user');
             });
             $('#df_batch_delete').click(function() {
-                danmaku_filter.deleteItem(danmaku_filter.selected);
+                if (confirm('确认删除'+danmaku_filter.selected.length+'项过滤规则?')) {
+                    danmaku_filter.deleteItem(danmaku_filter.selected);
+                }
             });
             $('#df_batch_enable').click(function() {
                 danmaku_filter.enableItem(danmaku_filter.selected, true);
