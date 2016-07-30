@@ -259,12 +259,12 @@ $(document).ready(function () {
         bkg_page.setOption("watchList", JSON.stringify(watchList));
     });
 
-    // Danmaku-filter control script
+    /* Begin Danmaku-filter control script */
     var danmaku_filter = {
-        list: document.querySelector('#df_rulelist'),
-        filters: JSON.parse(bkg_page.getOption('danmaku_filter')), // Array of rule objects
-        selected: [], // Array of selected indexes in `filters`
-        Rule: function(type, content) { // Rule Constructor (just a struct though...)
+        list: document.querySelector('#df_rulelist'), // the rules table
+        filters: JSON.parse(bkg_page.getOption('danmaku_filter')), // array of Rule objects
+        selected: [], // Array of selected indexes in `filters`, eg [1,2]
+        Rule: function(type, content) { // Rule object constructor 
             this.type = type;
             this.active = true;
             if (content) {
@@ -459,7 +459,7 @@ $(document).ready(function () {
         }
     };
     danmaku_filter.init();
-    // End Danmaku-filter control script
+    /* End Danmaku-filter control script */
 
     function initUpList() {
         var list    = Live.get('favouritesList');

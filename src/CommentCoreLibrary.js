@@ -98,21 +98,18 @@ function BilibiliParser(xmlDoc, text, warn){
 			if(obj.mode < 7){
 				obj.text = text.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
 				/* begin added filter code */
-				// Filter
+				// Test against saved results. If failed, reject
 				if (filtercache[obj.text]===false) {
-					// obj.text = "[屏蔽] "+obj.text
 					continue;
 				}
 				if (filtercache[obj.text]===undefined) {
-					// Apply filter
+					// Apply filters to comment
 					var result = filterComment(obj);
-					filtercache[obj.text] = result;
+					filtercache[obj.text] = result; // Save result for duplicates
 					if (!result) {
-						// obj.text = "[屏蔽] "+obj.text
 						continue;
 					}
 				}
-				// if filtercache[text] is true, just let go
 				/* end added filter code */
 			}else{
 				if(obj.mode == 7){
