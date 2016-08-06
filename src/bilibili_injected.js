@@ -56,9 +56,9 @@
 	}
 
 	function notifyCidHack(callback) {
-		var majorVersion = parseInt(/Chrome\/([\d\.apre]+)/.exec(window.navigator.userAgent)[1]);
+		var majorVersion = parseInt((/Chrome\/([\d\.apre]+)/.exec(window.navigator.userAgent) || /Firefox\/([\d\.apre]+)/.exec(window.navigator.userAgent))[1]);
 		if (biliHelper.cidHack) {
-			chrome.extension.sendMessage({
+			chrome.runtime.sendMessage({
 				command: "cidHack",
 				cid: biliHelper.cid,
 				type: biliHelper.cidHack
@@ -102,7 +102,7 @@
 	}
 
 	function intilize_style(callback) {
-		chrome.extension.sendMessage({
+		chrome.runtime.sendMessage({
 			command: "getCSS",
 			url: document.URL
 		}, function(response) {
@@ -111,7 +111,7 @@
 		});
 	}
 
-	chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch (request.command) {
 			case "update":
 				intilize_style();
@@ -154,7 +154,7 @@
 	});
 
 	var finishUp = function(forceCidHack) {
-		chrome.extension.sendMessage({
+		chrome.runtime.sendMessage({
 			command: "getDownloadLink",
 			cid: biliHelper.cid,
 			cidHack: forceCidHack || biliHelper.cidHack
@@ -213,7 +213,7 @@
 						// register a callback that can talk to extension background
 						$bhDownLink.click(function(e) {
 							e.preventDefault();
-							chrome.extension.sendMessage({
+							chrome.runtime.sendMessage({
 								command: 'requestForDownload',
 								url: $(e.target).attr('href'),
 								filename: $(e.target).data('download')
@@ -281,7 +281,7 @@
 			biliHelper.page = parseInt(biliHelper.page);
 		}
 		biliHelper.pageOffset = 0;
-		chrome.extension.sendMessage({
+		chrome.runtime.sendMessage({
 			command: "init"
 		}, function(response) {
 			biliHelper.playerConfig = response.playerConfig;
@@ -356,7 +356,7 @@
 						var commentId = e.detail.id,
 							commentData = e.detail;
 						delete e.detail.id;
-						chrome.extension.sendMessage({
+						chrome.runtime.sendMessage({
 							command: "sendComment",
 							avid: biliHelper.avid,
 							cid: biliHelper.cid,
@@ -368,7 +368,7 @@
 						});
 					});
 					abp.playerUnit.addEventListener("saveconfig", function(e) {
-						chrome.extension.sendMessage({
+						chrome.runtime.sendMessage({
 							command: "savePlayerConfig",
 							config: e.detail
 						});
@@ -494,7 +494,7 @@
 		}
 
 		biliHelper.work = function() {
-			chrome.extension.sendMessage({
+			chrome.runtime.sendMessage({
 				command: "getVideoInfo",
 				avid: biliHelper.avid,
 				pg: biliHelper.page + biliHelper.pageOffset,
@@ -515,7 +515,7 @@
 				}
 				if (typeof videoInfo.code !== "undefined") {
 					if (biliHelper.page != 1) {
-						chrome.extension.sendMessage({
+						chrome.runtime.sendMessage({
 							command: "getVideoInfo",
 							avid: biliHelper.avid,
 							pg: 1,
@@ -545,7 +545,7 @@
 									biliHelper.page, biliHelper.totalPage, 1, 1)).filename;
 						commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
 							e.preventDefault();
-							chrome.extension.sendMessage({
+							chrome.runtime.sendMessage({
 								command: 'requestForDownload',
 								url: $(e.target).attr('href'),
 								filename: $(e.target).attr('download')
@@ -564,7 +564,7 @@
 								assUrl = window.URL.createObjectURL(assBlob),
 								assBtn = $('<a class="b-btn w">下载 ASS 格式弹幕</a>').attr('download', downloadFileName.replace('.xml', '.ass')).attr('href', assUrl).click(function(e) {
 									e.preventDefault();
-									chrome.extension.sendMessage({
+									chrome.runtime.sendMessage({
 										command: 'requestForDownload',
 										url: $(e.target).attr('href'),
 										filename: $(e.target).attr('download')

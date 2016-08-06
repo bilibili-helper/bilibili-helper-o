@@ -422,7 +422,7 @@ function extensionLabsInit() {
 }
 
 if (typeof (chrome.runtime.setUninstallURL) == "function") {
-    chrome.runtime.setUninstallURL("https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D" + chrome.app.getDetails().version);
+    chrome.runtime.setUninstallURL("https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D" + chrome.runtime.getManifest().version);
 }
 Live.treasure = {};
 Live.watcherRoom = {};
@@ -467,7 +467,7 @@ function setNotFavourite(id) {
     return false;
 }
 chrome.runtime.onConnect.addListener(function (port) {Live.treasure.port=port});
-chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     switch (request.command) {
         case "init":
             sendResponse({
@@ -838,10 +838,10 @@ function getLocale() {
 function checkVersion() {
     var versionNotify = getOption("versionNotify");
     versionNotify == 'on' &&
-        getFileData("https://bilihelper.guguke.net/version.json?v=" + encodeURIComponent(chrome.app.getDetails().version), function (result) {
+        getFileData("https://bilihelper.guguke.net/version.json?v=" + encodeURIComponent(chrome.runtime.getManifest().version), function (result) {
             try {
                 result = JSON.parse(result);
-                if (compareVersion(result.version, chrome.app.getDetails().version) > 0) {
+                if (compareVersion(result.version, chrome.runtime.getManifest().version) > 0) {
                     setOption("crx_update", JSON.stringify(result));
                     if (!localeAcquired || locale == 1 || new Date().getTime() - result.update_time > 259200000) {
                         updateNotified = true;
@@ -861,18 +861,18 @@ getLocale();
 extensionLabsInit();
 
 chrome.runtime.onInstalled.addListener(function (details) {
-    setOption("version", chrome.app.getDetails().version);
+    setOption("version", chrome.runtime.getManifest().version);
     if (details.reason == "install") {
         chrome.tabs.create({
             url: chrome.extension.getURL("options.html?mod=install")
         });
     } else if (details.reason == "update") {
-        if (compareVersion(getOption("version"), chrome.app.getDetails().version) < 0) {
+        if (compareVersion(getOption("version"), chrome.runtime.getManifest().version) < 0) {
             chrome.notifications.create('bh-update', {
                 type: 'basic',
                 iconUrl: "imgs/icon-256.png",
                 title: chrome.i18n.getMessage('noticeficationTitle'),
-                message: chrome.i18n.getMessage('noticeficationExtensionUpdate').replace('%v', chrome.app.getDetails().version),
+                message: chrome.i18n.getMessage('noticeficationExtensionUpdate').replace('%v', chrome.runtime.getManifest().version),
                 isClickable: false,
                 buttons: [{
                     title: chrome.i18n.getMessage('noticeficationNewFeatures')
