@@ -1,3 +1,14 @@
 bilibili_helper.zip
 node_modules/
 dest/
+ColPick.min.js
+background.min.js
+bilibili_ASS_Danmaku_Downloader.min.js
+bilibili_injected.min.js
+bilibili_live.min.js
+filename-sanitize.min.js
+live-content-script.min.js
+options.min.js
+popup.min.js
+resource.min.js
+
