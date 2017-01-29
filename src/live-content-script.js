@@ -34,7 +34,7 @@ if (options != '{}') options = JSON.parse(options);
 if (options['treasure']) {
     Live.setInterval(window.refreshCaptcha, function () {
         window.refreshCaptcha = function () {
-            $("#captchaImg").attr("src", "http://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now());
+            $("#captchaImg").attr("src", getOption("https") + "://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now());
         };
     }, 1000);
 }
@@ -53,7 +53,7 @@ if (options['beat']) {
         window.sendBeatStorm = function (json) {
             b(json);
             var beat = json.content;
-            $.ajax({ url: "http://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: window.ROOMID } })
+            $.ajax({ url: getOption("https") + "://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: window.ROOMID } })
         };
     }, 1000);
 }
@@ -102,12 +102,12 @@ if (options['watcher']) {
     // var html = $(e.target).html();
     // var reg = new RegExp('([\\d]+)s');
     // var timer = reg.exec(html);
-var getBeat = function (roomId) {return $.get('http://live.bilibili.com/SpecialGift/room/' + window.ROOMID, {}, function () {}, 'json').promise();};
+var getBeat = function (roomId) {return $.get(getOption("https") + '://live.bilibili.com/SpecialGift/room/' + window.ROOMID, {}, function () {}, 'json').promise();};
 $('#player-container').on('DOMNodeInserted', function (e) {
     getBeat().done(function (data) {
         if (data.code == 0 && data.data['39'].hadJoin == 0) {
             console.log(data.data['39'].hadJoin);
-            $.ajax({ url: "http://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: data.data['39'].content, rnd: new Date().getTime(), roomid: window.ROOMID } })
+            $.ajax({ url: getOption("https") + "://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: data.data['39'].content, rnd: new Date().getTime(), roomid: window.ROOMID } })
         }
     });
 });

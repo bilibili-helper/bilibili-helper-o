@@ -24,6 +24,7 @@
 <script type="text/javascript" src="http://static.hdslb.com/js/video.min.js"></script>
 <script type="text/javascript" src="http://static.hdslb.com/js/jquery.zclip.min.js"></script>
 <script type="text/javascript" src="http://static.hdslb.com/js/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="resource.min.js"></script>
 		
 	</head>
 
@@ -606,6 +607,16 @@ $(function(){
     }
     js_viewallalist();
 });
+(function() {
+    if(getOption("https") == "http") {
+        return;
+	}
+	$("*[href]").each(function(id, e) {
+		if(/^http:\/\/[a-zA-Z0-9]*?\.bilibili\.com/.test(e.href)) {
+		    e.href = "https" + e.href.substr(4);
+		}
+    });
+})();
 </script>
 <script type="text/javascript" src="/html/ads-arc.js"></script>
 </div>
