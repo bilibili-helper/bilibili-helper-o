@@ -697,6 +697,9 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
                     }
                 });
             return true;
+        case 'getCommentFilter':
+            sendResponse(bkg_page.getOption('danmaku_filter'));
+            return true;
         case "getTVReward":
             var rewardStr = '',
                 lost = "很遗憾，此次您没有中奖";

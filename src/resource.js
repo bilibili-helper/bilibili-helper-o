@@ -32,9 +32,10 @@ var defaultOptions = {
 	"versionNotify":"on",
 	"watcher":"off",
 	"watchList":"[]",
+	"danmaku_filter":"[]",
 	"watchNotify":"on",
 	"watchNotifyList":"[]",
-	"giftpackage":"on",
+	"giftpackage":"on"
 };
 var cidCache = {};
 if(localStorage.getItem('cidCache') != null) {
