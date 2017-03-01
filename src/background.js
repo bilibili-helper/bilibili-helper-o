@@ -977,7 +977,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
         requestHeaders: details.requestHeaders
     };
 }, {
-    urls: [getOption("https") + "://interface.bilibili.com/playurl?cid*", getOption("https") + "://interface.bilibili.com/playurl?accel=1&cid=*", getOption("https") + "://interface.bilibili.com/playurl?platform=bilihelper*", getOption("https") + "://www.bilibili.com/video/av*", getOption("https") + "://www.bilibili.com/bangumi/*", getOption("https") + "://app.bilibili.com/bangumi/*", getOption("https") + "://www.bilibili.com/search*", "http://*.acgvideo.com/*", getOption("https") + "://www.bilibili.com/api_proxy*", getOption("https") + "://bangumi.bilibili.com/*", getOption("https") + "://interface.bilibili.com/playurl?platform=android*"]
+    urls: [/*"http://interface.bilibili.com/playurl?cid*", "http://interface.bilibili.com/playurl?accel=1&cid=*", "http://interface.bilibili.com/playurl?platform=bilihelper*", "http://www.bilibili.com/video/av*", "http://www.bilibili.com/bangumi/*", "http://app.bilibili.com/bangumi/*", "http://www.bilibili.com/search*", "http://*.acgvideo.com/*", "http://www.bilibili.com/api_proxy*", "http://bangumi.bilibili.com/*", "http://interface.bilibili.com/playurl?platform=android*"*/]
+
 }, ['requestHeaders', 'blocking']);
 
 function receivedHeaderModifier(details) {
