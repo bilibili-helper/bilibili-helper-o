@@ -228,7 +228,7 @@
 						biliHelper.mainBlock.downloaderSection.find('p .b-btn.w').click();
 					});
 				}
-				//biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="http://bilibili.audio/' + biliHelper.avid + '/' + biliHelper.page + '"></a>').text('抽出并下载音频'));
+				//biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="' + getOption("https") + '://bilibili.audio/' + biliHelper.avid + '/' + biliHelper.page + '"></a>').text('抽出并下载音频'));
 			}
 			if (biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1) {
 				biliHelper.mainBlock.switcherSection.find('a[type="html5"]').removeClass('hidden');
@@ -339,7 +339,7 @@
 						src: {
 							playlist: [{
 								video: document.getElementById("bilibili_helper_html5_player_video"),
-								comments: "http://comment.bilibili.com/" + biliHelper.cid + ".xml"
+								comments: getOption("https") + "://comment.bilibili.com/" + biliHelper.cid + ".xml"
 							}]
 						},
 						width: "100%",
@@ -540,8 +540,8 @@
 					biliHelper.cid = videoInfo.cid;
 					if (!biliHelper.genPage) {
 						biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
-						var commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="http://comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
-							downloadFileName = getDownloadOptions('http://comment.bilibili.com/' + biliHelper.cid + '.xml',
+						var commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + getOption("https") + '://comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
+							downloadFileName = getDownloadOptions(getOption("https") + '://comment.bilibili.com/' + biliHelper.cid + '.xml',
 								getNiceSectionFilename(biliHelper.avid,
 									biliHelper.page, biliHelper.totalPage, 1, 1)).filename;
 						commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
@@ -555,7 +555,7 @@
 						biliHelper.mainBlock.commentSection = commentDiv;
 						biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
 						var id = biliHelper.site ==1?biliHelper.avid:biliHelper.cid;
-						$.get('http://comment.bilibili.com/' + id + '.xml', function(response) {
+						$.get(getOption("https") + '://comment.bilibili.com/' + id + '.xml', function(response) {
 							console.log(response)
 							var assData = '\ufeff' + generateASS(setPosition(parseXML('', response)), {
 									'title': getNiceSectionFilename(biliHelper.avid, biliHelper.page, biliHelper.totalPage, 1, 1),
@@ -608,7 +608,7 @@
 										return;
 									}
 									var displayUserInfo = function(uid, data) {
-										control.find('.result').html('发送者: <a href="http://space.bilibili.com/' + uid + '" target="_blank" card="' + parseSafe(data.name) + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
+										control.find('.result').html('发送者: <a href="' + getOption("https") + '://space.bilibili.com/' + uid + '" target="_blank" card="' + parseSafe(data.name) + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
 										var s = document.createElement('script');
 										s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
 										document.body.appendChild(s);
@@ -619,13 +619,13 @@
 											control.find('.result').text('查询失败, 发送用户可能已被管理员删除.');
 										} else {
 											var uid = parseSafe(data.data[0].id);
-											control.find('.result').html('发送者 UID: <a href="http://space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
+											control.find('.result').html('发送者 UID: <a href="' + getOption("https") + '://space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
 											var data = sessionStorage.getItem('user/' + uid);
 											if (data) {
 												displayUserInfo(uid, JSON.parse(data));
 												return false;
 											}
-											$.getJSON('http://api.bilibili.cn/userinfo?mid=' + uid + '&type=json', function(data) {
+											$.getJSON(getOption("https") + '://api.bilibili.cn/userinfo?mid=' + uid + '&type=json', function(data) {
 												if (data.code == 0) {
 													sessionStorage.setItem('user/' + uid, JSON.stringify({
 														name: data.name,
@@ -713,7 +713,7 @@
 				$('.viewbox .info .v-title h1').html(addTitleLink($('.viewbox .info .v-title h1').attr('title'), response.rel_search));
 				$(".titleNumber").click(function() {
 					var msgbox = new MessageBox;
-					msgbox.show(this, '\u70b9\u51fb\u641c\u7d22\u76f8\u5173\u89c6\u9891\uff1a<br /><a target="_blank" href="http://www.bilibili.com/search?orderby=default&keyword=' + encodeURIComponent($(this).attr("previous")) + '">' + $(this).attr("previous") + '</a><br /><a target="_blank" href="http://www.bilibili.com/search?orderby=ranklevel&keyword=' + encodeURIComponent($(this).attr("next")) + '">' + $(this).attr("next") + '</a>', 1e3);
+					msgbox.show(this, '\u70b9\u51fb\u641c\u7d22\u76f8\u5173\u89c6\u9891\uff1a<br /><a target="_blank" href="' + getOption("https") + '://www.bilibili.com/search?orderby=default&keyword=' + encodeURIComponent($(this).attr("previous")) + '">' + $(this).attr("previous") + '</a><br /><a target="_blank" href="' + getOption("https") + '://www.bilibili.com/search?orderby=ranklevel&keyword=' + encodeURIComponent($(this).attr("next")) + '">' + $(this).attr("next") + '</a>', 1e3);
 				});
 			});
 		}
@@ -789,7 +789,7 @@
 	}
 })();
 (function(){
-	if(location.href=="http://www.bilibili.com/video/bgm_calendar.html"){
+	if(location.href==getOption("https") + "://www.bilibili.com/video/bgm_calendar.html"){
 		var l = $('#bangumi');
 		var d= new Date().getDay()-1;
 		for(var i = 0;i<7;++i){
