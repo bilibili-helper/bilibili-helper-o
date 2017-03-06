@@ -35,7 +35,7 @@
             return dates;
         }
         Live.getRoomHTML = function (url) {
-            return $.get(getOption("https") + '://live.bilibili.com/' + url).promise();
+            return $.get('http://live.bilibili.com/' + url).promise();
         };
         Live.getRoomIdByUrl = function (url, callback) {
             var id = store.get('bilibili_helper_live_roomId')[url];
@@ -57,7 +57,7 @@
             return $.getJSON("/user/getuserinfo").promise();
         };
         Live.getMedalList = function () {
-            return $.getJSON(getOption("https") + "://live.bilibili.com/i/ajaxGetMyMedalList").promise();
+            return $.getJSON("http://live.bilibili.com/i/ajaxGetMyMedalList").promise();
         };
         Live.each = function (obj, fn) {
             if (!fn) return;
@@ -602,7 +602,7 @@
                 if (Live.bet.stop) clearInterval(store.get('bilibili_helper_quiz_bet')[Live.roomId]);
                 if (rate >= o.rate) {
                     $.ajax({
-                        url: getOption("https") + '://live.bilibili.com/bet/addBettor',
+                        url: 'http://live.bilibili.com/bet/addBettor',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -896,7 +896,7 @@
                 Live.bet.show();
             },
             getBet: function () {
-                return $.post(getOption("https") + '://live.bilibili.com/bet/getRoomBet', { roomid: Live.roomId }, function () {}, 'json').promise();
+                return $.post('http://live.bilibili.com/bet/getRoomBet', { roomid: Live.roomId }, function () {}, 'json').promise();
             },
             do: function () {
                 Live.bet.getBet().done(function (bet) {
@@ -1362,7 +1362,7 @@
                 function getAward(time_start, time_end, captcha) {
                     Live.treasure.imgInit = false;
                     Live.treasure.stop && Live.helperInfo.setTreasureStatus('success', '功能已经启动');
-                    $.get(getOption("https") + '://live.bilibili.com/FreeSilver/getAward', { time_start: time_start, time_end: time_end, captcha: captcha }, function () {}, 'json').promise()
+                    $.get('http://live.bilibili.com/FreeSilver/getAward', { time_start: time_start, time_end: time_end, captcha: captcha }, function () {}, 'json').promise()
                         .done(function (result) {
                             if (result.code != 0) {
                                 Live.liveToast(Live.treasure.captchaInput[0], "info", result.msg + Live.randomEmoji.helpless());
@@ -1444,13 +1444,13 @@
                 return q;
             },
             getCurrentTask: function () {
-                return $.get(getOption("https") + '://live.bilibili.com/FreeSilver/getCurrentTask', {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/FreeSilver/getCurrentTask', {}, function () {}, 'json').promise();
             },
             getSurplus: function () {
-                return $.get(getOption("https") + '://live.bilibili.com/FreeSilver/getSurplus', {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/FreeSilver/getSurplus', {}, function () {}, 'json').promise();
             },
             getCaptcha: function () {
-                return getOption("https") + "://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now();
+                return "http://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now();
             }
         };
         Live.chat = {
@@ -2488,13 +2488,13 @@
                 }, 5000);*/
             },
             sendBeat: function (roomId, beat) {
-                $.ajax({ url: getOption("https") + "://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId } })
+                $.ajax({ url: "http://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId } })
             },
             getBeat: function (roomId) {
-                return $.get(getOption("https") + '://live.bilibili.com/SpecialGift/room/' + roomId, {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/SpecialGift/room/' + roomId, {}, function () {}, 'json').promise();
             },
             getRankList: function (datatype, day) {
-                return $.get(getOption("https") + '://live.bilibili.com/rank/getCond', { datatype: datatype, day: day, giftid: 39, usertype: 'master' }, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/rank/getCond', { datatype: datatype, day: day, giftid: 39, usertype: 'master' }, function () {}, 'json').promise();
             }
         };
         Live.giftpackage = {
@@ -3038,13 +3038,13 @@
                 return r;
             },
             getGiftPackage: function () { //get package data
-                return $.get(getOption("https") + '://live.bilibili.com/gift/playerBag', {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/gift/playerBag', {}, function () {}, 'json').promise();
             },
             getSendGift: function () { // get new gift
-                return $.get(getOption("https") + '://live.bilibili.com/giftBag/getSendGift', {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/giftBag/getSendGift', {}, function () {}, 'json').promise();
             },
             getGiftPackageStatus: function () { //get the info for 'if has new gift'
-                return $.get(getOption("https") + '://live.bilibili.com/giftBag/sendDaily', {}, function () {}, 'json').promise();
+                return $.get('http://live.bilibili.com/giftBag/sendDaily', {}, function () {}, 'json').promise();
             },
             openGiftPackagePanel: function () {
                 if (Live.giftpackage.packagePanel.css('display') != 'none') return;
@@ -3286,7 +3286,7 @@
                         store.set('bilibili_helper_login', true);
                         $.ajax({
                             dataType: 'json',
-                            url: getOption("https") + '://space.bilibili.com/ajax/member/MyInfo'
+                            url: 'http://space.bilibili.com/ajax/member/MyInfo'
                         }).promise().done(function (res) {
                             if (res.data && res.data.mobile_verified == 1) {
                                 Live.mobileVerified = 1;
@@ -3301,7 +3301,7 @@
             },
             medal: function () {
                 Live.getMedalList().done(function (medalList) {
-                    $.get(getOption("https") + '://live.bilibili.com/i/medal').promise().done(function (html) {
+                    $.get('http://live.bilibili.com/i/medal').promise().done(function (html) {
                         var medalDOM = $(html);
                         var medalDOMList = medalDOM.find('.my-medal-section dl dd');
                         if (medalList.code == 0) {

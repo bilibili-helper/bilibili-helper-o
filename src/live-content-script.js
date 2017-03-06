@@ -34,7 +34,7 @@ if (options != '{}') options = JSON.parse(options);
 if (options['treasure']) {
     Live.setInterval(window.refreshCaptcha, function () {
         window.refreshCaptcha = function () {
-            $("#captchaImg").attr("src", getOption("https") + "://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now());
+            $("#captchaImg").attr("src", "http://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now());
         };
     }, 1000);
 }
@@ -47,68 +47,68 @@ if (options['treasure']) {
 //     }, 1000);
 // }
 //beat
-if (options['beat']) {
-    Live.setInterval(window.sendBeatStorm, function () {
-        var b = window.sendBeatStorm;
-        window.sendBeatStorm = function (json) {
-            b(json);
-            var beat = json.content;
-            $.ajax({ url: getOption("https") + "://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: window.ROOMID } })
-        };
-    }, 1000);
-}
+// if (options['beat']) {
+//     Live.setInterval(window.sendBeatStorm, function () {
+//         var b = window.sendBeatStorm;
+//         window.sendBeatStorm = function (json) {
+//             b(json);
+//             var beat = json.content;
+//             $.ajax({ url: "http://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: window.ROOMID } })
+//         };
+//     }, 1000);
+// }
 //watcher
-if (options['watcher']) {
-    Live.setInterval(window.protocol, function () {
-        Live.setInterval(window.protocol.SYS_MSG, function () {
-            var b = window.protocol.SYS_MSG;
-            window.protocol.SYS_MSG = function (json) {
-                b(json);
-                sendMessage(json);
-            };
-        }, 500);
-        Live.setInterval(window.protocol.SYS_GIFT, function () {
-            var b = window.protocol.SYS_GIFT;
-            window.protocol.SYS_GIFT = function (json) {
-                b(json);
-                sendMessage(json);
-            };
-        }, 500);
-        // Live.setInterval(window.protocol.TV_END, function () {
-        //     var b = window.protocol.TV_END;
-        //     window.protocol.TV_END = function (json) {
-        //         b(json);
-        //         sendMessage(json);
-        //     };
-        // }, 500);
-    }, 1000);
-    Live.setInterval(window.liveRoomFuncs, function () {
-        Live.setInterval(window.liveRoomFuncs.addDanmu, function () {
-            var b = window.liveRoomFuncs.addDanmu;
-            window.liveRoomFuncs.addDanmu = function (json) {
-                b(json);
-                sendMessage(json);
-            };
-        }, 500);
-        Live.setInterval(window.liveRoomFuncs.addGift, function () {
-            var b = window.liveRoomFuncs.addGift;
-            window.liveRoomFuncs.addGift = function (json) {
-                b(json);
-                sendMessage(json);
-            };
-        }, 500);
-    }, 1000);
-}
+// if (options['watcher']) {
+//     Live.setInterval(window.protocol, function () {
+//         Live.setInterval(window.protocol.SYS_MSG, function () {
+//             var b = window.protocol.SYS_MSG;
+//             window.protocol.SYS_MSG = function (json) {
+//                 b(json);
+//                 sendMessage(json);
+//             };
+//         }, 500);
+//         Live.setInterval(window.protocol.SYS_GIFT, function () {
+//             var b = window.protocol.SYS_GIFT;
+//             window.protocol.SYS_GIFT = function (json) {
+//                 b(json);
+//                 sendMessage(json);
+//             };
+//         }, 500);
+//         // Live.setInterval(window.protocol.TV_END, function () {
+//         //     var b = window.protocol.TV_END;
+//         //     window.protocol.TV_END = function (json) {
+//         //         b(json);
+//         //         sendMessage(json);
+//         //     };
+//         // }, 500);
+//     }, 1000);
+//     Live.setInterval(window.liveRoomFuncs, function () {
+//         Live.setInterval(window.liveRoomFuncs.addDanmu, function () {
+//             var b = window.liveRoomFuncs.addDanmu;
+//             window.liveRoomFuncs.addDanmu = function (json) {
+//                 b(json);
+//                 sendMessage(json);
+//             };
+//         }, 500);
+//         Live.setInterval(window.liveRoomFuncs.addGift, function () {
+//             var b = window.liveRoomFuncs.addGift;
+//             window.liveRoomFuncs.addGift = function (json) {
+//                 b(json);
+//                 sendMessage(json);
+//             };
+//         }, 500);
+//     }, 1000);
+// }
     // var html = $(e.target).html();
     // var reg = new RegExp('([\\d]+)s');
     // var timer = reg.exec(html);
-var getBeat = function (roomId) {return $.get(getOption("https") + '://live.bilibili.com/SpecialGift/room/' + window.ROOMID, {}, function () {}, 'json').promise();};
-$('#player-container').on('DOMNodeInserted', function (e) {
-    getBeat().done(function (data) {
-        if (data.code == 0 && data.data['39'].hadJoin == 0) {
-            console.log(data.data['39'].hadJoin);
-            $.ajax({ url: getOption("https") + "://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: data.data['39'].content, rnd: new Date().getTime(), roomid: window.ROOMID } })
-        }
-    });
-});
+// var getBeat = function (roomId) {return $.get('http://live.bilibili.com/SpecialGift/room/' + window.ROOMID, {}, function () {}, 'json').promise();};
+// $('#player-container').on('DOMNodeInserted', function (e) {
+//     getBeat().done(function (data) {
+//         if (data.code == 0 && data.data['39'].hadJoin == 0) {
+//             console.log(data.data['39'].hadJoin);
+//             $.ajax({ url: "http://live.bilibili.com/msg/send", type: "post", data: { color: 16777215, fontsize: 25, mode: 1, msg: data.data['39'].content, rnd: new Date().getTime(), roomid: window.ROOMID } })
+//         }
+//     });
+// });
 $('.activity-lottery').on('DOMNodeInserted',function(e){$('.lottery-box').click();});

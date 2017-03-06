@@ -16,7 +16,7 @@ function adModeFunction(cmd) {
 
 function getDynamic() {
 	bkg_page.chrome.cookies.get({
-		url: getOption("https") + "://interface.bilibili.com/",
+		url: "http://interface.bilibili.com/",
 		name: "DedeUserID"
 	}, function(cookie) {
 		if(cookie === null) $('#go_dynamic').html(chrome.i18n.getMessage('goDynamic') + chrome.i18n.getMessage('notLogged'));
@@ -49,7 +49,7 @@ $(document).ready(function() {
 	}, 100);
 	$('#go_bili').click(function() {
 		chrome.tabs.create({
-			url: bkg_page.getOption("indexversion") == "old" ? getOption("https") + "://www.bilibili.com/index_old.html" : getOption("https") + "://www.bilibili.com/"
+			url: bkg_page.getOption("indexversion") == "old" ? "http://www.bilibili.com/index_old.html" : "http://www.bilibili.com/"
 		});
 		return false;
 	});
@@ -65,17 +65,13 @@ $(document).ready(function() {
 		});
 		bkg_page.setOption("updates", 0);
 		chrome.tabs.create({
-			url: getOption("https") + "://www.bilibili.com/account/dynamic"
+			url: "http://www.bilibili.com/account/dynamic"
 		});
 		return false;
 	});
 	$('#go_favorite').click(function() {
 		chrome.tabs.create({
-<<<<<<< HEAD
 			url: "http://space.bilibili.com/#!/favlist"
-=======
-			url: getOption("https") + "://member.bilibili.com/#favorite_manage"
->>>>>>> origin/master
 		});
 		return false;
 	});
@@ -97,11 +93,11 @@ $(document).ready(function() {
 		var value = $('#video_id').val().toLowerCase();
 		if (/av[0-9]+/g.test(value)) {
 			chrome.tabs.create({
-				url: getOption("https") + '://www.bilibili.com/video/' + value
+				url: 'http://www.bilibili.com/video/' + value
 			});
 		} else if (/[0-9]+/g.test(value)) {
 			chrome.tabs.create({
-				url: getOption("https") + '://www.bilibili.com/video/av' + value
+				url: 'http://www.bilibili.com/video/av' + value
 			});
 		} else {
 			$('#video_id').val('').focus();

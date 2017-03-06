@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var bkg_page   = chrome.extension.getBackgroundPage();
-    var Live       = {};
+    var Live       = {}
     document.title = chrome.i18n.getMessage('extShortName') + " - " + chrome.i18n.getMessage('optionPage');
 
     Live.set = function (n, k, v) {
@@ -73,7 +73,6 @@ $(document).ready(function () {
     $("div[option=\"" + bkg_page.getOption("autoTreasure") + "\"].autoTreasure").addClass("on");
     $("div[option=\"" + bkg_page.getOption("danmu") + "\"].danmu").addClass("on");
     $("div[option=\"" + bkg_page.getOption("liveNotification") + "\"].liveNotification").addClass("on");
-    $("div[option=\"" + bkg_page.getOption("https") + "\"].https").addClass("on");
 
     //chat-display
     $("div[option=\"" + bkg_page.getOption("chatDisplay") + "\"].chatDisplay").addClass("on");
@@ -144,12 +143,6 @@ $(document).ready(function () {
         $('.html5').removeClass('on');
         $(this).addClass('on');
         bkg_page.setOption("html5", $(this).attr("option"));
-    });
-    $('.https').click(function () {
-        if ($(this).hasClass('on')) return false;
-        $('.https').removeClass('on');
-        $(this).addClass('on');
-        bkg_page.setOption("https", $(this).attr("option"));
     });
     $('.contextmenu').click(function () {
         if ($(this).hasClass('on')) return false;
@@ -303,7 +296,7 @@ $(document).ready(function () {
         var ListDom = $('#up-list');
         each(list, function (i) {
             var upInfo = list[i];
-            var del    = $('<button class="button on delete" />').text('取消关注');
+            var del    = $('<button class="button on delete" />').text('取消关注')
             var l      = $('<li />').attr('roomId', upInfo.roomId).append($('<span class="upName"/>').text(upInfo.upName), del);
             ListDom.append(l);
             del.click(function () {

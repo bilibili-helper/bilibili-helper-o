@@ -716,6 +716,7 @@
     margin: 3px;
     border-radius: 3px;
     cursor: pointer;
+    transition: all cubic-bezier(.22, .58, .12, .98) .4s;
 }
 .gifts-package-panel .gifts-package-title .gifts-package-clean:hover {
     color:white;
