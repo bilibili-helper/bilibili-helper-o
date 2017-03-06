@@ -522,7 +522,7 @@ var getCid = function (callback) {
   if (cid) setTimeout(callback, 0, cid);
   else if (src) GM_xmlhttpRequest({
     'method': 'GET',
-    'url': 'http://interface.bilibili.com/player?' + src,
+    'url': getOption("https") + '://interface.bilibili.com/player?' + src,
     'onload': function (resp) {
       try { cid = Number(resp.responseText.match(/<chatid>(\d+)<\/chatid>/)[1]); }
       catch (e) { }
