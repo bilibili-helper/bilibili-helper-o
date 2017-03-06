@@ -594,9 +594,13 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
             });
             return true;
         case "getDownloadLink":
+            // var url = {
+            //     download: "http://interface.bilibili.com/playurl?platform=android&otype=json&appkey=86385cdc024c0f6c&cid=" + request.cid + "&quality=3&type=" + getOption("dlquality"),
+            //     playback: "http://interface.bilibili.com/playurl?platform=android&otype=json&appkey=86385cdc024c0f6c&cid=" + request.cid + "&quality=2&type=mp4"
+            // };
             var url = {
-                download: "http://interface.bilibili.com/playurl?platform=android&otype=json&appkey=86385cdc024c0f6c&cid=" + request.cid + "&quality=3&type=" + getOption("dlquality"),
-                playback: "http://interface.bilibili.com/playurl?platform=android&otype=json&appkey=86385cdc024c0f6c&cid=" + request.cid + "&quality=2&type=mp4"
+                download: "http://interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=" + request.cid + "&quality="+getOption("dlquality"),
+                playback: "http://interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=" + request.cid + "&quality=2&type=mp4"
             };
             if (request.cidHack && request.cidHack != locale) {
                 cidHackType[request.cid] = request.cidHack;
@@ -953,13 +957,13 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
     urls: ["http://static.hdslb.com/play.swf"]
 }, ["blocking"]);
 
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
-    return {
-        cancel: true
-    }
-}, {
-    urls: ["http://tajs.qq.com/stats*"]
-}, ["blocking"]);
+// chrome.webRequest.onBeforeRequest.addListener(function (details) {
+//     return {
+//         cancel: true
+//     }
+// }, {
+//     urls: ["http://tajs.qq.com/stats*"]
+// }, ["blocking"]);
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     var query = new URL(details.url).query;
@@ -977,7 +981,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
         requestHeaders: details.requestHeaders
     };
 }, {
-    // urls: ["http://interface.bilibili.com/playurl?cid*", "http://interface.bilibili.com/playurl?accel=1&cid=*", "http://interface.bilibili.com/playurl?platform=bilihelper*", "http://www.bilibili.com/video/av*", "http://www.bilibili.com/bangumi/*", "http://app.bilibili.com/bangumi/*", "http://www.bilibili.com/search*", "http://*.acgvideo.com/*", "http://www.bilibili.com/api_proxy*", "http://bangumi.bilibili.com/*", "http://interface.bilibili.com/playurl?platform=android*"]
+    urls: ["http://interface.bilibili.com/playurl?cid*", "http://interface.bilibili.com/playurl?accel=1&cid=*", "http://interface.bilibili.com/playurl?platform=bilihelper*", "http://www.bilibili.com/video/av*", "http://www.bilibili.com/bangumi/*", "http://app.bilibili.com/bangumi/*", "http://www.bilibili.com/search*", "http://*.acgvideo.com/*", "http://www.bilibili.com/api_proxy*", "http://bangumi.bilibili.com/*", "http://interface.bilibili.com/playurl?platform=android*"]
 }, ['requestHeaders', 'blocking']);
 
 function receivedHeaderModifier(details) {
@@ -1172,7 +1176,6 @@ if (getOption("liveNotification") == "on") {
 }
 chrome.runtime.onConnect.addListener(function (port) {
     port.onMessage.addListener(function (request, sender, sendResponse) {
-        console.log(request.json)
         if (!request.cmd) return false;
     });
 });

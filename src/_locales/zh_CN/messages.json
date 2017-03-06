@@ -15,6 +15,10 @@
     "message": "一键前往bilibili.com",
     "description": "Popup Button: go_bili"
   },
+  "goBiliLive": {
+    "message": "一键前往Bilibili Live",
+    "description": "Popup Button: go_bili_live"
+  },
   "adModeOff": {
     "message": "进入点广告模式",
     "description": "Popup Button: ad_mode_off"

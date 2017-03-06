@@ -708,7 +708,19 @@
 .gifts-package-panel .gifts-package-content {
     text-align: inherit;
 }
-
+.gifts-package-panel .gifts-package-title .gifts-package-clean {
+    border: 1px solid #4fc1e9;
+    font-size: 12px;
+    float: right;
+    padding: 3px;
+    margin: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.gifts-package-panel .gifts-package-title .gifts-package-clean:hover {
+    color:white;
+    background-color: #4fc1e9
+}
 .gifts-package-panel .gifts-package-content .container {
     overflow-x: auto;
     overflow-y: hidden;

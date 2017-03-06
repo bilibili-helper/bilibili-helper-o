@@ -1137,13 +1137,13 @@
                                     Live.treasure.timer = 0;
                                 });
                                 
-                                // var timerNum = setInterval(function(){
-                                //     ++Live.treasure.timer;
-                                //     if(Live.treasure.timer >=3600){
-                                //         Live.treasure.stop = true;
-                                //         Live.helperInfo.setTreasureStatus('error', '离开太久而暂停了该功能，请手动领取后恢复挂机');
-                                //     }
-                                // },1000);
+                                var timerNum = setInterval(function(){
+                                    ++Live.treasure.timer;
+                                    if(Live.treasure.timer >=3600){
+                                        Live.treasure.stop = true;
+                                        Live.helperInfo.setTreasureStatus('error', '离开太久而暂停了该功能，请手动领取后恢复挂机');
+                                    }
+                                },1000);
                                 
                                 var port = chrome.runtime.connect({ name: chrome.i18n.getMessage("@@extension_id") });
                                 port.onMessage.addListener(function (request) {
@@ -1477,7 +1477,7 @@
                 },
                 liveTitleIcon: {
                     title: '成就头衔',
-                    css: '#chat-msg-list .chat-msg .live-title-icon{display:none;}',
+                    css: '#chat-msg-list .chat-msg .check-my-title{display:none;}',
                     value: 'off'
                 },
                 mediaIcon: {
@@ -1844,280 +1844,280 @@
                 });
             }
         };
-        Live.smallTV = {
-            tvList: {},
-            count: 0,
-            reward: {},
-            rewardList: {
-                "1": { title: "大号小电视" },
-                "2": { title: "蓝白胖次道具" },
-                "3": { title: "B坷垃" },
-                "4": { title: "喵娘" },
-                "5": { title: "便当" },
-                "6": { title: "银瓜子" },
-                "7": { title: "辣条" }
-            },
-            init: function () {
-                Live.smallTV.reward = store.get('bilibili_helper_tvs_reward');
-                Live.smallTV.count = store.get('bilibili_helper_tvs_count');
-            },
-            getTV: function (roomId) {
-                if (Live.smallTV.tvList[roomId]) {
-                    var iter = roomId != undefined ? Live.smallTV.tvList[roomId]['iter'] : undefined;
-                    console.log('获取第' + (iter + 1) + '个小电视数据');
-                    var tv = iter != undefined ? Live.smallTV.tvList[roomId]['tv'][iter] : false;
-                    return tv;
-                }
-            },
-            get: function (roomId) {
-                $.getJSON('/SmallTV/index', { roomid: roomId, _: (new Date()).getTime() }).promise().done(function (result) {
-                    if (result.code == 0) { // 正在抽奖中
-                        if (result.data.unjoin.length || result.data.join.length) {
-                            // sTvVM.isShowPanel = true;
-                        }
-                        // sTv.events.updatePanelsArr();
-                        Live.console.watcher('监测到小电视抽奖活动 直播间【' + roomId + '】');
-                        if (result.data.lastid) { // 抽奖结束
-                            // sTv.events.showSmallTvTips(result.data.lastid);
-                            Live.console.watcher('小电视活动 直播间【' + roomId + '】 抽奖已经结束');
-                        } else {
-                            Live.console.watcher('小电视活动 直播间【' + roomId + '】 成功获取抽奖信息');
-                            var unjoin = result.data.unjoin;
-                            if (Live.smallTV.tvList[roomId] == undefined) Live.smallTV.tvList[roomId] = { "tv": [], "iter": 0 };
-                            for (var i = 0; i < unjoin.length; ++i) {
-                                var tv = unjoin[i];
-                                tv.finished = false;
-                                tv.joined = false;
-                                tv.drawIn = false;
-                                Live.smallTV.tvList[roomId]['tv'].push(tv);
-                                Live.smallTV.join(roomId, tv.id);
-                            }
-                            // var iter = Live.smallTV.tvList[roomId]['iter'];
-                            // var tv = Live.smallTV.tvList[roomId]['tv'][iter];
-                            // if (tv && tv.drawIn == false) 
-                        }
-                    }
-                }).fail(function (result) {
-                    Live.smallTV.get(roomId);
-                });
-            },
-            join: function (roomId, tvId) {
-                $.getJSON('/SmallTV/join', { roomid: roomId, _: (new Date()).getTime(), id: tvId }).promise().then(function (result) {
-                    if (result.code == 0 && result.data.status == 1) { // 参加成功
-                        var iter = Live.smallTV.tvList[roomId]['iter'];
-                        Live.smallTV.tvList[roomId]['tv'][iter] = result.data;
-                        Live.smallTV.tvList[roomId]['tv'][iter]['joined'] = true;
-                        var time = new Date();
-                        Live.smallTV.tvList[roomId]['tv'][iter].timestamp = {
-                            year: time.getFullYear(),
-                            month: time.getMonth(),
-                            day: time.getDate(),
-                            week: time.getDay(),
-                            hour: time.getHours(),
-                            min: time.getMinutes(),
-                            sec: time.getSeconds()
-                        };
-                        Live.smallTV.count += 1;
-                        store.set('bilibili_helper_tvs_count', Live.smallTV.count);
-                        Live.watcher.pushNotification('tv', "已参与小电视抽奖", "直播间【" + roomId + "】", "//static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png")
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 参加抽奖成功');
-                    } else if (result.code == 0 && result.data.status == 2) { // 参加的时候已经过了三百秒，但是还未计算出结果
-                        // sTv.panels.drawingPanel.open();
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
-                    } else {
-                        // sTv.panels.commonPanel("提示", result.msg);
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
-                    }
-                });
-            },
-            getReward: function (tvId, roomId) {
-                $.getJSON('/SmallTV/getReward', { id: tvId }).promise().then(function (result) {
+        // Live.smallTV = {
+        //     tvList: {},
+        //     count: 0,
+        //     reward: {},
+        //     rewardList: {
+        //         "1": { title: "大号小电视" },
+        //         "2": { title: "蓝白胖次道具" },
+        //         "3": { title: "B坷垃" },
+        //         "4": { title: "喵娘" },
+        //         "5": { title: "便当" },
+        //         "6": { title: "银瓜子" },
+        //         "7": { title: "辣条" }
+        //     },
+        //     init: function () {
+        //         Live.smallTV.reward = store.get('bilibili_helper_tvs_reward');
+        //         Live.smallTV.count = store.get('bilibili_helper_tvs_count');
+        //     },
+        //     getTV: function (roomId) {
+        //         if (Live.smallTV.tvList[roomId]) {
+        //             var iter = roomId != undefined ? Live.smallTV.tvList[roomId]['iter'] : undefined;
+        //             console.log('获取第' + (iter + 1) + '个小电视数据');
+        //             var tv = iter != undefined ? Live.smallTV.tvList[roomId]['tv'][iter] : false;
+        //             return tv;
+        //         }
+        //     },
+        //     get: function (roomId) {
+        //         $.getJSON('/SmallTV/index', { roomid: roomId, _: (new Date()).getTime() }).promise().done(function (result) {
+        //             if (result.code == 0) { // 正在抽奖中
+        //                 if (result.data.unjoin.length || result.data.join.length) {
+        //                     // sTvVM.isShowPanel = true;
+        //                 }
+        //                 // sTv.events.updatePanelsArr();
+        //                 Live.console.watcher('监测到小电视抽奖活动 直播间【' + roomId + '】');
+        //                 if (result.data.lastid) { // 抽奖结束
+        //                     // sTv.events.showSmallTvTips(result.data.lastid);
+        //                     Live.console.watcher('小电视活动 直播间【' + roomId + '】 抽奖已经结束');
+        //                 } else {
+        //                     Live.console.watcher('小电视活动 直播间【' + roomId + '】 成功获取抽奖信息');
+        //                     var unjoin = result.data.unjoin;
+        //                     if (Live.smallTV.tvList[roomId] == undefined) Live.smallTV.tvList[roomId] = { "tv": [], "iter": 0 };
+        //                     for (var i = 0; i < unjoin.length; ++i) {
+        //                         var tv = unjoin[i];
+        //                         tv.finished = false;
+        //                         tv.joined = false;
+        //                         tv.drawIn = false;
+        //                         Live.smallTV.tvList[roomId]['tv'].push(tv);
+        //                         Live.smallTV.join(roomId, tv.id);
+        //                     }
+        //                     // var iter = Live.smallTV.tvList[roomId]['iter'];
+        //                     // var tv = Live.smallTV.tvList[roomId]['tv'][iter];
+        //                     // if (tv && tv.drawIn == false) 
+        //                 }
+        //             }
+        //         }).fail(function (result) {
+        //             Live.smallTV.get(roomId);
+        //         });
+        //     },
+        //     join: function (roomId, tvId) {
+        //         $.getJSON('/SmallTV/join', { roomid: roomId, _: (new Date()).getTime(), id: tvId }).promise().then(function (result) {
+        //             if (result.code == 0 && result.data.status == 1) { // 参加成功
+        //                 var iter = Live.smallTV.tvList[roomId]['iter'];
+        //                 Live.smallTV.tvList[roomId]['tv'][iter] = result.data;
+        //                 Live.smallTV.tvList[roomId]['tv'][iter]['joined'] = true;
+        //                 var time = new Date();
+        //                 Live.smallTV.tvList[roomId]['tv'][iter].timestamp = {
+        //                     year: time.getFullYear(),
+        //                     month: time.getMonth(),
+        //                     day: time.getDate(),
+        //                     week: time.getDay(),
+        //                     hour: time.getHours(),
+        //                     min: time.getMinutes(),
+        //                     sec: time.getSeconds()
+        //                 };
+        //                 Live.smallTV.count += 1;
+        //                 store.set('bilibili_helper_tvs_count', Live.smallTV.count);
+        //                 Live.watcher.pushNotification('tv', "已参与小电视抽奖", "直播间【" + roomId + "】", "//static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png")
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 参加抽奖成功');
+        //             } else if (result.code == 0 && result.data.status == 2) { // 参加的时候已经过了三百秒，但是还未计算出结果
+        //                 // sTv.panels.drawingPanel.open();
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
+        //             } else {
+        //                 // sTv.panels.commonPanel("提示", result.msg);
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
+        //             }
+        //         });
+        //     },
+        //     getReward: function (tvId, roomId) {
+        //         $.getJSON('/SmallTV/getReward', { id: tvId }).promise().then(function (result) {
 
-                    if (result.code == 0 && result.data.status == 0) {
-                        var iter = Live.smallTV.tvList[roomId]['iter'];
-                        Live.smallTV.tvList[roomId]['tv'][iter]['reward'] = result.data.reward;
-                        Live.smallTV.tvList[roomId]['tv'][iter]['win'] = result.data.win;
-                        Live.smallTV.tvList[roomId]['tv'][iter]['fisished'] = true;
-                        Live.smallTV.tvList[roomId]['iter'] = ++iter;
-                        var reward_num = Live.smallTV.reward[result.data.reward.id];
-                        if (reward_num == undefined) Live.smallTV.reward[result.data.reward.id] = 0;
+        //             if (result.code == 0 && result.data.status == 0) {
+        //                 var iter = Live.smallTV.tvList[roomId]['iter'];
+        //                 Live.smallTV.tvList[roomId]['tv'][iter]['reward'] = result.data.reward;
+        //                 Live.smallTV.tvList[roomId]['tv'][iter]['win'] = result.data.win;
+        //                 Live.smallTV.tvList[roomId]['tv'][iter]['fisished'] = true;
+        //                 Live.smallTV.tvList[roomId]['iter'] = ++iter;
+        //                 var reward_num = Live.smallTV.reward[result.data.reward.id];
+        //                 if (reward_num == undefined) Live.smallTV.reward[result.data.reward.id] = 0;
 
-                        Live.smallTV.reward[result.data.reward.id] += result.data.reward.num;
-                        store.set('bilibili_helper_tvs_reward', Live.smallTV.reward);
+        //                 Live.smallTV.reward[result.data.reward.id] += result.data.reward.num;
+        //                 store.set('bilibili_helper_tvs_reward', Live.smallTV.reward);
 
-                        var tv = Live.smallTV.tvList[roomId]['tv'][iter];
-                        if (tv && tv.joined == false && tv.finished == false) Live.smallTV.join(roomId, tv.id);
-                        if (result.data.reward.num) {
-                            Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 获得' + Live.smallTV.rewardList[result.data.reward.id].title + "x" + result.data.reward.num);
+        //                 var tv = Live.smallTV.tvList[roomId]['tv'][iter];
+        //                 if (tv && tv.joined == false && tv.finished == false) Live.smallTV.join(roomId, tv.id);
+        //                 if (result.data.reward.num) {
+        //                     Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 获得' + Live.smallTV.rewardList[result.data.reward.id].title + "x" + result.data.reward.num);
 
-                            if (Live.watcher.notifyOptions && Live.watcher.notifyOptions.tv) {
-                                chrome.extension.sendMessage({
-                                    command: "getTVReward",
-                                    data: {
-                                        roomId: roomId,
-                                        rewardId: result.data.reward.id,
-                                        rewardNum: result.data.reward.num,
-                                        isWin: result.data.win
-                                    }
-                                });
-                            }
-                            Live.watcher.updateReward('tv');
-                        } else Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 您未赢得任何奖品');
+        //                     if (Live.watcher.notifyOptions && Live.watcher.notifyOptions.tv) {
+        //                         chrome.extension.sendMessage({
+        //                             command: "getTVReward",
+        //                             data: {
+        //                                 roomId: roomId,
+        //                                 rewardId: result.data.reward.id,
+        //                                 rewardNum: result.data.reward.num,
+        //                                 isWin: result.data.win
+        //                             }
+        //                         });
+        //                     }
+        //                     Live.watcher.updateReward('tv');
+        //                 } else Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 您未赢得任何奖品');
 
-                        // Live.console.info('tv', { msg: '你居然中了小电视' });
-                    } else if (result.code == 0 && result.data.status == 1) {
-                        // sTv.panels.commonPanel("抽奖过期", "非常抱歉，您错过了此次抽奖，下次记得早点来哦 (▔□▔)/");
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
-                    } else if (result.code == 0 && result.data.status == 2) {
-                        // sTv.panels.drawingPanel.open();
-                        // setTimeout(Live.smallTV.getReward(result.data.id, roomId), 1000);
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
-                    } else {
-                        // sTv.panels.commonPanel("提示", result.msg);
-                        Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
-                    }
-                });
-            }
-        };
-        Live.lottery = {
-            lotteryMap: {},
-            lotteries: {},
-            iteratorMap: {},
-            reward: {},
-            rewardList: {},
-            count: 0,
-            init: function () {
-                Live.lottery.count = store.get('bilibili_helper_lottery_count');
-                if (isNaN(Live.lottery.count)) {
-                    Live.lottery.count = 0;
-                    store.set('bilibili_helper_lottery_count', 0);
-                }
-                Live.lottery.reward = store.get('bilibili_helper_lottery_reward');
-                Live.lottery.rewardList = store.get('bilibili_helper_lottery_reward_list');
-                if (typeof Live.lottery.reward != 'object') {
-                    Live.lottery.reward = {};
-                    store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
-                }
-            },
-            get: function (roomId) {
-                // var result = {
-                //     "code": 0,
-                //     "msg": "\u83b7\u53d6\u6210\u529f",
-                //     "data": [{
-                //         "type": "lottery",
-                //         "raffleId": 171,
-                //         "time": 83,
-                //         "status": false 0  没有参加  1  等待抽奖； 2 等待开奖
-                //     }]
-                // };
-                $.getJSON('/eventRoom/check', { roomid: roomId }).promise().then(function (result) {
-                    console.log(result);
-                    if (result.code == -403) Live.console.watcher('抽奖活动 获取抽奖信息失败');
-                    else if (result.code == 0 && result.data.length > 0) {
-                        Live.console.watcher('监测到抽奖抽奖活动 直播间【' + roomId + '】');
-                        if (Live.lottery.lotteryMap[roomId] == undefined) Live.lottery.lotteryMap[roomId] = [];
-                        Live.each(result.data, function (index) {
-                            // console.log(result.data, index)
-                            var lottery = result.data[index];
-                            var raffleId = lottery.raffleId;
-                            if (Live.lottery.lotteries[raffleId] == undefined) { //new
-                                var time = new Date();
-                                lottery.timestamp = {
-                                    year: time.getFullYear(),
-                                    month: time.getMonth(),
-                                    day: time.getDate(),
-                                    week: time.getDay(),
-                                    hour: time.getHours(),
-                                    min: time.getMinutes(),
-                                    sec: time.getSeconds()
-                                };
-                                Live.lottery.lotteries[raffleId] = lottery;
-                                Live.lottery.lotteryMap[roomId].push(raffleId);
-                                Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 已加入监控列表 ');
-                                Live.lottery.join(roomId, raffleId);
-                            }
-                        });
-                    }
-                }, function () {
-                    Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 获取抽奖信息失败');
-                    Live.lottery.check(roomId);
-                });
-            },
-            join: function (roomId, raffleId) {
-                // var result = {
-                //     code: 0,
-                //     msg: "等待开奖",
-                //     data: []
-                // };
-                $.getJSON('/eventRoom/join', { roomid: roomId, raffleId: raffleId }).promise().then(function (result) {
-                    Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 参加成功');
-                    Live.lottery.count += 1;
-                    if (isNaN(Live.lottery.count)) Live.lottery.count = 1;
-                    store.set('bilibili_helper_lottery_count', Live.lottery.count);
-                    Live.watcher.pushNotification('lottery', "已参与抽奖抽奖", "直播间:" + roomId + " 编号:" + raffleId, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
-                    Live.lottery.lotteries[raffleId].setTimeoutNum = setTimeout(function () {
-                        Live.lottery.getReward(roomId, raffleId, function (result, roomId, raffleId) {
-                            var msg;
-                            if (result.data.giftName != "") {
-                                console.log(result.data);
+        //                 // Live.console.info('tv', { msg: '你居然中了小电视' });
+        //             } else if (result.code == 0 && result.data.status == 1) {
+        //                 // sTv.panels.commonPanel("抽奖过期", "非常抱歉，您错过了此次抽奖，下次记得早点来哦 (▔□▔)/");
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
+        //             } else if (result.code == 0 && result.data.status == 2) {
+        //                 // sTv.panels.drawingPanel.open();
+        //                 // setTimeout(Live.smallTV.getReward(result.data.id, roomId), 1000);
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
+        //             } else {
+        //                 // sTv.panels.commonPanel("提示", result.msg);
+        //                 Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' ' + result.msg);
+        //             }
+        //         });
+        //     }
+        // };
+        // Live.lottery = {
+        //     lotteryMap: {},
+        //     lotteries: {},
+        //     iteratorMap: {},
+        //     reward: {},
+        //     rewardList: {},
+        //     count: 0,
+        //     init: function () {
+        //         Live.lottery.count = store.get('bilibili_helper_lottery_count');
+        //         if (isNaN(Live.lottery.count)) {
+        //             Live.lottery.count = 0;
+        //             store.set('bilibili_helper_lottery_count', 0);
+        //         }
+        //         Live.lottery.reward = store.get('bilibili_helper_lottery_reward');
+        //         Live.lottery.rewardList = store.get('bilibili_helper_lottery_reward_list');
+        //         if (typeof Live.lottery.reward != 'object') {
+        //             Live.lottery.reward = {};
+        //             store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
+        //         }
+        //     },
+        //     get: function (roomId) {
+        //         // var result = {
+        //         //     "code": 0,
+        //         //     "msg": "\u83b7\u53d6\u6210\u529f",
+        //         //     "data": [{
+        //         //         "type": "lottery",
+        //         //         "raffleId": 171,
+        //         //         "time": 83,
+        //         //         "status": false 0  没有参加  1  等待抽奖； 2 等待开奖
+        //         //     }]
+        //         // };
+        //         $.getJSON('/eventRoom/check', { roomid: roomId }).promise().then(function (result) {
+        //             console.log(result);
+        //             if (result.code == -403) Live.console.watcher('抽奖活动 获取抽奖信息失败');
+        //             else if (result.code == 0 && result.data.length > 0) {
+        //                 Live.console.watcher('监测到抽奖抽奖活动 直播间【' + roomId + '】');
+        //                 if (Live.lottery.lotteryMap[roomId] == undefined) Live.lottery.lotteryMap[roomId] = [];
+        //                 Live.each(result.data, function (index) {
+        //                     // console.log(result.data, index)
+        //                     var lottery = result.data[index];
+        //                     var raffleId = lottery.raffleId;
+        //                     if (Live.lottery.lotteries[raffleId] == undefined) { //new
+        //                         var time = new Date();
+        //                         lottery.timestamp = {
+        //                             year: time.getFullYear(),
+        //                             month: time.getMonth(),
+        //                             day: time.getDate(),
+        //                             week: time.getDay(),
+        //                             hour: time.getHours(),
+        //                             min: time.getMinutes(),
+        //                             sec: time.getSeconds()
+        //                         };
+        //                         Live.lottery.lotteries[raffleId] = lottery;
+        //                         Live.lottery.lotteryMap[roomId].push(raffleId);
+        //                         Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 已加入监控列表 ');
+        //                         Live.lottery.join(roomId, raffleId);
+        //                     }
+        //                 });
+        //             }
+        //         }, function () {
+        //             Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 获取抽奖信息失败');
+        //             Live.lottery.check(roomId);
+        //         });
+        //     },
+        //     join: function (roomId, raffleId) {
+        //         // var result = {
+        //         //     code: 0,
+        //         //     msg: "等待开奖",
+        //         //     data: []
+        //         // };
+        //         $.getJSON('/eventRoom/join', { roomid: roomId, raffleId: raffleId }).promise().then(function (result) {
+        //             Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 参加成功');
+        //             Live.lottery.count += 1;
+        //             if (isNaN(Live.lottery.count)) Live.lottery.count = 1;
+        //             store.set('bilibili_helper_lottery_count', Live.lottery.count);
+        //             Live.watcher.pushNotification('lottery', "已参与抽奖抽奖", "直播间:" + roomId + " 编号:" + raffleId, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
+        //             Live.lottery.lotteries[raffleId].setTimeoutNum = setTimeout(function () {
+        //                 Live.lottery.getReward(roomId, raffleId, function (result, roomId, raffleId) {
+        //                     var msg;
+        //                     if (result.data.giftName != "") {
+        //                         console.log(result.data);
 
-                                //update gift id list
-                                Live.lottery.rewardList[result.data.giftId] = { title: result.data.giftName };
-                                store.set('bilibili_helper_lottery_reward_list', Live.lottery.rewardList);
+        //                         //update gift id list
+        //                         Live.lottery.rewardList[result.data.giftId] = { title: result.data.giftName };
+        //                         store.set('bilibili_helper_lottery_reward_list', Live.lottery.rewardList);
 
-                                Live.console.watcher("抽奖活动 直播间【" + roomId + "】 编号:" + raffleId + " 抽中" + result.data.giftName + "x" + result.data.giftNum);
-                                Live.watcher.pushNotification('lottery', "直播间【" + roomId + "】抽奖抽奖结果", "编号:" + raffleId + " 抽中" + result.data.giftName + "x" + result.data.giftNum, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
+        //                         Live.console.watcher("抽奖活动 直播间【" + roomId + "】 编号:" + raffleId + " 抽中" + result.data.giftName + "x" + result.data.giftNum);
+        //                         Live.watcher.pushNotification('lottery', "直播间【" + roomId + "】抽奖抽奖结果", "编号:" + raffleId + " 抽中" + result.data.giftName + "x" + result.data.giftNum, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
 
-                                //update reward list
-                                var rewardCount = Live.lottery.reward[result.data.giftId];
-                                if (rewardCount == undefined) rewardCount = 0;
-                                Live.lottery.reward[result.data.giftId] = rewardCount + result.data.giftNum;
-                                store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
-                                // Live.lottery.lotteries[raffleId].reward = result.data;
-                                Live.watcher.updateReward('lottery');
-                            } else {
-                                Live.console.watcher("抽奖活动 直播间【" + roomId + "】 编号:" + raffleId + " " + result.msg);
-                                Live.watcher.pushNotification('lottery', "直播间【" + roomId + "】抽奖抽奖结果", "编号:" + raffleId + " " + result.msg, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
-                            }
+        //                         //update reward list
+        //                         var rewardCount = Live.lottery.reward[result.data.giftId];
+        //                         if (rewardCount == undefined) rewardCount = 0;
+        //                         Live.lottery.reward[result.data.giftId] = rewardCount + result.data.giftNum;
+        //                         store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
+        //                         // Live.lottery.lotteries[raffleId].reward = result.data;
+        //                         Live.watcher.updateReward('lottery');
+        //                     } else {
+        //                         Live.console.watcher("抽奖活动 直播间【" + roomId + "】 编号:" + raffleId + " " + result.msg);
+        //                         Live.watcher.pushNotification('lottery', "直播间【" + roomId + "】抽奖抽奖结果", "编号:" + raffleId + " " + result.msg, "//static.hdslb.com/live-static/live-room/images/gift-section/gift-36.png");
+        //                     }
 
-                            // if ((Live.lottery.lotteryMap[roomId].length - 1) > Live.lottery.iteratorMap[roomId]) {
-                            //     var iter = ++Live.lottery.iteratorMap[roomId];
-                            //     var raffleId = Live.lottery.lotteryMap[roomId][iter];
-                            //     Live.lottery.join(roomId, raffleId);
-                            // }
-                        });
-                    }, (Live.lottery.lotteries[raffleId].time + 20) * 1000);
-                }, function () {
-                    Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 参加抽奖信息失败');
-                    Live.lottery.join(roomId, raffleId);
-                });
-            },
-            getReward: function (roomId, raffleId, callback) {
-                // var result = {
-                //     code: 0,
-                //     msg: "你一无所获，酋长喊你回部落吃饭。",
-                //     data: {
-                //         giftName: ""
-                //     }
-                // };
-                // var result = {
-                //     code: 0,
-                //     msg: "获取成功",
-                //     data: {
-                //         giftName: "辣条",
-                //         giftNum: 5,
-                //         giftId: "1",
-                //         raffleId: 964
-                //     }
-                // };
-                $.getJSON('/eventRoom/notice', { roomid: roomId, raffleId: raffleId }).promise().then(function (result) {
-                    if (typeof callback == 'function') callback(result, roomId, raffleId);
-                }, function () {
-                    Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 获取领奖信息失败');
-                    Live.lottery.getReward(roomId, raffleId);
-                });
-            }
-        };
+        //                     // if ((Live.lottery.lotteryMap[roomId].length - 1) > Live.lottery.iteratorMap[roomId]) {
+        //                     //     var iter = ++Live.lottery.iteratorMap[roomId];
+        //                     //     var raffleId = Live.lottery.lotteryMap[roomId][iter];
+        //                     //     Live.lottery.join(roomId, raffleId);
+        //                     // }
+        //                 });
+        //             }, (Live.lottery.lotteries[raffleId].time + 20) * 1000);
+        //         }, function () {
+        //             Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 参加抽奖信息失败');
+        //             Live.lottery.join(roomId, raffleId);
+        //         });
+        //     },
+        //     getReward: function (roomId, raffleId, callback) {
+        //         // var result = {
+        //         //     code: 0,
+        //         //     msg: "你一无所获，酋长喊你回部落吃饭。",
+        //         //     data: {
+        //         //         giftName: ""
+        //         //     }
+        //         // };
+        //         // var result = {
+        //         //     code: 0,
+        //         //     msg: "获取成功",
+        //         //     data: {
+        //         //         giftName: "辣条",
+        //         //         giftNum: 5,
+        //         //         giftId: "1",
+        //         //         raffleId: 964
+        //         //     }
+        //         // };
+        //         $.getJSON('/eventRoom/notice', { roomid: roomId, raffleId: raffleId }).promise().then(function (result) {
+        //             if (typeof callback == 'function') callback(result, roomId, raffleId);
+        //         }, function () {
+        //             Live.console.watcher('抽奖活动 直播间【' + roomId + '】 编号:' + raffleId + ' 获取领奖信息失败');
+        //             Live.lottery.getReward(roomId, raffleId);
+        //         });
+        //     }
+        // };
         Live.watcher = {
             able: false,
             options: {
@@ -3107,19 +3107,19 @@
                 /*helper info panel*/
                 Live.helperInfoRow = $('<div />').addClass('helper-info-panel').attr('id', 'helperInfoPanel');
                 infoPanel.find('.room-info.float-left').append(Live.helperInfoRow);
-                chrome.extension.sendMessage({
-                    command: "getOption",
-                    key: 'watcher'
-                }, function (res) {
-                    if (res['value'] == 'on') {
-                        Live.watcherBtn = $('<div />').addClass('watcher-info').html('<i class="watcher-info-icon" style="background-image:url(' + chrome.extension.getURL('imgs/icon.png') + ')"></i><span class="watcher-info-text">抽奖监控</span>');
-                        Live.helperInfoRow.append(Live.watcherBtn);
-                        Live.watcherPanel = Live.createPanel(Live.helperInfoRow, Live.watcherBtn, 'click', 'watcher-info-panel', 'watcherInfoPanel', function () {
-                            Live.watcher.updateReward('tv');
-                            Live.watcher.updateReward('lottery');
-                        });
-                    }
-                });
+                // chrome.extension.sendMessage({
+                //     command: "getOption",
+                //     key: 'watcher'
+                // }, function (res) {
+                //     if (res['value'] == 'on') {
+                //         Live.watcherBtn = $('<div />').addClass('watcher-info').html('<i class="watcher-info-icon" style="background-image:url(' + chrome.extension.getURL('imgs/icon.png') + ')"></i><span class="watcher-info-text">抽奖监控</span>');
+                //         Live.helperInfoRow.append(Live.watcherBtn);
+                //         Live.watcherPanel = Live.createPanel(Live.helperInfoRow, Live.watcherBtn, 'click', 'watcher-info-panel', 'watcherInfoPanel', function () {
+                //             Live.watcher.updateReward('tv');
+                //             Live.watcher.updateReward('lottery');
+                //         });
+                //     }
+                // });
                 chrome.extension.sendMessage({
                     command: "getOption",
                     key: 'autoTreasure'
@@ -3169,13 +3169,13 @@
                                             Live.chat.init();
                                             Live.notise.init();
                                             Live.giftpackage.init();
-                                            Live.bet.init();
+                                            //Live.bet.init();
                                             // Live.beat.init();
                                         }
                                         Live.treasure.init();
-                                        Live.watcher.init(function () {
-                                            Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
-                                        });
+                                        // Live.watcher.init(function () {
+                                        //     Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
+                                        // });
                                         Live.helperInfoRow.css('opacity', 1);
                                     }, 2500);
                                     Notification.requestPermission();

@@ -58,6 +58,7 @@ var fillStr = function (str) {
 // 将颜色的数值化为十六进制字符串表示
 var RRGGBB = function (color) {
   var t = Number(color).toString(16).toUpperCase();
+  if(t.length>6) t = t.substr(1);
   return Array(7 - t.length).join('0') + t;
 };
 
