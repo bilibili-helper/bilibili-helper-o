@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>哔哩哔哩助手 - Bilibili Helper - 咕咕好受</title>
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">
+    <meta name="description" content="哔哩哔哩弹幕网辅助扩展，可以替换 HTML5 播放器、绕过区域限制、推送通知并进行一些快捷操作">
+    <meta name="keywords" content="chrome,extension,bilibili,helper,bilibili helper,哔哩哔哩,助手,黑科技,扩展,浏览器,插件,替换,播放器">
+    <link rel="stylesheet" href="css/material.min.css">
+    <link rel="stylesheet" href="css/sweetalert.css">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body class="mdl-base">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll">
+        <div class="inner">
+          <div class="mdl-cell--hide-tablet mdl-cell--hide-phone mdl-layout__header-row">
+          </div>
+          <div class="mdl-layout__header-row">
+            <h3><img class="top-logo-ico" src="images/b_white.svg"><img class="top-logo-ico" src="images/b_white.svg"> <span class="top-logo-text">助手</span></h3>
+          </div>
+          <div class="mdl-cell--hide-tablet mdl-cell--hide-phone mdl-layout__header-row bh-desc">
+            <p>哔哩哔哩弹幕网辅助扩展，可以替换 HTML5 播放器、绕过区域限制、推送通知并进行一些快捷操作</p>
+          </div>
+          <div class="mdl-cell--hide-tablet mdl-cell--hide-phone download-button">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-shadow--4dp" id="download">
+              <i class="material-icons dl-icon" role="presentation">file_download</i>
+              <span class="visuallyhidden">Download</span>
+            </button>
+            <div id="download_tooltip" class="mdl-tooltip mdl-tooltip--large" for="download">立即安装</div>
+          </div>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="inner mdl-cell--hide-tablet mdl-cell--hide-phone">
+        <div class="mdl-layout__tab-panel is-active" id="main-content">
+          <section class="section--footer mdl-color--white mdl-grid">
+            <div id="main-left" class="section__text mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                  <div id="slider">
+                      <img src="images/slides/1.png" alt="哔哩哔哩助手">
+                      <img data-src="images/slides/2.png" src="" alt="扩展选项菜单">
+                      <img data-src="images/slides/3.png" src="" alt="HTML5 播放器">
+                  </div>
+            </div>
+            <div id="main-right" class="section__text mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+              <div id="version-info" class="mdl-color-text--grey-700">
+                <h5>版本信息</h5>
+                <p><i class="material-icons" role="presentation">history</i> 最新版本：<span id="latest">读取中</span></p>
+                <p><i class="material-icons" role="presentation">event</i> 发布日期：<span id="pubDate">读取中</span></p>
+                <p><i class="material-icons" role="presentation">assignment</i> 更新内容：<span id="updateContent">读取中</span></p>
+                <br>
+                <p id="webstore-install">正在检测网络环境</p>
+              </div>
+              <div id="install-guide" style="display:none;">
+                <h5>安装方法</h5>
+                <p id="fail-reason-china">您当前的网络环境可能无法正常连接到 Chrome 应用商店, 请点击右上角下载按钮下载扩展, 并参照下面的教程手动安装扩展.</p>
+                <p id="fail-reason-error">尝试从 Chrome 商店安装时返回了错误, 请参照下面的教程手动安装扩展</p>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" onclick="window.open('http://www.3haow.com/drag-and-drop-the-crx-file-to-install-chrome-plugin/','_blank')">
+                  <i class="material-icons" role="presentation">open_in_new</i> 查看教程
+                </button>
+              </div>
+            </div>
+          </section>
+          <section id="github-grid" class="mdl-grid">
+            <h5 class="mdl-cell mdl-cell--12-col">问题反馈</h5>
+            <div id="feedback" class="mdl-cell mdl-cell--12-col">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue-grey-800" onclick="window.open('https://github.com/zacyu/bilibili-helper/issues','_blank')">
+                <i class="material-icons" role="presentation">open_in_new</i> 在 GitHub 上提交 issue (推荐)
+              </button>
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--pink-400" onclick="window.open('http://message.bilibili.com/#whisper/mid277119','_blank')">
+                <i class="material-icons" role="presentation">open_in_new</i> 在「哔哩哔哩」上私信作者
+              </button>
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--orange-800" onclick="window.open('http://weibo.com/guguke','_blank')">
+                <i class="material-icons" role="presentation">open_in_new</i> 在「微博」上私信作者
+              </button>
+            </div>
+          </section>
+          <section id="disqus-grid" class="mdl-grid">
+            <h5 class="mdl-cell mdl-cell--12-col">用户讨论</h5>
+            <p class="mdl-cell mdl-cell--12-col mdl-color-text--grey-600">对于扩展功能上的问题, 建议使用「问题反馈」在 GitHub 上查阅相关 issue 或创建新 issue.</p>
+            <div class="mdl-cell mdl-cell--12-col" id="disqus_thread"></div>
+            <script>
+            var disqus_config = function () {
+              this.page.url = 'https://bilihelper.guguke.net/';
+              this.page.identifier = 'index';
+            };
+            (function() {
+              var d = document, s = d.createElement('script');
+              s.src = '//bilihelper.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+            </script>
+          </section>
+        </div>
+        </div>
+        <div class="inner mdl-cell--hide-desktop">
+          <section class="mdl-cell mdl-cell--12-col">
+            <h3>请使用 Chrome 桌面浏览器访问本网站安装扩展.</h3>
+            <h4><i class="material-icons" role="presentation">link</i> https://bilihelper.guguke.net/</h4>
+          </section>
+        </div>
+      </main>
+      <footer class="mdl-mini-footer">
+        <div class="inner">
+        <div class="left">
+          <div class="mdl-logo"><a href="http://www.miitbeian.gov.cn/" rel="external nofollow" target="_blank">京ICP备14001438号-1</a></div>
+        </div>
+        <div class="right">
+          <div class="mdl-logo">哔哩哔哩, Bilibili, 及其徽标为上海幻电信息科技有限公司在中国和其他国家的商标或注册商标.</div>
+        </div>
+        </div>
+      </footer>
+    </div>
+    <script src="js/min/material-min.js"></script>
+    <script src="js/min/sweetalert-min.js"></script>
+    <script src="js/min/slider-min.js"></script>
+    <script src="js/min/main-min.js"></script>
+  </body>
+</html>
