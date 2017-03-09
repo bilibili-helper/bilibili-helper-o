@@ -230,23 +230,23 @@
 				}
 				//biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="http://bilibili.audio/' + biliHelper.avid + '/' + biliHelper.page + '"></a>').text('抽出并下载音频'));
 			}
-			if (biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1) {
-				biliHelper.mainBlock.switcherSection.find('a[type="html5"]').removeClass('hidden');
-			}
-			$('#loading-notice').fadeOut(300);
-			if (biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') != 'force' && biliHelper.cid && biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1 && biliHelper.playbackUrls[0].url.indexOf('m3u8') < 0) {
-				$('#loading-notice').fadeOut(300, function() {
-					biliHelper.switcher.html5();
-				});
-			} else if (biliHelper.replacePlayer) {
-				$('#loading-notice').fadeOut(300, function() {
-					biliHelper.switcher.swf();
-				});
-			} else {
-				$('#loading-notice').fadeOut(300, function() {
-					biliHelper.switcher.original();
-				});
-			}
+			// if (biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1) {
+			// 	biliHelper.mainBlock.switcherSection.find('a[type="html5"]').removeClass('hidden');
+			// }
+			// $('#loading-notice').fadeOut(300);
+			// if (biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') != 'force' && biliHelper.cid && biliHelper.playbackUrls && biliHelper.playbackUrls.length == 1 && biliHelper.playbackUrls[0].url.indexOf('m3u8') < 0) {
+			// 	$('#loading-notice').fadeOut(300, function() {
+			// 		biliHelper.switcher.html5();
+			// 	});
+			// } else if (biliHelper.replacePlayer) {
+			// 	$('#loading-notice').fadeOut(300, function() {
+			// 		biliHelper.switcher.swf();
+			// 	});
+			// } else {
+			// 	$('#loading-notice').fadeOut(300, function() {
+			// 		biliHelper.switcher.original();
+			// 	});
+			// }
 		});
 	}
 
@@ -309,8 +309,8 @@
 			biliHelper.switcher = {
 				current: "original",
 				set: function(newMode) {
-					biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + this.current + '"]').addClass('w');
-					biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + newMode + '"]').removeClass('w');
+					// biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + this.current + '"]').addClass('w');
+					// biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + newMode + '"]').removeClass('w');
 					this.current = newMode;
 				},
 				original: function() {
@@ -420,22 +420,22 @@
 			biliHelper.mainBlock.dblclick(function(e) {
 				if (e.shiftKey) biliHelper.mainBlock.infoSection.toggleClass('hidden');
 			});
-			if (biliHelper.redirectUrl && biliHelper.redirectUrl != "undefined") {
-				biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
-				biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);
-			}
-			biliHelper.mainBlock.switcherSection = $('<div class="section switcher"><h3>播放器切换</h3><p></p></div>');
-			biliHelper.mainBlock.switcherSection.find('p').append($('<a class="b-btn w" type="original">原始播放器</a><a class="b-btn w hidden" type="bilimac">Mac 客户端</a><a class="b-btn w hidden" type="swf">SWF 播放器</a><a class="b-btn w hidden" type="iframe">Iframe 播放器</a><a class="b-btn w hidden" type="html5">HTML5 播放器</a>').click(function() {
-				biliHelper.switcher[$(this).attr('type')]();
-			}));
-			if (biliHelper.redirectUrl) {
-				biliHelper.mainBlock.switcherSection.find('a[type="original"]').addClass('hidden');
-				biliHelper.mainBlock.switcherSection.find('a[type="swf"],a[type="iframe"]').removeClass('hidden');
-			}
-			if (localStorage.getItem('bilimac_player_type')) {
-				biliHelper.mainBlock.switcherSection.find('a[type="bilimac"]').removeClass('hidden');
-			}
-			biliHelper.mainBlock.append(biliHelper.mainBlock.switcherSection);
+			// if (biliHelper.redirectUrl && biliHelper.redirectUrl != "undefined") {
+			// 	biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
+			// 	biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);
+			// }
+			// biliHelper.mainBlock.switcherSection = $('<div class="section switcher"><h3>播放器切换</h3><p></p></div>');
+			// biliHelper.mainBlock.switcherSection.find('p').append($('<a class="b-btn w" type="original">原始播放器</a><a class="b-btn w hidden" type="bilimac">Mac 客户端</a><a class="b-btn w hidden" type="swf">SWF 播放器</a><a class="b-btn w hidden" type="iframe">Iframe 播放器</a><a class="b-btn w hidden" type="html5">HTML5 播放器</a>').click(function() {
+			// 	biliHelper.switcher[$(this).attr('type')]();
+			// }));
+			// if (biliHelper.redirectUrl) {
+			// 	biliHelper.mainBlock.switcherSection.find('a[type="original"]').addClass('hidden');
+			// 	biliHelper.mainBlock.switcherSection.find('a[type="swf"],a[type="iframe"]').removeClass('hidden');
+			// }
+			// if (localStorage.getItem('bilimac_player_type')) {
+			// 	biliHelper.mainBlock.switcherSection.find('a[type="bilimac"]').removeClass('hidden');
+			// }
+			// biliHelper.mainBlock.append(biliHelper.mainBlock.switcherSection);
 			biliHelper.mainBlock.downloaderSection = $('<div class="section downloder"><h3>视频下载</h3><p><span></span>视频地址获取中，请稍等…</p></div>');
 			biliHelper.mainBlock.append(biliHelper.mainBlock.downloaderSection);
 			biliHelper.mainBlock.querySection = $('<div class="section query"><h3>弹幕发送者查询</h3><p><span></span>正在加载全部弹幕, 请稍等…</p></div>');
@@ -459,39 +459,39 @@
 		if (localStorage.getItem('bilimac_player_type') == 'force') {
 			biliHelper.switcher.set('bilimac');
 		}
-		if (!biliHelper.genPage && biliHelper.replaceEnabled && localStorage.getItem('bilimac_player_type') != 'force' &&
-			(($('#bofqi object').length > 0 && $('#bofqi object').attr('data') != 'http://static.hdslb.com/play.swf' && $('#bofqi object').attr('data') != 'https://static-s.bilibili.com/play.swf' && $('#bofqi object').attr('data') != 'http://static.hdslb.com/letv.swf' && $('#bofqi object').attr('data') != 'http://static.hdslb.com/play_old.swf')&& $('#bofqi object').attr('data') != 'http://static.hdslb.com/play196.swf' ||
-				($('#bofqi embed').length > 0 && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/play.swf' && $('#bofqi embed').attr('src') != 'https://static-s.bilibili.com/play.swf' && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/letv.swf' && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/play_old.swf') && $('#bofqi embed').attr('data') != 'http://static.hdslb.com/play196.swf' ||
-				($('#bofqi iframe').length > 0 && ($('#bofqi iframe').attr('src').indexOf('bilibili.com') < 0 || $('#bofqi iframe').attr('src').indexOf('iqiyi') > 0)) || ($('#bofqi object').length + $('#bofqi embed').length + $('#bofqi iframe').length == 0))) {
-			biliHelper.replacePlayer = true;
-			biliHelper.mainBlock.switcherSection.find('a[type="iframe"],a[type="swf"]').removeClass('hidden');
-		} else {
-			biliHelper.replacePlayer = false;
-		}
-		if (!biliHelper.genPage && biliHelper.favorHTML5) {
-			$('#bofqi').html('<div id="player_placeholder" class="player"></div>');
-			$('#bofqi').find('#player_placeholder').css({
-				background: 'url(' + biliHelper.videoPic + ') 50% 50% / cover no-repeat',
-				'-webkit-filter': 'blur(20px)',
-				overflow: 'hidden',
-				visibility: 'visible'
-			});
-		}
-		if (biliHelper.replacePlayer || biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') != 'force' && !biliHelper.genPage) {
-			var replaceNotice = $('<div id="loading-notice">正在尝试替换播放器…<span id="cancel-replacing">取消</span></div>');
-			replaceNotice.find('#cancel-replacing').click(function() {
-				$('#loading-notice').fadeOut(300);
-				if (biliHelper.favorHTML5) {
-					if (biliHelper.replacePlayer && !biliHelper.redirectUrl && !biliHelper.genPage) {
-						biliHelper.switcher.swf();
-					} else {
-						biliHelper.switcher.original();
-					}
-					biliHelper.favorHTML5 = false;
-				}
-			});
-			$('#bofqi').append(replaceNotice);
-		}
+		// if (!biliHelper.genPage && biliHelper.replaceEnabled && localStorage.getItem('bilimac_player_type') != 'force' &&
+		// 	(($('#bofqi object').length > 0 && $('#bofqi object').attr('data') != 'http://static.hdslb.com/play.swf' && $('#bofqi object').attr('data') != 'https://static-s.bilibili.com/play.swf' && $('#bofqi object').attr('data') != 'http://static.hdslb.com/letv.swf' && $('#bofqi object').attr('data') != 'http://static.hdslb.com/play_old.swf')&& $('#bofqi object').attr('data') != 'http://static.hdslb.com/play196.swf' ||
+		// 		($('#bofqi embed').length > 0 && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/play.swf' && $('#bofqi embed').attr('src') != 'https://static-s.bilibili.com/play.swf' && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/letv.swf' && $('#bofqi embed').attr('src') != 'http://static.hdslb.com/play_old.swf') && $('#bofqi embed').attr('data') != 'http://static.hdslb.com/play196.swf' ||
+		// 		($('#bofqi iframe').length > 0 && ($('#bofqi iframe').attr('src').indexOf('bilibili.com') < 0 || $('#bofqi iframe').attr('src').indexOf('iqiyi') > 0)) || ($('#bofqi object').length + $('#bofqi embed').length + $('#bofqi iframe').length == 0))) {
+		// 	biliHelper.replacePlayer = true;
+		// 	biliHelper.mainBlock.switcherSection.find('a[type="iframe"],a[type="swf"]').removeClass('hidden');
+		// } else {
+		biliHelper.replacePlayer = false;
+		// }
+		// if (!biliHelper.genPage && biliHelper.favorHTML5) {
+		// 	$('#bofqi').html('<div id="player_placeholder" class="player"></div>');
+		// 	$('#bofqi').find('#player_placeholder').css({
+		// 		background: 'url(' + biliHelper.videoPic + ') 50% 50% / cover no-repeat',
+		// 		'-webkit-filter': 'blur(20px)',
+		// 		overflow: 'hidden',
+		// 		visibility: 'visible'
+		// 	});
+		// }
+		// if (biliHelper.replacePlayer || biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') != 'force' && !biliHelper.genPage) {
+		// 	var replaceNotice = $('<div id="loading-notice">正在尝试替换播放器…<span id="cancel-replacing">取消</span></div>');
+		// 	replaceNotice.find('#cancel-replacing').click(function() {
+		// 		$('#loading-notice').fadeOut(300);
+		// 		if (biliHelper.favorHTML5) {
+		// 			if (biliHelper.replacePlayer && !biliHelper.redirectUrl && !biliHelper.genPage) {
+		// 				biliHelper.switcher.swf();
+		// 			} else {
+		// 				biliHelper.switcher.original();
+		// 			}
+		// 			biliHelper.favorHTML5 = false;
+		// 		}
+		// 	});
+		// 	$('#bofqi').append(replaceNotice);
+		// }
 
 		biliHelper.work = function() {
 			chrome.extension.sendMessage({

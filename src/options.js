@@ -60,8 +60,8 @@ $(document).ready(function () {
     $("#menu_title").text(chrome.i18n.getMessage('extShortName'));
     $("#version").html(bkg_page.version);
     $("#ad_opacity_opt").hide();
-    $("div[option=\"" + bkg_page.getOption("replace") + "\"].replace").addClass("on");
-    $("div[option=\"" + bkg_page.getOption("html5") + "\"].html5").addClass("on");
+    // $("div[option=\"" + bkg_page.getOption("replace") + "\"].replace").addClass("on");
+    // $("div[option=\"" + bkg_page.getOption("html5") + "\"].html5").addClass("on");
     $("div[option=\"" + bkg_page.getOption("contextmenu") + "\"].contextmenu").addClass("on");
     $("div[option=\"" + bkg_page.getOption("dynamic") + "\"].dynamic").addClass("on");
     $("div[option=\"" + bkg_page.getOption("giftpackage") + "\"].giftpackage").addClass("on");
@@ -132,18 +132,18 @@ $(document).ready(function () {
         $(this).addClass('on');
         bkg_page.setOption("dynamic", $(this).attr("option"));
     });
-    $('.replace').click(function () {
-        if ($(this).hasClass('on')) return false;
-        $('.replace').removeClass('on');
-        $(this).addClass('on');
-        bkg_page.setOption("replace", $(this).attr("option"));
-    });
-    $('.html5').click(function () {
-        if ($(this).hasClass('on')) return false;
-        $('.html5').removeClass('on');
-        $(this).addClass('on');
-        bkg_page.setOption("html5", $(this).attr("option"));
-    });
+    // $('.replace').click(function () {
+    //     if ($(this).hasClass('on')) return false;
+    //     $('.replace').removeClass('on');
+    //     $(this).addClass('on');
+    //     bkg_page.setOption("replace", $(this).attr("option"));
+    // });
+    // $('.html5').click(function () {
+    //     if ($(this).hasClass('on')) return false;
+    //     $('.html5').removeClass('on');
+    //     $(this).addClass('on');
+    //     bkg_page.setOption("html5", $(this).attr("option"));
+    // });
     $('.contextmenu').click(function () {
         if ($(this).hasClass('on')) return false;
         $('.contextmenu').removeClass('on');
