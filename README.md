@@ -9,6 +9,8 @@ An auxiliary extension for Bilibili (bilibili.com) which allows users to bypass 
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
 
+[Download in Github ](https://github.com/zacyu/bilibili-helper/releases)
+
 ## License (许可)
 [MIT](LICENSE)
 
