@@ -623,15 +623,16 @@
 												displayUserInfo(uid, JSON.parse(data));
 												return false;
 											}
-											$.getJSON('http://api.bilibili.cn/userinfo?mid=' + uid + '&type=json', function(data) {
+											$.getJSON('https://api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
 												if (data.code == 0) {
+													var cardData = data.data.card;
 													sessionStorage.setItem('user/' + uid, JSON.stringify({
-														name: data.name,
+														name: cardData.name,
 														level_info: {
-															current_level: data.level_info.current_level
+															current_level: cardData.level_info.current_level
 														}
 													}));
-													displayUserInfo(uid, data);
+													displayUserInfo(uid, cardData);
 												}
 											});
 										}
