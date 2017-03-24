@@ -298,7 +298,7 @@ function getVideoInfo(avid, page, callback) {
         avInfo = JSON.parse(avInfo);
         if (typeof avInfo.code != "undefined" && avInfo.code == -503) {
             setTimeout(function () {
-                getVideoInfo(avid, page, isbangumi, callback);
+                getVideoInfo(avid, page, callback);
             }, 1000);
         } else {
             if (typeof avInfo.list == "object") {
