@@ -250,27 +250,7 @@
 		});
 	}
 
-	var prob = document.createElement("script");
-	prob.id = "page-prob";
-	prob.innerHTML = "$('.player-wrapper .v-plist').attr('length', window.VideoPart.nodedata.length);$('#page-prob').remove();";
-	document.body.appendChild(prob);
-	intilize_style();
-	$("html").addClass("bilibili-helper");
-	var bili_reg,urlResult,hashPage;
-	if(biliHelper.site == 0){
-		bili_reg = /\/video\/av([0-9]+)\/(?:index_([0-9]+)\.html)?.*?$/,
-		urlResult = bili_reg.exec(document.location.pathname),
-		hashPage = (/page=([0-9]+)/).exec(document.location.hash);
-		if (hashPage && typeof hashPage == "object" && !isNaN(hashPage[1])) hashPage = parseInt(hashPage[1]);
-	}else if(biliHelper.site == 1){
-		bili_reg = /\/anime\/v\/([0-9]+)$/,
-		urlResult = bili_reg.exec(document.location.pathname);
-	}
-
-	if (urlResult) {
-		biliHelper.avid = urlResult[1];
-		biliHelper.bangumiid = urlResult[1];
-		biliHelper.page = hashPage || urlResult[2];
+	var initHelper = function() {
 		biliHelper.cidHack = 0;
 		biliHelper.genPage = false;
 		biliHelper.videoPic = $('img.cover_image').attr('src');
@@ -402,14 +382,14 @@
 					});
 				}
 			};
-			if(biliHelper.site == 0) {
+			if (biliHelper.site == 0) {
 				biliHelper.helperBlock = $("<div class=\"block helper\" id=\"bilibili_helper\"><span class=\"t\"><div class=\"icon\"></div><div class=\"t-right\"><span class=\"t-right-top middle\">助手</span><span class=\"t-right-bottom\">扩展菜单</span></div></span><div class=\"info\"><div class=\"main\"></div><div class=\"version\">哔哩哔哩助手 " + biliHelper.version + " by <a href=\"http://weibo.com/guguke\" target=\"_blank\">@啾咕咕www</a><a class=\"setting b-btn w\" href=\"" + chrome.extension.getURL("options.html") + "\" target=\"_blank\">设置</a></div></div></div>");
 				biliHelper.helperBlock.find('.t').click(function() {
 					biliHelper.helperBlock.toggleClass('active');
 				});
-			}else if(biliHelper.site == 1){
-			 	biliHelper.helperBlock = $("<div class=\"v1-bangumi-info-btn helper\" id=\"bilibili_helper\">哔哩哔哩助手<div class=\"info\"><div class=\"main\"></div><div class=\"version\">哔哩哔哩助手 " + biliHelper.version + " by <a href=\"http://weibo.com/guguke\" target=\"_blank\">@啾咕咕www</a><a class=\"setting b-btn w\" href=\"" + chrome.extension.getURL("options.html") + "\" target=\"_blank\">设置</a></div></div></div>");
-				biliHelper.helperBlock.click(function() {
+			} else if(biliHelper.site == 1){
+			 	biliHelper.helperBlock = $("<span class=\"helper\"><div class=\"v1-bangumi-info-btn\" id=\"bilibili_helper\">哔哩哔哩助手</div><div class=\"info\"><div class=\"main\"></div><div class=\"version\">哔哩哔哩助手 " + biliHelper.version + " by <a href=\"http://weibo.com/guguke\" target=\"_blank\">@啾咕咕www</a><a class=\"setting b-btn w\" href=\"" + chrome.extension.getURL("options.html") + "\" target=\"_blank\">设置</a></div></div></span>");
+				biliHelper.helperBlock.find('.v1-bangumi-info-btn').click(function() {
 					biliHelper.helperBlock.toggleClass('active');
 				});
 			}
@@ -451,6 +431,53 @@
 			}
 			$(document).ready(biliHelperFunc);
 		});
+	}
+
+	if (typeof $ === 'function' && $('.player-wrapper .v-plist').length) {
+		var prob = document.createElement("script");
+		prob.id = "page-prob";
+		prob.innerHTML = "$('.player-wrapper .v-plist').attr('length', window.VideoPart.nodedata.length);$('#page-prob').remove();";
+		document.body.appendChild(prob);
+	}
+	intilize_style();
+	$("html").addClass("bilibili-helper");
+	var bili_reg,urlResult,hashPage;
+	if(biliHelper.site == 0){
+		bili_reg = /\/video\/av([0-9]+)\/(?:index_([0-9]+)\.html)?.*?$/;
+		urlResult = bili_reg.exec(document.location.pathname);
+		hashPage = (/page=([0-9]+)/).exec(document.location.hash);
+		if (hashPage && typeof hashPage == "object" && !isNaN(hashPage[1])) hashPage = parseInt(hashPage[1]);
+		if (urlResult) {
+			biliHelper.avid = urlResult[1];
+			biliHelper.page = hashPage || urlResult[2];
+		}
+		if (biliHelper.avid) initHelper();
+	} else if (biliHelper.site == 1){
+		var playerBlock = $('#bofqi')[0];
+		var observer = new MutationObserver(function() {
+			if (biliHelper.avid) return;
+			if ($('iframe.player').length ||
+				$('.scontent object param[name="flashvars"]').length) {
+				urlResult = $('iframe.player').attr('src').split('?')[1] || // HTML5 Iframe
+					$('.scontent object param[name="flashvars"]').attr('value'); // Flash
+				if (urlResult) {
+					var search = urlResult.split('&').map(function(searchPart) {
+						return searchPart.split('=', 2);
+					});
+					search.forEach(function(param) {
+						var key = param[0], value = param[1];
+						if (key === 'aid') {
+							biliHelper.avid = value;
+						} else if (key === 'cid') {
+							biliHelper.cid = value;
+						}
+					});
+					initHelper();
+					observer.disconnect();
+				}
+			}
+		});
+		observer.observe(playerBlock, {childList: true});
 	}
 
 	var biliHelperFunc = function() {
@@ -497,8 +524,7 @@
 			chrome.extension.sendMessage({
 				command: "getVideoInfo",
 				avid: biliHelper.avid,
-				pg: biliHelper.page + biliHelper.pageOffset,
-				isBangumi:(biliHelper.site ==1)
+				pg: biliHelper.page + biliHelper.pageOffset
 			}, function(response) {
 				var videoInfo = response.videoInfo,
 					error = false;
