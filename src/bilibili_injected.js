@@ -580,7 +580,13 @@
 						biliHelper.mainBlock.commentSection = commentDiv;
 						biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
 						var id = biliHelper.site ==1?biliHelper.avid:biliHelper.cid;
-						$.get('http://comment.bilibili.com/' + id + '.xml', function(response) {
+						fetch('http://comment.bilibili.com/' + biliHelper.cid + '.xml').then(function(res){
+							return res.text();
+						}).then(function(text) {
+							var parser = new DOMParser();
+							var response = parser.parseFromString(
+								text.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ""),
+								'text/xml');
 							var assData = '\ufeff' + generateASS(setPosition(parseXML('', response)), {
 									'title': getNiceSectionFilename(biliHelper.avid, biliHelper.page, biliHelper.totalPage, 1, 1),
 									'ori': location.href
@@ -668,7 +674,7 @@
 								}
 							});
 							biliHelper.mainBlock.querySection.find('p').empty().append(control);
-						}, 'xml');
+						});
 					}
 				}
 				if (biliHelper.genPage) {
