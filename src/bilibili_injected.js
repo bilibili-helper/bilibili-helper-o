@@ -680,33 +680,42 @@
                                         document.body.appendChild(s);
                                         s.parentNode.removeChild(s);
                                     };
-                                    $.get('https://biliquery.typcn.com/api/user/hash/' + sender, function(data) {
-                                        if (!data || data.error !== 0 || typeof data.data !== 'object' || !data.data[0].id) {
-                                            control.find('.result').text('查询失败, 发送用户可能已被管理员删除.');
-                                        } else {
-                                            let uid = parseSafe(data.data[0].id);
-                                            control.find('.result').html('发送者 UID: <a href="http://space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
-                                            let data = sessionStorage.getItem('user/' + uid);
-                                            if (data) {
-                                                displayUserInfo(uid, JSON.parse(data));
-                                                return false;
-                                            }
-                                            $.getJSON('https://api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
-                                                if (data.code === 0) {
-                                                    let cardData = data.data.card;
-                                                    sessionStorage.setItem('user/' + uid, JSON.stringify({
-                                                        name: cardData.name,
-                                                        level_info: {
-                                                            current_level: cardData.level_info.current_level,
-                                                        },
-                                                    }));
-                                                    displayUserInfo(uid, cardData);
-                                                }
-                                            });
+
+                                    let renderSender = function(uid) {
+                                        control.find('.result').html('发送者 UID: <a href="http://space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
+                                        let cachedData = sessionStorage.getItem('user/' + uid);
+                                        if (cachedData) {
+                                            displayUserInfo(uid, JSON.parse(cachedData));
+                                            return false;
                                         }
-                                    }, 'json').fail(function() {
-                                        control.find('.result').text('查询失败, 无法连接到服务器 :(');
-                                    });
+                                        $.getJSON('https://api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
+                                            if (data.code === 0) {
+                                                let cardData = data.data.card;
+                                                sessionStorage.setItem('user/' + uid, JSON.stringify({
+                                                    name: cardData.name,
+                                                    level_info: {
+                                                        current_level: cardData.level_info.current_level,
+                                                    },
+                                                }));
+                                                displayUserInfo(uid, cardData);
+                                            }
+                                        });
+                                    };
+
+                                    let extracted = /^b(\d+)$/.exec(sender);
+                                    if (extracted) {
+                                        renderSender(extracted[1]);
+                                    } else {
+                                        $.get('https://biliquery.typcn.com/api/user/hash/' + sender, function(data) {
+                                            if (!data || data.error !== 0 || typeof data.data !== 'object' || !data.data[0].id) {
+                                                control.find('.result').text('查询失败, 发送用户可能已被管理员删除.');
+                                            } else {
+                                                renderSender(data.data[0].id);
+                                            }
+                                        }, 'json').fail(function() {
+                                            control.find('.result').text('查询失败, 无法连接到服务器 :(');
+                                        });
+                                    }
                                 },
                             });
                             biliHelper.mainBlock.querySection.find('p').empty().append(control);

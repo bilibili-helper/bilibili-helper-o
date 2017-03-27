@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: 0 */
-/* global setOption: false, getOption: false, getCSS: false */
+/* global setOption: false, getOption: false, getCSS: false, version: false */
 
 let notification = false,
     notificationAvid = {},
@@ -454,7 +454,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({
             replace: getOption('replace'),
             html5: getOption('html5'),
-            version: 'v' + chrome.app.getDetails().version,
+            version: version,
             playerConfig: JSON.parse(getOption('playerConfig')),
         });
         return true;
