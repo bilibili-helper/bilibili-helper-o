@@ -13,6 +13,7 @@
     } else {
         return false;
     }
+    biliHelper.protocol = location.protocol;
 
     function formatInt(Source, Length) {
         let strTemp = '';
@@ -343,7 +344,7 @@
                         src: {
                             playlist: [{
                                 video: document.getElementById('bilibili_helper_html5_player_video'),
-                                comments: '//comment.bilibili.com/' + biliHelper.cid + '.xml',
+                                comments: biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml',
                             }],
                         },
                         width: '100%',
@@ -600,8 +601,8 @@
                     biliHelper.cid = videoInfo.cid;
                     if (!biliHelper.genPage) {
                         biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
-                        let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
-                            downloadFileName = getDownloadOptions('//comment.bilibili.com/' + biliHelper.cid + '.xml',
+                        let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
+                            downloadFileName = getDownloadOptions(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml',
                 getNiceSectionFilename(biliHelper.avid,
                   biliHelper.page, biliHelper.totalPage, 1, 1)).filename;
                         commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
@@ -614,13 +615,10 @@
                         });
                         biliHelper.mainBlock.commentSection = commentDiv;
                         biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
-                        fetch('//comment.bilibili.com/' + biliHelper.cid + '.xml').then(function(res) {
-                            return res.text();
-                        }).then(function(text) {
+                        fetch(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml').then((res) => res.text()).then(function(text) {
                             let parser = new DOMParser();
                             let response = parser.parseFromString(
-                text.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''),
-                'text/xml');
+                                text.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
                             let assData = '\ufeff' + generateASS(setPosition(parseXML('', response)), {
                                     'title': getNiceSectionFilename(biliHelper.avid, biliHelper.page, biliHelper.totalPage, 1, 1),
                                     'ori': location.href,
@@ -629,10 +627,11 @@
                                     type: 'application/octet-stream',
                                 }),
                                 assUrl = window.URL.createObjectURL(assBlob),
-                                assBtn = $('<a class="b-btn w">下载 ASS 格式弹幕</a>').attr('download', downloadFileName.replace('.xml', '.ass')).attr('href', assUrl).click(function(e) {
+                                assBtn = $('<a class="b-btn w">下载 ASS 格式弹幕</a>').attr('download', downloadFileName.replace('.xml', '.ass')).attr('href', assUrl).data('data', assData).click(function(e) {
                                     e.preventDefault();
                                     chrome.runtime.sendMessage({
                                         command: 'requestForDownload',
+                                        data: $(e.target).data('data'),
                                         url: $(e.target).attr('href'),
                                         filename: $(e.target).attr('download'),
                                     });
@@ -674,7 +673,7 @@
                                         return;
                                     }
                                     let displayUserInfo = function(uid, data) {
-                                        control.find('.result').html('发送者: <a href="//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
+                                        control.find('.result').html('发送者: <a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
                                         let s = document.createElement('script');
                                         s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
                                         document.body.appendChild(s);
@@ -682,13 +681,13 @@
                                     };
 
                                     let renderSender = function(uid) {
-                                        control.find('.result').html('发送者 UID: <a href="//space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
+                                        control.find('.result').html('发送者 UID: <a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
                                         let cachedData = sessionStorage.getItem('user/' + uid);
                                         if (cachedData) {
                                             displayUserInfo(uid, JSON.parse(cachedData));
                                             return false;
                                         }
-                                        $.getJSON('//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
+                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
                                             if (data.code === 0) {
                                                 let cardData = data.data.card;
                                                 sessionStorage.setItem('user/' + uid, JSON.stringify({

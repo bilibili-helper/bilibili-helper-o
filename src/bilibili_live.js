@@ -26,7 +26,7 @@
                 store.remove(key);
             }
         };
-        let Live = {scriptOptions: {}, hasInit: false, giftList: {}, mobileVerified: 0};
+        let Live = {scriptOptions: {}, hasInit: false, giftList: {}, mobileVerified: 0, protocol: location.protocol};
         Live.addScriptByFile = function(fileName, options) {
             let a = document.createElement('script');
             a.id = 'bilibiliHelperScript';
@@ -46,7 +46,7 @@
             return dates;
         };
         Live.getRoomHTML = function(url) {
-            return $.get('//live.bilibili.com/' + url).promise();
+            return $.get(Live.protocol + '//live.bilibili.com/' + url).promise();
         };
         Live.getRoomIdByUrl = function(url, callback) {
             let id = store.get('bilibili_helper_live_roomId')[url];
@@ -72,10 +72,10 @@
             }
         };
         Live.getUser = function() {
-            return $.getJSON('/user/getuserinfo').promise();
+            return $.getJSON(Live.protocol + '/user/getuserinfo').promise();
         };
         Live.getMedalList = function() {
-            return $.getJSON('//live.bilibili.com/i/ajaxGetMyMedalList').promise();
+            return $.getJSON(Live.protocol + '//live.bilibili.com/i/ajaxGetMyMedalList').promise();
         };
         Live.each = function(obj, fn) {
             if (!fn) {
@@ -469,7 +469,7 @@
                             // noinspection JSDuplicatedDeclaration
                             msg = new Notification('签到成功', {
                                 body: '您获得了' + e.data.text,
-                                icon: '//static.hdslb.com/live-static/images/7.png',
+                                icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                             });
                             var o;
                             (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
@@ -482,7 +482,7 @@
                         } else if (e.code === -500) {
                             msg = new Notification(eval('\'' + e.msg + '\''), {
                                 body: '不能重复签到',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
+                                icon: Live.protocol + '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
                             });
                             var o;
                             (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
@@ -493,7 +493,7 @@
                         } else {
                             msg = new Notification(eval('\'' + e.msg + '\''), {
                                 body: '',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
+                                icon: Live.protocol + '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
                             });
                             setTimeout(function() {
                                 msg.close();
@@ -645,7 +645,7 @@
                 }
                 if (rate >= o.rate) {
                     $.ajax({
-                        url: '//live.bilibili.com/bet/addBettor',
+                        url: Live.protocol + '//live.bilibili.com/bet/addBettor',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -974,7 +974,7 @@
                 Live.bet.show();
             },
             getBet: function() {
-                return $.post('//live.bilibili.com/bet/getRoomBet', {roomid: Live.roomId}, function() {}, 'json').promise();
+                return $.post(Live.protocol + '//live.bilibili.com/bet/getRoomBet', {roomid: Live.roomId}, function() {}, 'json').promise();
             },
             do: function() {
                 Live.bet.getBet().done(function(bet) {
@@ -1159,7 +1159,7 @@
 
                                     let msg = new Notification('自动领瓜子功能已经启动', {
                                         body: Live.roomInfo.ANCHOR_NICK_NAME + '：' + Live.roomInfo.ROOMTITLE,
-                                        icon: '//static.hdslb.com/live-static/images/7.png',
+                                        icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                                     });
 
                                     setTimeout(function() {
@@ -1451,7 +1451,7 @@
                 function getAward(time_start, time_end, captcha) {
                     Live.treasure.imgInit = false;
                     Live.treasure.stop && Live.helperInfo.setTreasureStatus('success', '功能已经启动');
-                    $.get('//live.bilibili.com/FreeSilver/getAward', {time_start: time_start, time_end: time_end, captcha: captcha}, function() {}, 'json').promise()
+                    $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getAward', {time_start: time_start, time_end: time_end, captcha: captcha}, function() {}, 'json').promise()
                         .done(function(result) {
                             if (result.code != 0) {
                                 Live.liveToast(Live.treasure.captchaInput[0], 'info', result.msg + Live.randomEmoji.helpless());
@@ -1475,7 +1475,7 @@
 
                             let msg = new Notification('自动领取成功', {
                                 body: '领取了' + Live.treasure.taskInfo.award + '个瓜子',
-                                icon: '//static.hdslb.com/live-static/images/7.png',
+                                icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                             });
                             setTimeout(function() {
                                 msg.close();
@@ -1531,13 +1531,13 @@
                 return q;
             },
             getCurrentTask: function() {
-                return $.get('//live.bilibili.com/FreeSilver/getCurrentTask', {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getCurrentTask', {}, function() {}, 'json').promise();
             },
             getSurplus: function() {
-                return $.get('//live.bilibili.com/FreeSilver/getSurplus', {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getSurplus', {}, function() {}, 'json').promise();
             },
             getCaptcha: function() {
-                return '//live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now();
+                return Live.protocol + '//live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now();
             },
         };
         Live.chat = {
@@ -2606,13 +2606,13 @@
                 }, 5000);*/
             },
             sendBeat: function(roomId, beat) {
-                $.ajax({url: '//live.bilibili.com/msg/send', type: 'post', data: {color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId}});
+                $.ajax({url: Live.protocol + '//live.bilibili.com/msg/send', type: 'post', data: {color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId}});
             },
             getBeat: function(roomId) {
-                return $.get('//live.bilibili.com/SpecialGift/room/' + roomId, {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/SpecialGift/room/' + roomId, {}, function() {}, 'json').promise();
             },
             getRankList: function(datatype, day) {
-                return $.get('//live.bilibili.com/rank/getCond', {datatype: datatype, day: day, giftid: 39, usertype: 'master'}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/rank/getCond', {datatype: datatype, day: day, giftid: 39, usertype: 'master'}, function() {}, 'json').promise();
             },
         };
         Live.giftpackage = {
@@ -3178,13 +3178,13 @@
                 return r;
             },
             getGiftPackage: function() { // get package data
-                return $.get('//live.bilibili.com/gift/playerBag', {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/gift/playerBag', {}, function() {}, 'json').promise();
             },
             getSendGift: function() { // get new gift
-                return $.get('//live.bilibili.com/giftBag/getSendGift', {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/giftBag/getSendGift', {}, function() {}, 'json').promise();
             },
             getGiftPackageStatus: function() { // get the info for 'if has new gift'
-                return $.get('//live.bilibili.com/giftBag/sendDaily', {}, function() {}, 'json').promise();
+                return $.get(Live.protocol + '//live.bilibili.com/giftBag/sendDaily', {}, function() {}, 'json').promise();
             },
             openGiftPackagePanel: function() {
                 if (Live.giftpackage.packagePanel.css('display') != 'none') {
@@ -3443,7 +3443,7 @@
                         store.set('bilibili_helper_login', true);
                         $.ajax({
                             dataType: 'json',
-                            url: '//space.bilibili.com/ajax/member/MyInfo',
+                            url: Live.protocol + '//space.bilibili.com/ajax/member/MyInfo',
                         }).promise().done(function(res) {
                             if (res.data && res.data.mobile_verified === 1) {
                                 Live.mobileVerified = 1;
@@ -3462,7 +3462,7 @@
             },
             medal: function() {
                 Live.getMedalList().done(function(medalList) {
-                    $.get('//live.bilibili.com/i/medal').promise().done(function(html) {
+                    $.get(Live.protocol + '//live.bilibili.com/i/medal').promise().done(function(html) {
                         let medalDOM = $(html);
                         let medalDOMList = medalDOM.find('.my-medal-section dl dd');
                         if (medalList.code === 0) {

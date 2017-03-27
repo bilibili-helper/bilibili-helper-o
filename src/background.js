@@ -757,9 +757,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     case 'requestForDownload':
         chrome.downloads.download({
             saveAs: true,
-            url: request.url,
+            url: request.data ? URL.createObjectURL(new Blob([request.data], {
+                type: 'application/octet-stream',
+            })) : request.url,
             filename: 'Bilibili/' + request.filename,
-            conflictAction: 'prompt',
         });
         return true;
 
