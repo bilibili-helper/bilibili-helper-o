@@ -1,44 +1,50 @@
-var Live = {
-    setInterval: function (object, func, timeout) {
-        var a = setInterval(function () {
-            if (object && typeof func == 'function') {
+let Live = {
+    setInterval: function(object, func, timeout) {
+        let a = setInterval(function() {
+            if (object && typeof func === 'function') {
                 func();
                 clearInterval(a);
             }
         }, timeout);
     },
-    set: function (n, k, v) {
-        if (!window.localStorage || !n) return;
-        var storage = window.localStorage;
-        if (!storage[n]) storage[n] = JSON.stringify({});
-        var l = JSON.parse(storage[n]);
-        if (v == undefined) {
-            storage[n] = typeof k == 'string' ? k.trim() : JSON.stringify(k);
+    set: function(n, k, v) {
+        if (!window.localStorage || !n) {
+            return;
+        }
+        let storage = window.localStorage;
+        if (!storage[n]) {
+            storage[n] = JSON.stringify({});
+        }
+        let l = JSON.parse(storage[n]);
+        if (v === undefined) {
+            storage[n] = typeof k === 'string' ? k.trim() : JSON.stringify(k);
         } else {
-            l[k] = typeof v == 'string' ? v.trim() : JSON.stringify(v);
+            l[k] = typeof v === 'string' ? v.trim() : JSON.stringify(v);
             storage[n] = JSON.stringify(l);
         }
-    }
+    },
 };
 // console.log("%c弹幕监控脚本 插入成功㇏(°ω° )ノ♪~", "color:#FFFFFF;background-color:#4fc1e9;padding:5px;border-radius:7px;line-height:30px;");
-var event = document.createEvent('Event');
+let event = document.createEvent('Event');
 event.initEvent('sendMessage', true, true);
-var sendMessage = function (json) {
-    var message = JSON.stringify(json);
-    Live.set('bilibili_helper_message', message);
-    document.dispatchEvent(event);
-};
-var options = document.getElementById('bilibiliHelperScript').getAttribute('options');
-if (options != '{}') options = JSON.parse(options);
-//treause
+// let sendMessage = function(json) {
+//     let message = JSON.stringify(json);
+//     Live.set('bilibili_helper_message', message);
+//     document.dispatchEvent(event);
+// };
+let options = document.getElementById('bilibiliHelperScript').getAttribute('options');
+if (options !== '{}') {
+    options = JSON.parse(options);
+}
+// treause
 if (options['treasure']) {
-    Live.setInterval(window.refreshCaptcha, function () {
-        window.refreshCaptcha = function () {
-            $("#captchaImg").attr("src", "http://live.bilibili.com/freeSilver/getCaptcha?ts=" + Date.now());
+    Live.setInterval(window.refreshCaptcha, function() {
+        window.refreshCaptcha = function() {
+            $('#captchaImg').attr('src', 'http://live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now());
         };
     }, 1000);
 }
-//giftpackage
+// giftpackage
 // if (options['giftpackage']){
 //     Live.setInterval(window.flash_giftPackageOpen, function () {
 //         window.flash_giftPackageOpen = function () {
@@ -46,7 +52,7 @@ if (options['treasure']) {
 //         };
 //     }, 1000);
 // }
-//beat
+// beat
 // if (options['beat']) {
 //     Live.setInterval(window.sendBeatStorm, function () {
 //         var b = window.sendBeatStorm;
@@ -57,7 +63,7 @@ if (options['treasure']) {
 //         };
 //     }, 1000);
 // }
-//watcher
+// watcher
 // if (options['watcher']) {
 //     Live.setInterval(window.protocol, function () {
 //         Live.setInterval(window.protocol.SYS_MSG, function () {
@@ -111,4 +117,6 @@ if (options['treasure']) {
 //         }
 //     });
 // });
-$('.activity-lottery').on('DOMNodeInserted',function(e){$('.lottery-box').click();});
+$('.activity-lottery').on('DOMNodeInserted', function(e) {
+    $('.lottery-box').click();
+});

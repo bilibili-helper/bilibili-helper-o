@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */
+
 // adapted from https://github.com/parshap/node-sanitize-filename/blob/master/index.js
 // remove node "Buffer" to work in browser.
 
@@ -36,68 +38,66 @@
 //
 // TODO Through my own tests, I find actually Chrome can sanitize the file path
 // automatically but there are no API found for it though?
-var filenameSanitize = (function(){
-  var illegalRe = /[\/\?<>\\:\*\|":~]/g;
-  var controlRe = /[\x00-\x1f\x80-\x9f]/g;
-  var reservedRe = /^\.+$/;
-  var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+let filenameSanitize = (function() {
+    let illegalRe = /[\/\?<>\\:\*\|":~]/g;
+    let controlRe = /[\x00-\x1f\x80-\x9f]/g;
+    let reservedRe = /^\.+$/;
+    let windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 
   // Truncate string by size in bytes
-  function truncate(str, maxByteSize) {
-    var strLen = str.length,
-        curByteSize = 0,
-        codePoint = -1;
+    function truncate(str, maxByteSize) {
+        let strLen = str.length,
+            curByteSize = 0,
+            codePoint = -1;
 
-    for(var i = 0; i < strLen; i++){
-      codePoint = str.charCodeAt(i);
+        for (let i = 0; i < strLen; i++) {
+            codePoint = str.charCodeAt(i);
 
       // handle 4-byte non-BMP chars
       // low surrogate
-      if (codePoint >= 0xdc00 && codePoint <= 0xdfff){
+            if (codePoint >= 0xdc00 && codePoint <= 0xdfff) {
         // when parsing previous hi-surrogate, 3 is added to curByteSize
-        curByteSize++;
-        if(curByteSize > maxByteSize){
-          return str.substring(0, i - 1);
+                curByteSize++;
+                if (curByteSize > maxByteSize) {
+                    return str.substring(0, i - 1);
+                }
+
+                continue;
+            }
+
+            if (codePoint <= 0x7f) {
+                curByteSize++;
+            } else if (codePoint >= 0x80 && codePoint <= 0x7ff) {
+                curByteSize += 2;
+            } else if (codePoint >= 0x800 && codePoint <= 0xffff) {
+                curByteSize += 3;
+            }
+
+            if (curByteSize > maxByteSize) {
+                return str.substring(0, i);
+            }
         }
 
-        continue;
-      }
-
-      if( codePoint <= 0x7f ) {
-        curByteSize++;
-      }
-      else if( codePoint >= 0x80 && codePoint <= 0x7ff ) {
-        curByteSize += 2;
-      }
-      else if( codePoint >= 0x800 && codePoint <= 0xffff ) {
-        curByteSize += 3;
-      }
-
-      if (curByteSize > maxByteSize){
-        return str.substring(0, i);
-      }
+    // never exceeds the upper limit
+        return str;
     }
 
-    // never exceeds the upper limit
-    return str;
-  }
-
-  function sanitize(input, replacement, max) {
-    var sanitized = input
+    function sanitize(input, replacement, max) {
+        let sanitized = input
           .replace(illegalRe, replacement)
           .replace(controlRe, replacement)
           .replace(reservedRe, replacement)
           .replace(windowsReservedRe, replacement);
-    return truncate(sanitized, max);
-  }
-
-  return function (input, options) {
-    var replacement = (options && options.replacement) || '';
-    var max = (options && options.max && (options.max < 255))? options.max : 255;
-    var output = sanitize(input, replacement, max);
-    if (replacement === '') {
-      return output;
+        return truncate(sanitized, max);
     }
-    return sanitize(output, '');
-  };
+
+    return function(input, options) {
+        let replacement = (options && options.replacement) || '';
+        let max = (options && options.max && (options.max < 255)) ? options.max : 255;
+        let output = sanitize(input, replacement, max);
+        if (replacement === '') {
+            return output;
+        }
+        return sanitize(output, '');
+    };
 })();
