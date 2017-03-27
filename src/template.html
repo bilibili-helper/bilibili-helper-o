@@ -24,6 +24,7 @@
 <script type="text/javascript" src="http://static.hdslb.com/js/video.min.js"></script>
 <script type="text/javascript" src="http://static.hdslb.com/js/jquery.zclip.min.js"></script>
 <script type="text/javascript" src="http://static.hdslb.com/js/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="resource.min.js"></script>
 		
 	</head>
 
@@ -302,8 +303,7 @@
         </div>
     </div>
     <div class="scontent" id="bofqi">
-    	<div id='player_placeholder' class='player' style="-webkit-filter: blur(20px); overflow: hidden; visibility: visible; background: url(__bl_pic) 50% 50% / cover no-repeat;">
-    	</div>
+	    <iframe height="482" width="950" class="player" src="https://secure.bilibili.com/secure,cid=__bl_cid&aid=__bl_avid" scrolling="no" border="0" frameborder="no" framespacing="0" onload="window.securePlayerFrameLoaded=true"></iframe><img src="https://secure.bilibili.com/images/grey.gif" id="img_ErrCheck" style="display:none" /><script type="text/javascript" src="http://static.hdslb.com/js/page.player_error.js"></script>
     </div>
     <div class="arc-toolbar">
         <div class="block share">
@@ -607,6 +607,16 @@ $(function(){
     }
     js_viewallalist();
 });
+(function() {
+    if(getOption("https") == "http") {
+        return;
+	}
+	$("*[href]").each(function(id, e) {
+		if(/^http:\/\/[a-zA-Z0-9]*?\.bilibili\.com/.test(e.href)) {
+		    e.href = "https" + e.href.substr(4);
+		}
+    });
+})();
 </script>
 <script type="text/javascript" src="/html/ads-arc.js"></script>
 </div>

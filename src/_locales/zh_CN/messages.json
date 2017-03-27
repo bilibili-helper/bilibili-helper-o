@@ -8,12 +8,16 @@
     "description": "Extension: Short Name"
   },
   "extDescription": {
-    "message": "哔哩哔哩弹幕网辅助扩展，可以替换HTML5播放器、绕过区域限制、推送通知并进行一些快捷操作",
+    "message": "哔哩哔哩弹幕网辅助扩展，拥有视频区和直播区的人性化功能",
     "description": "Extension: Description"
   },
   "goBili": {
     "message": "一键前往bilibili.com",
     "description": "Popup Button: go_bili"
+  },
+  "goBiliLive": {
+    "message": "一键前往Bilibili Live",
+    "description": "Popup Button: go_bili_live"
   },
   "adModeOff": {
     "message": "进入点广告模式",

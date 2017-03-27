@@ -8,12 +8,16 @@
     "description": "Extension: Short Name"
   },
   "extDescription": {
-    "message": "An auxiliary extension for Bilibili which allows users to bypass playback restrictions, replace video players and use shortcuts.",
+    "message": "An auxiliary extension for Bilibili which provide human function",
     "description": "Extension: Description"
   },
   "goBili": {
     "message": "Go to bilibili.com",
     "description": "Popup Button: go_bili"
+  },
+  "goBiliLive": {
+    "message": "Go to Bilibili Live",
+    "description": "Popup Button: go_bili_live"
   },
   "adModeOff": {
     "message": "Enter AD Mode",

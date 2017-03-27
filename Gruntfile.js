@@ -1,22 +1,39 @@
+/* eslint-env node */
+
 module.exports = function(grunt) {
+    grunt.loadNpmTasks('gruntify-eslint');
+    require('load-grunt-tasks')(grunt);
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        uglify: {
+        eslint: {
+            src: ['Gruntfile.js', 'src/**/*.js', '!src/**/*.min.js'],
+        },
+        babel: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-                mangle: true,
-                sourceMap: false,
-                sourceMapName: 'dest/srcmap.map'
+                'sourceMap': false,
+                'presets': ['es2015'],
             },
-            release: {
+            dist: {
                 files: [{
                     expand: true,
                     cwd: 'src',
                     src: ['**/*.js', '!**/*.min.js'],
                     ext: '.min.js',
-                    dest: 'dest/'
-                }]
-            }
+                    dest: 'dest/',
+                }],
+            },
+        },
+        uglify: {
+            dist: {
+                options: {
+                    sourceMap: false,
+                },
+                files: [{
+                    expand: true,
+                    src: ['dest/**/*.min.js'],
+                }],
+            },
         },
         htmlmin: {
             main: {
@@ -24,31 +41,31 @@ module.exports = function(grunt) {
                     collapseWhitespace: true,
                     minifyCSS: true,
                     minifyJS: true,
-                    removeComments: true
+                    removeComments: true,
                 },
                 files: [{
                     expand: true,
                     cwd: 'src',
                     src: ['**/*.html'],
                     dest: 'dest/',
-                    ext: '.html'
-                }]
+                    ext: '.html',
+                }],
             },
         },
         cssmin: {
             main: {
                 options: {
                     shorthandCompacting: false,
-                    roundingPrecision: -1
+                    roundingPrecision: -1,
                 },
                 files: [{
                     expand: true,
                     cwd: 'src',
                     src: ['**/*.css', '!**/*.min.css'],
                     dest: 'dest/',
-                    ext: '.min.css'
-                }]
-            }
+                    ext: '.min.css',
+                }],
+            },
         },
         copy: {
             main: {
@@ -56,30 +73,25 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'src',
                     src: ['**/**', '!**/*.html', '!**/*.js', '**/*.min.js', '!**/*.css', '**/*.min.css', '_locales/**'],
-                    dest: 'dest/'
-                }]
-            }
+                    dest: 'dest/',
+                }],
+            },
         },
         compress: {
             main: {
                 options: {
-                    archive: 'bilibili_helper.zip'
+                    archive: 'bilibili_helper.zip',
                 },
                 files: [{
                     expand: true,
                     cwd: 'dest/',
                     src: ['**/*'],
-                    dest: '/'
-                }]
-            }
-        }
+                    dest: '/',
+                }],
+            },
+        },
     });
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-compress');
 
-    grunt.registerTask('default', ['uglify:release', 'htmlmin:main', 'cssmin:main', 'copy:main', 'compress:main']);
-    grunt.registerTask('debug', ['uglify:release', 'htmlmin:main', 'cssmin:main', 'copy:main']);
-}
+    grunt.registerTask('default', ['eslint', 'babel', 'uglify', 'htmlmin:main', 'cssmin:main', 'copy:main', 'compress:main']);
+    grunt.registerTask('debug', ['eslint', 'babel', 'uglify', 'htmlmin:main', 'cssmin:main', 'copy:main']);
+};

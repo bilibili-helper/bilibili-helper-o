@@ -8,12 +8,16 @@
     "description": "Extension: Short Name"
   },
   "extDescription": {
-    "message": "嗶哩嗶哩彈幕網輔助擴展，可以替換HTML5播放器、繞過區域限制、推送通知並進行一些快捷操作",
+    "message": "嗶哩嗶哩彈幕網輔助擴展，擁有視頻區和直播區的人性化功能",
     "description": "Extension: Description"
   },
   "goBili": {
     "message": "一鍵前往bilibili.com",
     "description": "Popup Button: go_bili"
+  },
+  "goBiliLive": {
+    "message": "一鍵前往Bilibili Live",
+    "description": "Popup Button: go_bili_live"
   },
   "adModeOff": {
     "message": "進入點廣告模式",
