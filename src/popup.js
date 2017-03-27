@@ -1,7 +1,11 @@
 let bkg_page = chrome.extension.getBackgroundPage();
 
 function adModeFunction(cmd) {
-    chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+    }, function(tabs) {
+        let tab = tabs[0];
         chrome.tabs.sendMessage(tab.id, {
             command: cmd,
             css: bkg_page.ad_mode,
@@ -33,7 +37,11 @@ function getDynamic() {
 }
 
 $(document).ready(function() {
-    chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+    }, function(tabs) {
+        let tab = tabs[0];
         if (tab.url.match(/:\/\/(.[^/]+)/)[1] === 'www.bilibili.com' || tab.url.match(/:\/\/(.[^/]+)/)[1] === 'space.bilibili.com') {
             $('#go_bili').hide();
         } else if (tab.url.match(/:\/\/(.[^/]+)/)[1] === 'space.bilibili.com' || tab.url.match(/:\/\/(.[^/]+)/)[1] === 'member.bilibili.com') {

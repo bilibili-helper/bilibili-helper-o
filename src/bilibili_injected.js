@@ -65,7 +65,7 @@
 
     function notifyCidHack(callback) {
         if (biliHelper.cidHack) {
-            chrome.extension.sendMessage({
+            chrome.runtime.sendMessage({
                 command: 'cidHack',
                 cid: biliHelper.cid,
                 type: biliHelper.cidHack,
@@ -120,7 +120,7 @@
     }
 
     function intilize_style(callback) {
-        chrome.extension.sendMessage({
+        chrome.runtime.sendMessage({
             command: 'getCSS',
             url: document.URL,
         }, function(response) {
@@ -133,7 +133,7 @@
         });
     }
 
-    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         switch (request.command) {
         case 'update':
             intilize_style();
@@ -176,7 +176,7 @@
     });
 
     let finishUp = function(forceCidHack) {
-        chrome.extension.sendMessage({
+        chrome.runtime.sendMessage({
             command: 'getDownloadLink',
             cid: biliHelper.cid,
             cidHack: forceCidHack || biliHelper.cidHack,
@@ -235,7 +235,7 @@
                         // register a callback that can talk to extension background
                         $bhDownLink.click(function(e) {
                             e.preventDefault();
-                            chrome.extension.sendMessage({
+                            chrome.runtime.sendMessage({
                                 command: 'requestForDownload',
                                 url: $(e.target).attr('href'),
                                 filename: $(e.target).data('download'),
@@ -283,7 +283,7 @@
             biliHelper.page = parseInt(biliHelper.page);
         }
         biliHelper.pageOffset = 0;
-        chrome.extension.sendMessage({
+        chrome.runtime.sendMessage({
             command: 'init',
         }, function(response) {
             biliHelper.playerConfig = response.playerConfig;
@@ -360,7 +360,7 @@
                         let commentId = e.detail.id,
                             commentData = e.detail;
                         delete e.detail.id;
-                        chrome.extension.sendMessage({
+                        chrome.runtime.sendMessage({
                             command: 'sendComment',
                             avid: biliHelper.avid,
                             cid: biliHelper.cid,
@@ -372,7 +372,7 @@
                         });
                     });
                     abp.playerUnit.addEventListener('saveconfig', function(e) {
-                        chrome.extension.sendMessage({
+                        chrome.runtime.sendMessage({
                             command: 'savePlayerConfig',
                             config: e.detail,
                         });
@@ -555,7 +555,7 @@
     // }
 
         biliHelper.work = function() {
-            chrome.extension.sendMessage({
+            chrome.runtime.sendMessage({
                 command: 'getVideoInfo',
                 avid: biliHelper.avid,
                 pg: biliHelper.page + biliHelper.pageOffset,
@@ -574,7 +574,7 @@
                 }
                 if (typeof videoInfo.code !== 'undefined') {
                     if (biliHelper.page !== 1) {
-                        chrome.extension.sendMessage({
+                        chrome.runtime.sendMessage({
                             command: 'getVideoInfo',
                             avid: biliHelper.avid,
                             pg: 1,
@@ -606,7 +606,7 @@
                   biliHelper.page, biliHelper.totalPage, 1, 1)).filename;
                         commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
                             e.preventDefault();
-                            chrome.extension.sendMessage({
+                            chrome.runtime.sendMessage({
                                 command: 'requestForDownload',
                                 url: $(e.target).attr('href'),
                                 filename: $(e.target).attr('download'),
@@ -631,7 +631,7 @@
                                 assUrl = window.URL.createObjectURL(assBlob),
                                 assBtn = $('<a class="b-btn w">下载 ASS 格式弹幕</a>').attr('download', downloadFileName.replace('.xml', '.ass')).attr('href', assUrl).click(function(e) {
                                     e.preventDefault();
-                                    chrome.extension.sendMessage({
+                                    chrome.runtime.sendMessage({
                                         command: 'requestForDownload',
                                         url: $(e.target).attr('href'),
                                         filename: $(e.target).attr('download'),
@@ -728,11 +728,11 @@
                     });
                     $.get(chrome.extension.getURL('template.html'), function(template) {
                         let page = template.replace(/__bl_avid/g, biliHelper.avid).replace(/__bl_page/g, biliHelper.page).replace(/__bl_cid/g, biliHelper.cid).replace(/__bl_tid/g, videoInfo.tid).replace(/__bl_mid/g, videoInfo.mid)
-              .replace(/__bl_pic/g, videoInfo.pic).replace(/__bl_title/g, parseSafe(videoInfo.title)).replace(/__bl_sp_title_uri/g, videoInfo.sp_title ? encodeURIComponent(videoInfo.sp_title) : '')
-              .replace(/__bl_sp_title/g, videoInfo.sp_title ? parseSafe(videoInfo.sp_title) : '').replace(/__bl_spid/g, videoInfo.spid).replace(/__bl_season_id/g, videoInfo.season_id)
-              .replace(/__bl_created_at/g, videoInfo.created_at).replace(/__bl_description/g, parseSafe(videoInfo.description)).replace(/__bl_redirectUrl/g, biliHelper.redirectUrl)
-              .replace(/__bl_tags/g, JSON.stringify(videoInfo.tag.split(','))).replace(/__bl_tag_list/g, tagList).replace(/__bl_alist/g, alist).replace(/__bl_bangumi_cover/g, videoInfo.bangumi ? videoInfo.bangumi.cover : '')
-              .replace(/__bl_bangumi_desc/g, videoInfo.bangumi ? videoInfo.bangumi.desc : '');
+                          .replace(/__bl_pic/g, videoInfo.pic).replace(/__bl_title/g, parseSafe(videoInfo.title)).replace(/__bl_sp_title_uri/g, videoInfo.sp_title ? encodeURIComponent(videoInfo.sp_title) : '')
+                          .replace(/__bl_sp_title/g, videoInfo.sp_title ? parseSafe(videoInfo.sp_title) : '').replace(/__bl_spid/g, videoInfo.spid).replace(/__bl_season_id/g, videoInfo.season_id)
+                          .replace(/__bl_created_at/g, videoInfo.created_at).replace(/__bl_description/g, parseSafe(videoInfo.description)).replace(/__bl_redirectUrl/g, biliHelper.redirectUrl)
+                          .replace(/__bl_tags/g, JSON.stringify(videoInfo.tag.split(','))).replace(/__bl_tag_list/g, tagList).replace(/__bl_alist/g, alist).replace(/__bl_bangumi_cover/g, videoInfo.bangumi ? videoInfo.bangumi.cover : '')
+                          .replace(/__bl_bangumi_desc/g, videoInfo.bangumi ? videoInfo.bangumi.desc : '');
                         document.open();
                         document.write(page);
                         document.close();

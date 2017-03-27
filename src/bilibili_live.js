@@ -421,7 +421,7 @@
                 return $.getJSON('/sign/GetSignInfo').promise();
             },
             init: function() {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'doSign',
                 }, function(response) {
@@ -836,7 +836,7 @@
                 });
             },
             init: function() {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'bet',
                 }, function(res) {
@@ -1126,16 +1126,16 @@
             waitingEmoji: Live.randomEmoji.happy(),
             panelEmoji: Live.randomEmoji.helpless(),
             init: function() {
-                chrome.extension.sendMessage({
-                    command: 'getOption',
+                chrome.runtime.sendMessage({
+                    command: "getOption",
                     key: 'autoTreasure',
                 }, function(res) {
                     if (res['value'] === 'on') {
                         setTimeout(function() {
                         // Live.scriptOptions['treasure'] = true;
-                            chrome.extension.sendMessage({
-                                command: 'getTreasure',
-                            }, function(response) {
+                        chrome.runtime.sendMessage({
+                            command: "getTreasure"
+                        }, function (response) {
                                 Live.treasureBtn.find('span').attr('title', '正在初始化');
                             // Live.treasureInfoDOM = $('<div class="room-info treasure-info">自动领瓜子功能正在初始化</div>');
                             // Live.bilibiliHelperInfoDOM.append(Live.treasureInfoDOM);
@@ -1145,7 +1145,7 @@
                                 }
                                 if (response['data'].roomId === undefined) {
                                 // init background data
-                                    chrome.extension.sendMessage({
+                                    chrome.runtime.sendMessage({
                                         command: 'setTreasure',
                                         data: {
                                             uid: Live.roomInfo.UID,
@@ -1213,8 +1213,8 @@
                                     Live.treasure.checkNewTask();
                                     Live.treasure.treasureTip.find('.close-btn').click();
                                     $(window).on('beforeunload', function() {
-                                        chrome.extension.sendMessage({
-                                            command: 'delTreasure',
+                                        chrome.runtime.sendMessage({
+                                            command: "delTreasure"
                                         });
                                     });
                                     $(document).mousemove(function(e) {
@@ -1393,7 +1393,7 @@
                         Live.helperInfo.setTreasureStatus('error', result.msg);
                         return;
                     }
-                    chrome.extension.sendMessage({
+                    chrome.runtime.sendMessage({
                         command: 'setCurrentTreasure',
                         data: {
                             minute: result.data.minute,
@@ -1597,15 +1597,15 @@
             init: function() {
                 Live.chat.chat_ctrl_panel = $('#chat-ctrl-panel');
                 Live.chat.counter = Live.chat.chat_ctrl_panel.find('.danmu-length-count');
-                chrome.extension.sendMessage({
-                    command: 'getOption',
+                chrome.runtime.sendMessage({
+                    command: "getOption",
                     key: 'beat',
                 }, function(res) {
                     if (res['value'] === 'on' && Live.BBQ && Live.BBQ.level >= 10 && Live.user && (typeof Live.user.user_level_rank === 'number') && Live.user.user_level_rank <= 25000) {
                         Live.chat.beat = true;
                     }
                 });
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'danmu',
                 }, function(response) {
@@ -1614,8 +1614,8 @@
                         setTimeout(Live.chat.initDanmu, 2000);
                     }
                 });
-                chrome.extension.sendMessage({
-                    command: 'getOption',
+                chrome.runtime.sendMessage({
+                    command: "getOption",
                     key: 'chatDisplay',
                 }, function(response) {
                     if (response['value'] === 'on') {
@@ -1838,8 +1838,8 @@
                 });
             },
             initChatDisplay: function(isInit) {
-                chrome.extension.sendMessage({
-                    command: 'getOption',
+                chrome.runtime.sendMessage({
+                    command: "getOption",
                     key: 'displayOption',
                 }, function(response) {
                     let local = store.get('bilibili_helper_chat_display')[Live.roomId] || [];
@@ -1912,20 +1912,20 @@
                     upInfo.url = location.href;
                     var notiseBtn = $('<div>').addClass('mid-part').append('<i class="live-icon-small favourite p-relative" style="top: 1px"></i><span>特别关注</span>').click(function() {
                         if ($(this).find('i').hasClass('favourited')) {
-                            chrome.extension.sendMessage({
-                                command: 'setNotFavourite',
-                                id: upInfo.roomId,
-                            }, function(response) {
+                            chrome.runtime.sendMessage({
+                                command: "setNotFavourite",
+                                id: upInfo.roomId
+                            }, function (response) {
                                 if (response.data) {
                                     notiseBtn.find('span').html('特别关注');
                                     notiseBtn.find('i').removeClass('favourited');
                                 }
                             });
                         } else {
-                            chrome.extension.sendMessage({
-                                command: 'setFavourite',
-                                upInfo: upInfo,
-                            }, function(response) {
+                            chrome.runtime.sendMessage({
+                                command: "setFavourite",
+                                upInfo: upInfo
+                            }, function (response) {
                                 if (response.data) {
                                     notiseBtn.find('span').html('已特别关注');
                                 }
@@ -1935,8 +1935,8 @@
                     }).hover(function() {
                         $(this).attr('title', '关注之后再特别关注会在主播开播时进行推送哦' + Live.randomEmoji.happy());
                     });
-                    chrome.extension.sendMessage({
-                        command: 'getFavourite',
+                    chrome.runtime.sendMessage({
+                        command: "getFavourite"
                     }, function(response) {
                         if (response.data.indexOf(parseInt(Live.roomId)) != -1) {
                             notiseBtn.find('span').html('已特别关注');
@@ -2054,7 +2054,7 @@
         //                     Live.console.watcher('小电视活动 直播间【' + roomId + '】 编号:' + tvId + ' 获得' + Live.smallTV.rewardList[result.data.reward.id].title + "x" + result.data.reward.num);
 
         //                     if (Live.watcher.notifyOptions && Live.watcher.notifyOptions.tv) {
-        //                         chrome.extension.sendMessage({
+        //                         chrome.runtime.sendMessage({
         //                             command: "getTVReward",
         //                             data: {
         //                                 roomId: roomId,
@@ -2237,13 +2237,13 @@
                 lottery: undefined,
             },
             init: function(callback) {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'watcher',
                 }, function(res) {
                     if (res['value'] === 'on') {
                         setTimeout(function() {
-                            chrome.extension.sendMessage({
+                            chrome.runtime.sendMessage({
                                 command: 'getWatcherRoom',
                             }, function(response) {
                             // Live.watcherInfoDOM = $('<div class="room-info watcher-info">直播信息监控功能正在初始化</div>');
@@ -2253,7 +2253,7 @@
                                     if (response['data'].roomId === undefined) {
                                     // setWatcherRoom
                                         Live.getRoomInfo().done(function(data) {
-                                            chrome.extension.sendMessage({
+                                            chrome.runtime.sendMessage({
                                                 command: 'setWatcherRoom',
                                                 data: {
                                                     uid: data.data.UID,
@@ -2265,7 +2265,7 @@
                                                 },
                                             });
                                         });
-                                        chrome.extension.sendMessage({
+                                        chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchList',
                                         }, function(response) {
@@ -2281,7 +2281,7 @@
                                             });
                                             Live.watcher.initRewardPanel();
                                             $(window).on('beforeunload', function() {
-                                                chrome.extension.sendMessage({
+                                                chrome.runtime.sendMessage({
                                                     command: 'delWatcherRoom',
                                                 });
                                             });
@@ -2295,7 +2295,6 @@
                                                 Live.watcher.updateReward('lottery');
                                             }
 
-
                                             document.addEventListener('sendMessage', function(event) {
                                                 let message = store.get('bilibili_helper_message');
                                                 if (!message.cmd) {
@@ -2308,13 +2307,13 @@
                                                 callback();
                                             }
                                         });
-                                        chrome.extension.sendMessage({
+                                        chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchNotify',
                                         }, function(response) {
                                             Live.watcher.notifyStatus = response['value'] === 'on';
                                         });
-                                        chrome.extension.sendMessage({
+                                        chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchNotifyList',
                                         }, function(response) {
@@ -2330,7 +2329,7 @@
 
                                         Live.helperInfo.setWatcherStatus('success', '功能已经启动');
                                     } else {
-                                        chrome.extension.sendMessage({
+                                        chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchList',
                                         }, function(response) {
@@ -2357,7 +2356,7 @@
                 });
             },
             initData: function() {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'watcherDataClean',
                 }, function(res) {
@@ -2534,7 +2533,7 @@
             rounds: 0,
             interval: -1,
             init: function() {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'beat',
                 }, function(res) {
@@ -3029,7 +3028,7 @@
                 },
             },
             init: function() {
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'giftpackage',
                 }, function(res) {
@@ -3251,7 +3250,7 @@
                 /* helper info panel*/
                 Live.helperInfoRow = $('<div />').addClass('helper-info-panel').attr('id', 'helperInfoPanel');
                 infoPanel.find('.room-info.float-left').append(Live.helperInfoRow);
-                // chrome.extension.sendMessage({
+                // chrome.runtime.sendMessage({
                 //     command: "getOption",
                 //     key: 'watcher'
                 // }, function (res) {
@@ -3264,7 +3263,7 @@
                 //         });
                 //     }
                 // });
-                chrome.extension.sendMessage({
+                chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'autoTreasure',
                 }, function(res) {
@@ -3286,7 +3285,7 @@
                         // $('.left-part.player-area').prepend(Live.bilibiliHelperInfoDOM);
                         if (location.pathname.substr(1) && !isNaN(location.pathname.substr(1))) {
                             /* get options*/
-                            chrome.extension.sendMessage({
+                            chrome.runtime.sendMessage({
                                 command: 'getOption',
                                 key: 'version',
                             }, function(response) {
