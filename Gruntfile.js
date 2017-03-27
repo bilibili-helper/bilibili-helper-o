@@ -93,5 +93,5 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['eslint', 'babel', 'uglify', 'htmlmin:main', 'cssmin:main', 'copy:main', 'compress:main']);
-    grunt.registerTask('debug', ['eslint', 'babel', 'uglify', 'htmlmin:main', 'cssmin:main', 'copy:main']);
+    grunt.registerTask('debug', ['eslint', 'babel', 'htmlmin:main', 'cssmin:main', 'copy:main']);
 };

@@ -8,7 +8,7 @@
     "description": "Extension: Short Name"
   },
   "extDescription": {
-    "message": "An auxiliary extension for Bilibili which provide human function",
+    "message": "An extension for Bilibili that provides convenient features/shortcuts.",
     "description": "Extension: Description"
   },
   "goBili": {
