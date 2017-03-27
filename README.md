@@ -1,4 +1,8 @@
 # bilibili-helper
+[![Build Status](https://img.shields.io/travis/zacyu/bilibili-helper.svg)](https://travis-ci.org/zacyu/bilibili-helper)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kpbnombpnpcffllnianjibmpadjolanh.svg?style=flat-square)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
+[![Chrome Webstore Downloads](https://img.shields.io/chrome-web-store/d/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
+[![Website](https://img.shields.io/website-up-down-green-red/http/bilihelper.guguke.net.svg)](https://bilihelper.guguke.net/)
 
 Copyright (c) 2015 [Zac Yu](mailto:zacyu@google.com), Google Inc., [ruo](mailto:jjj201200@gmail.com)
 
