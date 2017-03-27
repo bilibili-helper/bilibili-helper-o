@@ -343,7 +343,7 @@
                         src: {
                             playlist: [{
                                 video: document.getElementById('bilibili_helper_html5_player_video'),
-                                comments: 'http://comment.bilibili.com/' + biliHelper.cid + '.xml',
+                                comments: '//comment.bilibili.com/' + biliHelper.cid + '.xml',
                             }],
                         },
                         width: '100%',
@@ -600,8 +600,8 @@
                     biliHelper.cid = videoInfo.cid;
                     if (!biliHelper.genPage) {
                         biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
-                        let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="http://comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
-                            downloadFileName = getDownloadOptions('http://comment.bilibili.com/' + biliHelper.cid + '.xml',
+                        let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>'),
+                            downloadFileName = getDownloadOptions('//comment.bilibili.com/' + biliHelper.cid + '.xml',
                 getNiceSectionFilename(biliHelper.avid,
                   biliHelper.page, biliHelper.totalPage, 1, 1)).filename;
                         commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
@@ -614,7 +614,7 @@
                         });
                         biliHelper.mainBlock.commentSection = commentDiv;
                         biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
-                        fetch('http://comment.bilibili.com/' + biliHelper.cid + '.xml').then(function(res) {
+                        fetch('//comment.bilibili.com/' + biliHelper.cid + '.xml').then(function(res) {
                             return res.text();
                         }).then(function(text) {
                             let parser = new DOMParser();
@@ -674,7 +674,7 @@
                                         return;
                                     }
                                     let displayUserInfo = function(uid, data) {
-                                        control.find('.result').html('发送者: <a href="http://space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
+                                        control.find('.result').html('发送者: <a href="//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
                                         let s = document.createElement('script');
                                         s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
                                         document.body.appendChild(s);
@@ -682,13 +682,13 @@
                                     };
 
                                     let renderSender = function(uid) {
-                                        control.find('.result').html('发送者 UID: <a href="http://space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
+                                        control.find('.result').html('发送者 UID: <a href="//space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
                                         let cachedData = sessionStorage.getItem('user/' + uid);
                                         if (cachedData) {
                                             displayUserInfo(uid, JSON.parse(cachedData));
                                             return false;
                                         }
-                                        $.getJSON('https://api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
+                                        $.getJSON('//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
                                             if (data.code === 0) {
                                                 let cardData = data.data.card;
                                                 sessionStorage.setItem('user/' + uid, JSON.stringify({
@@ -873,7 +873,7 @@
     }
 })();
 (function() {
-    if (location.href === 'http://www.bilibili.com/video/bgm_calendar.html') {
+    if (location.pathname === '/video/bgm_calendar.html') {
         let l = $('#bangumi');
         let d = new Date().getDay() - 1;
         for (let i = 0; i < 7; ++i) {
