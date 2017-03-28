@@ -1,4 +1,5 @@
 # bilibili-helper
+[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 [![Build Status](https://img.shields.io/travis/zacyu/bilibili-helper.svg)](https://travis-ci.org/zacyu/bilibili-helper)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
 [![Chrome Webstore Downloads](https://img.shields.io/chrome-web-store/d/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
