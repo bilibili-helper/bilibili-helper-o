@@ -4,12 +4,12 @@
 /**
  * Created by Ruo on 4/12/2016.
  */
-(function() {
+(function () {
     if (location.hostname === 'live.bilibili.com') {
         if (!store.enabled) {
             return;
         }
-        store.delete = function(key, value) {
+        store.delete = function (key, value) {
             if (key === undefined) {
                 return;
             }
@@ -26,34 +26,34 @@
                 store.remove(key);
             }
         };
-        let Live = {scriptOptions: {}, hasInit: false, giftList: {}, mobileVerified: 0, protocol: location.protocol};
-        Live.addScriptByFile = function(fileName, options) {
+        let Live = { scriptOptions: {}, hasInit: false, giftList: {}, mobileVerified: 0, protocol: location.protocol };
+        Live.addScriptByFile = function (fileName, options) {
             let a = document.createElement('script');
             a.id = 'bilibiliHelperScript';
             a.src = chrome.extension.getURL(fileName);
             typeof options === 'object' && a.setAttribute('options', JSON.stringify(options));
             document.body.appendChild(a);
         };
-        Live.addScriptByText = function(text) {
+        Live.addScriptByText = function (text) {
             let a = document.createElement('script');
             a.innerHTML = text;
             document.body.appendChild(a);
         };
-        Live.getDateDiff = function(startDate, endDate) {
+        Live.getDateDiff = function (startDate, endDate) {
             let startTime = new Date(Date.parse(startDate.replace(/-/g, '/'))).getTime();
             let endTime = new Date(Date.parse(endDate.replace(/-/g, '/'))).getTime();
             let dates = Math.abs((startTime - endTime)) / (1000 * 60 * 60 * 24);
             return dates;
         };
-        Live.getRoomHTML = function(url) {
+        Live.getRoomHTML = function (url) {
             return $.get(Live.protocol + '//live.bilibili.com/' + url).promise();
         };
-        Live.getRoomIdByUrl = function(url, callback) {
+        Live.getRoomIdByUrl = function (url, callback) {
             let id = store.get('bilibili_helper_live_roomId')[url];
             if (id != undefined) {
                 callback(id);
             } else {
-                Live.getRoomHTML(url).done(function(roomHtml) {
+                Live.getRoomHTML(url).done(function (roomHtml) {
                     let reg = new RegExp('var ROOMID = ([\\d]+)');
                     let roomID = reg.exec(roomHtml)[1];
                     if (roomID) {
@@ -64,20 +64,20 @@
                             callback(roomID);
                         }
                     }
-                }).fail(function(res) {
+                }).fail(function (res) {
                     if (res.status != 404) {
                         Live.getRoomIdByUrl(url, callback);
                     }
                 });
             }
         };
-        Live.getUser = function() {
+        Live.getUser = function () {
             return $.getJSON(Live.protocol + '/user/getuserinfo').promise();
         };
-        Live.getMedalList = function() {
+        Live.getMedalList = function () {
             return $.getJSON(Live.protocol + '//live.bilibili.com/i/ajaxGetMyMedalList').promise();
         };
-        Live.each = function(obj, fn) {
+        Live.each = function (obj, fn) {
             if (!fn) {
                 return;
             }
@@ -98,7 +98,7 @@
                 }
             }
         };
-        Live.getCookie = function(name) {
+        Live.getCookie = function (name) {
             let arr, reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
             if (arr = document.cookie.match(reg)) {
                 return unescape(arr[2]);
@@ -106,7 +106,7 @@
                 return null;
             }
         };
-        Live.setCookie = function(name, value, seconds) {
+        Live.setCookie = function (name, value, seconds) {
             seconds = seconds || 0;
             let expires = '';
             if (seconds != 0) {
@@ -116,11 +116,11 @@
             }
             document.cookie = name + '=' + escape(value) + expires + '; path=/';
         };
-        Live.liveQuickLogin = function() {
+        Live.liveQuickLogin = function () {
             if (!Live.getCookie('DedeUserID') && !Live.getCookie('LIVE_LOGIN_DATA')) {
                 try {
                     if (!window.biliQuickLogin) {
-                        $.getScript('https://static-s.bilibili.com/account/bili_quick_login.js', function(response, status) {
+                        $.getScript('https://static-s.bilibili.com/account/bili_quick_login.js', function (response, status) {
                             status === 'success' && login();
                         });
                     } else {
@@ -133,7 +133,7 @@
 
             function login() {
                 if (window.biliQuickLogin) {
-                    window.biliQuickLogin(function() {
+                    window.biliQuickLogin(function () {
                         window.location.reload();
                     });
                     throw 'Bilibili Live: 您没登陆，想干撒子？~~ -_-';
@@ -142,20 +142,20 @@
                 }
             }
         };
-        Live.getRoomId = function() {
+        Live.getRoomId = function () {
             return store.get('bilibili_helper_live_roomId')[location.pathname.substr(1)];
         };
-        Live.getRoomInfo = function() {
+        Live.getRoomInfo = function () {
             return $.getJSON('/live/getInfo?roomid=' + Live.roomId).promise();
         };
-        Live.numFormat = function(num) {
+        Live.numFormat = function (num) {
             let number = num;
             if (num >= 10000) {
                 number = (num / 10000).toFixed(1) + '万';
             }
             return number;
         };
-        Live.rgb2hex = function(rgb) {
+        Live.rgb2hex = function (rgb) {
             function zero_fill_hex(num, digits) {
                 let s = num.toString(16);
                 while (s.length < digits) {
@@ -172,7 +172,7 @@
             let decimal = Number(ds[1]) * 65536 + Number(ds[2]) * 256 + Number(ds[3]);
             return '#' + zero_fill_hex(decimal, 6);
         };
-        Live.getDomType = function(t) {
+        Live.getDomType = function (t) {
             let e = Object.prototype.toString.call(t),
                 n = /HTML.*.Element/;
             return '[object Object]' === e && t.jquery ? 'jQuery Object' : '[object Object]' === e ? 'Object' : '[object Number]' === e ? 'Number' : '[object String]' === e ? 'String' : '[object Array]' === e ? 'Array' : '[object Boolean]' === e ? 'Boolean' : '[object Function]' === e ? 'Function' : '[object Null]' === e ? 'null' : '[object Undefined]' === e ? 'undefined' : e.match(n) ? 'HTML Element' : '[object HTMLCollection]' === e ? 'HTML Elements Collection' : null;
@@ -184,16 +184,16 @@
                 sad: ['∑(っ °Д °;)っ', '＞︿＜', '＞△＜', '●︿●', '(´；ω；`)'],
                 helpless: ['◐▽◑', 'ʅ（´◔౪◔）ʃ', '_(:3 」∠)_', '_(┐「ε:)_', '(/・ω・＼)', '(°▽°)ﾉ'],
             },
-            happy: function() {
+            happy: function () {
                 return Live.randomEmoji.list.happy[Math.floor(Math.random() * Live.randomEmoji.list.happy.length)];
             },
-            sad: function() {
+            sad: function () {
                 return Live.randomEmoji.list.sad[Math.floor(Math.random() * Live.randomEmoji.list.sad.length)];
             },
-            shock: function() {
+            shock: function () {
                 return Live.randomEmoji.list.shock[Math.floor(Math.random() * Live.randomEmoji.list.shock.length)];
             },
-            helpless: function() {
+            helpless: function () {
                 return Live.randomEmoji.list.helpless[Math.floor(Math.random() * Live.randomEmoji.list.helpless.length)];
             },
         };
@@ -210,7 +210,7 @@
             }
 
             // Definition: 倒计时定义.
-            var interval = setInterval(function() {
+            var interval = setInterval(function () {
                 let ms = endTime.getTime() - dateNow.getTime(); // 倒计时剩余总时间: 毫秒.
                 let mm = Math.floor(ms / 60 / 1000); // 倒计时剩余总时间: 分钟.
                 let s = ms - (mm * 60 * 1000); // 倒计时秒数零头毫秒数: 总毫秒时间 - 总分钟取整时间
@@ -238,7 +238,7 @@
 
             this.countDown = interval;
         };
-        Live.countdown.prototype.clearCountdown = function() {
+        Live.countdown.prototype.clearCountdown = function () {
             clearInterval(this.countDown);
         };
         Live.console = {
@@ -252,10 +252,10 @@
                     'sys_gift': true,
                 },
             },
-            watcher: function(msg) {
+            watcher: function (msg) {
                 console.warn('%c监控:' + msg, 'color:#FFFFFF;background-color:#4fc1e9;padding:5px;border-radius:7px;line-height:30px;');
             },
-            info: function(type, json) {
+            info: function (type, json) {
                 if (type === 'danmu' && Live.console.option.display['danmu']) {
                     let danmu = json.info[1];
                     let userId = json.info[2][0];
@@ -327,23 +327,23 @@
                 }
             },
         };
-        Live.createPanel = function(parentDOM, toggleDom, eventName, className, id, callback) {
+        Live.createPanel = function (parentDOM, toggleDom, eventName, className, id, callback) {
             let openEvent, closeEvent;
             switch (eventName) {
-            case 'click':
-                openEvent = eventName;
-                closeEvent = eventName;
-                break;
-            case 'mouseenter':
-            case 'hover':
-            case 'mouseover':
-                openEvent = 'mouseenter';
-                closeEvent = 'mouseleave';
-                break;
+                case 'click':
+                    openEvent = eventName;
+                    closeEvent = eventName;
+                    break;
+                case 'mouseenter':
+                case 'hover':
+                case 'mouseover':
+                    openEvent = 'mouseenter';
+                    closeEvent = 'mouseleave';
+                    break;
             }
             let panel = $('<div />').addClass('live-hover-panel arrow-top ' + className).attr('id', id);
             parentDOM.append(toggleDom, panel);
-            toggleDom.off(openEvent).on(openEvent, function(t) {
+            toggleDom.off(openEvent).on(openEvent, function (t) {
                 t.stopPropagation();
                 $(window).click();
                 if (panel.hasClass('show')) {
@@ -357,13 +357,13 @@
                     let e = t && (t.target || t.srcElement);
                     if (!$(e).hasClass(className) && !$(e).parents('.' + className).length) {
                         panel.addClass('out');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(window).off(openEvent, n);
                             panel.removeClass('out').removeClass('show').css('display', '');
                         }, 300);
                     }
                 }
-                setTimeout(function() {
+                setTimeout(function () {
                     $(window).off(closeEvent).on(closeEvent, n);
                 }, 1);
                 if (typeof callback === 'function') {
@@ -372,7 +372,7 @@
             });
             return panel;
         };
-        Live.liveToast = function(dom, type, msg) {
+        Live.liveToast = function (dom, type, msg) {
             if (n = type || 'info', 'success' !== n && 'caution' !== n && 'error' !== n && 'info' !== n) {
                 return;
             }
@@ -381,14 +381,14 @@
             u.innerHTML = '<i class=\'toast-icon info\'></i><span class=\'toast-text\'>' + msg + Live.randomEmoji.helpless() + '</span>', u.className = 'live-toast ' + n;
             let d = null;
             switch (Live.getDomType(dom)) {
-            case 'HTML Element':
-                d = dom;
-                break;
-            case 'jQuery Object':
-                d = dom[0];
-                break;
-            default:
-                throw new Error(a.consoleText.error + '在使用 Live Toast 时请传入正确的原生 Dom 对象或节点的 jQuery 对象.');
+                case 'HTML Element':
+                    d = dom;
+                    break;
+                case 'jQuery Object':
+                    d = dom[0];
+                    break;
+                default:
+                    throw new Error(a.consoleText.error + '在使用 Live Toast 时请传入正确的原生 Dom 对象或节点的 jQuery 对象.');
             }
 
             function o(t) {
@@ -401,36 +401,36 @@
                 return null !== t.offsetParent ? e += i(t.offsetParent) : void 0, e;
             }
 
-            let f = {width: $(d).width(), height: $(d).height()},
+            let f = { width: $(d).width(), height: $(d).height() },
                 p = o(d),
                 m = i(d);
-            $(u).css({left: p + f.width});
+            $(u).css({ left: p + f.width });
             let v = 0;
-            v = document.body.scrollTop, $(u).css({top: m + f.height}), setTimeout(function() {
-                $(u).addClass('out'), setTimeout(function() {
+            v = document.body.scrollTop, $(u).css({ top: m + f.height }), setTimeout(function () {
+                $(u).addClass('out'), setTimeout(function () {
                     $(u).remove(), c = u = d = f = p = m = v = null;
                 }, 400);
             }, 2e3), c.appendChild(u), document.body.appendChild(c);
             let h = $(window).width(),
                 g = u.offsetWidth,
                 y = u.offsetLeft;
-            0 > h - g - y && $(u).css({left: h - g - 10}), h = g = y = null;
+            0 > h - g - y && $(u).css({ left: h - g - 10 }), h = g = y = null;
         };
         Live.doSign = {
-            getSignInfo: function() {
+            getSignInfo: function () {
                 return $.getJSON('/sign/GetSignInfo').promise();
             },
-            init: function() {
+            init: function () {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'doSign',
-                }, function(response) {
+                }, function (response) {
                     if (response['value'] === 'on') {
                         let username = store.get('bilibili_helper_userInfo')['username'];
                         let o;
-                        (o = {})[username] = {today: false, date: undefined};
+                        (o = {})[username] = { today: false, date: undefined };
                         store.set('bilibili_helper_doSign', o);
-                        Live.doSign.getSignInfo().done(function(data) {
+                        Live.doSign.getSignInfo().done(function (data) {
                             if (data.code === 0 && data.data.status === 0) {
                                 Live.doSign.sign();
                                 // $('.sign-up-btn').click();
@@ -438,20 +438,20 @@
                             } else if (data.code === 0 && data.data.status === 1) {
                                 let username = store.get('bilibili_helper_userInfo')['username'];
                                 let o;
-                                (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: new Date().getDate()};
+                                (o = store.get('bilibili_helper_doSign'))[username] = { today: true, date: new Date().getDate() };
                                 store.set('bilibili_helper_doSign', o);
                             }
                         });
                     }
                 });
             },
-            sign: function() {
+            sign: function () {
                 /* check login*/
 
                 let date = new Date().getDate();
                 let username = store.get('bilibili_helper_userInfo')['username'];
                 if (!store.get('bilibili_helper_doSign')[username].today || store.get('bilibili_helper_doSign')[username].date != date) {
-                    $.get('/sign/doSign', function(data) {
+                    $.get('/sign/doSign', function (data) {
                         let e = JSON.parse(data),
                             msg;
                         //    {
@@ -472,9 +472,9 @@
                                 icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                             });
                             var o;
-                            (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
+                            (o = store.get('bilibili_helper_doSign'))[username] = { today: true, date: date };
                             store.set('bilibili_helper_doSign', o);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 msg.close();
                             }, 10000);
                             let spans = $('.body-container').find('.room-left-sidebar .sign-and-mission .sign-up-btn .dp-inline-block span');
@@ -485,9 +485,9 @@
                                 icon: Live.protocol + '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
                             });
                             var o;
-                            (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
+                            (o = store.get('bilibili_helper_doSign'))[username] = { today: true, date: date };
                             store.set('bilibili_helper_doSign', o);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 msg.close();
                             }, 10000);
                         } else {
@@ -495,7 +495,7 @@
                                 body: '',
                                 icon: Live.protocol + '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
                             });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 msg.close();
                             }, 10000);
                         }
@@ -503,7 +503,7 @@
                 }
             },
         };
-        Live.Queue = function(which) {
+        Live.Queue = function (which) {
             let o = {};
             o.id = new Date().getTime();
             o.which = which;
@@ -513,11 +513,11 @@
             o.error = [];
             o.success = [];
             o.cancel = [];
-            o.add = function(appoint, state) {
+            o.add = function (appoint, state) {
                 state = state === undefined ? 'wait' : state;
                 o[state].push(appoint);
             };
-            o.empty = function() {
+            o.empty = function () {
                 $('#quiz_helper').find(o.which + '-box *').addClass('hide');
                 o.run = [];
                 o.wait = [];
@@ -525,14 +525,14 @@
                 o.cancel = [];
                 o.success = [];
             };
-            o.remove = function(appoint) {
+            o.remove = function (appoint) {
                 let index = o[appoint.state].indexOf(appoint);
                 if (index != -1) {
                     o[appoint.state].splice(index, 1);
                     appoint.destory();
                 }
             };
-            o.pushQueue = function(appoint, state) {
+            o.pushQueue = function (appoint, state) {
                 if (appoint.state != state) {
                     state = state === undefined ? 'wait' : state;
                     o.remove(appoint);
@@ -556,12 +556,12 @@
                     }
                 }
             };
-            o.updateTotal = function() {
+            o.updateTotal = function () {
                 Live.bet[o.which + '_sum_number'].text(o.total);
             };
             return o;
         };
-        Live.Appoint = function(which, rate, number, state) {
+        Live.Appoint = function (which, rate, number, state) {
             // var queueStr = {'0': 'cancel', '1': 'success', '2': 'error', '3': 'wait', '4': 'run'};
             let o = {};
             o.id = new Date().getTime();
@@ -570,7 +570,7 @@
             o.number = number;
             /* 0:cancel,1:success,2:error,3:wait,4:run*/
             o.state = state === undefined ? 'wait' : state;
-            o.emit = function(which, state) {
+            o.emit = function (which, state) {
                 /* set state*/
                 o.state = state === undefined ? o.state : state;
                 o.create_dom();
@@ -581,7 +581,7 @@
                 Live.bet.checkQueue();
                 return o;
             };
-            o.create_dom = function(top) {
+            o.create_dom = function (top) {
                 if (o.dom === undefined) {
                     let rate_dom = $('<span>').addClass('rate').text(rate);
                     let number_dom = $('<h4>').addClass('number').text(Live.numFormat(o.number));
@@ -605,15 +605,15 @@
                 }
                 return o;
             };
-            o.updateMenu = function() {
+            o.updateMenu = function () {
                 o.menu.empty();
-                o.menu_delete = $('<span class="delete"></span>').off('click').click(function() {
+                o.menu_delete = $('<span class="delete"></span>').off('click').click(function () {
                     Live.bet[o.which + '_queue'].remove(o);
                 });
-                o.menu_reset = $('<span class="reset"></span>').off('click').click(function() {
+                o.menu_reset = $('<span class="reset"></span>').off('click').click(function () {
                     Live.bet[o.which + '_queue'].pushQueue(o, 'wait');
                 });
-                o.menu_run = $('<span class="run"></span>').off('click').click(function() {
+                o.menu_run = $('<span class="run"></span>').off('click').click(function () {
                     Live.bet[o.which + '_queue'].pushQueue(o, 'run');
                 });
                 if (o.state === 'run' || o.state === 'success' || o.state === 'error' || o.state === 'cancel') {
@@ -623,7 +623,7 @@
                 }
                 return o;
             };
-            o.run = function(bet) {
+            o.run = function (bet) {
                 if (!bet) {
                     return false;
                 }
@@ -653,10 +653,10 @@
                             amount: o.number,
                             token: Live.getCookie('LIVE_LOGIN_DATA'),
                         },
-                        complete: function(data) {
+                        complete: function (data) {
                             let b = JSON.parse(data.responseText);
                             if (b.code === -400) { // error
-                                if (b.msg === '手慢了,剩余可购数量不足！') {} else {
+                                if (b.msg === '手慢了,剩余可购数量不足！') { } else {
                                     o.error(b);
                                 }
                             } else if (b.msg === 'ok') { // success
@@ -667,7 +667,7 @@
                 }
                 return o;
             };
-            o.error = function(data) {
+            o.error = function (data) {
                 if (!data) {
                     return false;
                 }
@@ -681,7 +681,7 @@
                 Live.bet[o.which + '_queue'].pushQueue(Live.bet[o.which + '_queue'].run.shift(), 'error');
                 return o;
             };
-            o.success = function() {
+            o.success = function () {
                 o.updateMenu();
                 /* deal style class*/
                 o.dom.removeClass('cancel wait error run');
@@ -691,7 +691,7 @@
                 Live.bet[o.which + '_queue'].pushQueue(Live.bet[o.which + '_queue'].run.shift(), 'success');
                 return o;
             };
-            o.wait = function() {
+            o.wait = function () {
                 o.state = 'wait';
                 /* deal style class*/
                 o.dom.removeClass('cancel success error run');
@@ -700,7 +700,7 @@
                 }
                 return o;
             };
-            o.cancel = function() {
+            o.cancel = function () {
                 o.state = 'cancel';
                 /* deal style class*/
                 o.dom.removeClass('wait success error run');
@@ -710,27 +710,27 @@
                 Live.bet[o.which + '_queue'].pushQueue(Live.bet[o.which + '_queue'].run.shift(), 'cancel');
                 return o;
             };
-            o.destory = function() {
+            o.destory = function () {
                 o.dom.remove();
                 o.dom = undefined;
             };
-            o.dealWith = function(data) {
+            o.dealWith = function (data) {
                 switch (o.state) {
-                case 'cancel':
-                    o.cancel();
-                    break;
-                case 'success':
-                    o.success();
-                    break;
-                case 'error':
-                    o.error(data);
-                    break;
-                case 'wait':
-                    o.wait();
-                    break;
-                case 'run':
-                    o.run(data);
-                    break;
+                    case 'cancel':
+                        o.cancel();
+                        break;
+                    case 'success':
+                        o.success();
+                        break;
+                    case 'error':
+                        o.error(data);
+                        break;
+                    case 'wait':
+                        o.wait();
+                        break;
+                    case 'run':
+                        o.run(data);
+                        break;
                 }
             };
             return o;
@@ -742,9 +742,9 @@
             hasShow: false,
             blue_queue: new Live.Queue('blue'),
             red_queue: new Live.Queue('red'),
-            checkBetStatus: function(callback) {
+            checkBetStatus: function (callback) {
                 /* check bet*/
-                Live.bet.getBet().done(function(bet) {
+                Live.bet.getBet().done(function (bet) {
                     bet = bet.data;
 
                     // if (bet.betStatus === false) {
@@ -768,7 +768,7 @@
                     }
                 });
             },
-            canBet: function(bet) {
+            canBet: function (bet) {
                 if (bet.isBet === false) {
                     if (store.get('bilibili_helper_quiz_autoMode')[Live.roomId] === 1) {
                         Live.bet.disable();
@@ -781,7 +781,7 @@
                     return true;
                 }
             },
-            betOn: function(bet) {
+            betOn: function (bet) {
                 if (bet.betStatus === false) {
                     if (store.get('bilibili_helper_quiz_autoMode')[Live.roomId] === 1) {
                         Live.bet.hide();
@@ -793,7 +793,7 @@
                     return true;
                 }
             },
-            checkQueue: function() {
+            checkQueue: function () {
                 Live.bet.cancelCheck();
                 if (Live.bet.stop) {
                     Live.bet.stopBet();
@@ -821,30 +821,30 @@
                     store.set('bilibili_helper_quiz_bet', o);
                 }
             },
-            hide_quiz_helper: function() {
+            hide_quiz_helper: function () {
                 Live.bet.hasShow = false;
                 Live.bet.quiz_helper_height = Live.bet.quiz_helper.height();
-                Live.bet.quiz_helper.animate({'height': '0px'});
+                Live.bet.quiz_helper.animate({ 'height': '0px' });
             },
-            show_quiz_helper: function() {
+            show_quiz_helper: function () {
                 Live.bet.hasShow = true;
                 if (Live.bet.quiz_helper_height === undefined) {
                     Live.bet.quiz_helper_height = 'auto';
                 }
-                Live.bet.quiz_helper.animate({height: Live.bet.quiz_helper_height}, function() {
+                Live.bet.quiz_helper.animate({ height: Live.bet.quiz_helper_height }, function () {
                     Live.bet.quiz_helper.css('height', 'auto');
                 });
             },
-            init: function() {
+            init: function () {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'bet',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on' && Live.BBQ && Live.BBQ.level >= 7) {
                         Live.bet.quiz_toggle_btn = $('<a class="bet_toggle">自动下注</a>');
                         $('#quiz-control-panel').find('.section-title').append(Live.bet.quiz_toggle_btn);
 
-                        Live.bet.quiz_toggle_btn.click(function() {
+                        Live.bet.quiz_toggle_btn.click(function () {
                             if (store.get('bilibili_helper_quiz_autoMode')[Live.roomId] === 1) {
                                 Live.bet.disable();
                             } else {
@@ -861,7 +861,7 @@
                     }
                 });
             },
-            initDOM: function() {
+            initDOM: function () {
                 /* auto mode*/
                 if (!store.get('bilibili_helper_quiz_autoMode')[Live.roomId]) {
                     return;
@@ -910,7 +910,7 @@
                     Live.bet.quiz_panel.append(Live.bet.quiz_helper);
 
                     /* add listener*/
-                    $('#quiz_helper').find('.bet-buy-btns button').click(function() {
+                    $('#quiz_helper').find('.bet-buy-btns button').click(function () {
                         let which = $(this).attr('data-target');
                         /* rate*/
                         let rate = parseFloat(Live.bet.quiz_rate.val());
@@ -952,10 +952,10 @@
                         which = which === 'a' ? 'blue' : 'red';
                         new Live.Appoint(which, rate, number).emit(which);
                     });
-                    Live.bet.quiz_number.focus(function() {
+                    Live.bet.quiz_number.focus(function () {
                         Live.init.userInfo();
                     });
-                    Live.bet.quiz_number.keyup(function() {
+                    Live.bet.quiz_number.keyup(function () {
                         let v = $(this).val();
                         let silver = parseInt(store.get('bilibili_helper_userInfo')['silver']);
                         while (v != '' && isNaN(v)) {
@@ -966,18 +966,18 @@
                             $(this).val(silver);
                         }
                     });
-                    Live.bet.quiz_rate.on('input change', function() {
+                    Live.bet.quiz_rate.on('input change', function () {
                         Live.bet.quiz_rate_n.text($(this).val());
                     });
                 }
                 Live.bet.hasInit = true;
                 Live.bet.show();
             },
-            getBet: function() {
-                return $.post(Live.protocol + '//live.bilibili.com/bet/getRoomBet', {roomid: Live.roomId}, function() {}, 'json').promise();
+            getBet: function () {
+                return $.post(Live.protocol + '//live.bilibili.com/bet/getRoomBet', { roomid: Live.roomId }, function () { }, 'json').promise();
             },
-            do: function() {
-                Live.bet.getBet().done(function(bet) {
+            do: function () {
+                Live.bet.getBet().done(function (bet) {
                     bet = bet.data;
                     /* no bet permission or bet is not on*/
                     if (!Live.bet.canBet(bet) || !Live.bet.betOn(bet)) {
@@ -997,7 +997,7 @@
                     Live.bet.checkQueue();
                 });
             },
-            cancel: function(check) {
+            cancel: function (check) {
                 if (Live.bet.hasInit) {
                     Live.bet.quiz_helper.children('input,div').removeClass('hide');
                     Live.init.clearLocalStorage();
@@ -1006,7 +1006,7 @@
                     Live.bet.check();
                 }
             },
-            hide: function(all) {
+            hide: function (all) {
                 if (Live.bet.hasInit) {
                     if (all) {
                         Live.bet.quiz_toggle_btn.removeClass('on');
@@ -1016,7 +1016,7 @@
                     Live.bet.hide_quiz_helper();
                 }
             },
-            show: function() {
+            show: function () {
                 if (Live.bet.hasInit) {
                     $('.bet-buy-ctnr.dp-none').find('.bet-buy-btns').addClass('hide');
                     $('#quiz-control-panel').find('.section-title').append(Live.bet.description);
@@ -1024,11 +1024,11 @@
                     Live.bet.show_quiz_helper();
                 }
             },
-            stopBet: function() {
+            stopBet: function () {
                 clearInterval(store.get('bilibili_helper_quiz_bet')[Live.roomId]);
                 store.delete('bilibili_helper_quiz_bet', Live.roomId);
             },
-            able: function() {
+            able: function () {
                 Live.bet.stop = false;
                 let o;
                 (o = store.get('bilibili_helper_quiz_autoMode'))[Live.roomId] = true;
@@ -1038,7 +1038,7 @@
                 }
                 Live.bet.check();
             },
-            disable: function() {
+            disable: function () {
                 if (Live.bet.hasInit) {
                     Live.bet.stopBet();
                     Live.bet.cancelCheck();
@@ -1052,7 +1052,7 @@
                     Live.bet.red_queue.empty();
                 }
             },
-            check: function() {
+            check: function () {
                 let o = store.get('bilibili_helper_quiz_check');
                 Live.bet.cancelCheck();
                 if (!o[Live.roomId]) {
@@ -1061,7 +1061,7 @@
                     store.set('bilibili_helper_quiz_check', o);
                 }
             },
-            cancelCheck: function() {
+            cancelCheck: function () {
                 clearInterval(store.get('bilibili_helper_quiz_check')[Live.roomId]);
                 store.delete('bilibili_helper_quiz_check', Live.roomId);
             },
@@ -1072,7 +1072,7 @@
             timer: 0,
             stop: false,
             silverSum: 0,
-            correctStr: {'g': 9, 'z': 2, '_': 4, 'Z': 2, 'o': 0, 'l': 1, 'B': 8, 'O': 0, 'S': 6, 's': 6, 'i': 1, 'I': 1},
+            correctStr: { 'g': 9, 'z': 2, '_': 4, 'Z': 2, 'o': 0, 'l': 1, 'B': 8, 'O': 0, 'S': 6, 's': 6, 'i': 1, 'I': 1 },
             silverSeed: false, // current silver
             allowCtrl: true,
             status: 'waiting', // current treasure status: "waiting" || "acquirable"
@@ -1093,7 +1093,7 @@
                 userInput: '',
                 question: '',
                 answer: '',
-                refresh: function() {
+                refresh: function () {
                     Live.treasure.captcha.img = Live.treasure.getCaptcha();
                     Live.treasure.treasureTipAcquire.find('img').attr('src', Live.treasure.captcha.img);
                     Live.treasure.treasureTipAcquire.find('input').val('');
@@ -1103,12 +1103,12 @@
                 text: '领取',
                 bk: '',
                 interval: null,
-                awarding: function() {
+                awarding: function () {
                     Live.treasure.awardBtn.bk = Live.treasure.awardBtn.text;
                     Live.treasure.awardBtn.text = '领取中.';
                     let btn = Live.treasure.treasureTip.find('.acquiring-panel .get-award-btn');
                     btn.text(Live.treasure.awardBtn.text);
-                    Live.treasure.awardBtn.interval = setInterval(function() {
+                    Live.treasure.awardBtn.interval = setInterval(function () {
                         if (Live.treasure.awardBtn.text.indexOf('...') > -1) {
                             Live.treasure.awardBtn.text = '领取中';
                             btn.text(Live.treasure.awardBtn.text);
@@ -1118,33 +1118,33 @@
                         btn.text(Live.treasure.awardBtn.text);
                     }, 500);
                 },
-                restore: function() {
+                restore: function () {
                     clearInterval(Live.treasure.awardBtn.interval);
                     Live.treasure.awardBtn.text = Live.treasure.awardBtn.bk;
                 },
             },
             waitingEmoji: Live.randomEmoji.happy(),
             panelEmoji: Live.randomEmoji.helpless(),
-            init: function() {
+            init: function () {
                 chrome.runtime.sendMessage({
                     command: "getOption",
                     key: 'autoTreasure',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on') {
-                        setTimeout(function() {
-                        // Live.scriptOptions['treasure'] = true;
-                        chrome.runtime.sendMessage({
-                            command: "getTreasure"
-                        }, function (response) {
+                        setTimeout(function () {
+                            // Live.scriptOptions['treasure'] = true;
+                            chrome.runtime.sendMessage({
+                                command: "getTreasure"
+                            }, function (response) {
                                 Live.treasureBtn.find('span').attr('title', '正在初始化');
-                            // Live.treasureInfoDOM = $('<div class="room-info treasure-info">自动领瓜子功能正在初始化</div>');
-                            // Live.bilibiliHelperInfoDOM.append(Live.treasureInfoDOM);
+                                // Live.treasureInfoDOM = $('<div class="room-info treasure-info">自动领瓜子功能正在初始化</div>');
+                                // Live.bilibiliHelperInfoDOM.append(Live.treasureInfoDOM);
                                 if (Live.mobileVerified === 0) {
                                     Live.helperInfo.setTreasureStatus('error', '初始化失败，无法通过手机绑定检测');
                                     return;
                                 }
                                 if (response['data'].roomId === undefined) {
-                                // init background data
+                                    // init background data
                                     chrome.runtime.sendMessage({
                                         command: 'setTreasure',
                                         data: {
@@ -1162,13 +1162,13 @@
                                         icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                                     });
 
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         msg.close();
                                     }, 10000);
 
                                     Live.treasure.silverSum = store.get('bilibili_helper_treasure_silver_count');
 
-                                // init dom
+                                    // init dom
                                     Live.treasure.treasureCtrl = $('.treasure-box-ctnr').clone();
                                     Live.treasure.treasureCtrl.attr('id', 'helperTreasurePlanel');
                                     $('.treasure-box-ctnr').after(Live.treasure.treasureCtrl).hide();
@@ -1178,7 +1178,7 @@
                                     Live.treasure.treasureTipAcquire = Live.treasure.treasureCtrl.find('.box-panel .acquiring-panel');
                                     Live.treasure.captchaInput = Live.treasure.treasureCtrl.find('.get-award-btn');
 
-                                // init canvas
+                                    // init canvas
                                     Live.treasure.canvas = document.createElement('canvas');
                                     Live.treasure.canvas.width = 120;
                                     Live.treasure.canvas.height = 40;
@@ -1192,37 +1192,37 @@
                                         document.body.appendChild(d);
                                     }
 
-                                // init dom event
-                                    Live.treasure.treasureBox.find('.hide-box').on('click', function() {
+                                    // init dom event
+                                    Live.treasure.treasureBox.find('.hide-box').on('click', function () {
                                         Live.treasure.minBox();
                                     });
-                                    Live.treasure.treasureBox.find('.count-down').on('click', function() {
+                                    Live.treasure.treasureBox.find('.count-down').on('click', function () {
                                         Live.treasure.maxBox();
                                     });
-                                    Live.treasure.treasureBox.find('.treasure-box').on('click', function() {
+                                    Live.treasure.treasureBox.find('.treasure-box').on('click', function () {
                                         Live.treasure.showPanel();
                                     });
-                                    Live.treasure.treasureTip.find('.close-btn,.waiting-panel .live-btn').on('click', function() {
+                                    Live.treasure.treasureTip.find('.close-btn,.waiting-panel .live-btn').on('click', function () {
                                         Live.treasure.hidePanel();
                                     });
-                                    Live.treasure.treasureTip.find('.acquiring-panel .get-award-btn').on('click', function() {
+                                    Live.treasure.treasureTip.find('.acquiring-panel .get-award-btn').on('click', function () {
                                         Live.treasure.getAward();
                                     });
 
                                     Live.treasure.totalTime = (store.get('bilibili_helper_userInfo')['vip'] === 1) ? 3 : 5;
                                     Live.treasure.checkNewTask();
                                     Live.treasure.treasureTip.find('.close-btn').click();
-                                    $(window).on('beforeunload', function() {
+                                    $(window).on('beforeunload', function () {
                                         chrome.runtime.sendMessage({
                                             command: "delTreasure"
                                         });
                                     });
-                                    $(document).mousemove(function(e) {
+                                    $(document).mousemove(function (e) {
                                         Live.treasure.stop = false;
                                         Live.treasure.timer = 0;
                                     });
 
-                                    setInterval(function() {
+                                    setInterval(function () {
                                         ++Live.treasure.timer;
                                         if (Live.treasure.timer >= 3600) {
                                             Live.treasure.stop = true;
@@ -1230,27 +1230,27 @@
                                         }
                                     }, 1000);
 
-                                    let port = chrome.runtime.connect({name: chrome.i18n.getMessage('@@extension_id')});
-                                    port.onMessage.addListener(function(request) {
+                                    let port = chrome.runtime.connect({ name: chrome.i18n.getMessage('@@extension_id') });
+                                    port.onMessage.addListener(function (request) {
                                         switch (request.command) {
-                                        case 'updateCurrentTreasure':
-                                            var startTime = request.data.time_start;
-                                            var endTime = request.data.time_end;
-                                            var minute = request.data.minute;
-                                            var award = request.data.silver;
-                                            Live.treasure.setNewTask(startTime, endTime, minute, award);
-                                            break;
+                                            case 'updateCurrentTreasure':
+                                                var startTime = request.data.time_start;
+                                                var endTime = request.data.time_end;
+                                                var minute = request.data.minute;
+                                                var award = request.data.silver;
+                                                Live.treasure.setNewTask(startTime, endTime, minute, award);
+                                                break;
                                         }
                                     });
                                     Live.helperInfo.setTreasureStatus('success', '功能已经启动');
                                 } else if (response['data'].roomId != Live.roomId) {
                                     Live.helperInfo.setTreasureStatus('wait', '已在' + response['data'].upName + '的直播间自动领瓜子');
-                                // Live.treasureInfoDOM.html('已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间自动领瓜子');
+                                    // Live.treasureInfoDOM.html('已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间自动领瓜子');
                                     $('#player-container').find('.treasure-box-ctnr').hide('middle');
                                     Live.treasure.checkNewTask(true);
                                 } else if (response['data'].roomId === Live.roomId) {
                                     Live.helperInfo.setTreasureStatus('wait', '本直播间页面已经被打开过');
-                                // Live.treasureInfoDOM.html('本直播间页面已经被打开过');
+                                    // Live.treasureInfoDOM.html('本直播间页面已经被打开过');
                                     $('#player-container').find('.treasure-box-ctnr').hide('middle');
                                     Live.treasure.checkNewTask(true);
                                 } else {
@@ -1261,27 +1261,27 @@
                     }
                 });
             },
-            showBox: function() {
+            showBox: function () {
                 if (!Live.treasure.boxHidden || !Live.treasure.allowCtrl) {
                     return;
                 }
                 Live.treasure.boxHidden = false;
             },
-            hideBox: function() {
+            hideBox: function () {
                 if (!Live.treasure.allowCtrl || Live.treasure.boxHidden) {
                     return;
                 }
                 Live.treasure.boxHidden = true;
             },
-            minBox: function() {
+            minBox: function () {
                 Live.treasure.treasureBox.find('.hide-box,.box-footer,.treasure-box').hide();
                 Live.treasure.treasureBox.find('.count-down-node').addClass('minimal');
             },
-            maxBox: function() {
+            maxBox: function () {
                 Live.treasure.treasureBox.find('.hide-box,.box-footer,.treasure-box').show();
                 Live.treasure.treasureBox.find('.count-down-node').removeClass('minimal');
             },
-            showPanel: function() {
+            showPanel: function () {
                 if (!Live.treasure.allowCtrl || !Live.treasure.panelHidden) {
                     return;
                 }
@@ -1299,7 +1299,7 @@
                 }
                 Live.treasure.treasureTip.show();
             },
-            hidePanel: function() {
+            hidePanel: function () {
                 if (Live.treasure.panelHidden) {
                     return;
                 }
@@ -1307,7 +1307,7 @@
                 Live.treasure.panelOut = true;
                 Live.treasure.treasureBox.find('.hide-box').show();
                 Live.treasure.treasureTip.addClass('out');
-                setTimeout(function() {
+                setTimeout(function () {
                     Live.treasure.panelHidden = true;
                     Live.treasure.panelOut = false;
                     Live.treasure.allowCtrl = true;
@@ -1315,7 +1315,7 @@
                     Live.treasure.treasureTip.removeClass('out');
                 }, 300);
             },
-            makeAcquirable: function() {
+            makeAcquirable: function () {
                 Live.treasure.allowCtrl = true;
                 Live.treasure.treasureTipAcquire.show();
                 Live.treasure.treasureTipWait.hide();
@@ -1325,7 +1325,7 @@
                 Live.treasure.playBoxAnimation();
                 Live.treasure.status = 'acquirable';
             },
-            makeWaiting: function() {
+            makeWaiting: function () {
                 Live.treasure.treasureTipAcquire.hide();
                 Live.treasure.treasureTipWait.show();
                 Live.treasure.treasureTip.removeClass('acquire');
@@ -1333,7 +1333,7 @@
                 Live.treasure.treasureTipWait.find('.panel-title').text('宝箱倒计时' + Live.treasure.waitingEmoji);
                 Live.treasure.status = 'waiting';
             },
-            makeFinished: function() {
+            makeFinished: function () {
                 Live.treasure.finished = true;
                 Live.setCookie('F_S_T_' + window.UID, 1);
                 Live.treasure.treasureCtrl && Live.treasure.treasureCtrl.hide('middle');
@@ -1341,9 +1341,9 @@
 
                 Live.helperInfo.setTreasureStatus('finished', '今天的瓜子已经领完');
             },
-            restoreBox: function() {
-                setTimeout(function() {
-                    var interval = setInterval(function() {
+            restoreBox: function () {
+                setTimeout(function () {
+                    var interval = setInterval(function () {
                         Live.treasure.aniStep--;
                         if (Live.treasure.aniStep <= 1) {
                             clearInterval(interval);
@@ -1354,9 +1354,9 @@
                     }, 100);
                 }, 250);
             },
-            playBoxAnimation: function(target) {
+            playBoxAnimation: function (target) {
                 target = target || 7;
-                var interval = setInterval(function() {
+                var interval = setInterval(function () {
                     Live.treasure.aniStep++;
                     if (Live.treasure.aniStep >= target) {
                         clearInterval(interval);
@@ -1366,8 +1366,8 @@
                     Live.treasure.treasureBox.find('.treasure-box').removeClass('animate' + (Live.treasure.aniStep - 1));
                 }, 100);
             },
-            checkNewTask: function(opened) {
-                Live.treasure.getCurrentTask().done(function(result) {
+            checkNewTask: function (opened) {
+                Live.treasure.getCurrentTask().done(function (result) {
                     if (result.code !== undefined) {
                         result.code = parseInt(result.code, 10);
                     } else {
@@ -1406,11 +1406,11 @@
                         // $('#head-info-panel').find('.treasure-info').html('已开始在本直播间自动领瓜子');
                         Live.treasure.setNewTask(result.data.time_start, result.data.time_end, parseInt(result.data.minute, 10), parseInt(result.data.silver, 10));
                     }
-                }).fail(function() {
+                }).fail(function () {
                     Live.treasure.checkNewTask();
                 });
             },
-            setNewTask: function(startTime, endTime, minute, award) {
+            setNewTask: function (startTime, endTime, minute, award) {
                 Live.treasure.hidePanel();
                 Live.treasure.restoreBox();
                 setTimeout(Live.treasure.makeWaiting, 300); // 等待动画结束后延迟执行.
@@ -1422,7 +1422,7 @@
 
                 Live.treasure.setCountdown(minute);
             },
-            getAward: function() {
+            getAward: function () {
                 if (!Live.treasure.allowCtrl) {
                     return;
                 }
@@ -1431,7 +1431,7 @@
                 // Live.treasure.awardBtn.awarding();
 
                 let img = Live.treasure.treasureTipAcquire.find('.captcha-img');
-                img.load(function() {
+                img.load(function () {
                     Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
                     Live.treasure.context.drawImage(img[0], 0, 0);
                     Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
@@ -1444,15 +1444,15 @@
                     !Live.treasure.stop && getAward(data.startTime, data.endTime, captcha);
                 });
                 Live.treasure.captcha.refresh();
-                img.error(function() {
+                img.error(function () {
                     Live.treasure.captcha.refresh();
                 });
 
                 function getAward(time_start, time_end, captcha) {
                     Live.treasure.imgInit = false;
                     Live.treasure.stop && Live.helperInfo.setTreasureStatus('success', '功能已经启动');
-                    $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getAward', {time_start: time_start, time_end: time_end, captcha: captcha}, function() {}, 'json').promise()
-                        .done(function(result) {
+                    $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getAward', { time_start: time_start, time_end: time_end, captcha: captcha }, function () { }, 'json').promise()
+                        .done(function (result) {
                             if (result.code != 0) {
                                 Live.liveToast(Live.treasure.captchaInput[0], 'info', result.msg + Live.randomEmoji.helpless());
                                 Live.treasure.allowCtrl = true;
@@ -1477,7 +1477,7 @@
                                 body: '领取了' + Live.treasure.taskInfo.award + '个瓜子',
                                 icon: Live.protocol + '//static.hdslb.com/live-static/images/7.png',
                             });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 msg.close();
                             }, 10000);
 
@@ -1485,19 +1485,19 @@
                             Live.treasure.checkNewTask();
                             Live.treasure.awardBtn.restore();
                             Live.treasure.allowCtrl = true;
-                        }).fail(function(xhrObject) {
+                        }).fail(function (xhrObject) {
                             Live.liveToast($captchaInput[0], 'error', '系统错误，请稍后再试 ' + Live.randomEmoji.sad());
                             Live.treasure.awardBtn.restore();
                             Live.treasure.allowCtrl = true;
                             Live.treasure.getAward(time_start, time_end, captcha);
                             // MOCKING.
                             // treasureCtrl.setNewTask(111, 222, 5, 10);
-                        }).always(function() {
+                        }).always(function () {
                             Live.treasure.captcha.userInput = '';
                         });
                 }
             },
-            updateCurrency: function() {
+            updateCurrency: function () {
                 if (isNaN(parseInt(Live.treasure.silverSeed, 10))) {
                     return;
                 }
@@ -1505,7 +1505,7 @@
                 // Live.control.$fire("all!updateCurrency", { silver: newSeed });
                 Live.treasure.silverSeed = newSeed;
             },
-            setCountdown: function(countMinutes) {
+            setCountdown: function (countMinutes) {
                 Live.treasure.countdown && Live.treasure.countdown.clearCountdown();
                 let newDate = new Date();
                 let targetMinutes = newDate.getMinutes() + countMinutes; // MOCKING: SHOULD RESTORE TO GET MINUTES.
@@ -1513,7 +1513,7 @@
                 Live.treasure.countdown = new Live.countdown({
                     endTime: newDate,
                     element: Live.treasure.treasureCtrl.find('.count-down-node'),
-                    callback: function() {
+                    callback: function () {
                         Live.treasure.makeAcquirable();
                         Live.treasure.treasureBox.find('.treasure-box').click();
                         Live.treasure.treasureTip.find('.acquiring-panel .get-award-btn').click();
@@ -1521,7 +1521,7 @@
                 });
                 Live.treasure.allowCtrl = true;
             },
-            correctQuestion: function(question) {
+            correctQuestion: function (question) {
                 var q = '',
                     question = question.trim();
                 for (let i in question) {
@@ -1530,13 +1530,13 @@
                 }
                 return q;
             },
-            getCurrentTask: function() {
-                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getCurrentTask', {}, function() {}, 'json').promise();
+            getCurrentTask: function () {
+                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getCurrentTask', {}, function () { }, 'json').promise();
             },
-            getSurplus: function() {
-                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getSurplus', {}, function() {}, 'json').promise();
+            getSurplus: function () {
+                return $.get(Live.protocol + '//live.bilibili.com/FreeSilver/getSurplus', {}, function () { }, 'json').promise();
             },
-            getCaptcha: function() {
+            getCaptcha: function () {
                 return Live.protocol + '//live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now();
             },
         };
@@ -1544,8 +1544,8 @@
             maxLength: 20,
             text: '',
             beat: false,
-            colorValue: {'white': '0xffffff', 'red': '0xff6868', 'blue': '0x66ccff', 'pink': '0xfca992', 'cyan': '0x00fffc', 'green': '0x7eff00', 'yellow': '0xffed4f', 'orange': '0xff9800'},
-            danmuMode: {'top': 5, 'scroll': 1},
+            colorValue: { 'white': '0xffffff', 'red': '0xff6868', 'blue': '0x66ccff', 'pink': '0xfca992', 'cyan': '0x00fffc', 'green': '0x7eff00', 'yellow': '0xffed4f', 'orange': '0xff9800' },
+            danmuMode: { 'top': 5, 'scroll': 1 },
             hideStyle: {
                 chat: {
                     title: '聊天内容',
@@ -1594,13 +1594,13 @@
                 },
             },
             displayOption: [],
-            init: function() {
+            init: function () {
                 Live.chat.chat_ctrl_panel = $('#chat-ctrl-panel');
                 Live.chat.counter = Live.chat.chat_ctrl_panel.find('.danmu-length-count');
                 chrome.runtime.sendMessage({
                     command: "getOption",
                     key: 'beat',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on' && Live.BBQ && Live.BBQ.level >= 10 && Live.user && (typeof Live.user.user_level_rank === 'number') && Live.user.user_level_rank <= 25000) {
                         Live.chat.beat = true;
                     }
@@ -1608,7 +1608,7 @@
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'danmu',
-                }, function(response) {
+                }, function (response) {
                     if (response['value'] === 'on') {
                         $('#chat-ctrl-panel').append($('<div class="room-silent-merge dp-none p-absolute p-zero help-chat-shade" style="display:block;"><p><span class="hint-text"></span>弹幕增强功能正在初始化</p></div>'));
                         setTimeout(Live.chat.initDanmu, 2000);
@@ -1617,26 +1617,28 @@
                 chrome.runtime.sendMessage({
                     command: "getOption",
                     key: 'chatDisplay',
-                }, function(response) {
+                }, function (response) {
                     if (response['value'] === 'on') {
                         Live.chat.initChatDisplay(true);
                     }
                 });
             },
-            sendDamu: function() {
+            sendDamu: function () {
                 if (Live.chat.text.length > 0) {
                     let colorStr = $('.color-select-panel').attr('data-dd');
                     let mode = $('.mode-select-panel').find('a.active').attr('class').split(' ', 3)[1];
-                    $('#player_object')[0].sendMsg(Live.chat.text.substr(0, Live.chat.maxLength), colorStr, Live.chat.danmuMode[mode]);
-                    Live.chat.text = Live.chat.text.substr(Live.chat.maxLength);
-                    if (Live.chat.text.length > 0) {
-                        setTimeout(function() {
-                            Live.chat.sendDamu();
-                        }, 4000);
-                    }
+                    console.log(chrome.windows)
+                    console.log($('#player_object')[0])
+                    // $('#player_object')[0].sendMsg(Live.chat.text.substr(0, Live.chat.maxLength), colorStr, Live.chat.danmuMode[mode]);
+                    // Live.chat.text = Live.chat.text.substr(Live.chat.maxLength);
+                    // if (Live.chat.text.length > 0) {
+                    //     setTimeout(function() {
+                    //         Live.chat.sendDamu();
+                    //     }, 4000);
+                    // }
                 }
             },
-            initDanmu: function() {
+            initDanmu: function () {
                 // init & hide original ui
                 let original_emoji_btn = Live.chat.chat_ctrl_panel.find('.chat-ctrl-btns .btns .emoji');
                 let helper_emoji_btn = original_emoji_btn.clone().addClass('helper-emoji');
@@ -1666,35 +1668,40 @@
                 Live.chat.maxLength = parseInt(store.get('bilibili_helper_userInfo')['userLevel']) >= 20 ? 30 : 20;
 
                 Live.chat.counter.text('0 / 1 + 0');
+                Live.scriptOptions['chat'] = {
+                    colorValue: Live.chat.colorValue,
+                    danmuMode: Live.chat.danmuMode,
+                    maxLength: Live.chat.maxLength
+                };
 
                 // init event
-                helper_emoji_btn.on('click', function() {
+                helper_emoji_btn.on('click', function () {
                     if (helper_emoji_list.css('display') === 'none') {
                         helper_emoji_list.show();
 
                         function n(t) {
                             let e = t && (t.target || t.srcElement);
-                            e && e.className.indexOf('emoji-panel') > -1 || $('.emoji-panel').fadeOut(200, function() {
+                            e && e.className.indexOf('emoji-panel') > -1 || $('.emoji-panel').fadeOut(200, function () {
                                 $(window).off('click', n);
                             });
                         }
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(window).on('click', n);
                         }, 1);
                     }
                 });
-                helper_hot_words_btn.on('click', function() {
+                helper_hot_words_btn.on('click', function () {
                     if (helper_hot_words_list.css('display') === 'none') {
                         helper_hot_words_list.show();
 
                         function n(t) {
                             let e = t && (t.target || t.srcElement);
-                            e && e.className.indexOf('hot-words-panel') > -1 || $('.hot-words-panel').fadeOut(200, function() {
+                            e && e.className.indexOf('hot-words-panel') > -1 || $('.hot-words-panel').fadeOut(200, function () {
                                 $(window).off('click', n);
                             });
                         }
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(window).on('click', n);
                         }, 1);
                     }
@@ -1715,28 +1722,28 @@
                 //     }
                 // }
 
-                helper_send_btn.on('click', function(e) {
-                    e.preventDefault();
-                    if (Live.chat.helper_text_area.val() != '') {
-                        if (Live.chat.text.length === 0) {
-                            Live.chat.text = Live.chat.helper_text_area.val().trim();
-                            Live.chat.helper_text_area.val('');
+                // helper_send_btn.on('click', function(e) {
+                //     e.preventDefault();
+                //     if (Live.chat.helper_text_area.val() != '') {
+                //         if (Live.chat.text.length === 0) {
+                //             Live.chat.text = Live.chat.helper_text_area.val().trim();
+                //             Live.chat.helper_text_area.val('');
 
-                            // /*beat*/
-                            // doBeat(Live.chat.text);
+                //             // /*beat*/
+                //             // doBeat(Live.chat.text);
 
-                            Live.chat.sendDamu();
-                        } else {
-                            Live.chat.text += Live.chat.helper_text_area.val();
-                            Live.chat.helper_text_area.val('');
-                        }
+                //             Live.chat.sendDamu();
+                //         } else {
+                //             Live.chat.text += Live.chat.helper_text_area.val();
+                //             Live.chat.helper_text_area.val('');
+                //         }
 
-                        Live.chat.counter.text('0 / 1 + 0');
-                    } else {
-                        Live.liveToast(helper_send_btn, 'info', '请输入弹幕后再发送~');
-                    }
-                });
-                Live.chat.helper_text_area.on('keydown', function(e) {
+                //         Live.chat.counter.text('0 / 1 + 0');
+                //     } else {
+                //         Live.liveToast(helper_send_btn, 'info', '请输入弹幕后再发送~');
+                //     }
+                // });
+                Live.chat.helper_text_area.on('keydown', function (e) {
                     let text = Live.chat.helper_text_area.val().trim();
                     if (e.keyCode === 13 && text === '') {
                         e.preventDefault();
@@ -1757,17 +1764,17 @@
                     }
                     Live.chat.updateCounter(text);
                 });
-                Live.chat.helper_text_area.on('keyup', function() {
+                Live.chat.helper_text_area.on('keyup', function () {
                     let text = Live.chat.helper_text_area.val().trim();
                     Live.chat.updateCounter(text);
                 });
-                helper_emoji_list.on('click', 'a', function() {
+                helper_emoji_list.on('click', 'a', function () {
                     let text = Live.chat.helper_text_area.val().trim();
                     Live.chat.helper_text_area.val(text + $(this).text());
                     Live.chat.helper_text_area.focus();
                     Live.chat.updateCounter(Live.chat.helper_text_area.val().trim());
                 });
-                helper_hot_words_list.on('click', 'a', function() {
+                helper_hot_words_list.on('click', 'a', function () {
                     let text = Live.chat.helper_text_area.val().trim();
                     Live.chat.helper_text_area.val(text + $(this).text());
                     Live.chat.helper_text_area.focus();
@@ -1777,12 +1784,12 @@
                 // init has finished
                 Live.chat.chat_ctrl_panel.find('.help-chat-shade').hide('middle');
             },
-            initChatHelper: function() {
+            initChatHelper: function () {
                 Live.chat.chat_ctrl_panel.find('#chatHelper').remove();
                 Live.chat.chatHelper = $('<div id="chatHelper"></div>').css('background-image', 'url(' + chrome.extension.getURL('imgs/jinkela.png') + ')');
                 Live.chat.chatDisplayBlock = $('<div class="chat-display"><h2 class="panel-title">屏蔽选项</h2></div>');
                 Live.chat.chatHelperWindow = $('<div id="chatHelperWindow" class="chat-helper-panel ctrl-panel"></div>').hide();
-                Live.each(Live.chat.hideStyle, function(i) {
+                Live.each(Live.chat.hideStyle, function (i) {
                     let displayOptionDOM = $(
                         '<div class="display-option">' +
                         '<span class="title">' + Live.chat.hideStyle[i].title + '</span>' +
@@ -1795,23 +1802,23 @@
                 });
                 Live.chat.chatHelperWindow.append(Live.chat.chatDisplayBlock);
                 Live.chat.chat_ctrl_panel.append(Live.chat.chatHelper, Live.chat.chatHelperWindow);
-                Live.chat.chatHelper.off('click').on('click', function() {
+                Live.chat.chatHelper.off('click').on('click', function () {
                     if (Live.chat.chatHelperWindow.css('display') === 'none') {
                         Live.chat.chatHelperWindow.show();
 
                         function n(t) {
                             let e = t && (t.target || t.srcElement);
                             !$(e).hasClass('chat-helper-panel') && !$(e).parents('#chatHelperWindow').length &&
-                                $('.chat-helper-panel').fadeOut(200, function() {
+                                $('.chat-helper-panel').fadeOut(200, function () {
                                     $(window).off('click', n);
                                 });
                         }
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(window).on('click', n);
                         }, 1);
                     }
                 });
-                Live.chat.chatDisplayBlock.find('.display-option .option .button').off('click').on('click', function() {
+                Live.chat.chatDisplayBlock.find('.display-option .option .button').off('click').on('click', function () {
                     let classes = $(this).attr('class').split(' ')[1];
                     if ($(this).hasClass('on')) {
                         return false;
@@ -1837,11 +1844,11 @@
                     Live.chat.initChatDisplay();
                 });
             },
-            initChatDisplay: function(isInit) {
+            initChatDisplay: function (isInit) {
                 chrome.runtime.sendMessage({
                     command: "getOption",
                     key: 'displayOption',
-                }, function(response) {
+                }, function (response) {
                     let local = store.get('bilibili_helper_chat_display')[Live.roomId] || [];
                     let local_option = local.length ? local : [];
                     let global_option = JSON.parse(response['value']);
@@ -1868,7 +1875,7 @@
                         Live.chat.displayOption = global_option;
                     }
                     let options = Live.chat.displayOption;
-                    Live.each(Live.chat.hideStyle, function(i) {
+                    Live.each(Live.chat.hideStyle, function (i) {
                         let index = options.indexOf(i);
                         if (index < 0) {
                             $('.chatDisplayStyle_' + i).remove();
@@ -1883,7 +1890,7 @@
                     }
                 });
             },
-            addStylesheet: function(displayType) {
+            addStylesheet: function (displayType) {
                 let styleElement = document.createElement('style');
                 styleElement.setAttribute('class', 'chatDisplayStyle_' + displayType);
                 styleElement.setAttribute('type', 'text/css');
@@ -1894,23 +1901,23 @@
                     document.documentElement.appendChild(styleElement);
                 }
             },
-            updateCounter: function(text) {
+            updateCounter: function (text) {
                 let part = parseInt(text.length / Live.chat.maxLength);
                 let rest = part > 0 ? text.length % Live.chat.maxLength : 0;
                 Live.chat.counter.text(text.length + ' / ' + (part === 0 ? 1 : part) + ' + ' + rest);
             },
         };
         Live.notise = {
-            init: function() {
+            init: function () {
                 let upInfo = {};
-                Live.getRoomInfo().done(function(data) {
+                Live.getRoomInfo().done(function (data) {
                     upInfo.uid = data.data.UID;
                     upInfo.roomId = data.data.ROOMID;
                     upInfo.roomShortI = location.pathname.substr(1);
                     upInfo.roomTitle = data.data.ROOMTITLE;
                     upInfo.upName = data.data.ANCHOR_NICK_NAME;
                     upInfo.url = location.href;
-                    var notiseBtn = $('<div>').addClass('mid-part').append('<i class="live-icon-small favourite p-relative" style="top: 1px"></i><span>特别关注</span>').click(function() {
+                    var notiseBtn = $('<div>').addClass('mid-part').append('<i class="live-icon-small favourite p-relative" style="top: 1px"></i><span>特别关注</span>').click(function () {
                         if ($(this).find('i').hasClass('favourited')) {
                             chrome.runtime.sendMessage({
                                 command: "setNotFavourite",
@@ -1932,12 +1939,12 @@
                                 notiseBtn.find('i').addClass('favourited');
                             });
                         }
-                    }).hover(function() {
+                    }).hover(function () {
                         $(this).attr('title', '关注之后再特别关注会在主播开播时进行推送哦' + Live.randomEmoji.happy());
                     });
                     chrome.runtime.sendMessage({
                         command: "getFavourite"
-                    }, function(response) {
+                    }, function (response) {
                         if (response.data.indexOf(parseInt(Live.roomId)) != -1) {
                             notiseBtn.find('span').html('已特别关注');
                             notiseBtn.find('i').addClass('favourited');
@@ -2236,23 +2243,23 @@
                 ty: undefined,
                 lottery: undefined,
             },
-            init: function(callback) {
+            init: function (callback) {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'watcher',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on') {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             chrome.runtime.sendMessage({
                                 command: 'getWatcherRoom',
-                            }, function(response) {
-                            // Live.watcherInfoDOM = $('<div class="room-info watcher-info">直播信息监控功能正在初始化</div>');
+                            }, function (response) {
+                                // Live.watcherInfoDOM = $('<div class="room-info watcher-info">直播信息监控功能正在初始化</div>');
                                 Live.watcherBtn.find('span').attr('title', '正在初始化');
                                 if (Live.mobileVerified) {
-                                // Live.bilibiliHelperInfoDOM.append(Live.watcherInfoDOM);
+                                    // Live.bilibiliHelperInfoDOM.append(Live.watcherInfoDOM);
                                     if (response['data'].roomId === undefined) {
-                                    // setWatcherRoom
-                                        Live.getRoomInfo().done(function(data) {
+                                        // setWatcherRoom
+                                        Live.getRoomInfo().done(function (data) {
                                             chrome.runtime.sendMessage({
                                                 command: 'setWatcherRoom',
                                                 data: {
@@ -2268,10 +2275,10 @@
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchList',
-                                        }, function(response) {
+                                        }, function (response) {
                                             let watchList = response['value'] ? JSON.parse(response['value']) : [];
                                             Live.scriptOptions['watcher'] = [];
-                                            Live.each(watchList, function(i) {
+                                            Live.each(watchList, function (i) {
                                                 let option = Live.watcher.options[watchList[i]];
                                                 if (option === false) {
                                                     Live.watcher.options[watchList[i]] = true;
@@ -2280,7 +2287,7 @@
                                                 }
                                             });
                                             Live.watcher.initRewardPanel();
-                                            $(window).on('beforeunload', function() {
+                                            $(window).on('beforeunload', function () {
                                                 chrome.runtime.sendMessage({
                                                     command: 'delWatcherRoom',
                                                 });
@@ -2295,7 +2302,7 @@
                                                 Live.watcher.updateReward('lottery');
                                             }
 
-                                            document.addEventListener('sendMessage', function(event) {
+                                            document.addEventListener('sendMessage', function (event) {
                                                 let message = store.get('bilibili_helper_message');
                                                 if (!message.cmd) {
                                                     return false;
@@ -2310,31 +2317,31 @@
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchNotify',
-                                        }, function(response) {
+                                        }, function (response) {
                                             Live.watcher.notifyStatus = response['value'] === 'on';
                                         });
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchNotifyList',
-                                        }, function(response) {
+                                        }, function (response) {
                                             let notifyOptionsList = response['value'] ? JSON.parse(response['value']) : [];
-                                            Live.each(notifyOptionsList, function(i) {
+                                            Live.each(notifyOptionsList, function (i) {
                                                 let option = Live.watcher.notifyOptions[notifyOptionsList[i]];
                                                 if (!option) {
                                                     Live.watcher.notifyOptions[notifyOptionsList[i]] = true;
                                                 }
                                             });
                                         });
-                                    // Live.watcherInfoDOM.html('该房间已开启监控功能');
+                                        // Live.watcherInfoDOM.html('该房间已开启监控功能');
 
                                         Live.helperInfo.setWatcherStatus('success', '功能已经启动');
                                     } else {
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
                                             key: 'watchList',
-                                        }, function(response) {
+                                        }, function (response) {
                                             let watchList = response['value'] ? JSON.parse(response['value']) : [];
-                                            Live.each(watchList, function(i) {
+                                            Live.each(watchList, function (i) {
                                                 Live.watcher.options[watchList[i]] = true;
                                             });
                                             Live.watcher.initRewardPanel();
@@ -2343,7 +2350,7 @@
                                         if (typeof callback === 'function') {
                                             callback();
                                         }
-                                    // Live.watcherInfoDOM.html('监控功能已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间启动');
+                                        // Live.watcherInfoDOM.html('监控功能已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间启动');
                                     }
 
                                     Live.watcher.able = true;
@@ -2355,11 +2362,11 @@
                     }
                 });
             },
-            initData: function() {
+            initData: function () {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'watcherDataClean',
-                }, function(res) {
+                }, function (res) {
                     let oDate = store.get('bilibili_helper_watcher_data_date');
                     let currentYear = new Date().getFullYear(),
                         currentMonth = new Date().getMonth() + 1,
@@ -2382,40 +2389,40 @@
                     }
                 });
             },
-            cleanData: function() {
+            cleanData: function () {
                 store.set('bilibili_helper_tvs_reward', {});
                 store.set('bilibili_helper_tvs_count', 0);
                 store.set('bilibili_helper_lottery_reward', {});
                 store.set('bilibili_helper_lottery_count', 0);
             },
-            classify: function(json) {
+            classify: function (json) {
                 switch (json.cmd) {
-                case 'DANMU_MSG':
-                    Live.console.info('danmu', json);
-                    break;
-                case 'SYS_MSG':
-                    Live.console.info('system', json);
-                    Live.watcher.options['tv'] && Live.watcher.dealWithSysMsg(json);
-                    break;
-                case 'TV_END':
-                    Live.console.info('tv_end', json);
-                    break;
-                case 'SEND_GIFT':
-                    Live.console.info('gift', json);
-                    break;
-                case 'SYS_GIFT':
-                    Live.console.info('sys_gift', json);
-                    Live.watcher.options['lottery'] && Live.watcher.dealWithSysGift(json);
-                    break;
+                    case 'DANMU_MSG':
+                        Live.console.info('danmu', json);
+                        break;
+                    case 'SYS_MSG':
+                        Live.console.info('system', json);
+                        Live.watcher.options['tv'] && Live.watcher.dealWithSysMsg(json);
+                        break;
+                    case 'TV_END':
+                        Live.console.info('tv_end', json);
+                        break;
+                    case 'SEND_GIFT':
+                        Live.console.info('gift', json);
+                        break;
+                    case 'SYS_GIFT':
+                        Live.console.info('sys_gift', json);
+                        Live.watcher.options['lottery'] && Live.watcher.dealWithSysGift(json);
+                        break;
                 }
             },
-            dealWithSysMsg: function(json) {
+            dealWithSysMsg: function (json) {
                 let msg = json.msg;
                 if (msg[0] === '【' && json.url != '' && json.rep === 1 && json.styleType === 2) { // smallTV
                     var reg = new RegExp('【([\\S]+)】在直播间【([\\d]+)】');
                     var res = reg.exec(msg);
                     let roomUrl = res[2];
-                    Live.getRoomIdByUrl(roomUrl, function(roomId) {
+                    Live.getRoomIdByUrl(roomUrl, function (roomId) {
                         Live.smallTV.get(roomId);
                     });
                 } else if (msg[0] === '恭' && json.url === '' && json.rep === 1 && json.styleType === 2) { // get smallTV
@@ -2427,7 +2434,7 @@
                     tv && Live.smallTV.getReward(tv.id, roomId);
                 }
             },
-            dealWithSysGift: function(json) {
+            dealWithSysGift: function (json) {
                 // "tips": "【正義の此方】在直播间【81688】内 赠送 刨冰共 100 个，触发 1 次刨冰雨抽奖，快去前往抽奖吧！"
                 // try {
                 let msg = json.tips;
@@ -2435,44 +2442,44 @@
                     return;
                 }
                 switch (json.giftId) {
-                case 39:
-                    var reg = new RegExp('在直播间【([0-9]+)】');
-                    var res = reg.exec(msg);
-                    var roomUrl = res[1];
-                    Live.getRoomIdByUrl(roomUrl, function(roomId) {
-                        Live.beat.getBeat(roomId).done(function(res) {
-                            if (res.data['39']['id']) {
-                                let beat = res.data['39']['content'];
-                                Live.beat.sendBeat(roomId, beat);
-                                let rewardCount = Live.lottery.reward['6'];
-                                if (rewardCount === undefined) {
-                                    rewardCount = 0;
+                    case 39:
+                        var reg = new RegExp('在直播间【([0-9]+)】');
+                        var res = reg.exec(msg);
+                        var roomUrl = res[1];
+                        Live.getRoomIdByUrl(roomUrl, function (roomId) {
+                            Live.beat.getBeat(roomId).done(function (res) {
+                                if (res.data['39']['id']) {
+                                    let beat = res.data['39']['content'];
+                                    Live.beat.sendBeat(roomId, beat);
+                                    let rewardCount = Live.lottery.reward['6'];
+                                    if (rewardCount === undefined) {
+                                        rewardCount = 0;
+                                    }
+                                    Live.lottery.reward['6'] = ++rewardCount;
+                                    store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
+                                    Live.watcher.updateReward('lottery');
                                 }
-                                Live.lottery.reward['6'] = ++rewardCount;
-                                store.set('bilibili_helper_lottery_reward', Live.lottery.reward);
-                                Live.watcher.updateReward('lottery');
-                            }
+                            });
                         });
-                    });
-                    break;
+                        break;
                 }
                 // } catch (e) {
                 //     console.log(e);
                 //     return;
                 // }
             },
-            pushNotification: function(type, title, body, icon) {
+            pushNotification: function (type, title, body, icon) {
                 if (Live.watcher.notifyStatus && Live.watcher.notifyOptions[type]) {
                     let msg = new Notification(title, {
                         body: body,
                         icon: icon,
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         msg.close();
                     }, 5000);
                 }
             },
-            initRewardPanel: function() {
+            initRewardPanel: function () {
                 if (Live.watcher.options['tv']) {
                     Live.watcher.panelDOM.tv = $('<div />').addClass('tv reward-panel');
                     let tvCounter = $('<span />').addClass('reward-counter');
@@ -2490,27 +2497,27 @@
                     Live.watcherPanel.append(Live.watcher.panelDOM.lottery);
                 }
             },
-            updateReward: function(type) {
+            updateReward: function (type) {
                 let gifts = {},
                     counter = 0,
                     giftsList = undefined;
                 if (Live.watcher.able) {
                     switch (type) {
-                    case 'tv':
-                        gifts = store.get('bilibili_helper_tvs_reward');
-                        counter = store.get('bilibili_helper_tvs_count');
-                        giftsList = Live.smallTV.rewardList;
-                        break;
-                    case 'lottery':
-                        gifts = store.get('bilibili_helper_lottery_reward');
-                        counter = store.get('bilibili_helper_lottery_count');
-                        giftsList = store.get('bilibili_helper_lottery_reward_list');
-                        break;
+                        case 'tv':
+                            gifts = store.get('bilibili_helper_tvs_reward');
+                            counter = store.get('bilibili_helper_tvs_count');
+                            giftsList = Live.smallTV.rewardList;
+                            break;
+                        case 'lottery':
+                            gifts = store.get('bilibili_helper_lottery_reward');
+                            counter = store.get('bilibili_helper_lottery_count');
+                            giftsList = store.get('bilibili_helper_lottery_reward_list');
+                            break;
                     }
                     if (giftsList && Live.watcher.panelDOM[type]) {
                         Live.watcher.panelDOM[type].find('.reward-container').empty();
                         let length = 0;
-                        Live.each(gifts, function(id) {
+                        Live.each(gifts, function (id) {
                             ++length;
                             let giftName = giftsList[id] ? giftsList[id].title : (Live.giftList[id] ? Live.giftList[id].title : '神秘礼物'),
                                 number = gifts[id];
@@ -2532,11 +2539,11 @@
             iter: 0,
             rounds: 0,
             interval: -1,
-            init: function() {
+            init: function () {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'beat',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on') {
                         if (Live.BBQ && Live.BBQ.level >= 10) {
                             if (typeof Live.user.user_level_rank === 'string') {
@@ -2605,14 +2612,14 @@
                     if (Live.beat.iter === Live.beat.rounds * Live.beat.counter) Live.beat.iter = 0;
                 }, 5000);*/
             },
-            sendBeat: function(roomId, beat) {
-                $.ajax({url: Live.protocol + '//live.bilibili.com/msg/send', type: 'post', data: {color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId}});
+            sendBeat: function (roomId, beat) {
+                $.ajax({ url: Live.protocol + '//live.bilibili.com/msg/send', type: 'post', data: { color: 16777215, fontsize: 25, mode: 1, msg: beat, rnd: new Date().getTime(), roomid: roomId } });
             },
-            getBeat: function(roomId) {
-                return $.get(Live.protocol + '//live.bilibili.com/SpecialGift/room/' + roomId, {}, function() {}, 'json').promise();
+            getBeat: function (roomId) {
+                return $.get(Live.protocol + '//live.bilibili.com/SpecialGift/room/' + roomId, {}, function () { }, 'json').promise();
             },
-            getRankList: function(datatype, day) {
-                return $.get(Live.protocol + '//live.bilibili.com/rank/getCond', {datatype: datatype, day: day, giftid: 39, usertype: 'master'}, function() {}, 'json').promise();
+            getRankList: function (datatype, day) {
+                return $.get(Live.protocol + '//live.bilibili.com/rank/getCond', { datatype: datatype, day: day, giftid: 39, usertype: 'master' }, function () { }, 'json').promise();
             },
         };
         Live.giftpackage = {
@@ -2621,12 +2628,12 @@
             giftPackageData: {},
             giftPackageMap: {},
             giftSendAll: {
-                open: function() {
+                open: function () {
                     Live.giftpackage.sendLineSection.empty();
                     let giftsArray = [];
-                    Live.each(Live.giftpackage.giftPackageMap, function(id) {
+                    Live.each(Live.giftpackage.giftPackageMap, function (id) {
                         let gifts = Live.giftpackage.giftPackageMap[id];
-                        Live.each(gifts, function(index) {
+                        Live.each(gifts, function (index) {
                             let gift = gifts[index];
                             let giftDOM = $('<span />').addClass('package-item').attr({
                                 'title': gift.gift_name,
@@ -2659,14 +2666,14 @@
                 line_id: null,
                 giftsData: {},
                 outTimeout: null,
-                open: function(id) {
+                open: function (id) {
                     $(document).click();
                     Live.giftpackage.giftSendLinePanel.line_id = id;
                     Live.giftpackage.giftSendLinePanel.giftsData = Live.giftpackage.giftPackageMap[id];
                     let gifts = Live.giftpackage.giftSendLinePanel.giftsData;
                     Live.giftpackage.sendLinePanel.show();
                     Live.giftpackage.sendLineSection.empty();
-                    Live.each(Live.giftpackage.giftSendLinePanel.giftsData, function(index) {
+                    Live.each(Live.giftpackage.giftSendLinePanel.giftsData, function (index) {
                         let gift = gifts[index];
                         let giftDOM = $('<span />').addClass('package-item').attr({
                             'title': gift.gift_name,
@@ -2687,22 +2694,22 @@
                         Live.giftpackage.sendLineSection.append(giftDOM);
                     });
                 },
-                close: function() {
+                close: function () {
                     let sendLinePanel = Live.giftpackage.giftSendLinePanel;
                     Live.giftpackage.sendLinePanel.addClass('hide out');
-                    sendLinePanel.outTimeout = setTimeout(function() {
+                    sendLinePanel.outTimeout = setTimeout(function () {
                         Live.giftpackage.sendLinePanel.removeClass('hide out').css('display', '');
                     }, 380);
                 },
-                sendLine: function(event) {
+                sendLine: function (event) {
                     if (event.type === 'keyup' && event.keyCode !== 13) {
                         return;
                     }
                     let gifts = Live.giftpackage.giftSendLinePanel.giftsData;
-                    let status = {complete: 0};
+                    let status = { complete: 0 };
                     Live.giftpackage.giftSendLinePanel.send(gifts, status, Live.giftpackage.giftSendLinePanel.callback);
                 },
-                send: function(gifts, status, callback) {
+                send: function (gifts, status, callback) {
                     let gift = gifts[status.complete];
                     $.ajax({
                         url: '/giftBag/send',
@@ -2719,14 +2726,14 @@
                             token: Live.getCookie('LIVE_LOGIN_DATA') || '',
                         },
                         dataType: 'JSON',
-                        success: function(result) {
+                        success: function (result) {
                             if (result.code === 0) {
                                 if (typeof callback === 'function') {
                                     callback(gifts, status);
                                 }
                             } else if (result.code === 1) {
                                 console.error('系统繁忙，正在重试');
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     Live.giftpackage.giftSendLinePanel.send(gift);
                                 }, 500);
                             } else {
@@ -2735,7 +2742,7 @@
                         },
                     });
                 },
-                callback: function(gifts, status) {
+                callback: function (gifts, status) {
                     ++status.complete;
                     if (status.complete === gifts.length) {
                         Live.giftpackage.giftSendLinePanel.close();
@@ -2756,7 +2763,7 @@
                 show: false,
                 out: false,
                 outTimeout: null,
-                toggleGiftPackage: function(event) {
+                toggleGiftPackage: function (event) {
                     event.stopPropagation();
                     Live.liveQuickLogin();
                     if (!Live.giftpackage.panelStatus) {
@@ -2769,7 +2776,7 @@
                         Live.giftpackage.closeGiftPackagePanel();
                     }
                 },
-                open: function(giftId, giftName, giftNum, bigId) {
+                open: function (giftId, giftName, giftNum, bigId) {
                     let sendPanel = Live.giftpackage.giftSendPanel;
 
                     sendPanel.giftData.giftId = giftId;
@@ -2787,32 +2794,32 @@
                             numberBtn.addClass('disabled');
                         }
                         Live.giftpackage.sendNumberGroup.append(numberBtn);
-                        numberBtn.off('click').on('click', function(e) {
+                        numberBtn.off('click').on('click', function (e) {
                             let n = $(this).text();
                             switch (n) {
-                            case '1':
-                            case '5':
-                            case '10':
-                            case '30':
-                            case '50':
-                                var num = parseInt(n);
-                                if (giftNum < num) {
-                                    num = giftNum;
-                                }
-                                Live.giftpackage.sendGiftInput.val(num);
-                                break;
-                            case '5%':
-                            case '10%':
-                            case '30%':
-                            case '50%':
-                                var num = Math.ceil(parseInt(n.substr(0, n.length - 1)) * 0.01 * giftNum);
-                                if (giftNum < num) {
-                                    num = giftNum;
-                                }
-                                Live.giftpackage.sendGiftInput.val(num);
-                                break;
-                            case 'MAX':
-                                Live.giftpackage.sendGiftInput.val(giftNum);
+                                case '1':
+                                case '5':
+                                case '10':
+                                case '30':
+                                case '50':
+                                    var num = parseInt(n);
+                                    if (giftNum < num) {
+                                        num = giftNum;
+                                    }
+                                    Live.giftpackage.sendGiftInput.val(num);
+                                    break;
+                                case '5%':
+                                case '10%':
+                                case '30%':
+                                case '50%':
+                                    var num = Math.ceil(parseInt(n.substr(0, n.length - 1)) * 0.01 * giftNum);
+                                    if (giftNum < num) {
+                                        num = giftNum;
+                                    }
+                                    Live.giftpackage.sendGiftInput.val(num);
+                                    break;
+                                case 'MAX':
+                                    Live.giftpackage.sendGiftInput.val(giftNum);
                             }
                         });
                     }
@@ -2821,9 +2828,9 @@
                     Live.giftpackage.sendGiftInput.val(giftNum).focus();
                     Live.giftpackage.sendPanel.show();
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(document).on('click', n);
-                        var n = function(t) {
+                        var n = function (t) {
                             let e = t && (t.target || t.srcElement);
                             if (!$(e).hasClass('panel-content') && !$(e).parents('.panel-content').length) {
                                 $(document).off('click', n);
@@ -2832,14 +2839,14 @@
                         };
                     }, 1);
                 },
-                close: function() {
+                close: function () {
                     let sendPanel = Live.giftpackage.giftSendPanel;
                     Live.giftpackage.sendPanel.addClass('hide out');
-                    sendPanel.outTimeout = setTimeout(function() {
+                    sendPanel.outTimeout = setTimeout(function () {
                         Live.giftpackage.sendPanel.removeClass('hide out').css('display', '');
                     }, 380);
                 },
-                sendGift: function(event) {
+                sendGift: function (event) {
                     if (event.type === 'keyup' && event.keyCode !== 13) {
                         return;
                     }
@@ -2872,7 +2879,7 @@
                             token: Live.getCookie('LIVE_LOGIN_DATA') || '',
                         },
                         dataType: 'JSON',
-                        success: function(result) {
+                        success: function (result) {
                             if (result.code === 0) {
                                 Live.liveToast(element, 'info', 'Gift-sending is successful. ' + Live.randomEmoji.helpless());
                                 // 更新瓜子数.
@@ -2976,7 +2983,7 @@
                                 element && Live.liveToast(element, 'caution', result.msg + ' ' + Live.randomEmoji.sad());
                             }
                         },
-                        error: function(result) {
+                        error: function (result) {
                             element && Live.liveToast(element, 'error', Live.randomEmoji.sad() + ' 送礼失败：' + result.statusText + ' ' + Live.randomEmoji.sad());
                             // param.errorCallback && param.errorCallback();
                         },
@@ -3009,29 +3016,29 @@
                 show: false,
                 out: false,
                 outTimeout: null,
-                open: function() {
+                open: function () {
                     // 获取赠送的新道具数据
-                    Live.giftpackage.getSendGift(function(result) {
+                    Live.giftpackage.getSendGift(function (result) {
                         if (result.code === 0) {
                             Live.giftpackage.giftPackageNewPanel.data = result.data;
                         }
                     });
                 },
-                close: function() {
+                close: function () {
                     let giftPackageNewPanel = Live.giftpackage.giftPackageNewPanel;
                     giftPackageNewPanel.out = true;
-                    giftPackageNewPanel.outTimeout = setTimeout(function() {
+                    giftPackageNewPanel.outTimeout = setTimeout(function () {
                         giftPackageNewPanel = null;
                         Live.giftpackage.giftPackageStatus = 2;
                         Live.giftpackage.openGiftPackagePanel(); // 打开包裹
                     }, 380);
                 },
             },
-            init: function() {
+            init: function () {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'giftpackage',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on') {
                         // init dom
                         $('#gift-panel').find('.control-panel .items-package').hide();
@@ -3067,38 +3074,38 @@
                         Live.giftpackage.sendLineBtn = Live.giftpackage.sendLinePanel.find('button:eq(1)');
 
                         // init event
-                        Live.giftpackage.packageBtn.off('click').on('click', function(e) {
+                        Live.giftpackage.packageBtn.off('click').on('click', function (e) {
                             Live.giftpackage.openGiftPackagePanel();
                         });
 
-                        Live.giftpackage.sendContent.find('.close-btn').off('click').on('click', function(e) {
+                        Live.giftpackage.sendContent.find('.close-btn').off('click').on('click', function (e) {
                             Live.giftpackage.giftSendPanel.close();
                         });
-                        Live.giftpackage.sendLinePanel.find('.close-btn').off('click').on('click', function(e) {
+                        Live.giftpackage.sendLinePanel.find('.close-btn').off('click').on('click', function (e) {
                             Live.giftpackage.giftSendLinePanel.close();
                         });
-                        Live.giftpackage.sendGiftInput.off('keydown').on('keydown', function(e) {
+                        Live.giftpackage.sendGiftInput.off('keydown').on('keydown', function (e) {
                             if (e.keyCode === 13 && Live.giftpackage.sendGiftInput.val() != '') {
                                 Live.giftpackage.giftSendPanel.sendGift(e);
                             }
                         });
-                        Live.giftpackage.sendGiftBtn.off('click').on('click', function(e) {
+                        Live.giftpackage.sendGiftBtn.off('click').on('click', function (e) {
                             Live.giftpackage.giftSendPanel.sendGift(e);
                         });
-                        Live.giftpackage.sendLineBtn.off('click').on('click', function(e) {
+                        Live.giftpackage.sendLineBtn.off('click').on('click', function (e) {
                             Live.giftpackage.giftSendLinePanel.sendLine(e);
                         });
                         Live.scriptOptions['giftpackage'] = true;
                     }
                 });
             },
-            initGiftsDOM: function(giftsData) {
+            initGiftsDOM: function (giftsData) {
                 Live.giftpackage.packageContent.empty();
                 Live.giftpackage.packagePanel.removeClass('big');
-                Live.each(giftsData, function(id) {
+                Live.each(giftsData, function (id) {
                     let gifts = giftsData[id];
                     let giftsDOM = $('<div />').addClass('gift-item-group').attr('gift_id', id);
-                    Live.each(gifts, function(index) {
+                    Live.each(gifts, function (index) {
                         let gift = gifts[index];
                         let giftDOM = $('<span />').addClass('package-item').attr({
                             'title': gift.gift_name,
@@ -3126,24 +3133,24 @@
                 });
 
                 // init event
-                Live.giftpackage.packagePanelCleanBtn && Live.giftpackage.packagePanelCleanBtn.off('click').on('click', function(e) {
+                Live.giftpackage.packagePanelCleanBtn && Live.giftpackage.packagePanelCleanBtn.off('click').on('click', function (e) {
                     Live.giftpackage.giftSendAll.open();
                 });
-                Live.giftpackage.packageContent.find('.package-item').off('click').on('click', function(e) {
+                Live.giftpackage.packageContent.find('.package-item').off('click').on('click', function (e) {
                     let bagId = $(this).attr('bag_id');
                     let gift = Live.giftpackage.giftPackageData[bagId];
                     Live.giftpackage.giftSendPanel.open(gift.gift_id, gift.gift_name, gift.gift_num, gift.id);
                 });
-                Live.giftpackage.packageContent.find('.send_line').off('click').on('click', function(e) {
+                Live.giftpackage.packageContent.find('.send_line').off('click').on('click', function (e) {
                     let gift_id = $(this).parent().find('.gift-item-group').attr('gift_id');
                     Live.giftpackage.giftSendLinePanel.open(gift_id);
                 });
             },
-            sortGifts: function(giftpackageData) {
+            sortGifts: function (giftpackageData) {
                 let r = {},
                     gs = giftpackageData;
                 Live.giftpackage.giftPackageData = {};
-                Live.each(gs, function(i) {
+                Live.each(gs, function (i) {
                     // expireat:"31天"
                     // gift_id:37
                     // gift_name:"团扇"
@@ -3166,7 +3173,7 @@
                         r[gift.gift_id] = [];
                     }
                     let position = 0;
-                    Live.each(r[gift.gift_id], function(index) {
+                    Live.each(r[gift.gift_id], function (index) {
                         if (gift.expireat < r[gift.gift_id][index].expireat && position >= index) {
                             position = index;
                         } else if (position >= index) {
@@ -3177,32 +3184,32 @@
                 });
                 return r;
             },
-            getGiftPackage: function() { // get package data
-                return $.get(Live.protocol + '//live.bilibili.com/gift/playerBag', {}, function() {}, 'json').promise();
+            getGiftPackage: function () { // get package data
+                return $.get(Live.protocol + '//live.bilibili.com/gift/playerBag', {}, function () { }, 'json').promise();
             },
-            getSendGift: function() { // get new gift
-                return $.get(Live.protocol + '//live.bilibili.com/giftBag/getSendGift', {}, function() {}, 'json').promise();
+            getSendGift: function () { // get new gift
+                return $.get(Live.protocol + '//live.bilibili.com/giftBag/getSendGift', {}, function () { }, 'json').promise();
             },
-            getGiftPackageStatus: function() { // get the info for 'if has new gift'
-                return $.get(Live.protocol + '//live.bilibili.com/giftBag/sendDaily', {}, function() {}, 'json').promise();
+            getGiftPackageStatus: function () { // get the info for 'if has new gift'
+                return $.get(Live.protocol + '//live.bilibili.com/giftBag/sendDaily', {}, function () { }, 'json').promise();
             },
-            openGiftPackagePanel: function() {
+            openGiftPackagePanel: function () {
                 if (Live.giftpackage.packagePanel.css('display') != 'none') {
                     return;
                 }
-                Live.giftpackage.getGiftPackage().then(function(result) {
+                Live.giftpackage.getGiftPackage().then(function (result) {
                     Live.giftpackage.giftPackageMap = Live.giftpackage.sortGifts(result.data);
                     Live.giftpackage.initGiftsDOM(Live.giftpackage.giftPackageMap);
                     Live.giftpackage.packagePanel.show();
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     $(document).on('click', Live.giftpackage.closeGiftPackagePanel);
                 }, 1);
             },
-            closeGiftPackagePanel: function(t) {
+            closeGiftPackagePanel: function (t) {
                 let e = t && (t.target || t.srcElement);
                 if (!$(e).hasClass('gifts-package-panel') && !$(e).parents('.gifts-package-panel').length) {
-                    Live.giftpackage.packagePanel.hide(0, function() {
+                    Live.giftpackage.packagePanel.hide(0, function () {
                         Live.giftpackage.panelStatus = false;
                         $(document).off('click', Live.giftpackage.closeGiftPackagePanel);
                     });
@@ -3210,24 +3217,24 @@
             },
         };
         Live.helperInfo = {
-            setStatus: function(dom, className, statusClass) {
+            setStatus: function (dom, className, statusClass) {
                 if (dom.hasClass(statusClass)) {
                     return;
                 } else {
                     dom.attr('class', className).addClass(statusClass);
                 }
             },
-            setWatcherStatus: function(statusClass, title) {
+            setWatcherStatus: function (statusClass, title) {
                 Live.helperInfo.setStatus(Live.watcherBtn, 'watcher-info', statusClass);
                 Live.watcherBtn.find('span').attr('title', title);
                 Live.watcher.updateReward('tv');
                 Live.watcher.updateReward('lottery');
             },
-            setTreasureStatus: function(statusClass, title) {
+            setTreasureStatus: function (statusClass, title) {
                 Live.helperInfo.setStatus(Live.treasureBtn, 'treasure-info', statusClass);
                 Live.treasureBtn.find('span').attr('title', title);
             },
-            initPanel: function() {
+            initPanel: function () {
                 let headPanel = $('#head-info-panel');
                 let infoPanel = headPanel.find('.info-ctnr');
                 let roomInfo = infoPanel.find('.room-info');
@@ -3241,7 +3248,7 @@
                 let manage = roomInfo.find('.room-manage');
                 let report = roomTitleRow.find('.report-link[href]');
                 let share = roomTitleRow.find('.share-link');
-                setTimeout(function() {
+                setTimeout(function () {
                     roomTitleRow.find('.report-link:not([href])').hide();
                 }, 1000);
                 helperAnchorInfoPanel.append(area, tags, manage, report, share);
@@ -3266,7 +3273,7 @@
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'autoTreasure',
-                }, function(res) {
+                }, function (res) {
                     if (res['value'] === 'on') {
                         Live.treasureBtn = $('<div />').addClass('treasure-info').html('<i class="treasure-info-icon" style="background-image:url(' + chrome.extension.getURL('imgs/icon.png') + ')"></i><span class="treasure-info-text">自动领瓜子</span>');
                         Live.helperInfoRow.append(Live.treasureBtn);
@@ -3277,9 +3284,9 @@
             },
         };
         Live.init = {
-            do: function() {
+            do: function () {
                 Live.init.localStorage();
-                Live.init.userInfo(function() {
+                Live.init.userInfo(function () {
                     if (store.get('bilibili_helper_login', 'login')) {
                         // Live.bilibiliHelperInfoDOM = $('<div class="room-info bilibili-helper-info"></div>');
                         // $('.left-part.player-area').prepend(Live.bilibiliHelperInfoDOM);
@@ -3288,7 +3295,7 @@
                             chrome.runtime.sendMessage({
                                 command: 'getOption',
                                 key: 'version',
-                            }, function(response) {
+                            }, function (response) {
                                 Live.version = response.value;
                                 let version = store.get('bilibili_helper_version');
                                 if (!version || version != Live.version) {
@@ -3300,14 +3307,14 @@
 
                                 Live.addScriptByText('(function(){if (location.pathname.substr(1) && !isNaN(location.pathname.substr(1))) {var a=function(f,d,c){if(!window.localStorage||!f){return}var e=window.localStorage;if(!e[f]){e[f]=JSON.stringify({})}var b=JSON.parse(e[f]);if(c==undefined){e[f]=typeof d=="string"?d.trim():JSON.stringify(d)}else{b[d]=typeof c=="string"?c.trim():JSON.stringify(c);e[f]=JSON.stringify(b)}};a("bilibili_helper_live_roomId",ROOMURL,ROOMID);a("bilibili_helper_live_danmu_rnd",ROOMURL,DANMU_RND);}})();');
                                 Live.roomId = Live.getRoomId();
-                                Live.getRoomInfo().done(function(data) {
+                                Live.getRoomInfo().done(function (data) {
                                     Live.init.giftList();
                                     Live.roomInfo = data.data;
                                     Live.roomInfo.roomShortId = location.pathname.substr(1);
                                     Live.helperInfo.initPanel();
 
                                     /* function init*/
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         if (Live.mobileVerified) {
                                             Live.doSign.init();
                                             Live.chat.init();
@@ -3318,10 +3325,13 @@
                                         }
                                         Live.treasure.init();
                                         // Live.watcher.init(function () {
-                                        //     Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
+                                        
                                         // });
                                         Live.helperInfoRow.css('opacity', 1);
                                     }, 2500);
+                                    setTimeout(()=>{
+                                        Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
+                                    },5000)
                                     Notification.requestPermission();
                                 });
                             });
@@ -3332,7 +3342,7 @@
                     }
                 });
             },
-            style: function() {
+            style: function () {
                 // init stylesheet
                 let l = $('document').find('#bilibiliHelperLive');
                 if (l.length) {
@@ -3349,7 +3359,7 @@
                     document.documentElement.appendChild(styleLink);
                 }
             },
-            giftList: function() {
+            giftList: function () {
                 let giftsDom = $('.gifts-ctnr .gift-item[role=listitem]');
                 if (giftsDom.length > 0) {
                     for (let i = 0; i < giftsDom.length; ++i) {
@@ -3365,7 +3375,7 @@
                     }
                 }
             },
-            clearLocalStorage: function() {
+            clearLocalStorage: function () {
                 store.delete('bilibili_helper_quiz_bet', Live.roomId);
                 store.delete('bilibili_helper_quiz_check', Live.roomId);
                 store.delete('bilibili_helper_quiz_number', Live.roomId);
@@ -3374,7 +3384,7 @@
                 store.delete('bilibili_helper_doSign');
                 store.delete('bilibili_helper_userInfo');
             },
-            localStorage: function() {
+            localStorage: function () {
                 Live.init.clearLocalStorage();
                 /* install init*/
                 if (store.has('bilibili_helper_init')) {
@@ -3424,8 +3434,8 @@
                 // store.set('bilibili_helper_tvs_reward', tv_reward);
                 // store.set('bilibili_helper_tvs_count', tv_count);
             },
-            userInfo: function(callback) {
-                return Live.getUser().done(function(user) {
+            userInfo: function (callback) {
+                return Live.getUser().done(function (user) {
                     if (user.code === 'REPONSE_OK') {
                         var user = user.data;
                         Live.user = user;
@@ -3444,7 +3454,7 @@
                         $.ajax({
                             dataType: 'json',
                             url: Live.protocol + '//space.bilibili.com/ajax/member/MyInfo',
-                        }).promise().done(function(res) {
+                        }).promise().done(function (res) {
                             if (res.data && res.data.mobile_verified === 1) {
                                 Live.mobileVerified = 1;
                             } else {
@@ -3460,9 +3470,9 @@
                     }
                 });
             },
-            medal: function() {
-                Live.getMedalList().done(function(medalList) {
-                    $.get(Live.protocol + '//live.bilibili.com/i/medal').promise().done(function(html) {
+            medal: function () {
+                Live.getMedalList().done(function (medalList) {
+                    $.get(Live.protocol + '//live.bilibili.com/i/medal').promise().done(function (html) {
                         let medalDOM = $(html);
                         let medalDOMList = medalDOM.find('.my-medal-section dl dd');
                         if (medalList.code === 0) {
