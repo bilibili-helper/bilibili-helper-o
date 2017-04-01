@@ -72,7 +72,7 @@
             }
         };
         Live.getUser = function () {
-            return $.getJSON(Live.protocol + '/user/getuserinfo').promise();
+            return $.getJSON(Live.protocol + '//live.bilibili.com/user/getuserinfo').promise();
         };
         Live.getMedalList = function () {
             return $.getJSON(Live.protocol + '//live.bilibili.com/i/ajaxGetMyMedalList').promise();
@@ -146,7 +146,7 @@
             return store.get('bilibili_helper_live_roomId')[location.pathname.substr(1)];
         };
         Live.getRoomInfo = function () {
-            return $.getJSON('/live/getInfo?roomid=' + Live.roomId).promise();
+            return $.getJSON(Live.protocol + '//live.bilibili.com/live/getInfo?roomid=' + Live.roomId).promise();
         };
         Live.numFormat = function (num) {
             let number = num;
@@ -373,7 +373,8 @@
             return panel;
         };
         Live.liveToast = function (dom, type, msg) {
-            if (n = type || 'info', 'success' !== n && 'caution' !== n && 'error' !== n && 'info' !== n) {
+            let n = type || 'info';
+            if ('success' !== n && 'caution' !== n && 'error' !== n && 'info' !== n) {
                 return;
             }
             let c = document.createDocumentFragment();
@@ -418,7 +419,7 @@
         };
         Live.doSign = {
             getSignInfo: function () {
-                return $.getJSON('/sign/GetSignInfo').promise();
+                return $.getJSON(Live.protocol + '//live.bilibili.com/sign/GetSignInfo').promise();
             },
             init: function () {
                 chrome.runtime.sendMessage({
@@ -3286,12 +3287,13 @@
         Live.init = {
             do: function () {
                 Live.init.localStorage();
-                Live.init.userInfo(function () {
+                Live.init.userInfo(function (user) {
                     if (store.get('bilibili_helper_login', 'login')) {
                         // Live.bilibiliHelperInfoDOM = $('<div class="room-info bilibili-helper-info"></div>');
                         // $('.left-part.player-area').prepend(Live.bilibiliHelperInfoDOM);
                         if (location.pathname.substr(1) && !isNaN(location.pathname.substr(1))) {
                             /* get options*/
+                            
                             chrome.runtime.sendMessage({
                                 command: 'getOption',
                                 key: 'version',
@@ -3301,6 +3303,7 @@
                                 if (!version || version != Live.version) {
                                     store.set('bilibili_helper_version', Live.version);
                                 }
+                                console.log(1)
                                 $('#gift-panel').find('.control-panel').prepend('<div class="ctrl-item version">哔哩哔哩助手 v' + Live.version + ' by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕www</a> <a href="http://weibo.com/ruo0037" target="_blank">@沒睡醒的肉啊</a></div>');
                                 Live.init.style();
                                 Live.init.medal();
@@ -3325,13 +3328,13 @@
                                         }
                                         Live.treasure.init();
                                         // Live.watcher.init(function () {
-                                        
+
                                         // });
                                         Live.helperInfoRow.css('opacity', 1);
                                     }, 2500);
-                                    setTimeout(()=>{
+                                    setTimeout(() => {
                                         Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
-                                    },5000)
+                                    }, 5000)
                                     Notification.requestPermission();
                                 });
                             });
@@ -3435,7 +3438,7 @@
                 // store.set('bilibili_helper_tvs_count', tv_count);
             },
             userInfo: function (callback) {
-                return Live.getUser().done(function (user) {
+                Live.getUser().done(function (user) {
                     if (user.code === 'REPONSE_OK') {
                         var user = user.data;
                         Live.user = user;

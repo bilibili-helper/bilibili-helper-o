@@ -1,5 +1,5 @@
 let bkg_page = chrome.extension.getBackgroundPage();
-
+console.warn(bkg_page);
 function adModeFunction(cmd) {
     chrome.tabs.query({
         active: true,
