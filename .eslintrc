@@ -25,6 +25,5 @@
         "space-in-parens": 1,
         "space-infix-ops": 1,
         "valid-jsdo": 0,
-        "linebreak-style":["error","windows"]
     }
 }
