@@ -90,5 +90,9 @@
   "notificationLiveOn": {
     "message": " is live-streaming!",
     "description": "Noticefication: Live On"
+  },
+  "notificationGetTv": {
+    "message": "Proceed to fill out mailing address.",
+    "description": "Noticefication: Get TV"
   }
 }

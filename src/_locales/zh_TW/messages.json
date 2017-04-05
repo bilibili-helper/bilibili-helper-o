@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "嗶哩嗶哩助手：bilibili.com 綜合輔助擴展",
+    "message": "嗶哩嗶哩助手：bilibili.com 綜合輔助擴充套件",
     "description": "Extension: Name"
   },
   "extShortName": {
@@ -8,7 +8,7 @@
     "description": "Extension: Short Name"
   },
   "extDescription": {
-    "message": "嗶哩嗶哩彈幕網輔助擴展，擁有視頻區和直播區的人性化功能",
+    "message": "嗶哩嗶哩彈幕網輔助擴充套件，擁有視訊區和直播區的人性化功能",
     "description": "Extension: Description"
   },
   "goBili": {
@@ -72,11 +72,11 @@
     "description": "Noticefication: Extension Update"
   },
   "noticeficationNewFeatures": {
-    "message": "查看更新內容",
+    "message": "檢視更新內容",
     "description": "Noticefication: New Features"
   },
   "followingUpdateMessage": {
-    "message": "您的嗶哩嗶哩關注更新了(%n 個新動態)!\n%uploader 剛剛發布了「%title」!",
+    "message": "您的嗶哩嗶哩關注更新了(%n 個新動態)!\n%uploader 剛剛釋出了「%title」!",
     "description": "Noticefication: Following Update Message"
   },
   "notificationWatch": {
@@ -90,5 +90,9 @@
   "notificationLiveOn": {
     "message": "開播啦",
     "description": "Noticefication: Live On"
+  },
+  "notificationGetTv": {
+    "message": "前往填寫收貨地址",
+    "description": "Noticefication: Get TV"
   }
 }
