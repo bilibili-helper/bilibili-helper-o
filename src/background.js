@@ -468,6 +468,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             value: getOption(request.key),
         });
         return true;
+    case 'getAd':
+        sendResponse({
+            value: getOption('ad'),
+        });
+        return true;
     case 'setOption':
         setOption(request.key, request.value);
         sendResponse({
@@ -1134,10 +1139,9 @@ Live.notise = {
                 Live.notise.page++;
                 Live.notise.getList();
             }
-        }, 5000);
+        }, 30000);
     },
 };
-
 if (getOption('liveNotification') === 'on') {
     Live.notise.init();
 }

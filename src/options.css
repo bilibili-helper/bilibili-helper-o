@@ -82,7 +82,7 @@ p {
 
 .header {
     position: relative;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#FFF), to(#EEE));
+    /*background: -webkit-gradient(linear, 0 0, 0 bottom, from(#FFF), to(#EEE));*/
     text-indent: 68px;
     margin: 0px;
     padding: 20px;
@@ -139,7 +139,8 @@ li {
     position: absolute;
     left: 0;
     top: 0;
-    height: 100%
+    height: 80%;
+    margin: 8px 25px;
 }
 
 .options_form {
@@ -181,6 +182,12 @@ input[type="color"] {
     margin-left: 20px;
 }
 
+.category p span {
+    font-size: 10px;
+    margin: 5px 20px;
+    float: right;
+}
+
 .button {
     cursor: pointer;
     display: inline-block;
@@ -219,7 +226,6 @@ input[type="color"] {
     cursor: default
 }
 
-.ad,
 .rel_search {
     width: 100px
 }
@@ -242,6 +248,7 @@ input[type="color"] {
 .watcher,
 .watchNotify,
 .autowide,
+.ad,
 .https {
     width: 160px
 }
@@ -278,15 +285,16 @@ input[type="color"] {
     line-height: 24px
 }
 
-#about p.highlight {
+#about .highlight p {
     color: #B71C1C;
     background-color: #FFECB3;
     border-radius: 5px;
     text-indent: 0;
-    padding: 1em 2em
+    padding: 1em 2em;
+    font-size: 14px;
 }
 
-#about p.highlight .title {
+#about .highlight p .title {
     font-size: 24px;
     font-weight: 500;
     line-height: 36px

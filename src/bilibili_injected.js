@@ -4,7 +4,6 @@
     if ($('html').hasClass('bilibili-helper')) {
         return false;
     }
-    let adModeOn = false;
     let biliHelper = {};
     if (location.hostname === 'www.bilibili.com') {
         biliHelper.site = 0;
@@ -31,66 +30,32 @@
         return formatInt(parseInt(timecount / 60000), 2) + ':' + formatInt(parseInt((timecount / 1000) % 60), 2);
     }
 
-    function inject_css(name, content) {
-        let styleElement = document.createElement('style');
-        styleElement.setAttribute('id', name);
-        styleElement.setAttribute('type', 'text/css');
-        styleElement.appendChild(document.createTextNode(content));
+    function inject_css(name, filename) {
+        let styleLink = document.createElement('link');
+        styleLink.setAttribute('id', name);
+        styleLink.setAttribute('type', 'text/css');
+        styleLink.setAttribute('rel', 'stylesheet');
+        styleLink.setAttribute('href', chrome.extension.getURL(filename));
         if (document.head) {
-            document.head.appendChild(styleElement);
+            document.head.appendChild(styleLink);
         } else {
-            document.documentElement.appendChild(styleElement);
+            document.documentElement.appendChild(styleLink);
         }
     }
 
-    function disable() {
-        let style = document.getElementById('bilibili_helper');
-        if (style) {
-            style.parentNode.removeChild(style);
-        }
-    }
-
-    function enable(style2apply) {
-        disable();
-        if (style2apply) {
-            inject_css('bilibili_helper', style2apply);
-            if (window.location.hostname === 'space.bilibili.com') {
-                $('link[type="text/css"]').each(function(index, element) {
-                    if ($(element).attr('href').indexOf('space.css') !== -1) {
-                        disable();
-                    }
-                });
-            }
-        }
-    }
-
-    function adMode(css) {
-        let style = document.getElementById('bilibili_helper_ad_mode');
-        if (style) {
-            style.parentNode.removeChild(style);
-        }
-        if (adModeOn === true) {
-            adModeOn = false;
-        } else {
-            adModeOn = true;
-            inject_css('bilibili_helper_ad_mode', css);
-        }
-        return adModeOn;
-    }
-
-
-    function intilize_style(callback) {
+    function removeAd() {
         chrome.runtime.sendMessage({
-            command: 'getCSS',
-            url: document.URL,
+            command: 'getAd',
         }, function(response) {
-            if (response.result === 'ok') {
-                enable(response.css);
-            }
-            if (typeof callback === 'function') {
-                callback();
+            if (response.value === 'on') {
+                inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
             }
         });
+    }
+    removeAd();
+    function initStyle() {
+        inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
+        $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
     function setWide() {
         let player = $('#bofqi');
@@ -111,7 +76,6 @@
             doit();
         }, 2000);
         let observer = new MutationObserver(function() {
-            console.warn(player.hasClass('wide'));
             setTimeout(()=>{
                 doit();
             }, 2000);
@@ -122,15 +86,9 @@
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         switch (request.command) {
         case 'update':
-            intilize_style();
+            removeAd();
             sendResponse({
                 result: 'ok',
-            });
-            return true;
-        case 'adMode':
-            sendResponse({
-                result: 'ok',
-                mode: adMode(request.css),
             });
             return true;
         case 'error':
@@ -307,6 +265,7 @@
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
+            initStyle();
         });
     };
 
@@ -316,7 +275,6 @@
         prob.innerHTML = '$(\'.player-wrapper .v-plist\').attr(\'length\', window.VideoPart.nodedata.length);$(\'#page-prob\').remove();';
         document.body.appendChild(prob);
     }
-    intilize_style();
     $('html').addClass('bilibili-helper');
     let bili_reg, urlResult, hashPage;
     if (biliHelper.site === 0) {
@@ -335,31 +293,32 @@
         }
     } else if (biliHelper.site === 1) {
         let playerBlock = $('#bofqi')[0];
-        let observer = new MutationObserver(function() {
-            if (biliHelper.avid) {
-                return;
-            }
-            if ($('iframe.player').length || $('.scontent object param[name="flashvars"]').length) {
-                urlResult = $('iframe.player').attr('src').split('?')[1] || // HTML5 Iframe
-                $('.scontent object param[name="flashvars"]').attr('value'); // Flash
-                if (urlResult) {
-                    let search = urlResult.split('&').map(function(searchPart) {
-                        return searchPart.split('=', 2);
-                    });
-                    search.forEach(function(param) {
-                        let key = param[0], value = param[1];
-                        if (key === 'aid') {
-                            biliHelper.avid = value;
-                        } else if (key === 'cid') {
-                            biliHelper.cid = value;
-                        }
-                    });
-                    initHelper();
-                    observer.disconnect();
+        if (playerBlock) {
+            let observer = new MutationObserver(function() {
+                if (biliHelper.avid) {
+                    return;
                 }
-            }
-        });
-        observer.observe(playerBlock, {childList: true});
+                if ($('iframe.player').length || $('.scontent object param[name="flashvars"]').length) {
+                    urlResult = $('.scontent object param[name="flashvars"]').attr('value');
+                    if (urlResult) {
+                        let search = urlResult.split('&').map(function(searchPart) {
+                            return searchPart.split('=', 2);
+                        });
+                        search.forEach(function(param) {
+                            let key = param[0], value = param[1];
+                            if (key === 'aid') {
+                                biliHelper.avid = value;
+                            } else if (key === 'cid') {
+                                biliHelper.cid = value;
+                            }
+                        });
+                        initHelper();
+                        observer.disconnect();
+                    }
+                }
+            });
+            observer.observe(playerBlock, {childList: true});
+        }
     }
     biliHelper.work = function() {
         chrome.runtime.sendMessage({

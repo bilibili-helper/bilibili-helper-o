@@ -38,11 +38,9 @@
                     <div class="button contextmenu" option="off">关闭功能</div>
                 </li>
                 <li class="category">
-                    <p>广告样式</p>
-                    <div class="button ad" option="fade">半透明显示</div>
-                    <div class="button ad" option="kill">不显示(不推荐)</div>
-                    <div class="button ad" option="keep">保持原样</div>
-                    <p id="ad_opacity_opt" class="little_opt">不透明度&nbsp;<input id="ad_opacity" type="range" min="0" max="1" step="0.01"></p>
+                    <p>广告屏蔽<span>广告，推荐视频，推广视频等</span></p>
+                    <div class="button ad" option="on">开启功能</div>
+                    <div class="button ad" option="off">关闭功能</div>
                 </li>
             </ul>
 
@@ -157,18 +155,28 @@
                     <span>更新内容: <span class="detail"></span><br/></span>
                     <span>手动更新: <a class="url" href="#" target="_blank">下载页面</a> <a href="http://www.3haow.com/drag-and-drop-the-crx-file-to-install-chrome-plugin/" target="_blank">安装教程</a></span></p>
             </div>
-            <h1>关于本扩展目前情况</h1>
-            <p>哔哩哔哩助手一开始源自哔哩哔哩美化器，源自我个人兴趣对哔哩哔哩视频弹幕站（以下简称B站）网页CSS上做的一些改动。当然这些改动被成为美化只是相对而言的，我一开始也只是希望大家能够更自由地定制网页样式。后来我在这个基础上又加入了很多额外的功能比如检查“我的关注”更新、获取视频下载地址、播放器切换等。尤其是在加入“播放器切换”切换后得到了很多人尝试了我这个应用，很感谢大家。中间因为各种原因（版权方对B站压力等）也不得不做出了一些让步。</p>
-            <p>2013年11月初，B站更新大量样式，旧版的“美化”功能已不可用，因此暂时移除。一段时间内，我因为个人时间的原因没有太多时间更新本应用，而将精力局限于维持已有功能可用性。</p>
-            <p class="highlight">
-                <span class="title">****** 近期更新内容 ******</span>
-                <br>※ 修复偶尔的页面替换问题（页面替换功能已经被删除）
-            </p>
+            <div class="highlight">
+                <h1>近期更新内容</h1>
+                <p>
+                    ※ 修复偶尔的页面替换问题（页面替换功能已经被删除）<br>
+                    ※ 更新广告屏蔽功能，现在会直接屏蔽并包含直播区的广告，Flash播放器内的除外<br>
+                    ＋ 增加自动设置番剧播放器宽屏功能
+                </p>
+            </div>
+            <div>
+                <h1>关于本扩展</h1>
+                <p>哔哩哔哩助手一开始是一款名叫“哔哩哔哩美化器”的扩展程序，源自 咕咕 对哔哩哔哩视频弹幕站（以下简称“B站”）网页CSS上做的一些改动。当然这些改动被成为美化只是相对而言的，一开始也只是希望大家能够更自由地定制网页样式。后来在这个基础上又加入了很多额外的功能，比如“我的关注”推送、视频下载、播放器切换（已被删除）等。中间因为各种原因（版权方对B站压力等）也不得不做出了一些让步。</p>
+                <p>后来B站更新大量样式，旧版的“美化”功能已不可用，“播放器替换”也由于官方HTML5播放器的推出而被移除。同时也由于精力有限，咕咕开始将重心转向已有功能的维护和扩展上。2016年6月末，随着B站直播区的兴盛，肉肉 开始为助手维护B站直播区功能。陆续推出了自动“下注竞猜”（已被删除），“自动抽奖”（已被删除），“道具包裹”等实用功能。目前我们将主要的工作集中在现有功能的维护上，同时进行代码的重构工作。在此谢谢大家的支持，我们会一直维护下去。<p>
+            </div>
+
+
             <p>咕咕投喂宝暂时无法使用，所以更换成肉肉的。欢迎喂食 _(:3」∠)_<br/><img class="alipay" src="./imgs/alipay.png"></p>
             <p>项目 GitHub 页 <a href="https://github.com/zacyu/bilibili-helper" target="_blank">zacyu/bilibili-helper</a>，可以在这边反馈问题或提供建议。</p>
             <p>最后再次感谢大家的支持。</p>
-            <p>※ 本页面中使用了 t4t5 以 <a href="http://opensource.org/licenses/MIT" target="_blank">MIT许可协议</a> 发布的 JavaScript 脚本 <a href="https://github.com/t4t5/sweetalert" target="_blank">sweetalert</a>。</p>
-            <p>※ 本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href="http://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a> 发布的开源项目 <a href="https://github.com/tiansh/us-danmaku" target="_blank">us-danmaku</a>。</p>
+            <p>※ 本页面中使用了 t4t5 以 <a href="http://opensource.org/licenses/MIT" target="_blank">MIT许可协议</a> 发布的 JavaScript 脚本
+                <a
+                    href="https://github.com/t4t5/sweetalert" target="_blank">sweetalert</a>。</p>
+            <p>※ 本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href="http://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a>                发布的开源项目 <a href="https://github.com/tiansh/us-danmaku" target="_blank">us-danmaku</a>。</p>
             <p style="text-align:right">作者: <a href="http://weibo.com/guguke" target="_blank">@啾咕咕www</a><a href="http://weibo.com/ruo0037" target="_blank">@没睡醒的肉啊</a></p>
         </div>
     </body>

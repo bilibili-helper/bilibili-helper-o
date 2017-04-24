@@ -3013,6 +3013,7 @@
         Live.init = {
             do: function () {
                 Live.init.localStorage();
+                Live.init.ad();
                 Live.init.userInfo(function (user) {
                     if (store.get('bilibili_helper_login', 'login')) {
                         // Live.bilibiliHelperInfoDOM = $('<div class="room-info bilibili-helper-info"></div>');
@@ -3073,16 +3074,28 @@
                 if (l.length) {
                     l.remove();
                 }
+                Live.init.inject_css('bilibiliHelperLive','live.min.css');
+            },
+            inject_css: function (name, filename) {
                 let styleLink = document.createElement('link');
-                styleLink.setAttribute('id', 'bilibiliHelperLive');
+                styleLink.setAttribute('id', name);
                 styleLink.setAttribute('type', 'text/css');
                 styleLink.setAttribute('rel', 'stylesheet');
-                styleLink.setAttribute('href', chrome.extension.getURL('live.min.css'));
+                styleLink.setAttribute('href', chrome.extension.getURL(filename));
                 if (document.head) {
                     document.head.appendChild(styleLink);
                 } else {
                     document.documentElement.appendChild(styleLink);
                 }
+            },
+            ad:function(){
+                chrome.runtime.sendMessage({
+                    command: 'getAd',
+                }, function(response) {
+                    if (response.value === 'on') {
+                        Live.init.inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
+                    }
+                });
             },
             giftList: function () {
                 let giftsDom = $('.gifts-ctnr .gift-item[role=listitem]');
