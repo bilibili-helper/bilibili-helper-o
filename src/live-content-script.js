@@ -25,13 +25,13 @@ let Live = {
     },
 };
 console.warn('%c弹幕监控脚本 插入成功㇏(°ω° )ノ♪~", "color:#FFFFFF;background-color:#4fc1e9;padding:5px;border-radius:7px;line-height:30px;');
-let event = document.createEvent('Event');
-event.initEvent('sendMessage', true, true);
-// let sendMessage = function(json) {
-//     let message = JSON.stringify(json);
-//     Live.set('bilibili_helper_message', message);
-//     document.dispatchEvent(event);
-// };
+// let event = document.createEvent('Event');
+// event.initEvent('sendMessage', true, true);
+let sendMessage = function(json) {
+    let message = JSON.stringify(json);
+    Live.set('bilibili_helper_message', message);
+    // document.dispatchEvent(event);
+};
 let options = document.getElementById('bilibiliHelperScript').getAttribute('options');
 if (options !== '{}') {
     options = JSON.parse(options);
@@ -127,14 +127,14 @@ if (options['chat']) {
 //         //     };
 //         // }, 500);
 //     }, 1000);
-//     Live.setInterval(window.liveRoomFuncs, function () {
-//         Live.setInterval(window.liveRoomFuncs.addDanmu, function () {
-//             var b = window.liveRoomFuncs.addDanmu;
-//             window.liveRoomFuncs.addDanmu = function (json) {
-//                 b(json);
-//                 sendMessage(json);
-//             };
-//         }, 500);
+Live.setInterval(window.liveRoomFuncs, function() {
+    Live.setInterval(window.liveRoomFuncs.addDanmu, function() {
+        let b = window.liveRoomFuncs.addDanmu;
+        window.liveRoomFuncs.addDanmu = function(json) {
+            b(json);
+            sendMessage(json);
+        };
+    }, 500);
 //         Live.setInterval(window.liveRoomFuncs.addGift, function () {
 //             var b = window.liveRoomFuncs.addGift;
 //             window.liveRoomFuncs.addGift = function (json) {
@@ -142,7 +142,7 @@ if (options['chat']) {
 //                 sendMessage(json);
 //             };
 //         }, 500);
-//     }, 1000);
+}, 1000);
 // }
 // var html = $(e.target).html();
 // var reg = new RegExp('([\\d]+)s');

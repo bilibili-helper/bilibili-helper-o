@@ -88,6 +88,7 @@ $(document).ready(function() {
     $('div[option="' + bkg_page.getOption('giftpackage') + '"].giftpackage').addClass('on');
     // $("div[option=\"" + bkg_page.getOption("support") + "\"].support").addClass("on");
     $('div[option="' + bkg_page.getOption('dlquality') + '"].dlquality').addClass('on');
+    $('div[option="' + bkg_page.getOption('autowide') + '"].autowide').addClass('on');
     $('div[option="' + bkg_page.getOption('indexversion') + '"].indexversion').addClass('on');
     $('div[option="' + bkg_page.getOption('rel_search') + '"].rel_search').addClass('on');
     $('div[option="' + bkg_page.getOption('doSign') + '"].doSign').addClass('on');
@@ -122,30 +123,30 @@ $(document).ready(function() {
         $('.watcher-notify-option .option .' + wn_options[i] + '[option="on"]').addClass('on');
     });
 
-    let adOption = bkg_page.getOption('ad');
-    $('div[option="' + adOption + '"].ad').addClass('on');
-    if (adOption === 'fade') {
-        $('#ad_opacity_opt').show();
-    }
-    $('#ad_opacity').val(bkg_page.getOption('ad_opacity'));
-    $('.ad').click(function() {
-        if ($(this).hasClass('on')) {
-            return false;
-        }
-        $('.ad').removeClass('on');
-        $(this).addClass('on');
-        if ($(this).attr('option') === 'fade') {
-            $('#ad_opacity_opt').slideDown(300);
-        } else {
-            $('#ad_opacity_opt').slideUp(300);
-        }
-        bkg_page.setOption('ad', $(this).attr('option'), true);
-        // updatepreview();
-    });
-    $('#ad_opacity').change(function() {
-        bkg_page.setOption('ad_opacity', $(this).val(), true);
-        // updatepreview();
-    });
+    // let adOption = bkg_page.getOption('ad');
+    // $('div[option="' + adOption + '"].ad').addClass('on');
+    // if (adOption === 'fade') {
+    //     $('#ad_opacity_opt').show();
+    // }
+    // $('#ad_opacity').val(bkg_page.getOption('ad_opacity'));
+    // $('.ad').click(function() {
+    //     if ($(this).hasClass('on')) {
+    //         return false;
+    //     }
+    //     $('.ad').removeClass('on');
+    //     $(this).addClass('on');
+    //     if ($(this).attr('option') === 'fade') {
+    //         $('#ad_opacity_opt').slideDown(300);
+    //     } else {
+    //         $('#ad_opacity_opt').slideUp(300);
+    //     }
+    //     bkg_page.setOption('ad', $(this).attr('option'), true);
+    //     // updatepreview();
+    // });
+    // $('#ad_opacity').change(function() {
+    //     bkg_page.setOption('ad_opacity', $(this).val(), true);
+    //     // updatepreview();
+    // });
 
 
     /* $('.support').click(function() {
@@ -216,6 +217,15 @@ $(document).ready(function() {
         $('.rel_search').removeClass('on');
         $(this).addClass('on');
         bkg_page.setOption('rel_search', $(this).attr('option'));
+        // updatepreview();
+    });
+    $('.autowide').click(function() {
+        if ($(this).hasClass('on')) {
+            return false;
+        }
+        $('.autowide').removeClass('on');
+        $(this).addClass('on');
+        bkg_page.setOption('autowide', $(this).attr('option'));
         // updatepreview();
     });
     $('.doSign').click(function() {
