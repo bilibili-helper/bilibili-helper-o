@@ -5,15 +5,16 @@
         return false;
     }
     let biliHelper = {};
-    if (location.hostname === 'www.bilibili.com') {
-        biliHelper.site = 0;
+    if (document.location.pathname === '/blackboard/html5player.html') {
+        biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
+    } else if (location.hostname === 'www.bilibili.com') {
+        biliHelper.site = 0;
     } else {
         return false;
     }
     biliHelper.protocol = location.protocol;
-
     function formatInt(Source, Length) {
         let strTemp = '';
         for (let i = 1; i <= Length - (Source + '').length; i++) {
@@ -67,7 +68,7 @@
                     let flashvars = player.find('param[name=flashvars]');
                     flashvars.val(flashvars.val() + '&as_wide=1');
                     $('#player_placeholder').attr('data', $('#player_placeholder').attr('data'));
-                } else {
+                } else if (document.location.pathname === '/blackboard/html5player.html' || html5WidthButton.length > 0) {
                     html5WidthButton.click();
                 }
             }
@@ -80,7 +81,9 @@
                 doit();
             }, 2000);
         });
-        observer.observe(player[0], {childList: true});
+        if (player.length > 0) {
+            observer.observe(player[0], {childList: true});
+        }
     }
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -299,7 +302,7 @@
                     return;
                 }
                 if ($('iframe.player').length || $('.scontent object param[name="flashvars"]').length) {
-                    urlResult = $('.scontent object param[name="flashvars"]').attr('value');
+                    urlResult = $('.scontent object param[name="flashvars"]').attr('value') || $('iframe.player').attr('src');
                     if (urlResult) {
                         let search = urlResult.split('&').map(function(searchPart) {
                             return searchPart.split('=', 2);
@@ -310,6 +313,10 @@
                                 biliHelper.avid = value;
                             } else if (key === 'cid') {
                                 biliHelper.cid = value;
+                            } else if (key === 'seasonId') {
+                                biliHelper.seasonId = value;
+                            } else if (key === 'episodeId') {
+                                biliHelper.episodeId = value;
                             }
                         });
                         initHelper();
@@ -319,6 +326,14 @@
             });
             observer.observe(playerBlock, {childList: true});
         }
+    } else if (biliHelper.site === 2) {
+        chrome.runtime.sendMessage({
+            command: 'init',
+        }, function(response) {
+            if (response.autowide === 'on') {
+                setWide();
+            }
+        });
     }
     biliHelper.work = function() {
         chrome.runtime.sendMessage({
