@@ -9,6 +9,7 @@
         biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
+        biliHelper.sameVideo = false;
     } else if (location.hostname === 'www.bilibili.com') {
         biliHelper.site = 0;
     } else {
@@ -201,6 +202,7 @@
     let initHelper = function() {
         biliHelper.videoPic = $('img.cover_image').attr('src');
         biliHelper.totalPage = $('#dedepagetitles option').length;
+        $('.v1-bangumi-info-operate .helper').remove();
         if (typeof biliHelper.page === 'undefined') {
             biliHelper.page = 1;
         } else {
@@ -229,7 +231,7 @@
             }
             let blockInfo = biliHelper.helperBlock.find('.info');
             biliHelper.mainBlock = blockInfo.find('.main');
-            biliHelper.mainBlock.infoSection = $('<div class="section video hidden"><h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p></div>');
+            biliHelper.mainBlock.infoSection = $('<div class="section video"><h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p></div>');
             biliHelper.mainBlock.append(biliHelper.mainBlock.infoSection);
             biliHelper.mainBlock.dblclick(function(e) {
                 if (e.shiftKey) {
@@ -300,9 +302,6 @@
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
             let observer = new MutationObserver(function() {
-                if (biliHelper.avid) {
-                    return;
-                }
                 if ($('iframe.player').length || $('.scontent object param[name="flashvars"]').length) {
                     urlResult = $('.scontent object param[name="flashvars"]').attr('value') || $('iframe.player').attr('src');
                     if (urlResult) {
@@ -318,11 +317,18 @@
                             } else if (key === 'seasonId') {
                                 biliHelper.seasonId = value;
                             } else if (key === 'episodeId') {
+                                if (biliHelper.episodeId === value) {
+                                    biliHelper.sameVideo = true;
+                                } else {
+                                    biliHelper.sameVideo = false;
+                                }
                                 biliHelper.episodeId = value;
                             }
                         });
-                        initHelper();
-                        observer.disconnect();
+                        if (biliHelper.sameVideo === false) {
+                            initHelper();
+                        }
+                        // observer.disconnect();
                     }
                 }
             });
@@ -379,7 +385,19 @@
                 // if (!isNaN(biliHelper.cid) && biliHelper.originalPlayer) {
                     // biliHelper.originalPlayer.replace('cid=' + biliHelper.cid, 'cid=' + videoInfo.cid);
                 // }
-                biliHelper.cid = videoInfo.cid;
+                if (biliHelper.cid === undefined) {
+                    biliHelper.cid = videoInfo.cid;
+                }
+                if (biliHelper.site === 1) {
+                    chrome.runtime.sendMessage({
+                        command: 'getBangumiInfo',
+                        episodeId: biliHelper.episodeId,
+                    }, function(response) {
+                        biliHelper.avid = response.videoInfo.avid;
+                        biliHelper.cid = response.videoInfo.danmaku;
+                        biliHelper.index = response.videoInfo.index;
+                    });
+                }
                 biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
                 let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
                 let url = biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml';

@@ -628,6 +628,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
         });
         return true;
+    case 'getBangumiInfo':
+        {
+            let episodeId = request.episodeId;
+            getFileData('http://bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
+                bangumiInfo = JSON.parse(bangumiInfo);
+                if (typeof bangumiInfo.code === undefined) {
+                    bangumiInfo.code = 200;
+                }
+                bangumiInfo = bangumiInfo.result;
+                sendResponse({
+                    videoInfo: bangumiInfo.currentEpisode,
+                });
+            });
+            return true;
+        }
     case 'searchVideo':
         { let keyword = request.keyword;
             getFileData('http://api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
