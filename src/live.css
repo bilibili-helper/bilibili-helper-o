@@ -731,7 +731,7 @@
 }
 
 .gifts-package-panel .gifts-package-content .container .send_line {
-    display: inline-block;
+    /*display: inline-block;*/
     width: 20px;
     line-height: 14px;
     text-align: center;
@@ -742,7 +742,11 @@
     color: #FFC760;
     cursor: pointer;
     opacity: 0;
-    transition: all cubic-bezier(.22, .58, .12, .98) .4s;
+    visibility: hidden; 
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
     position: absolute;
     left: 0;
 }
@@ -754,6 +758,7 @@
 
 .gifts-package-panel .gifts-package-content .container:hover .send_line {
     opacity: 1;
+    visibility: visible; 
 }
 
 .gifts-package-panel .gifts-package-content .container .gift-item-group {

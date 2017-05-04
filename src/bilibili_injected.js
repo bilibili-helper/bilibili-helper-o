@@ -182,7 +182,6 @@
         });
     };
     biliHelper.bilimac = function() {
-        this.set('bilimac');
         $('#bofqi').html('<div id="player_placeholder" class="player"></div><div id="loading-notice">正在加载 Bilibili Mac 客户端…</div>');
         $('#bofqi').find('#player_placeholder').css({
             'background': 'url(' + biliHelper.videoPic + ') 50% 50% / cover no-repeat',
@@ -237,6 +236,9 @@
                     biliHelper.mainBlock.infoSection.toggleClass('hidden');
                 }
             });
+            if (response.macplayer === 'on') {
+                biliHelper.bilimac();
+            }
       // if (biliHelper.redirectUrl && biliHelper.redirectUrl !== "undefined") {
       //   biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
       //   biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);

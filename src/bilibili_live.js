@@ -1570,7 +1570,7 @@
                 },
                 mediaIcon: {
                     title: '粉丝勋章',
-                    css: '#chat-msg-list .chat-msg .medal-icon{display:none;}',
+                    css: '#chat-msg-list .chat-msg .fans-medal-item{display:none;}',
                     value: 'off',
                 },
                 userLevel: {

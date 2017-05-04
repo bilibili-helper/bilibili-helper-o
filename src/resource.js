@@ -34,6 +34,7 @@ let defaultOptions = {
     'watchNotifyList': '[]',
     'giftpackage': 'on',
     'autowide': 'off',
+    'macplayer': 'off',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

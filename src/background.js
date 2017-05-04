@@ -454,6 +454,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             // replace: getOption('replace'),
             autowide: getOption('autowide'),
             version: version,
+            macplayer: getOption('macplayer'),
         });
         return true;
     case 'cidHack':
