@@ -231,7 +231,7 @@
             }
             let blockInfo = biliHelper.helperBlock.find('.info');
             biliHelper.mainBlock = blockInfo.find('.main');
-            biliHelper.mainBlock.infoSection = $('<div class="section video"><h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p></div>');
+            biliHelper.mainBlock.infoSection = $('<div class="section video hidden"><h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p></div>');
             biliHelper.mainBlock.append(biliHelper.mainBlock.infoSection);
             biliHelper.mainBlock.dblclick(function(e) {
                 if (e.shiftKey) {
