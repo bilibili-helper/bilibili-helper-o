@@ -1585,7 +1585,7 @@
                 },
                 superGift: {
                     title: '礼物连击',
-                    css: '.super-gift-ctnr{display:none;}',
+                    css: '.live-haruna-ctnr{display:none;}',
                     value: 'off',
                 },
                 announcement: {
@@ -2966,6 +2966,7 @@
                 let infoPanel = headPanel.find('.info-ctnr');
                 let roomInfo = infoPanel.find('.room-info');
                 let roomTitleRow = roomInfo.find('.room-title-row');
+                let roomAnchorRow = roomInfo.find('.anchor-info-row');
 
                 /* up more btn & panel*/
                 let helperAnchorInfoBtn = $('<span />').addClass('helper-anchor-info-btn').text('更多');
@@ -2975,10 +2976,13 @@
                 let manage = roomInfo.find('.room-manage');
                 let report = roomTitleRow.find('.report-link[href]');
                 let share = roomTitleRow.find('.share-link');
-                setTimeout(function () {
-                    roomTitleRow.find('.report-link:not([href])').hide();
-                }, 1000);
-                helperAnchorInfoPanel.append(area, tags, manage, report, share);
+                //san
+                let san = roomAnchorRow.find('.san-info').hide();
+                let roomInfoURL = san.attr('href');
+                let sanValue = san.find('.san-num');
+                let sanIn = $('<div class="row-item san-info"><span class="san">San值：</span></div>').append(sanValue);
+                
+                helperAnchorInfoPanel.append(sanIn, area, tags,  manage, report, share);
 
 
                 /* helper info panel*/
