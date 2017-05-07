@@ -86,6 +86,9 @@
             observer.observe(player[0], {childList: true});
         }
     }
+    function setOffset() {
+        $(document).scrollTop($('.b-page-body').offset().top);
+    }
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         switch (request.command) {
@@ -214,6 +217,8 @@
         }, function(response) {
             // biliHelper.playerConfig = response.playerConfig;
             biliHelper.version = response.version;
+            biliHelper.autowide = response.autowide;
+            biliHelper.autooffset = response.autooffset;
             // biliHelper.favorHTML5 = response.html5 === 'on';
             // biliHelper.replaceEnabled = response.replace === 'on';
             // biliHelper.originalPlayer = localStorage.getItem('bilimac_original_player') || $('#bofqi').html();
@@ -263,9 +268,6 @@
             biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 
             // biliHelper.switcher.set('original');
-            if (response.autowide === 'on') {
-                setWide();
-            }
             if (biliHelper.site === 0) {
                 $('.player-wrapper .arc-toolbar').append(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
@@ -359,6 +361,12 @@
                 biliHelper.pageOffset = videoInfo.pages - biliHelper.totalPage;
                 biliHelper.work();
                 return false;
+            }
+            if (biliHelper.autowide === 'on') {
+                setWide();
+            }
+            if (biliHelper.autooffset === 'on') {
+                setOffset();
             }
             if (typeof videoInfo.code !== 'undefined') {
                 if (biliHelper.page !== 1) {
@@ -528,12 +536,6 @@
                 window.__SetCookie('__secureJS', '');
                 eval(evalCode);
             }, 1000);
-
-            if (biliHelper.cid && !biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') !== 'force') {
-                $('#loading-notice').fadeOut(300, function() {
-                    biliHelper.switcher.swf();
-                });
-            }
 
             if (!biliHelper.cid) {
                 biliHelper.error = '错误' + videoInfo.code + ': ' + videoInfo.error;

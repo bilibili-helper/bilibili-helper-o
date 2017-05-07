@@ -33,8 +33,9 @@ let defaultOptions = {
     'watchNotify': 'on',
     'watchNotifyList': '[]',
     'giftpackage': 'on',
-    'autowide': 'off',
+    'autowide': 'on',
     'macplayer': 'off',
+    'autooffset': 'on',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

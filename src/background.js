@@ -455,6 +455,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             autowide: getOption('autowide'),
             version: version,
             macplayer: getOption('macplayer'),
+            autooffset: getOption('autooffset'),
         });
         return true;
     case 'cidHack':
