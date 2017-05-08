@@ -96,7 +96,6 @@ $(document).ready(function() {
     $('div[option="' + bkg_page.getOption('autoTreasure') + '"].autoTreasure').addClass('on');
     $('div[option="' + bkg_page.getOption('danmu') + '"].danmu').addClass('on');
     $('div[option="' + bkg_page.getOption('liveNotification') + '"].liveNotification').addClass('on');
-    $('div[option="' + bkg_page.getOption('macplayer') + '"].macplayer').addClass('on');
 
     // chat-display
     $('div[option="' + bkg_page.getOption('chatDisplay') + '"].chatDisplay').addClass('on');
@@ -172,14 +171,6 @@ $(document).ready(function() {
         $('.ad').removeClass('on');
         $(this).addClass('on');
         bkg_page.setOption('ad', $(this).attr('option'));
-    });
-    $('.macplayer').click(function() {
-        if ($(this).hasClass('on')) {
-            return false;
-        }
-        $('.macplayer').removeClass('on');
-        $(this).addClass('on');
-        bkg_page.setOption('macplayer', $(this).attr('option'));
     });
     // $('.replace').click(function () {
     //     if ($(this).hasClass('on')) return false;

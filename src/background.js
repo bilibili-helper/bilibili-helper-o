@@ -776,6 +776,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
         return true;
 
+    case 'callBilibiliMac':
+        postFileData('http://localhost:23330/rpc', request.data, function() {
+            sendResponse(true);
+        });
+        return true;
+
     default:
         sendResponse({
             result: 'unknown',

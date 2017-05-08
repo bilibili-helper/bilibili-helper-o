@@ -182,23 +182,6 @@
       // }
         });
     };
-    biliHelper.bilimac = function() {
-        $('#bofqi').html('<div id="player_placeholder" class="player"></div><div id="loading-notice">正在加载 Bilibili Mac 客户端…</div>');
-        $('#bofqi').find('#player_placeholder').css({
-            'background': 'url(' + biliHelper.videoPic + ') 50% 50% / cover no-repeat',
-            '-webkit-filter': 'blur(20px)',
-            'overflow': 'hidden',
-            'visibility': 'visible',
-        });
-        $.post('http://localhost:23330/rpc', {
-            action: 'playVideoByCID',
-            data: biliHelper.cid + '|' + window.location.href + '|' + document.title,
-        }, function() {
-            $('#bofqi').find('#loading-notice').text('已在 Bilibili Mac 客户端中加载');
-        }).fail(function() {
-            $('#bofqi').find('#loading-notice').text('调用 Bilibili Mac 客户端失败 :(');
-        });
-    };
     let initHelper = function() {
         biliHelper.videoPic = $('img.cover_image').attr('src');
         biliHelper.totalPage = $('#dedepagetitles option').length;
@@ -216,8 +199,45 @@
             biliHelper.version = response.version;
             // biliHelper.favorHTML5 = response.html5 === 'on';
             // biliHelper.replaceEnabled = response.replace === 'on';
-            // biliHelper.originalPlayer = localStorage.getItem('bilimac_original_player') || $('#bofqi').html();
+            biliHelper.originalPlayer = localStorage.getItem('bilimac_original_player') || $('#bofqi').html();
             localStorage.removeItem('bilimac_original_player');
+            biliHelper.switcher = {
+                current: 'original',
+                set: function(newMode) {
+                    if (biliHelper.mainBlock.switcherSection) {
+                        biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + this.current + '"]').addClass('w');
+                        biliHelper.mainBlock.switcherSection.find('a.b-btn[type="' + newMode + '"]').removeClass('w');
+                    }
+                    this.current = newMode;
+                },
+                original: function() {
+                    this.set('original');
+                    $('#bofqi').html(biliHelper.originalPlayer);
+                },
+                bilimac: function() {
+                    this.set('bilimac');
+                    $('#bofqi').html('<div id="player_placeholder" class="player"></div><div id="loading-notice">正在加载 Bilibili Mac 客户端…</div>');
+                    $('#bofqi').find('#player_placeholder').css({
+                        'background': 'url(' + biliHelper.videoPic + ') 50% 50% / cover no-repeat',
+                        '-webkit-filter': 'blur(20px)',
+                        'overflow': 'hidden',
+                        'visibility': 'visible',
+                    });
+                    chrome.runtime.sendMessage({
+                        command: 'callBilibiliMac',
+                        data: {
+                            action: 'playVideoByCID',
+                            data: biliHelper.cid + '|' + window.location.href + '|' + document.title + '|' + (biliHelper.cidHack === 2 ? 2 : 1),
+                        },
+                    }, function(succ) {
+                        if (succ) {
+                            $('#bofqi').find('#loading-notice').text('已在 Bilibili Mac 客户端中加载');
+                        } else {
+                            $('#bofqi').find('#loading-notice').text('调用 Bilibili Mac 客户端失败 :(');
+                        }
+                    });
+                },
+            };
             if (biliHelper.site === 0) {
                 biliHelper.helperBlock = $('<div class="block helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version">哔哩哔哩助手 ' + biliHelper.version + ' by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕www</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
                 biliHelper.helperBlock.find('.t').click(function() {
@@ -238,31 +258,27 @@
                     biliHelper.mainBlock.infoSection.toggleClass('hidden');
                 }
             });
-            if (response.macplayer === 'on') {
-                biliHelper.bilimac();
-            }
       // if (biliHelper.redirectUrl && biliHelper.redirectUrl !== "undefined") {
       //   biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
       //   biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);
       // }
-      // biliHelper.mainBlock.switcherSection = $('<div class="section switcher"><h3>播放器切换</h3><p></p></div>');
-      // biliHelper.mainBlock.switcherSection.find('p').append($('<a class="b-btn w" type="original">原始播放器</a><a class="b-btn w hidden" type="bilimac">Mac 客户端</a><a class="b-btn w hidden" type="swf">SWF 播放器</a><a class="b-btn w hidden" type="iframe">Iframe 播放器</a><a class="b-btn w hidden" type="html5">HTML5 播放器</a>').click(function() {
-      //   biliHelper.switcher[$(this).attr('type')]();
-      // }));
       // if (biliHelper.redirectUrl) {
       //   biliHelper.mainBlock.switcherSection.find('a[type="original"]').addClass('hidden');
       //   biliHelper.mainBlock.switcherSection.find('a[type="swf"],a[type="iframe"]').removeClass('hidden');
       // }
-      // if (localStorage.getItem('bilimac_player_type')) {
-      //   biliHelper.mainBlock.switcherSection.find('a[type="bilimac"]').removeClass('hidden');
-      // }
-      // biliHelper.mainBlock.append(biliHelper.mainBlock.switcherSection);
+            if (localStorage.getItem('bilimac_player_type')) {
+                biliHelper.mainBlock.switcherSection = $('<div class="section switcher"><h3>播放器切换</h3><p></p></div>');
+                biliHelper.mainBlock.switcherSection.find('p').append($('<a class="b-btn w" type="original">原始播放器</a><a class="b-btn w" type="bilimac">Mac 客户端</a>').click(function() {
+                    biliHelper.switcher[$(this).attr('type')]();
+                }));
+                biliHelper.mainBlock.append(biliHelper.mainBlock.switcherSection);
+            }
             biliHelper.mainBlock.downloaderSection = $('<div class="section downloder"><h3>视频下载</h3><p><span></span>视频地址获取中，请稍等…</p></div>');
             biliHelper.mainBlock.append(biliHelper.mainBlock.downloaderSection);
             biliHelper.mainBlock.querySection = $('<div class="section query"><h3>弹幕发送者查询</h3><p><span></span>正在加载全部弹幕, 请稍等…</p></div>');
             biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 
-            // biliHelper.switcher.set('original');
+            biliHelper.switcher.set('original');
             if (response.autowide === 'on') {
                 setWide();
             }
@@ -529,11 +545,11 @@
                 eval(evalCode);
             }, 1000);
 
-            if (biliHelper.cid && !biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') !== 'force') {
+            /* if (biliHelper.cid && !biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') !== 'force') {
                 $('#loading-notice').fadeOut(300, function() {
                     biliHelper.switcher.swf();
                 });
-            }
+            } */
 
             if (!biliHelper.cid) {
                 biliHelper.error = '错误' + videoInfo.code + ': ' + videoInfo.error;
@@ -553,6 +569,7 @@
         if (localStorage.getItem('bilimac_player_type') === 'force') {
             biliHelper.switcher.set('bilimac');
         }
+        localStorage.removeItem('bilimac_player_type');
         biliHelper.replacePlayer = false;
         biliHelper.work();
 
@@ -647,4 +664,3 @@
     }
 })();
 // wide
-
