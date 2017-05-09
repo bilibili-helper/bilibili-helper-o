@@ -24,13 +24,13 @@ let Live = {
         }
     },
 };
-console.warn('%c弹幕监控脚本 插入成功㇏(°ω° )ノ♪~", "color:#FFFFFF;background-color:#4fc1e9;padding:5px;border-radius:7px;line-height:30px;');
-// let event = document.createEvent('Event');
-// event.initEvent('sendMessage', true, true);
+console.warn('%c弹幕监控脚本 插入成功㇏(°ω° )ノ♪~');
+let event = document.createEvent('Event');
+event.initEvent('sendMessage', true, true);
 let sendMessage = function(json) {
     let message = JSON.stringify(json);
     Live.set('bilibili_helper_message', message);
-    // document.dispatchEvent(event);
+    document.dispatchEvent(event);
 };
 let options = document.getElementById('bilibiliHelperScript').getAttribute('options');
 if (options !== '{}') {
@@ -103,47 +103,47 @@ if (options['chat']) {
 //     }, 1000);
 // }
 // watcher
-// if (options['watcher']) {
-//     Live.setInterval(window.protocol, function () {
-//         Live.setInterval(window.protocol.SYS_MSG, function () {
-//             var b = window.protocol.SYS_MSG;
-//             window.protocol.SYS_MSG = function (json) {
-//                 b(json);
-//                 sendMessage(json);
-//             };
-//         }, 500);
-//         Live.setInterval(window.protocol.SYS_GIFT, function () {
-//             var b = window.protocol.SYS_GIFT;
-//             window.protocol.SYS_GIFT = function (json) {
-//                 b(json);
-//                 sendMessage(json);
-//             };
-//         }, 500);
-//         // Live.setInterval(window.protocol.TV_END, function () {
-//         //     var b = window.protocol.TV_END;
-//         //     window.protocol.TV_END = function (json) {
-//         //         b(json);
-//         //         sendMessage(json);
-//         //     };
-//         // }, 500);
-//     }, 1000);
-Live.setInterval(window.liveRoomFuncs, function() {
-    Live.setInterval(window.liveRoomFuncs.addDanmu, function() {
-        let b = window.liveRoomFuncs.addDanmu;
-        window.liveRoomFuncs.addDanmu = function(json) {
-            b(json);
-            sendMessage(json);
-        };
-    }, 500);
-//         Live.setInterval(window.liveRoomFuncs.addGift, function () {
-//             var b = window.liveRoomFuncs.addGift;
-//             window.liveRoomFuncs.addGift = function (json) {
-//                 b(json);
-//                 sendMessage(json);
-//             };
-//         }, 500);
-}, 1000);
-// }
+if (options['watcher']) {
+    Live.setInterval(window.protocol, function() {
+        Live.setInterval(window.protocol.SYS_MSG, function() {
+            let b = window.protocol.SYS_MSG;
+            window.protocol.SYS_MSG = function(json) {
+                b(json);
+                sendMessage(json);
+            };
+        }, 500);
+        // Live.setInterval(window.protocol.SYS_GIFT, function() {
+        //     let b = window.protocol.SYS_GIFT;
+        //     window.protocol.SYS_GIFT = function(json) {
+        //         b(json);
+        //         sendMessage(json);
+        //     };
+        // }, 500);
+        // Live.setInterval(window.protocol.TV_END, function () {
+        //     var b = window.protocol.TV_END;
+        //     window.protocol.TV_END = function (json) {
+        //         b(json);
+        //         sendMessage(json);
+        //     };
+        // }, 500);
+    }, 1000);
+    // Live.setInterval(window.liveRoomFuncs, function() {
+        // Live.setInterval(window.liveRoomFuncs.addDanmu, function() {
+        //     let b = window.liveRoomFuncs.addDanmu;
+        //     window.liveRoomFuncs.addDanmu = function(json) {
+        //         b(json);
+        //         sendMessage(json);
+        //     };
+        // }, 500);
+        // Live.setInterval(window.liveRoomFuncs.addGift, function() {
+        //     let b = window.liveRoomFuncs.addGift;
+        //     window.liveRoomFuncs.addGift = function(json) {
+        //         b(json);
+        //         sendMessage(json);
+        //     };
+        // }, 500);
+    // }, 1000);
+}
 // var html = $(e.target).html();
 // var reg = new RegExp('([\\d]+)s');
 // var timer = reg.exec(html);

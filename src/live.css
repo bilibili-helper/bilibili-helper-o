@@ -618,8 +618,7 @@
 }
 
 .helper-info-panel i {
-    margin: 0 18px 0 10px;
-    background-position: 0px 0px;
+    margin: 0 14px 0 10px;
 }
 
 .helper-info-panel .watcher-info.wait .watcher-info-icon {
@@ -656,7 +655,7 @@
 
 .helper-info-panel .treasure-info.finished .treasure-info-icon {
     background-position: -20px -80px;
-    margin-right: 15px;
+    margin-right: 9px;
 }
 
 .watcher-info-panel {

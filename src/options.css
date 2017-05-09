@@ -286,6 +286,9 @@ input[type="color"] {
     font-size: 14px;
     line-height: 24px
 }
+#about .info{
+    position: relative;
+}
 
 #about .highlight p {
     color: #B71C1C;
@@ -310,6 +313,9 @@ input[type="color"] {
 .alipay {
     width: 200px;
     margin-left: 2em;
+    position: absolute;
+    right: 20px;
+    top: 60px;
 }
 
 .sweet-alert h2+p a {
