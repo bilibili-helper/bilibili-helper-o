@@ -28,13 +28,14 @@ let defaultOptions = {
     'chatDisplay': 'on',
     'displayOption': '[]',
     'versionNotify': 'on',
-    'watcher': 'off',
-    'watchList': '[]',
+    'watcher': 'on',
+    'watchList': '["tv"]',
     'watchNotify': 'on',
     'watchNotifyList': '[]',
     'giftpackage': 'on',
-    'autowide': 'off',
+    'autowide': 'on',
     'macplayer': 'off',
+    'autooffset': 'on',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

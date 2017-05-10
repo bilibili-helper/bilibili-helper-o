@@ -6,7 +6,8 @@
 #b_recommend,
 /*live*/
 .bulletins,
-.live-ad-full
+.live-ad-full,
+.not-enough
  {
     display: none !important;
 }

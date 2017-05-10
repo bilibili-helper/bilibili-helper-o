@@ -401,6 +401,7 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
 Live.treasure = {};
 Live.watcherRoom = {};
 Live.tvs = {};
+Live.tvNotification = {};
 
 function setTreasure(data) {
     if (Object.prototype.toString.call(data) === '[object Object]') {
@@ -455,6 +456,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             autowide: getOption('autowide'),
             version: version,
             macplayer: getOption('macplayer'),
+            autooffset: getOption('autooffset'),
         });
         return true;
     case 'cidHack':
@@ -702,6 +704,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     }
                 });
             return true; }
+    case 'tvNotification':
+        {
+            let data = request.data;
+            let roomId = data.roomId;
+            Live.tvNotification[roomId] = true;
+            chrome.notifications.create(roomId, {
+                type: 'basic',
+                iconUrl: 'http://static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
+                title: '小电视抽奖提示',
+                message: '直播间【' + roomId + '】正在进行小电视抽奖',
+                isClickable: true,
+                buttons: [{
+                    title: chrome.i18n.getMessage('notificationGetTv'),
+                }],
+            }, function(id) {
+                setTimeout(function() {
+                    chrome.notifications.clear(id);
+                }, 10000);
+            });
+
+            return true;
+        }
     case 'getTVReward':
         { let rewardStr = '',
             lost = '很遗憾，此次您没有中奖';
@@ -920,6 +944,11 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 });
 
 chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
+    if (Live.tvNotification[notificationId] !== undefined) {
+        chrome.tabs.create({
+            url: 'http://live.bilibili.com/' + notificationId,
+        });
+    }
     if (Live.notisesIdList[notificationId] !== undefined) {
         if (index === 0) {
             chrome.tabs.create({
@@ -1098,11 +1127,9 @@ Live.notise = {
                                 iconUrl: data.face,
                                 title: data.nickname + chrome.i18n.getMessage('notificationLiveOn'),
                                 message: data.roomname,
-                                isClickable: false,
+                                isClickable: true,
                                 buttons: [{
                                     title: chrome.i18n.getMessage('notificationWatch'),
-                                }, {
-                                    title: chrome.i18n.getMessage('notificationShowAll'),
                                 }],
                             }, function(id) {
                                 Live.notisesIdList[id] = data;

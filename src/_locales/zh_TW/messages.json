@@ -92,7 +92,7 @@
     "description": "Noticefication: Live On"
   },
   "notificationGetTv": {
-    "message": "前往填寫收貨地址",
+    "message": "前往參加",
     "description": "Noticefication: Get TV"
   }
 }

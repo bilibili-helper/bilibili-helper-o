@@ -86,6 +86,7 @@ $(document).ready(function() {
     $('div[option="' + bkg_page.getOption('contextmenu') + '"].contextmenu').addClass('on');
     $('div[option="' + bkg_page.getOption('dynamic') + '"].dynamic').addClass('on');
     $('div[option="' + bkg_page.getOption('ad') + '"].ad').addClass('on');
+    $('div[option="' + bkg_page.getOption('autooffset') + '"].autooffset').addClass('on');
     $('div[option="' + bkg_page.getOption('giftpackage') + '"].giftpackage').addClass('on');
     // $("div[option=\"" + bkg_page.getOption("support") + "\"].support").addClass("on");
     $('div[option="' + bkg_page.getOption('dlquality') + '"].dlquality').addClass('on');
