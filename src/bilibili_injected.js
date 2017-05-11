@@ -423,8 +423,13 @@
                         biliHelper.avid = response.videoInfo.avid;
                         biliHelper.cid = response.videoInfo.danmaku;
                         biliHelper.index = response.videoInfo.index;
+                        createDanmuList();
                     });
+                } else {
+                    createDanmuList();
                 }
+            }
+            function createDanmuList() {
                 biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
                 let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
                 let url = biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml';
@@ -545,7 +550,6 @@
                     biliHelper.mainBlock.querySection.find('p').empty().append(control);
                 });
             }
-
             let c = null;
 
             window.postMessage ? (c = function(a) {
