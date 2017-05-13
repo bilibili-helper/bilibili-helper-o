@@ -54,7 +54,6 @@ if (options['chat']) {
             window.LivePlayer.sendMsg(text.substr(0, options['chat']['maxLength']), colorStr, options['chat']['danmuMode'][mode]);
             text = text.substr(options['chat']['maxLength']);
             if (text.length > 0) {
-                console.warn(text);
                 setTimeout(function() {
                     sendDamu();
                 }, 4000);
