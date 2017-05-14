@@ -1555,7 +1555,7 @@
                 },
                 gift: {
                     title: '礼物信息',
-                    css: '#chat-msg-list .gift-msg{display:none;}',
+                    css: '#chat-msg-list .gift-msg,.gift-msg-1000{display:none !important;}',
                     value: 'off',
                 },
                 vipEnterMsg: {
@@ -3226,14 +3226,12 @@
                                             // Live.beat.init();
                                         }
                                         Live.treasure.init();
-                                        Live.watcher.init(()=>{
-                                            Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
-                                        });
+                                        Live.watcher.init();
                                         Live.helperInfoRow.css('opacity', 1);
                                     }, 2500);
-                                    // setTimeout(() => {
-                                        
-                                    // }, 5000)
+                                    setTimeout(() => {
+                                        Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
+                                    }, 5000)
                                     Notification.requestPermission();
                                 });
                             });
