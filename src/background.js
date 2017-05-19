@@ -391,10 +391,6 @@ function checkSecurePlayer() {
     xmlhttp.send();
 }
 
-function extensionLabsInit() {
-    getFileData('https://extlabs.io/analytics/?uid=178&pid=264');
-}
-
 if (typeof (chrome.runtime.setUninstallURL) === 'function') {
     chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
@@ -843,6 +839,7 @@ chrome.alarms.create('getLocale', {
     periodInMinutes: 5,
 });
 
+/*
 function getLocale() {
     getFileData('https://telize.guguke.net/geoip', function(result) {
         try {
@@ -874,6 +871,7 @@ function getLocale() {
         }
     });
 }
+*/
 
 function checkVersion() {
     let versionNotify = getOption('versionNotify');
@@ -897,8 +895,7 @@ function checkVersion() {
         });
 }
 
-getLocale();
-extensionLabsInit();
+//getLocale();
 
 chrome.runtime.onInstalled.addListener(function(details) {
     setOption('version', chrome.runtime.getManifest().version);
