@@ -894,9 +894,6 @@ function checkVersion() {
             }
         });
 }
-
-//getLocale();
-
 chrome.runtime.onInstalled.addListener(function(details) {
     setOption('version', chrome.runtime.getManifest().version);
     if (details.reason === 'install') {
@@ -932,7 +929,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     case 'getLocale':
         if (!localeAcquired) {
             clearTimeout(localeTimeout);
-            getLocale();
+            // getLocale();
         }
         return true;
     default:
