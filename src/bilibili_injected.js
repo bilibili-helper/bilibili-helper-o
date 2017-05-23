@@ -5,6 +5,10 @@
         return false;
     }
     let biliHelper = {};
+    biliHelper.eval = function(fn) {
+        let Fn = Function;
+        return new Fn('return ' + fn)();
+    };
     if (document.location.pathname === '/blackboard/html5player.html') {
         biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
@@ -553,11 +557,11 @@
             let c = null;
 
             window.postMessage ? (c = function(a) {
-                'https://secure.bilibili.com' !== a.origin && 'https://ssl.bilibili.com' !== a.origin || 'secJS:' !== a.data.substr(0, 6) || eval(a.data.substr(6));
+                'https://secure.bilibili.com' !== a.origin && 'https://ssl.bilibili.com' !== a.origin || 'secJS:' !== a.data.substr(0, 6) || biliHelper.eval(a.data.substr(6));
             }, window.addEventListener ? window.addEventListener('message', c, !1) : window.attachEvent && window.attachEvent('onmessage', c)) : setInterval(function() {
                 let evalCode = window.__GetCookie('__secureJS');
                 window.__SetCookie('__secureJS', '');
-                eval(evalCode);
+                biliHelper.eval(evalCode);
             }, 1000);
 
             if (!biliHelper.cid) {
