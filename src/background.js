@@ -832,12 +832,12 @@ chrome.alarms.create('checkDynamic', {
     periodInMinutes: 1,
 });
 getOption('versionNotify') === 'on' && chrome.alarms.create('checkVersion', {
-    periodInMinutes: 10,
+    periodInMinutes: 60,
 });
 
-chrome.alarms.create('getLocale', {
+/* chrome.alarms.create('getLocale', {
     periodInMinutes: 5,
-});
+}); */
 
 /*
 function getLocale() {
