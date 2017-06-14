@@ -1436,7 +1436,7 @@
                 // Live.treasure.awardBtn.awarding();
 
                 let img = Live.treasure.treasureTipAcquire.find('.captcha-img');
-                img.load(function () {
+                img.on("load",function () {
                     Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
                     Live.treasure.context.drawImage(img[0], 0, 0);
                     Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
@@ -1449,7 +1449,7 @@
                     !Live.treasure.stop && getAward(data.startTime, data.endTime, captcha);
                 });
                 Live.treasure.captcha.refresh();
-                img.error(function () {
+                img.on("error",function () {
                     Live.treasure.captcha.refresh();
                 });
 
