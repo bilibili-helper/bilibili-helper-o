@@ -155,6 +155,6 @@ if (options['watcher']) {
 //         }
 //     });
 // });
-$('.activity-lottery').on('DOMNodeInserted', function(e) {
-    $('.lottery-box').click();
-});
+// $('.activity-lottery').on('DOMNodeInserted', function(e) {
+//     $('.lottery-box').click();
+// });

@@ -1602,14 +1602,14 @@
             init: function () {
                 Live.chat.chat_ctrl_panel = $('#chat-ctrl-panel');
                 Live.chat.counter = Live.chat.chat_ctrl_panel.find('.danmu-length-count');
-                chrome.runtime.sendMessage({
-                    command: "getOption",
-                    key: 'beat',
-                }, function (res) {
-                    if (res['value'] === 'on' && Live.BBQ && Live.BBQ.level >= 10 && Live.user && (typeof Live.user.user_level_rank === 'number') && Live.user.user_level_rank <= 25000) {
-                        Live.chat.beat = true;
-                    }
-                });
+                // chrome.runtime.sendMessage({
+                //     command: "getOption",
+                //     key: 'beat',
+                // }, function (res) {
+                //     if (res['value'] === 'on' && Live.BBQ && Live.BBQ.level >= 10 && Live.user && (typeof Live.user.user_level_rank === 'number') && Live.user.user_level_rank <= 25000) {
+                //         Live.chat.beat = true;
+                //     }
+                // });
                 chrome.runtime.sendMessage({
                     command: 'getOption',
                     key: 'danmu',
