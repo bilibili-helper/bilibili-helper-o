@@ -112,6 +112,10 @@
         }
     });
 
+    let removeExtensionParam = function(url) {
+        return url.replace(/platform=bilihelper&?/, '');
+    };
+
     let finishUp = function() {
         chrome.runtime.sendMessage({
             command: 'getDownloadLink',
@@ -139,7 +143,7 @@
                 for (let i = 0; i < biliHelper.downloadUrls.length; i++) {
                     let segmentInfo = biliHelper.downloadUrls[i];
                     if (typeof segmentInfo === 'object') {
-                        let downloadOptions = getDownloadOptions(segmentInfo.url,
+                        let downloadOptions = getDownloadOptions(removeExtensionParam(segmentInfo.url),
                           getNiceSectionFilename(biliHelper.avid,
                             biliHelper.page, biliHelper.totalPage,
                             i, biliHelper.downloadUrls.length)),
@@ -148,7 +152,7 @@
                               // Set download attribute to better file name. When use "Save As" dialog, this value gets respected even the target is not from the same origin.
                               .data('download', downloadOptions.filename)
                               .attr('title', isNaN(parseInt(segmentInfo.filesize / 1048576 + 0.5)) ? ('长度: ' + parseTime(segmentInfo.length)) : ('长度: ' + parseTime(segmentInfo.length) + ' 大小: ' + parseInt(segmentInfo.filesize / 1048576 + 0.5) + ' MB'))
-                              .attr('href', segmentInfo.url);
+                              .attr('href', removeExtensionParam(segmentInfo.url));
                         biliHelper.mainBlock.downloaderSection.find('p').append($bhDownLink);
                         // register a callback that can talk to extension background
                         $bhDownLink.click(function(e) {
