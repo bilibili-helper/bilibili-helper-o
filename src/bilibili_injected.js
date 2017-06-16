@@ -1,4 +1,4 @@
-/* global filenameSanitize: false, SelectModule: false,
+/* global filenameSanitize: false,
    generateASS: false, setPosition: false, parseXML: false */
 (function() {
     if ($('html').hasClass('bilibili-helper')) {
@@ -487,30 +487,77 @@
                         if (keyword.trim() !== '') {
                             control.find('.b-slt .txt').text(control.find('.b-slt .txt').text());
                         }
+                        let list = control.find('ul.list');
                         for (let i = 0; i < biliHelper.comments.length; i++) {
                             let node = biliHelper.comments[i],
                                 text = node.childNodes[0];
                             if (text && node && regex.test(text.nodeValue)) {
                                 text = text.nodeValue;
+                                let li = $('<li></li>');
                                 let commentData = node.getAttribute('p').split(','),
-                                    sender = commentData[6],
+                                    sender,
+                                    time,
+                                    originalContent;
+                                if (biliHelper.comments[i].senderUsername === undefined) {
+                                    sender = commentData[6];
+                                    biliHelper.comments[i].senderUsername = sender;
+                                } else {
+                                    sender = biliHelper.comments[i].senderUsername;
+                                }
+                                if (biliHelper.comments[i].time === undefined) {
                                     time = parseTime(parseInt(commentData[0]) * 1000);
-                                control.find('ul.list').append($('<li></li>').data('sender', sender).html('[' + time + '] ' + (keyword.trim() === '' ? parseSafe(text) : parseSafe(text).replace(regex, function(kw) {
-                                    return '<span class="kw">' + kw + '</span>';
-                                }))));
+                                    biliHelper.comments[i].time = time;
+                                } else {
+                                    time = biliHelper.comments[i].time;
+                                }
+                                if (biliHelper.comments[i].originalContent === undefined) {
+                                    originalContent = parseSafe(text);
+                                    biliHelper.comments[i].originalContent = originalContent;
+                                } else {
+                                    originalContent = biliHelper.comments[i].originalContent;
+                                }
+                                let content = '[' + time + '] ';
+                                // if (biliHelper.comments[i].senderId !== undefined) {
+                                //     content += '<a href="' + biliHelper.protocol + '//space.bilibili.com/' + biliHelper.comments[i].senderId + '" target="_blank">' + biliHelper.comments[i].senderUsername + '</a>';
+                                //     li.addClass('result');
+                                // }
+                                li.attr({'sender': sender, 'index': i});
+                                if (keyword.trim() === '') {
+                                    content += originalContent;
+                                } else {
+                                    content += originalContent.replace(regex, function(kw) {
+                                        return '<span class="kw">' + kw + '</span>';
+                                    });
+                                }
+                                li.append(content).attr('title', originalContent);
+                                if (node.error === true) {
+                                    li.addClass('error');
+                                }
+                                list.append(li);
                             }
                         }
-                    });
-                    control.find('.b-input').keyup();
-                    SelectModule.bind(control.find('div.b-slt'), {
-                        onChange: function(item) {
-                            let sender = $(item[0]).data('sender');
+                        let t = document.createElement('script');
+                        t.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .list .result"));'));
+                        document.body.appendChild(t);
+                        t.parentNode.removeChild(t);
+                        control.find('.b-slt .list li').on('click', (e)=>{
+                            $('.b-slt .list').hide();
+                            if (biliHelper.selectedDanmu) {
+                                biliHelper.selectedDanmu.removeClass('selected');
+                            }
+                            let item = $(e.target);
+                            biliHelper.selectedDanmu = item;
+                            biliHelper.selectedDanmu.addClass('selected');
+                            let sender = item.attr('sender'),
+                                index = item.attr('index');
                             control.find('.result').text('查询中…');
                             if (sender.indexOf('D') === 0) {
                                 control.find('.result').text('游客弹幕');
                                 return;
                             }
                             let displayUserInfo = function(uid, data) {
+                                biliHelper.comments[index].senderId = uid;
+                                biliHelper.comments[index].senderUsername = parseSafe(data.name);
                                 control.find('.result').html('发送者: <a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
                                 let s = document.createElement('script');
                                 s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
@@ -523,20 +570,20 @@
                                 let cachedData = sessionStorage.getItem('user/' + uid);
                                 if (cachedData) {
                                     displayUserInfo(uid, JSON.parse(cachedData));
-                                    return false;
+                                } else {
+                                    $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
+                                        if (data.code === 0) {
+                                            let cardData = data.data.card;
+                                            sessionStorage.setItem('user/' + uid, JSON.stringify({
+                                                name: cardData.name,
+                                                level_info: {
+                                                    current_level: cardData.level_info.current_level,
+                                                },
+                                            }));
+                                            displayUserInfo(uid, cardData);
+                                        }
+                                    });
                                 }
-                                $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
-                                    if (data.code === 0) {
-                                        let cardData = data.data.card;
-                                        sessionStorage.setItem('user/' + uid, JSON.stringify({
-                                            name: cardData.name,
-                                            level_info: {
-                                                current_level: cardData.level_info.current_level,
-                                            },
-                                        }));
-                                        displayUserInfo(uid, cardData);
-                                    }
-                                });
                             };
 
                             let extracted = /^b(\d+)$/.exec(sender);
@@ -546,6 +593,8 @@
                                 $.get('https://biliquery.typcn.com/api/user/hash/' + sender, function(data) {
                                     if (!data || data.error !== 0 || typeof data.data !== 'object' || !data.data[0].id) {
                                         control.find('.result').text('查询失败, 发送用户可能已被管理员删除.');
+                                        item.addClass('error');
+                                        biliHelper.comments[index].error = true;
                                     } else {
                                         renderSender(data.data[0].id);
                                     }
@@ -553,7 +602,13 @@
                                     control.find('.result').text('查询失败, 无法连接到服务器 :(');
                                 });
                             }
-                        },
+                        });
+                    });
+                    control.find('.b-input').keyup();
+                    control.find('.b-slt').on('mouseover', ()=>{
+                        $('.b-slt .list').show();
+                    }).on('mouseleave', ()=>{
+                        $('.b-slt .list').hide();
                     });
                     biliHelper.mainBlock.querySection.find('p').empty().append(control);
                 });

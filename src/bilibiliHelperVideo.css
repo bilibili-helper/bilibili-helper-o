@@ -219,6 +219,15 @@
 .v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li {
     width: 260px
 }
+.arc-toolbar .helper .info .main .section.query .b-slt .list li.selected,
+.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li.selected {
+    background-color: #00a1d6;
+    color: white;
+}
+.arc-toolbar .helper .info .main .section.query .b-slt .list li.error,
+.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li.error {
+    color: gainsboro;
+}
 
 .arc-toolbar .helper .info .version,
 .v1-bangumi-info-operate .helper .info .version {
