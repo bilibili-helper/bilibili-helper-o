@@ -13,7 +13,7 @@
    },
    "content_scripts": [ {
       "all_frames": true,
-      "js": ["jquery-3.2.1.min.js", "bilibili_ASS_Danmaku_Downloader.min.js", "store.min.js", "filename-sanitize.min.js", "bilibili_injected.min.js","ocrad.min.js","bilibili_live.min.js", "ColPick.min.js", "CommentCoreLibrary.min.js", "hls.min.js" ],
+      "js": ["jquery-3.2.1.min.js", "bilibili_ASS_Danmaku_Downloader.min.js", "store.min.js", "filename-sanitize.min.js", "bilibili_injected.min.js","ocrad.min.js","bilibili_live.min.js", "ColPick.min.js", "hls.min.js" ],
       "matches": [ "*://*.bilibili.com/*" ],
       "run_at": "document_end"
    } ],
