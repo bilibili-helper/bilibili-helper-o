@@ -1,6 +1,7 @@
 /*video*/
 *[data-ad-type],
 *[data-loc-id][data-target-url],
+*[data-loc-id] [data-target-url],
 .bilibili-player-promote-wrap,
 #b_recommend,
 /*live*/
