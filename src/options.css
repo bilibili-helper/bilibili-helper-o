@@ -247,12 +247,14 @@ input[type="color"] {
 .liveNotification,
 .watcher,
 .watchNotify,
-.autowide,
 .ad,
 .autooffset,
 .macplayer,
 .https {
-    width: 160px
+    width: 160px;
+}
+.autowide {
+    width: 100px;
 }
 
 .little_opt {
