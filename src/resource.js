@@ -33,7 +33,7 @@ let defaultOptions = {
     'watchNotify': 'on',
     'watchNotifyList': '[]',
     'giftpackage': 'on',
-    'autowide': 'wide',
+    'autowide': 'off',
     'macplayer': 'off',
     'autooffset': 'on',
 };

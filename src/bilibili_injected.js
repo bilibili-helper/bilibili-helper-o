@@ -112,11 +112,11 @@
         } else {
             let observer = new MutationObserver(function() {
                 doit();
+                observer.disconnect();
             });
             if ($('#bofqi').length > 0) {
                 observer.observe($('#bofqi')[0], {childList: true});
-            }
-            if ($('#bilibiliPlayer').length > 0) {
+            } else if ($('#bilibiliPlayer').length > 0) {
                 observer.observe($('#bilibiliPlayer')[0], {childList: true});
             }
         }
