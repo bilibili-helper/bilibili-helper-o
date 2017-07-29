@@ -94,5 +94,9 @@
   "notificationGetTv": {
     "message": "Attend it.",
     "description": "Noticefication: Get TV"
+  },
+  "notificationWatchLater": {
+    "message": "Watch Later",
+    "description": "Noticefication: Watch Later"
   }
 }

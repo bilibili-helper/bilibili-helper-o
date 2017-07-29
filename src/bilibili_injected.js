@@ -1,15 +1,36 @@
-/* global filenameSanitize: false,
+/* global filenameSanitize: false, store,
    generateASS: false, setPosition: false, parseXML: false */
 (function() {
     if ($('html').hasClass('bilibili-helper')) {
         return false;
     }
+    if (!store.enabled) {
+        return false;
+    }
+    store.set('defaulth5', 1);
+    store.delete = function(key, value) {
+        if (key === undefined) {
+            return;
+        }
+        let o = store.get(key);
+        if (o === undefined) {
+            return;
+        }
+        if (value !== undefined && value !== null) {
+            if (typeof value === 'string' || typeof value === 'number') {
+                o[value] && delete o[value];
+                store.set(key, o);
+            }
+        } else {
+            store.remove(key);
+        }
+    };
     let biliHelper = {};
     biliHelper.eval = function(fn) {
         let Fn = Function;
         return new Fn('return ' + fn)();
     };
-    if (document.location.pathname === '/blackboard/html5player.html') {
+    if (document.location.pathname === '/blackboard/html5player.html' || document.location.pathname === '/blackboard/html5playerbeta.html') {
         biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
@@ -63,35 +84,48 @@
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
         $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
-    function setWide() {
-        let player = $('#bofqi');
-        let doit = ()=>{
-            if (!player.hasClass('wide')) {
+    function setWide(mode) {
+        console.warn('side:' + biliHelper.site, 'mode:' + mode);
+        let player = $('#bilibiliPlayer');
+        let doit = () => {
+            if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
                 let html5WidthButton = $('.bilibili-player-iconfont-widescreen');
-                player.addClass('wide');
                 if (html5WidthButton.length === 0) {
-                    let flashvars = player.find('param[name=flashvars]');
+                    let flashvars = $('#player_placeholder').find('param[name=flashvars]');
                     flashvars.val(flashvars.val() + '&as_wide=1');
                     $('#player_placeholder').attr('data', $('#player_placeholder').attr('data'));
-                } else if (document.location.pathname === '/blackboard/html5player.html' || html5WidthButton.length > 0) {
+                } else {
                     html5WidthButton.click();
+                }
+            } else if (mode === 'webfullscreen' && !player.hasClass('mode-webfullscreen')) {
+                let html5WebfullscreenButton = $('.bilibili-player-iconfont-web-fullscreen');
+                console.warn(html5WebfullscreenButton.length);
+                if (html5WebfullscreenButton.length === 0) {
+                    // todo
+                } else if (html5WebfullscreenButton.length > 0) {
+                    html5WebfullscreenButton.click();
                 }
             }
         };
-        setTimeout(()=>{
+        if ($('#player_placeholder > *').length > 0) {
             doit();
-        }, 2000);
-        let observer = new MutationObserver(function() {
-            setTimeout(()=>{
+        } else {
+            let observer = new MutationObserver(function() {
                 doit();
-            }, 2000);
-        });
-        if (player.length > 0) {
-            observer.observe(player[0], {childList: true});
+                observer.disconnect();
+            });
+            if ($('#bofqi').length > 0) {
+                observer.observe($('#bofqi')[0], {childList: true});
+            } else if ($('#bilibiliPlayer').length > 0) {
+                observer.observe($('#bilibiliPlayer')[0], {childList: true});
+            }
         }
     }
     function setOffset() {
-        $(document).scrollTop($('.b-page-body').offset().top);
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+            $(document).scrollTop($('.player-wrapper').offset().top);
+        }
     }
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -292,8 +326,8 @@
             biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 
             biliHelper.switcher.set('original');
-            if (response.autowide === 'on') {
-                setWide();
+            if (response.autowide !== 'off') {
+                setWide(response.autowide);
             }
             if (biliHelper.site === 0) {
                 $('.player-wrapper .arc-toolbar').append(biliHelper.helperBlock);
@@ -367,8 +401,8 @@
         chrome.runtime.sendMessage({
             command: 'init',
         }, function(response) {
-            if (response.autowide === 'on') {
-                setWide();
+            if (response.autowide !== 'off') {
+                setWide(response.autowide);
             }
         });
     }
@@ -389,8 +423,8 @@
                 biliHelper.work();
                 return false;
             }
-            if (biliHelper.autowide === 'on') {
-                setWide();
+            if (biliHelper.autowide !== 'off') {
+                setWide(biliHelper.autowide);
             }
             if (biliHelper.autooffset === 'on') {
                 setOffset();

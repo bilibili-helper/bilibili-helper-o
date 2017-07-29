@@ -94,5 +94,9 @@
   "notificationGetTv": {
     "message": "前往參加",
     "description": "Noticefication: Get TV"
+  },
+  "notificationWatchLater": {
+    "message": "稍後觀看",
+    "description": "Noticefication: Watch Later"
   }
 }

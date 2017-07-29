@@ -2,3 +2,5 @@ bilibili_helper.zip
 node_modules/
 dest/
 .vscode/
+*.pem
+*.crx

@@ -602,11 +602,10 @@
     color: #4fc1e9;
 }
 
-.head-info-panel .anchor-info-row .master-info {
-    width: 142px;
+.head-info-panel .anchor-info-row .master-info a:nth-child(1) {
+    /*width: 142px;*/
+    margin-right:0 !important;
 }
-
-.helper-info-panel .watcher-info {}
 
 .helper-info-panel .watcher-info .watcher-info-icon,
 .helper-info-panel .treasure-info .treasure-info-icon {
