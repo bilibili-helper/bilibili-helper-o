@@ -1,6 +1,27 @@
 /* global filenameSanitize: false, store,
    generateASS: false, setPosition: false, parseXML: false */
 (function() {
+    fetch_ = function(url) {
+        return new Promise(function(resolve, reject) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onload = function() {
+                resolve({
+                    text: function() {
+                        return xhr.responseText;
+                    }
+                });
+            };
+
+            xhr.onerror = xhr.ontimeout = function() {
+                reject(new TypeError('Network request failed'))
+            };
+
+            xhr.open('get', url, true);
+            xhr.send();
+        })
+    };
+    
     if ($('html').hasClass('bilibili-helper')) {
         return false;
     }
@@ -487,7 +508,7 @@
                 });
                 biliHelper.mainBlock.commentSection = commentDiv;
                 biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
-                fetch(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml').then((res) => res.text()).then(function(text) {
+                fetch_(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml').then((res) => res.text()).then(function(text) {
                     let parser = new DOMParser();
                     let response = parser.parseFromString(
                         text.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
