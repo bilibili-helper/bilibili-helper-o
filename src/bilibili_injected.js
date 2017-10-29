@@ -500,15 +500,23 @@
                 let downloadFileName = getDownloadOptions(url, fileName).filename;
                 commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
                     e.preventDefault();
-                    chrome.runtime.sendMessage({
-                        command: 'requestForDownload',
-                        url: $(e.target).attr('href'),
-                        filename: $(e.target).attr('download'),
-                    });
+                    if(biliHelper.xml_str)
+                        chrome.runtime.sendMessage({
+                            command: 'requestForDownload',
+                            data: biliHelper.xml_str,
+                            filename: $(e.target).attr('download'),
+                        });
+                    else
+                        chrome.runtime.sendMessage({
+                            command: 'requestForDownload',
+                            url: $(e.target).attr('href'),
+                            filename: $(e.target).attr('download'),
+                        });
                 });
                 biliHelper.mainBlock.commentSection = commentDiv;
                 biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
                 fetch_(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml').then((res) => res.text()).then(function(text) {
+                    biliHelper.xml_str = text;
                     let parser = new DOMParser();
                     let response = parser.parseFromString(
                         text.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
