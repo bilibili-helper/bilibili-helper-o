@@ -1,27 +1,27 @@
-/* global filenameSanitize: false, store,
+/* global filenameSanitize: false, store, Promise: false,
    generateASS: false, setPosition: false, parseXML: false */
 (function() {
-    fetch_ = function(url) {
+    let fetch_ = function(url) {
         return new Promise(function(resolve, reject) {
-            var xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest();
 
             xhr.onload = function() {
                 resolve({
                     text: function() {
                         return xhr.responseText;
-                    }
+                    },
                 });
             };
 
             xhr.onerror = xhr.ontimeout = function() {
-                reject(new TypeError('Network request failed'))
+                reject(new TypeError('Network request failed'));
             };
 
             xhr.open('get', url, true);
             xhr.send();
-        })
+        });
     };
-    
+
     if ($('html').hasClass('bilibili-helper')) {
         return false;
     }
@@ -500,18 +500,19 @@
                 let downloadFileName = getDownloadOptions(url, fileName).filename;
                 commentDiv.find('a').attr('download', downloadFileName).click(function(e) {
                     e.preventDefault();
-                    if(biliHelper.xml_str)
+                    if (biliHelper.xml_str) {
                         chrome.runtime.sendMessage({
                             command: 'requestForDownload',
                             data: biliHelper.xml_str,
                             filename: $(e.target).attr('download'),
                         });
-                    else
+                    } else {
                         chrome.runtime.sendMessage({
                             command: 'requestForDownload',
                             url: $(e.target).attr('href'),
                             filename: $(e.target).attr('download'),
                         });
+                    }
                 });
                 biliHelper.mainBlock.commentSection = commentDiv;
                 biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);

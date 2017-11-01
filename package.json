@@ -4,7 +4,7 @@
   "description": "bilibili-helper",
   "main": "index.js",
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-es2015": "^6.24.1",
     "eslint": "^3.18.0",
     "eslint-config-google": "^0.7.1",
     "grunt": "^1.0.1",
