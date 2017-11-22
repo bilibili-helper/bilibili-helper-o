@@ -28,7 +28,8 @@
     if (!store.enabled) {
         return false;
     }
-    store.set('defaulth5', 1);
+    // 设置默认播放器
+    // store.set('defaulth5', 1);
     store.delete = function(key, value) {
         if (key === undefined) {
             return;
@@ -96,13 +97,13 @@
             command: 'getAd',
         }, function(response) {
             if (response.value === 'on') {
-                inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
+                inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.css');
             }
         });
     }
     removeAd();
     function initStyle() {
-        inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
+        inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.css');
         $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
     function setWide(mode) {

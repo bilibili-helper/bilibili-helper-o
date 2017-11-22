@@ -4,3 +4,6 @@ dest/
 .vscode/
 *.pem
 *.crx
+.idea/
+.DS_Store
+package-lock.json

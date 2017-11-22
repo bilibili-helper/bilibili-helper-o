@@ -10,11 +10,14 @@ let notification = false,
     localeTimeout = null,
     secureAvailable = false,
     updateNotified = false,
-    videoPlaybackHosts = ['http://*.hdslb.com/*', 'http://*.acgvideo.com/*'],
+    protocol = 'https://',
+    videoPlaybackHosts = [protocol + '*.hdslb.com/*', protocol + '*.acgvideo.com/*'],
     Live = {},
     bangumi = false,
     CRSF, watchLater = false,
-    hasLogin = false;
+    hasLogin = false,
+    subName = '/neptune/';
+
 
 Live.set = function(n, k, v) {
     if (!window.localStorage || !n) {
@@ -197,7 +200,7 @@ function postFileData(url, data, callback) {
 
 function searchBilibili(info) {
     chrome.tabs.create({
-        url: 'http://www.bilibili.com/search?keyword=' + info.selectionText,
+        url: protocol + 'www.bilibili.com/search?keyword=' + info.selectionText,
     });
 }
 
@@ -231,7 +234,7 @@ function disableAll() {
 
 function checkDynamic() {
     if (getOption('dynamic') === 'on' && hasLogin === true) {
-        getFileData('http://api.bilibili.com/x/feed/unread/count?type=0', function(data) {
+        getFileData(protocol + 'api.bilibili.com/x/feed/unread/count?type=0', function(data) {
             let dynamic = JSON.parse(data);
             if (typeof dynamic === 'object' && dynamic.code === 0 && typeof dynamic.data === 'object' &&
                 typeof dynamic.data.all === 'number') {
@@ -240,7 +243,7 @@ function checkDynamic() {
                     chrome.browserAction.setBadgeText({
                         text: getOption('updates'),
                     });
-                    getFileData('http://api.bilibili.com/x/feed/pull?ps=1&type=0', function(data) {
+                    getFileData(protocol + 'api.bilibili.com/x/feed/pull?ps=1&type=0', function(data) {
                         let feed = JSON.parse(data);
                         if (typeof feed === 'object' && feed.code === 0 && typeof feed.data === 'object' &&
                             typeof feed.data.feeds === 'object' && feed.data.feeds.length > 0) {
@@ -363,7 +366,7 @@ function getVideoInfo(avid, page, callback) {
         return true;
     }
     resetVideoHostList();
-    getFileData('http://api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avid + '&page=' + page + '&batch=true', function(avInfo) {
+    getFileData(protocol + 'api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avid + '&page=' + page + '&batch=true', function(avInfo) {
         avInfo = JSON.parse(avInfo);
         if (typeof avInfo.code !== 'undefined' && avInfo.code === -503) {
             setTimeout(function() {
@@ -398,7 +401,7 @@ function getVideoInfo(avid, page, callback) {
                     bangumi: false,
                 };
                 if (typeof avInfo.bangumi === 'object') {
-                    getFileData('http://api.bilibili.cn/sp?spid=' + avInfo.spid, function(spInfo) {
+                    getFileData(protocol + 'api.bilibili.cn/sp?spid=' + avInfo.spid, function(spInfo) {
                         spInfo = JSON.parse(spInfo);
                         if (spInfo.isbangumi === 1) {
                             viCache[avid + '-' + page].bangumi = {
@@ -421,7 +424,7 @@ function getVideoInfo(avid, page, callback) {
 
 function checkSecurePlayer() {
     let xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('HEAD', 'https://static-s.bilibili.com/play.swf', true);
+    xmlhttp.open('HEAD', protocol + 'static-s.bilibili.com/play.swf', true);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             secureAvailable = xmlhttp.getResponseHeader('Content-Type') === 'application/x-shockwave-flash';
@@ -431,7 +434,7 @@ function checkSecurePlayer() {
 }
 
 if (typeof (chrome.runtime.setUninstallURL) === 'function') {
-    chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
+    chrome.runtime.setUninstallURL(protocol + 'extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
 Live.treasure = {};
 Live.watcherRoom = {};
@@ -621,8 +624,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return true;
     case 'getDownloadLink': {
         let url = {
-            download: 'http://interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=' + getOption('dlquality'),
-            playback: 'http://interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=2&type=mp4',
+            download: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=' + getOption('dlquality'),
+            playback: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=2&type=mp4',
         };
         getFileData(url['download'], function(avDownloadLink) {
             avDownloadLink = JSON.parse(avDownloadLink);
@@ -654,7 +657,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return true;
     }
     case 'getMyInfo':
-        getFileData('http://api.bilibili.com/myinfo', function(myinfo) {
+        getFileData(protocol + 'api.bilibili.com/myinfo', function(myinfo) {
             myinfo = JSON.parse(myinfo);
             if (typeof myinfo.code === undefined) {
                 myinfo.code = 200;
@@ -668,7 +671,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     case 'getBangumiInfo':
         {
             let episodeId = request.episodeId;
-            getFileData('http://bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
+            getFileData(protocol + 'bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
                 bangumiInfo = JSON.parse(bangumiInfo);
                 if (typeof bangumiInfo.code === undefined) {
                     bangumiInfo.code = 200;
@@ -682,7 +685,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
     case 'searchVideo':
         { let keyword = request.keyword;
-            getFileData('http://api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
+            getFileData(protocol + 'api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
                 searchResult = JSON.parse(searchResult);
                 if (searchResult.code === 0) {
                     sendResponse({
@@ -699,7 +702,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
             return true; }
     case 'checkComment':
-        getFileData('http://www.bilibili.com/feedback/arc-' + request.avid + '-1.html', function(commentData) {
+        getFileData(protocol + 'www.bilibili.com/feedback/arc-' + request.avid + '-1.html', function(commentData) {
             let test = commentData.indexOf('<div class="no_more">');
             if (test >= 0) {
                 sendResponse({
@@ -722,7 +725,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             '投稿不存在', 'UP主禁止', '权限有误', '视频未审核/未发布', '禁止游客弹幕',
         ];
             request.comment.cid = request.cid;
-            postFileData('http://interface.bilibili.com/dmpost?cid=' + request.cid +
+            postFileData(protocol + 'interface.bilibili.com/dmpost?cid=' + request.cid +
                 '&aid=' + request.avid + '&pid=' + request.page, request.comment,
                 function(result) {
                     result = parseInt(result);
@@ -746,7 +749,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             Live.tvNotification[roomId] = true;
             chrome.notifications.create(roomId, {
                 type: 'basic',
-                iconUrl: 'http://static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
+                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
                 title: '小电视抽奖提示',
                 message: '直播间【' + roomId + '】正在进行小电视抽奖',
                 isClickable: true,
@@ -786,7 +789,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 if (data.rewardId === 1 || data.isWin) {
                     chrome.notifications.create('getTV', {
                         type: 'basic',
-                        iconUrl: 'http://static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
                         title: '小电视抽奖结果',
                         message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
                         isClickable: false,
@@ -801,7 +804,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 } else {
                     chrome.notifications.create('getTV', {
                         type: 'basic',
-                        iconUrl: 'http://static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
                         title: '小电视抽奖结果',
                         isClickable: false,
                         message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
@@ -814,7 +817,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             } else {
                 chrome.notifications.create('getTV', {
                     type: 'basic',
-                    iconUrl: 'http://static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                    iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
                     title: '直播间:' + data.roomId,
                     message: rewardStr,
                     isClickable: false,
@@ -982,7 +985,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
     if (Live.tvNotification[notificationId] !== undefined) {
         chrome.tabs.create({
-            url: 'http://live.bilibili.com/' + notificationId,
+            url: protocol + 'live.bilibili.com' + subName + notificationId,
         });
     }
     if (Live.notisesIdList[notificationId] !== undefined) {
@@ -992,7 +995,7 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, index)
             });
         } else if (index === 1) {
             chrome.tabs.create({
-                url: 'http://live.bilibili.com/i/following',
+                url: protocol + 'live.bilibili.com/i/following',
             });
         }
     } else if (notificationId === 'bh-update') {
@@ -1001,11 +1004,11 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, index)
         });
     } else if (notificationId === 'getTV') {
         chrome.tabs.create({
-            url: 'http://live.bilibili.com/i/awards',
+            url: protocol + 'live.bilibili.com/i/awards',
         });
     } else if (index === 0 && notificationAvid[notificationId]) {
         chrome.tabs.create({
-            url: 'http://www.bilibili.com/video/av' + notificationAvid[notificationId],
+            url: protocol + 'www.bilibili.com/video/av' + notificationAvid[notificationId],
         });
     } else if (index === 1 && notificationAvid[notificationId]) {
         resetVideoHostList();
@@ -1057,18 +1060,18 @@ function receivedHeaderModifier(details) {
         });
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Origin',
-            value: 'http://www.bilibili.com',
+            value: protocol + 'www.bilibili.com',
         });
         watchLater = false;
     } else if (!hasCORS && !bangumi) {
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Origin',
-            value: 'http://www.bilibili.com',
+            value: protocol + 'www.bilibili.com',
         });
     } else if (!hasCORS) {
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Origin',
-            value: 'http://bangumi.bilibili.com',
+            value: protocol + 'bangumi.bilibili.com',
         });
     }
     return {
@@ -1087,6 +1090,8 @@ function resetVideoHostList() {
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
     let headers = details.responseHeaders;
+    //eslint-disable-next-line
+    console.log(headers);
     if (details.statusLine.indexOf('HTTP/1.1 302') === 0 && getOption('replace') === 'on') {
         for (let i = 0; i < headers.length; i++) {
             if (headers[i].name.toLowerCase() === 'location') {
@@ -1101,7 +1106,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
         responseHeaders: headers,
     };
 }, {
-    urls: ['http://www.bilibili.com/video/av*', 'http://bangumi.bilibili.com/anime/v/*', 'http://api.bilibili.com/x/v2/history/toview/add'],
+    urls: ['www.bilibili.com/video/av*', 'bangumi.bilibili.com/anime/v/*', 'api.bilibili.com/x/v2/history/toview/add'],
 }, ['responseHeaders', 'blocking']);
 
 function getCookie(name) {
@@ -1147,7 +1152,7 @@ Live.notise = {
     roomIdList: {},
     cacheList: {},
     getList: function(d) {
-        let url = 'http://live.bilibili.com/feed/getList/' + Live.notise.page;
+        let url = protocol + 'live.bilibili.com/feed/getList/' + Live.notise.page;
         let callback = function(t) {
             t = t.substr(1, t.length - 3);
             t = JSON.parse(t);
@@ -1205,7 +1210,7 @@ Live.notise = {
         getFileData(url, callback, type);
     },
     heartBeat: function() {
-        getFileData('http://live.bilibili.com/feed/heartBeat/heartBeat', function(data) {
+        getFileData(protocol + 'live.bilibili.com/feed/heartBeat/heartBeat', function(data) {
             data = JSON.parse(data);
             Live.notise.do(data);
         }, 'POST');

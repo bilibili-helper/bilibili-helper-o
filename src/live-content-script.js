@@ -24,7 +24,7 @@ let Live = {
         }
     },
 };
-console.warn('%c弹幕监控脚本 插入成功㇏(°ω° )ノ♪~');
+console.warn('弹幕监控脚本 插入成功㇏(°ω° )ノ♪~');
 let event = document.createEvent('Event');
 event.initEvent('sendMessage', true, true);
 let sendMessage = function(json) {
@@ -40,7 +40,7 @@ if (options !== '{}') {
 if (options['treasure']) {
     Live.setInterval(window.refreshCaptcha, function() {
         window.refreshCaptcha = function() {
-            $('#captchaImg').attr('src', 'http://live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now());
+            $('#captchaImg').attr('src', 'https://live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now());
         };
     }, 1000);
 }
