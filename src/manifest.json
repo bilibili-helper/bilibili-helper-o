@@ -16,11 +16,12 @@
       "all_frames": true,
       "js": [
         "jquery-3.2.1.min.js",
-        "bilibili_ASS_Danmaku_Downloader.js",
+        "lodash.custom.min.js",
         "store.min.js",
+        "ocrad.min.js",
+        "bilibili_ASS_Danmaku_Downloader.js",
         "filename-sanitize.js",
         "bilibili_injected.js",
-        "ocrad.min.js",
         "bilibili_live.js",
         "ColPick.js"
       ],

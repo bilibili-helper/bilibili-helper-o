@@ -2177,10 +2177,10 @@
                 update: (callback) => {
                     Live.giftpackage.getGiftPackage().done((res) => {
                         if (res.code === 0) {
-                            if (res.data && res.data.length === 0){
+                            if (res.data && res.data.length === 0) {
                                 Live.giftpackage.mainPopupBoxEmptyBox.show();
                                 Live.giftpackage.sendAllBtn.hide();
-                            }else{
+                            } else {
                                 Live.giftpackage.mainPopupBoxEmptyBox.hide();
                                 Live.giftpackage.sendAllBtn.show();
                                 Live.giftpackage.giftPackageData = Live.giftpackage.sortGifts(res.data);
@@ -2278,7 +2278,28 @@
                         Live.giftpackage.mainPopupBoxGiftBox.empty();
                         Live.each(data, (index) => {
                             const gifts = data[index];
-                            const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone();
+                            const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone().on('DOMMouseScroll mousewheel', _.throttle(function (ev) {
+                                var $this = $(ev.currentTarget),
+                                    scrollLeft = $this.scrollLeft(),
+                                    scrollWidth = $this[0].scrollWidth,
+                                    width = $this.innerWidth(),
+                                    deltaX = (ev.type == 'DOMMouseScroll' ?
+                                        ev.originalEvent.detail * -40 :
+                                        ev.originalEvent.wheelDeltaX);
+                                var prevent = function () {
+                                    ev.stopPropagation();
+                                    ev.preventDefault();
+                                    ev.returnValue = false;
+                                    return false;
+                                }
+                                if (deltaX > 0 && deltaX > scrollLeft) {
+                                    $this.scrollLeft(0);
+                                    return prevent();
+                                } else if (deltaX < 0 && -deltaX > scrollWidth - width - scrollLeft) {
+                                    $this.scrollLeft(scrollWidth);
+                                    return prevent();
+                                }
+                            }, 60));
                             const sendLineBtn = Live.giftpackage.sendLineBtn.clone().data('giftsData', gifts);
                             const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
                             Live.each(gifts, (i) => {
@@ -2604,7 +2625,7 @@
                             const keys = Object.keys(giftsData);
                             const giftData = giftsData[keys[kindIndex]];
                             const counter = giftData.length;
-                            console.log(keys,giftData,counter);
+                            console.log(keys, giftData, counter);
                             p = Live.giftpackage.sendPanel.sendLineAjax(counter - 1, giftData, submitBtnDOM);
                             p && p.always(() => {
                                 Live.giftpackage.sendPanel.sendAllAjax(kindIndex - 1, giftsData, submitBtnDOM);
