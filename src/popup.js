@@ -29,13 +29,13 @@ $(document).ready(function() {
     }, 100);
     $('#go_bili').click(function() {
         chrome.tabs.create({
-            url: 'http://www.bilibili.com/',
+            url: 'https://www.bilibili.com/',
         });
         return false;
     });
     $('#go_bili_live').click(function() {
         chrome.tabs.create({
-            url: 'http://live.bilibili.com/',
+            url: 'https://live.bilibili.com/',
         });
         return false;
     });
@@ -45,13 +45,13 @@ $(document).ready(function() {
         });
         bkg_page.setOption('updates', 0);
         chrome.tabs.create({
-            url: 'http://www.bilibili.com/account/dynamic',
+            url: 'https://www.bilibili.com/account/dynamic',
         });
         return false;
     });
     $('#go_favorite').click(function() {
         chrome.tabs.create({
-            url: 'http://space.bilibili.com/#!/favlist',
+            url: 'https://space.bilibili.com/#!/favlist',
         });
         return false;
     });
@@ -70,11 +70,11 @@ $(document).ready(function() {
         let value = $('#video_id').val().toLowerCase();
         if (/av[0-9]+/g.test(value)) {
             chrome.tabs.create({
-                url: 'http://www.bilibili.com/video/' + value,
+                url: 'https://www.bilibili.com/video/' + value,
             });
         } else if (/[0-9]+/g.test(value)) {
             chrome.tabs.create({
-                url: 'http://www.bilibili.com/video/av' + value,
+                url: 'https://www.bilibili.com/video/av' + value,
             });
         } else {
             $('#video_id').val('').focus();

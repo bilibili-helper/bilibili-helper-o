@@ -219,8 +219,8 @@
 }
 
 /* 新版礼物包裹 主弹出界面 */
-.gift-package {
-    display: inline-block;
+#helper-gift-ctl.gift-package, #helper-gift-ctl .gift-package{
+    display: inline-block !important;
 }
 #helper-gift-ctl .warp {
     position: absolute;
@@ -245,7 +245,8 @@
 }
 
 #helper-gift-ctl .popup:after, #helper-gift-ctl .popup:before {
-    left: 87%;
+    right: 40px;
+    left: auto;
 }
 
 #helper-gift-ctl header {
@@ -276,26 +277,27 @@
     position: relative;
     max-height: 190px;
     overflow: auto;
-    /*padding: 10px 0 14px;*/
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: left;
-    max-width: 300px;
+    max-width: 320px;
+    margin: 0 10px 0 2px;
+    min-width: 150px;
 }
 
 .content .send-line {
     position: absolute;
     padding: 3px;
-    width: 8px;
-    height: 36px;
-    font-size: 8px;
-    margin: 14px 3px 0 0;
+    width: 12px;
+    height: 52px;
+    margin: 6px 0px 0 0;
     border: 1px solid #ff8e29;
     border-radius: 3px;
     color: #ff8e29;
     cursor: pointer;
     opacity: 0;
     transition: all 0.15s;
+    transform: translate(-2px,0) scale(0.7);
 }
 .content .send-line:hover {
     background-color: #ff8e29;
@@ -552,4 +554,16 @@
     color: #fff;
     border: #fff 1px solid;
     cursor: not-allowed;
+}
+#helper-gift-ctl .des {
+    margin: 0px 0 10px;
+    padding-top: 8px;
+    text-align: left;
+    color: #999;
+    font-size: 12px;
+}
+.a-move-in-left {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 332px;
 }

@@ -2154,8 +2154,8 @@
                 }, (res) => {
                     if (res['value'] === 'on') {
                         // init dom
-                        Live.giftpackage.originCtl = $('#gift-control-vm').find('.gift-section.gift-package');
-                        Live.giftpackage.ctl = Live.giftpackage.originCtl.clone()
+                        Live.giftpackage.originCtl = $('#gift-control-vm').find('.gift-section.gift-package').hide();
+                        Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'})
                             .attr('id', 'helper-gift-ctl')
                             .on('click', function (e) {
                                 e.stopPropagation();
@@ -2177,7 +2177,14 @@
                 update: (callback) => {
                     Live.giftpackage.getGiftPackage().done((res) => {
                         if (res.code === 0) {
-                            Live.giftpackage.giftPackageData = Live.giftpackage.sortGifts(res.data);
+                            if (res.data && res.data.length === 0){
+                                Live.giftpackage.mainPopupBoxEmptyBox.show();
+                                Live.giftpackage.sendAllBtn.hide();
+                            }else{
+                                Live.giftpackage.mainPopupBoxEmptyBox.hide();
+                                Live.giftpackage.sendAllBtn.show();
+                                Live.giftpackage.giftPackageData = Live.giftpackage.sortGifts(res.data);
+                            }
                             if (typeof callback === 'function') callback(res);
                         }
                     });
@@ -2238,7 +2245,7 @@
                     Live.giftpackage.sendAllBtn = $('<div />').addClass('send-all').text('一键清空');
                     Live.giftpackage.mainPopupBoxGiftBox = $('<div />').addClass('a-move-in-left');
                     Live.giftpackage.mainPopupBoxGiftWapper = $('<div />').addClass('content');
-                    Live.giftpackage.sendLineBtn = $('<div />').addClass('send-line').text('清空本行');
+                    Live.giftpackage.sendLineBtn = $('<div />').addClass('send-line').text('清空本类');
 
                     Live.giftpackage.mainPopupBoxGiftItemBox = $('<div />').addClass('item-box');
                     Live.giftpackage.mainPopupBoxGiftItem = $('<div />').addClass('gift-box item');
@@ -2246,14 +2253,22 @@
                     Live.giftpackage.mainPopupBoxGiftItemNum = $('<div />').addClass('num');
                     Live.giftpackage.mainPopupBoxGiftItemExpires = $('<span />').addClass('expires');
 
+                    // 包裹为空时显示dom
+                    Live.giftpackage.mainPopupBoxEmptyBox = $('<div />').append(
+                        $('<div />').addClass('des').text('包裹中没有道具哦～'),
+                        $('<img />').addClass('img').attr('src', '//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/404.6c08e48.png')
+                    ).hide();
+
                     // 拼装主窗口
                     Live.giftpackage.mainPopupBoxHeader.append(Live.giftpackage.sendAllBtn);
                     Live.giftpackage.mainBox.append(Live.giftpackage.mainBoxInner);
                     Live.giftpackage.mainBoxInner.append(Live.giftpackage.mainPopupBoxInner);
                     Live.giftpackage.mainPopupBoxInner.append(
                         Live.giftpackage.mainPopupBoxHeader,
-                        Live.giftpackage.mainPopupBoxGiftBox
+                        Live.giftpackage.mainPopupBoxGiftBox,
+                        Live.giftpackage.mainPopupBoxEmptyBox
                     );
+                    Live.giftpackage.ctl.find('.wrap').remove();
                     Live.giftpackage.ctl.append(Live.giftpackage.mainBox);
                 },
                 createPanel: (data) => {
@@ -2426,29 +2441,40 @@
                         Live.giftpackage.sendPanel.send(e, data);
                     });
                 },
-                createTypeDOM: (gifts, all) => {
+                createTypeDOM: (giftsData, all) => {
                     const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
-                    Live.each(gifts, (i) => {
-                        const gift = gifts[i];
-                        const item = Live.giftpackage.mainPopupBoxGiftItem.clone()
-                            .data('giftData', gift)
-                        const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
-                        icon.css({
-                            'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${gift.gift_id}.png")`
+                    const s = (gifts) => {
+                        Live.each(gifts, (i) => {
+                            const gift = gifts[i];
+                            const item = Live.giftpackage.mainPopupBoxGiftItem.clone()
+                                .data('giftData', gift)
+                            const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
+                            icon.css({
+                                'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${gift.gift_id}.png")`
+                            });
+                            const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.expireat);
+                            const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
+                            item.append(expires, icon, num).data('giftData', gift);
+                            items.append(item);
+                        })
+                    }
+                    if (all) { // 一键清空
+                        const keys = Object.keys(giftsData);
+                        Live.each(keys, (i) => {
+                            const singleGifts = giftsData[keys[i]];
+                            s(singleGifts);
                         });
-                        const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.expireat);
-                        const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
-                        item.append(expires, icon, num).data('giftData', gift);
-                        items.append(item);
-                    })
+                    } else { // 清空本行
+                        s(giftsData);
+                    }
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(items);
                     const submitBox = Live.giftpackage.linkBoxGiftSubmitBox.clone().empty().append(Live.giftpackage.linkBoxGiftSubmitButton.clone());
                     Live.giftpackage.linkBoxForm.empty().append(infoBox, submitBox);
                     submitBox.find('button').on('click', function (e) {
                         if (all) {
-                            Live.giftpackage.sendPanel.sendAll(e, gifts);
+                            Live.giftpackage.sendPanel.sendAll(e, giftsData);
                         } else {
-                            Live.giftpackage.sendPanel.sendLine(e, gifts);
+                            Live.giftpackage.sendPanel.sendLine(e, giftsData);
                         }
                     });
                 },
@@ -2532,7 +2558,7 @@
                 },
                 sendAjax: (giftData, submitBtnDOM, inputDOM) => {
                     let rnd = store.get('bilibili_helper_live_danmu_rnd')[(Live.roomInfo.short_id || Live.roomInfo.room_id)];
-                    return $.post('http://api.live.bilibili.com/gift/v2/live/bag_send', {
+                    return $.post('//api.live.bilibili.com/gift/v2/live/bag_send', {
                         uid: Live.user.mid,
                         gift_id: giftData.gift_id,
                         ruid: Live.roomInfo.uid,
@@ -2546,7 +2572,7 @@
                         csrf_token: Live.getCookie('bili_jct') || '',
                     }, function (result) {
                         Live.giftpackage.sendPanel.successCallback(giftData, result, submitBtnDOM, inputDOM);
-                    }, 'json').fail(function () {
+                    }, 'json').fail(function (result) {
                         submitBtnDOM && Live.liveToast(submitBtnDOM, Live.randomEmoji.sad() + ' 送礼失败：' + result.statusText + ' ' + Live.randomEmoji.sad(), 'error');
                     }).always(function () {
                         Live.giftpackage.sendPanel.sendState = false;
@@ -2654,15 +2680,15 @@
                     // gift_name:"团扇"
                     // gift_num:39
                     // gift_price:"1000金瓜子"
-                    // gift_type:3
+                    // gift_type:3q
                     // id:4473074
                     // uid:50623
                     let gift = gs[i];
                     Live.giftpackage.giftPackageData[gift.id] = gift;
-
                     if (gift.expireat === '今日') {
                         gift.expireatDate = 0;
-                    } else if (gift.expireat === 0) {
+                    } else if (gift.expireat === '0') {
+                        gift.expireat = '永久';
                         gift.expireatDate = -1;
                     } else {
                         gift.expireatDate = parseInt(gift.expireat);
