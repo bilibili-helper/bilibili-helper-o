@@ -60,6 +60,48 @@
             let Fn = Function;
             return new Fn('return ' + fn)();
         };
+        Live.scrollEvent = _.throttle(function (ev) {
+            var $this = $(ev.currentTarget),
+                scrollTop = $this.scrollTop(),
+                scrollLeft = $this.scrollLeft(),
+                scrollWidth = $this[0].scrollWidth,
+                scrollHeight = $this[0].scrollHeight,
+                width = $this.innerWidth(),
+                height = $this.innerHeight(),
+                deltaY = (ev.type == 'DOMMouseScroll' ?
+                    ev.originalEvent.detail * -40 :
+                    ev.originalEvent.wheelDeltaY),
+                deltaX = (ev.type == 'DOMMouseScroll' ?
+                    ev.originalEvent.detail * -40 :
+                    ev.originalEvent.wheelDeltaX);
+            var prevent = function () {
+                ev.stopPropagation();
+                ev.preventDefault();
+                ev.returnValue = false;
+                return false;
+            }
+            const x = Math.abs(deltaX);
+            const y = Math.abs(deltaY);
+            if (y > x) {
+                if (deltaY <= 0 && -deltaY > scrollHeight - height - scrollTop) {
+                    // Scrolling down, but this will take us past the bottom.
+                    $this.scrollTop(scrollHeight);
+                    return prevent();
+                } else if (deltaY > 0 && deltaY > scrollTop) {
+                    // Scrolling up, but this will take us past the top.
+                    $this.scrollTop(0);
+                    return prevent();
+                }
+            } else if (y < x){
+                if (deltaX > 0 && deltaX > scrollLeft) {
+                    $this.scrollLeft(0);
+                    return prevent();
+                } else if (deltaX < 0 && -deltaX > scrollWidth - width - scrollLeft) {
+                    $this.scrollLeft(scrollWidth);
+                    return prevent();
+                }
+            }
+        }, 60);
         Live.each = (obj, fn) => {
             if (!fn) {
                 return;
@@ -2278,28 +2320,7 @@
                         Live.giftpackage.mainPopupBoxGiftBox.empty();
                         Live.each(data, (index) => {
                             const gifts = data[index];
-                            const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone().on('DOMMouseScroll mousewheel', _.throttle(function (ev) {
-                                var $this = $(ev.currentTarget),
-                                    scrollLeft = $this.scrollLeft(),
-                                    scrollWidth = $this[0].scrollWidth,
-                                    width = $this.innerWidth(),
-                                    deltaX = (ev.type == 'DOMMouseScroll' ?
-                                        ev.originalEvent.detail * -40 :
-                                        ev.originalEvent.wheelDeltaX);
-                                var prevent = function () {
-                                    ev.stopPropagation();
-                                    ev.preventDefault();
-                                    ev.returnValue = false;
-                                    return false;
-                                }
-                                if (deltaX > 0 && deltaX > scrollLeft) {
-                                    $this.scrollLeft(0);
-                                    return prevent();
-                                } else if (deltaX < 0 && -deltaX > scrollWidth - width - scrollLeft) {
-                                    $this.scrollLeft(scrollWidth);
-                                    return prevent();
-                                }
-                            }, 60));
+                            const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone().on('DOMMouseScroll mousewheel', Live.scrollEvent);
                             const sendLineBtn = Live.giftpackage.sendLineBtn.clone().data('giftsData', gifts);
                             const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
                             Live.each(gifts, (i) => {
@@ -2488,7 +2509,7 @@
                     } else { // 清空本行
                         s(giftsData);
                     }
-                    const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(items);
+                    const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(items).on('DOMMouseScroll mousewheel', Live.scrollEvent);;
                     const submitBox = Live.giftpackage.linkBoxGiftSubmitBox.clone().empty().append(Live.giftpackage.linkBoxGiftSubmitButton.clone());
                     Live.giftpackage.linkBoxForm.empty().append(infoBox, submitBox);
                     submitBox.find('button').on('click', function (e) {
