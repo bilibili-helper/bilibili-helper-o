@@ -47,12 +47,97 @@
             store.remove(key);
         }
     };
-    let biliHelper = {};
+    const QUALITY_DISPLAY_NAMES = {
+        112: '1080P',
+        80: '超清',
+        64: '高清',
+        32: '清晰',
+        16: '流畅',
+    };
+    let biliHelper = {
+        playUrls: {},
+        playQualities: [],
+    };
     biliHelper.eval = function(fn) {
         let Fn = Function;
         return new Fn('return ' + fn)();
     };
-    if (document.location.pathname === '/blackboard/html5player.html' || document.location.pathname === '/blackboard/html5playerbeta.html') {
+    biliHelper.handlePlayUrl = function(data) {
+        if (data.accept_quality.length > biliHelper.playQualities) {
+            biliHelper.playQualities = data.accept_quality;
+        }
+        biliHelper.playUrls[data.quality] = data.durl;
+        if (biliHelper.domReady) {
+            biliHelper.renderDownloadSection();
+        }
+    };
+    biliHelper.renderDownloadSection = function() {
+        biliHelper.mainBlock.downloaderSection.find('p').empty();
+        biliHelper.mainBlock.downloaderSection.find('p').append($('<h4>清晰度</h4>'));
+        if (!biliHelper.selectedQuality || biliHelper.playQualities.indexOf(biliHelper.selectedQuality) < -1) {
+            biliHelper.selectedQuality = Math.max(...Object.keys(biliHelper.playUrls));
+        }
+        for (let i = 0; i < biliHelper.playQualities.length; i++) {
+            let qualitySwitch = $('<a class="b-btn" rel="noreferrer"></a>')
+                .text(biliHelper.playQualities[i] ?
+                    QUALITY_DISPLAY_NAMES[biliHelper.playQualities[i]] :
+                    biliHelper.playQualities[i])
+                .data('quality', biliHelper.playQualities[i]);
+            if (biliHelper.playQualities[i] !== biliHelper.selectedQuality) {
+                qualitySwitch.addClass('w');
+            }
+            if (!biliHelper.playUrls[biliHelper.playQualities[i]]) {
+                qualitySwitch.addClass('disabled');
+                qualitySwitch.text(qualitySwitch.text() + ' (未获取)');
+            }
+            qualitySwitch.click(function() {
+                if (!$(this).hasClass('w')) {
+                    return false;
+                }
+                if ($(this).hasClass('disabled')) {
+                    window.alert('请切换播放器画质以获取' + QUALITY_DISPLAY_NAMES[$(this).data('quality')] + '下载地址.');
+                    return false;
+                }
+                biliHelper.selectedQuality = $(this).data('quality');
+                biliHelper.renderDownloadSection();
+            });
+            biliHelper.mainBlock.downloaderSection.find('p').append(qualitySwitch);
+        }
+        biliHelper.mainBlock.downloaderSection.find('p').append($('<h4>下载分段</h4>'));
+        let downloadUrls = biliHelper.playUrls[biliHelper.selectedQuality];
+        for (let i = 0; i < downloadUrls.length; i++) {
+            let segmentInfo = downloadUrls[i];
+            if (typeof segmentInfo === 'object') {
+                let downloadOptions = getDownloadOptions(segmentInfo.url,
+                        getNiceSectionFilename(biliHelper.avid,
+                            biliHelper.page, biliHelper.totalPage,
+                            i, downloadUrls.length)),
+                    $bhDownLink = $('<a class="b-btn w" referrerpolicy="unsafe-url"></a>')
+                    .text('分段 ' + (parseInt(i) + 1))
+                    // Set download attribute to better file name. When use "Save As" dialog, this value gets respected even the target is not from the same origin.
+                    .data('download', downloadOptions.filename)
+                    .attr('title', isNaN(parseInt(segmentInfo.filesize / 1048576 + 0.5)) ? ('长度: ' + parseTime(segmentInfo.length)) : ('长度: ' + parseTime(segmentInfo.length) + ' 大小: ' + parseInt(segmentInfo.filesize / 1048576 + 0.5) + ' MB'))
+                    .attr('href', '//' + segmentInfo.url.split('://')[1]);
+                biliHelper.mainBlock.downloaderSection.find('p').append($bhDownLink);
+                $bhDownLink.click(function(e) {
+                    chrome.runtime.sendMessage({
+                        command: 'suggestName',
+                        url: biliHelper.protocol + $(e.target).attr('href'),
+                        filename: $(e.target).data('download'),
+                    });
+                });
+            }
+        }
+        /* Can't download multiple videos this way.
+        if (downloadUrls.length > 1) {
+            let $bhDownAllLink = $('<a class="b-btn"></a>').text('下载全部共 ' + downloadUrls.length + ' 个分段');
+            biliHelper.mainBlock.downloaderSection.find('p').append($bhDownAllLink);
+            $bhDownAllLink.click(function(e) {
+                biliHelper.mainBlock.downloaderSection.find('p .b-btn.w[referrerpolicy]').click();
+            });
+        }*/
+    };
+    if (document.location.pathname.indexOf('/blackboard/') === 0) {
         biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
@@ -63,6 +148,7 @@
         return false;
     }
     biliHelper.protocol = location.protocol;
+
     function formatInt(Source, Length) {
         let strTemp = '';
         for (let i = 1; i <= Length - (Source + '').length; i++) {
@@ -102,12 +188,13 @@
         });
     }
     removeAd();
+
     function initStyle() {
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.css');
         $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
+
     function setWide(mode) {
-        console.warn('side:' + biliHelper.site, 'mode:' + mode);
         let player = $('#bilibiliPlayer');
         let doit = () => {
             if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
@@ -121,7 +208,6 @@
                 }
             } else if (mode === 'webfullscreen' && !player.hasClass('mode-webfullscreen')) {
                 let html5WebfullscreenButton = $('.bilibili-player-iconfont-web-fullscreen');
-                console.warn(html5WebfullscreenButton.length);
                 if (html5WebfullscreenButton.length === 0) {
                     // todo
                 } else if (html5WebfullscreenButton.length > 0) {
@@ -137,17 +223,26 @@
                 observer.disconnect();
             });
             if ($('#bofqi').length > 0) {
-                observer.observe($('#bofqi')[0], {childList: true});
+                observer.observe($('#bofqi')[0], {
+                    childList: true,
+                });
             } else if ($('#bilibiliPlayer').length > 0) {
-                observer.observe($('#bilibiliPlayer')[0], {childList: true});
+                observer.observe($('#bilibiliPlayer')[0], {
+                    childList: true,
+                });
             }
         }
     }
+
     function setOffset() {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
             $(document).scrollTop($('.player-wrapper').offset().top);
         }
+    }
+
+    if (biliHelper.site === 2) {
+        return;
     }
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -160,6 +255,9 @@
             return true;
         case 'error':
             return true;
+        case 'playurl':
+            biliHelper.handlePlayUrl(request.data);
+            return true;
         default:
             sendResponse({
                 result: 'unknown',
@@ -168,11 +266,12 @@
         }
     });
 
-    let removeExtensionParam = function(url) {
-        return url.replace(/platform=bilihelper&?/, '');
-    };
-
     let finishUp = function() {
+        if (biliHelper.playUrls.length) {
+            biliHelper.renderDownloadSection();
+        }
+        biliHelper.domReady = true;
+        /*
         chrome.runtime.sendMessage({
             command: 'getDownloadLink',
             cid: biliHelper.cid,
@@ -247,7 +346,7 @@
       //     biliHelper.switcher.original();
       //   });
       // }
-        });
+        });*/
     };
     let initHelper = function() {
         biliHelper.videoPic = $('img.cover_image').attr('src');
@@ -327,14 +426,14 @@
                     biliHelper.mainBlock.infoSection.toggleClass('hidden');
                 }
             });
-      // if (biliHelper.redirectUrl && biliHelper.redirectUrl !== "undefined") {
-      //   biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
-      //   biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);
-      // }
-      // if (biliHelper.redirectUrl) {
-      //   biliHelper.mainBlock.switcherSection.find('a[type="original"]').addClass('hidden');
-      //   biliHelper.mainBlock.switcherSection.find('a[type="swf"],a[type="iframe"]').removeClass('hidden');
-      // }
+            // if (biliHelper.redirectUrl && biliHelper.redirectUrl !== "undefined") {
+            //   biliHelper.mainBlock.redirectSection = $('<div class="section redirect"><h3>生成页选项</h3><p><a class="b-btn w" href="' + biliHelper.redirectUrl + '">前往原始跳转页</a></p></div>');
+            //   biliHelper.mainBlock.append(biliHelper.mainBlock.redirectSection);
+            // }
+            // if (biliHelper.redirectUrl) {
+            //   biliHelper.mainBlock.switcherSection.find('a[type="original"]').addClass('hidden');
+            //   biliHelper.mainBlock.switcherSection.find('a[type="swf"],a[type="iframe"]').removeClass('hidden');
+            // }
             if (localStorage.getItem('bilimac_player_type')) {
                 biliHelper.mainBlock.switcherSection = $('<div class="section switcher"><h3>播放器切换</h3><p></p></div>');
                 biliHelper.mainBlock.switcherSection.find('p').append($('<a class="b-btn w" type="original">原始播放器</a><a class="b-btn w" type="bilimac">Mac 客户端</a>').click(function() {
@@ -394,7 +493,8 @@
                             return searchPart.split('=', 2);
                         });
                         search.forEach(function(param) {
-                            let key = param[0], value = param[1];
+                            let key = param[0],
+                                value = param[1];
                             if (key === 'aid') {
                                 biliHelper.avid = value;
                             } else if (key === 'cid') {
@@ -417,7 +517,9 @@
                     }
                 }
             });
-            observer.observe(playerBlock, {childList: true});
+            observer.observe(playerBlock, {
+                childList: true,
+            });
         }
     } else if (biliHelper.site === 2) {
         chrome.runtime.sendMessage({
@@ -474,7 +576,7 @@
                 }
             } else {
                 // if (!isNaN(biliHelper.cid) && biliHelper.originalPlayer) {
-                    // biliHelper.originalPlayer.replace('cid=' + biliHelper.cid, 'cid=' + videoInfo.cid);
+                // biliHelper.originalPlayer.replace('cid=' + biliHelper.cid, 'cid=' + videoInfo.cid);
                 // }
                 if (biliHelper.cid === undefined) {
                     biliHelper.cid = videoInfo.cid;
@@ -493,6 +595,7 @@
                     createDanmuList();
                 }
             }
+
             function createDanmuList() {
                 biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
                 let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
@@ -586,7 +689,10 @@
                                 //     content += '<a href="' + biliHelper.protocol + '//space.bilibili.com/' + biliHelper.comments[i].senderId + '" target="_blank">' + biliHelper.comments[i].senderUsername + '</a>';
                                 //     li.addClass('result');
                                 // }
-                                li.attr({'sender': sender, 'index': i});
+                                li.attr({
+                                    'sender': sender,
+                                    'index': i,
+                                });
                                 if (keyword.trim() === '') {
                                     content += originalContent;
                                 } else {
@@ -605,7 +711,7 @@
                         t.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .list .result"));'));
                         document.body.appendChild(t);
                         t.parentNode.removeChild(t);
-                        control.find('.b-slt .list li').on('click', (e)=>{
+                        control.find('.b-slt .list li').on('click', (e) => {
                             $('.b-slt .list').hide();
                             if (biliHelper.selectedDanmu) {
                                 biliHelper.selectedDanmu.removeClass('selected');
@@ -670,9 +776,9 @@
                         });
                     });
                     control.find('.b-input').keyup();
-                    control.find('.b-slt').on('mouseover', ()=>{
+                    control.find('.b-slt').on('mouseover', () => {
                         $('.b-slt .list').show();
-                    }).on('mouseleave', ()=>{
+                    }).on('mouseleave', () => {
                         $('.b-slt .list').hide();
                     });
                     biliHelper.mainBlock.querySection.find('p').empty().append(control);
@@ -717,6 +823,8 @@
             }
             if (hashPage && hashPage !== biliHelper.page) {
                 biliHelper.page = hashPage;
+                biliHelper.playUrls = {};
+                biliHelper.playQualities = [];
                 biliHelper.mainBlock.infoSection.html('<h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p>');
                 biliHelper.mainBlock.downloaderSection.html('<h3>视频下载</h3><p><span></span>视频地址获取中，请稍等…</p>');
                 biliHelper.mainBlock.querySection.html('<h3>弹幕发送者查询</h3><p><span></span>正在加载全部弹幕, 请稍等…</p>');
@@ -732,45 +840,45 @@
     };
 
     function getNiceSectionFilename(avid, page, totalPage, idx, numParts) {
-    // TODO inspect the page to get better section name
+        // TODO inspect the page to get better section name
         let idName = 'av' + avid + '_',
-      // page/part name is only shown when there are more than one pages/parts
+            // page/part name is only shown when there are more than one pages/parts
             pageIdName = (totalPage && (totalPage > 1)) ? ('p' + page + '_') : '',
             pageName = '',
             partIdName = (numParts && (numParts > 1)) ? ('' + idx + '_') : '';
 
-    // try to find a good page name
+        // try to find a good page name
         if (pageIdName) {
             pageName = $('.player-wrapper #plist > span').text();
             pageName = pageName.substr(pageName.indexOf('、') + 1) + '_';
         }
-    // document.title contains other info feeling too much
-        return idName + pageIdName + pageName + partIdName + $('div.v-title').text();
+        // document.title contains other info feeling too much
+        return idName + pageIdName + pageName + partIdName + $('div.v-title').text().trim();
     }
 
-  // Helper function, return object {url, filename}, options object used by
-  // "chrome.downloads.download"
+    // Helper function, return object {url, filename}, options object used by
+    // "chrome.downloads.download"
     function getDownloadOptions(url, filename) {
-    // TODO Improve file extension determination process.
-    //
-    // Parsing the url should be ok in most cases, but the best way should
-    // use MIME types and tentative file names returned by server. Not
-    // feasible at this stage.
+        // TODO Improve file extension determination process.
+        //
+        // Parsing the url should be ok in most cases, but the best way should
+        // use MIME types and tentative file names returned by server. Not
+        // feasible at this stage.
         let resFn = null,
-            fileBaseName = url.split(/[\\/]/).pop().split('?')[0],
-      // arbitrarily default to "mp4" for no better reason...
+            fileBaseName = url.split('://').pop().split('?')[0],
+            // arbitrarily default to "mp4" for no better reason...
             fileExt = fileBaseName.match(/[.]/) ? fileBaseName.match(/[^.]+$/) : 'mp4';
 
-    // file extension auto conversion.
-    //
-    // Some sources are known to give weird file extensions, do our best to
-    // convert them.
+        // file extension auto conversion.
+        //
+        // Some sources are known to give weird file extensions, do our best to
+        // convert them.
         switch (fileExt) {
         case 'letv':
             fileExt = 'flv';
             break;
         default:
-            // remain the same, nothing
+                // remain the same, nothing
             break;
         }
 

@@ -3,6 +3,7 @@
 
 let notification = false,
     notificationAvid = {},
+    downloadNames = {},
     playerTabs = {},
     viCache = {},
     locale = 0,
@@ -622,6 +623,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
         });
         return true;
+    /*
     case 'getDownloadLink': {
         let url = {
             download: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=' + getOption('dlquality'),
@@ -655,7 +657,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             }
         });
         return true;
-    }
+    }*/
     case 'getMyInfo':
         getFileData(protocol + 'api.bilibili.com/myinfo', function(myinfo) {
             myinfo = JSON.parse(myinfo);
@@ -834,10 +836,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             url: request.data ? URL.createObjectURL(new Blob([request.data], {
                 type: 'application/octet-stream',
             })) : request.url,
-            filename: 'Bilibili/' + request.filename,
+            filename: request.filename,
         });
         return true;
-
     case 'callBilibiliMac':
         postFileData('http://localhost:23330/rpc', request.data, function() {
             sendResponse(true);
@@ -845,8 +846,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return true;
     case 'sendCRSF':
         CRSF = request.CRSF;
+        sendResponse();
         return true;
-
+    case 'suggestName':
+        downloadNames[request.url.split('?')[0]] = request.filename;
+        sendResponse();
+        return false;
     default:
         sendResponse({
             result: 'unknown',
@@ -1028,6 +1033,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
     urls: ['https://comment.bilibili.com/1272.xml'],
 });
 
+/*
 chrome.webRequest.onBeforeRequest.addListener(function() {
     if (secureAvailable) {
         return {
@@ -1039,6 +1045,46 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 }, {
     urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
+*/
+
+chrome.webRequest.onResponseStarted.addListener(function(details) {
+    if (details.tabId < 0) {
+        return;
+    }
+    getFileData(details.url, (data) => {
+        let parsed_data = JSON.parse(data);
+        chrome.tabs.sendMessage(details.tabId, {
+            command: 'playurl',
+            url: details.url,
+            data: parsed_data,
+        });
+    });
+}, {
+    urls: [
+        '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://interface.bilibili.com/playurl*',
+    ],
+});
+
+chrome.webRequest.onHeadersReceived.addListener(function(details) {
+    if (details.tabId < 0) {
+        return;
+    }
+    let modifiedHeaders = details.responseHeaders;
+    let baseUri = details.url.split('?')[0];
+    if (downloadNames[baseUri]) {
+        modifiedHeaders.push({
+            name: 'Content-Disposition',
+            value: 'attachment; filename*=UTF-8\'\'' + encodeURIComponent(downloadNames[baseUri]),
+        });
+    }
+    console.warn(modifiedHeaders);
+    return {
+        responseHeaders: modifiedHeaders,
+    };
+}, {
+    urls: ['*://*.acgvideo.com/*'],
+}, ['responseHeaders', 'blocking']);
 
 function receivedHeaderModifier(details) {
     let hasCORS = false;
@@ -1049,7 +1095,7 @@ function receivedHeaderModifier(details) {
     });
     if (!hasCORS && watchLater) {
         // details.responseHeaders['Access-Control-Allow-Origin']
-        console.warn(details.responseHeaders);
+        // console.warn(details.responseHeaders);
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Credentials',
             value: 'true',
@@ -1088,7 +1134,8 @@ function resetVideoHostList() {
     }, ['responseHeaders', 'blocking']);
 }
 
-/* chrome.webRequest.onHeadersReceived.addListener(function(details) {
+/*
+chrome.webRequest.onHeadersReceived.addListener(function(details) {
     let headers = details.responseHeaders;
     //eslint-disable-next-line
     console.log(headers);
@@ -1106,7 +1153,7 @@ function resetVideoHostList() {
         responseHeaders: headers,
     };
 }, {
-    urls: ['*://www.bilibili.com/video/av*', '*://bangumi.bilibili.com/anime/v/!*', '*://api.bilibili.com/x/v2/history/toview/add'],
+    urls: ['www.bilibili.com/video/av*', 'bangumi.bilibili.com/anime/v/*', 'api.bilibili.com/x/v2/history/toview/add'],
 }, ['responseHeaders', 'blocking']);*/
 
 function getCookie(name) {
@@ -1262,4 +1309,3 @@ chrome.runtime.onConnect.addListener(function(port) {
         }
     });
 });
-

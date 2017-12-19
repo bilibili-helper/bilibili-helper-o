@@ -87,7 +87,8 @@ let filenameSanitize = (function() {
           .replace(illegalRe, replacement)
           .replace(controlRe, replacement)
           .replace(reservedRe, replacement)
-          .replace(windowsReservedRe, replacement);
+          .replace(windowsReservedRe, replacement)
+          .replace(/ |,/g, replacement);
         return truncate(sanitized, max);
     }
 
