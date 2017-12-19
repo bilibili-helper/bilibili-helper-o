@@ -16,7 +16,7 @@ let notification = false,
     bangumi = false,
     CRSF, watchLater = false,
     hasLogin = false,
-    subName = '/neptune/';
+    subName = '';
 
 
 Live.set = function(n, k, v) {
@@ -330,7 +330,7 @@ function resolvePlaybackLink(avPlaybackLink, callback) {
 function addWatchLater(aid) {
     watchLater = true;
     let xmlhttp = new XMLHttpRequest();
-    let url = 'https://api.bilibili.com/x/v2/history/toview/add';
+    let url = protocol + 'api.bilibili.com/x/v2/history/toview/add';
     let xmlChange = () => {
         if (xmlhttp.readyState === 2) {
             if (!retry && xmlhttp.status !== 200) {
@@ -921,7 +921,7 @@ function getLocale() {
 function checkVersion() {
     let versionNotify = getOption('versionNotify');
     versionNotify === 'on' &&
-        getFileData('https://bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function(result) {
+        getFileData(protocol + 'bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function(result) {
             try {
                 result = JSON.parse(result);
                 if (compareVersion(result.version, chrome.runtime.getManifest().version) > 0) {
@@ -1025,7 +1025,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
         command: 'error',
     });
 }, {
-    urls: ['http://comment.bilibili.com/1272.xml'],
+    urls: ['https://comment.bilibili.com/1272.xml'],
 });
 
 chrome.webRequest.onBeforeRequest.addListener(function() {
@@ -1037,7 +1037,7 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
         return {};
     }
 }, {
-    urls: ['http://static.hdslb.com/play.swf'],
+    urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
 
 function receivedHeaderModifier(details) {
@@ -1088,7 +1088,7 @@ function resetVideoHostList() {
     }, ['responseHeaders', 'blocking']);
 }
 
-chrome.webRequest.onHeadersReceived.addListener(function(details) {
+/* chrome.webRequest.onHeadersReceived.addListener(function(details) {
     let headers = details.responseHeaders;
     //eslint-disable-next-line
     console.log(headers);
@@ -1106,8 +1106,8 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
         responseHeaders: headers,
     };
 }, {
-    urls: ['www.bilibili.com/video/av*', 'bangumi.bilibili.com/anime/v/*', 'api.bilibili.com/x/v2/history/toview/add'],
-}, ['responseHeaders', 'blocking']);
+    urls: ['*://www.bilibili.com/video/av*', '*://bangumi.bilibili.com/anime/v/!*', '*://api.bilibili.com/x/v2/history/toview/add'],
+}, ['responseHeaders', 'blocking']);*/
 
 function getCookie(name) {
     let arr, reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
@@ -1152,7 +1152,7 @@ Live.notise = {
     roomIdList: {},
     cacheList: {},
     getList: function(d) {
-        let url = protocol + 'live.bilibili.com/feed/getList/' + Live.notise.page;
+        let url = protocol + '//live.bilibili.com/feed/getList/' + Live.notise.page;
         let callback = function(t) {
             t = t.substr(1, t.length - 3);
             t = JSON.parse(t);
