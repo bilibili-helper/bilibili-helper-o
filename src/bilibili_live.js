@@ -668,15 +668,15 @@
 
                                 // init dom event
                                 Live.treasure.infoSection.find('.slide-btn.right').show().on('click', () => {
-                                    if (Live.treasure.page < 3) {
+                                    if (Live.treasure.page < Live.treasure.taskInfo.max_times) {
                                         Live.treasure.page += 1;
-                                        Live.treasure.setInfoSectionPage(Live.treasure.page);
+                                        Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
                                     }
                                 });
                                 Live.treasure.infoSection.find('.slide-btn.left').show().on('click', () => {
                                     if (Live.treasure.page > 1) {
                                         Live.treasure.page -= 1;
-                                        Live.treasure.setInfoSectionPage(Live.treasure.page);
+                                        Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
                                     }
                                 });
 
@@ -691,8 +691,8 @@
                                     let captcha = Live.treasure.captcha.answer;
                                     Live.treasure.captchaBoxInput.val(captcha);
                                     setTimeout(() => {
-                                        !Live.treasure.stop && Live.treasure.captchaBoxSubmitButton.click();
-                                    }, 300);
+                                        Live.treasure.captchaBoxSubmitButton.click();
+                                    }, 1000);
                                 }).on('error', () => {
                                     Live.treasure.captcha.refresh();
                                 });
@@ -704,7 +704,7 @@
                                 Live.treasure.treasureCtrl.find('.bg-cover').on('click', () => {
                                     Live.treasure.showPanel();
                                     Live.treasure.page = Live.treasure.taskInfo.times;
-                                    Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times);
+                                    Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times, Live.treasure.taskInfo.max_times);
                                 });
                                 //隐藏宝箱展开面板
                                 Live.treasure.treasureCtrl.on('click', (e) => {
@@ -737,25 +737,14 @@
                                         command: 'delTreasure'
                                     });
                                 });
-                                $(document).on('mousemove', (e) => {
-                                    Live.treasure.stop = false;
-                                    Live.treasure.timer = 0;
-                                });
-
-                                setInterval(() => {
-                                    ++Live.treasure.timer;
-                                    if (Live.treasure.timer >= 3600) {
-                                        Live.treasure.stop = true;
-                                    }
-                                }, 1000);
                             });
                         }, 2000);
                     }
                 });
             },
-            setInfoSectionPage: (page = 1) => {
+            setInfoSectionPage: (page = 1, maxPage = 3) => {
                 Live.treasure.infoSection.find('.slide-btn.left')[page === 1 ? 'hide' : 'show']();
-                Live.treasure.infoSection.find('.slide-btn.right')[page === 3 ? 'hide' : 'show']();
+                Live.treasure.infoSection.find('.slide-btn.right')[page === maxPage ? 'hide' : 'show']();
                 Live.treasure.infoSection.find('.round-count').text(`第 ${page} / ${Live.treasure.taskInfo.max_times} 轮`);
                 Live.treasure.treasureCtrl.find('.awarding-panel .info-section .box-slide .round-ctnr').css({
                     transform: `translate(-${200 * (page - 1)}px, 0px)`
@@ -824,7 +813,7 @@
                 Live.treasure.status = 'acquirable';
             },
             makeWaiting: () => {
-                Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times);
+                Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times, Live.treasure.taskInfo.max_times);
                 Live.treasure.treasureCtrl.find(`.box-slide .round-ctnr .box-slide-item`).removeClass('in-countdown');
                 Live.treasure.treasureCtrl.find(`.box-slide .round-ctnr:nth-child(${Live.treasure.taskInfo.times}) .box-slide-item:nth-child(${Live.treasure.taskInfo.minute / 3})`).addClass('in-countdown');
                 Live.treasure.status = 'waiting';
@@ -1774,390 +1763,6 @@
             panelStatus: false,
             giftPackageData: {},
             giftPackageMap: {},
-            giftSendAll: {
-                open: () => {
-                    Live.giftpackage.sendLineSection.empty();
-                    let giftsArray = [];
-                    Live.each(Live.giftpackage.giftPackageMap, (id) => {
-                        let gifts = Live.giftpackage.giftPackageMap[id];
-                        Live.each(gifts, (index) => {
-                            let gift = gifts[index];
-                            let giftDOM = $('<span />').addClass('package-item').attr({
-                                'title': gift.gift_name,
-                                'gift_id': id,
-                                'bag_id': gift.id
-                            });
-                            let giftItemDOM = $('<div />').addClass('gift-item gift-item-package gift-' + id);
-                            if (gift.expireat > 0) {
-                                giftItemDOM.html('<span class="expires">' + gift.expireat + '天</span>');
-                            } else if (gift.expireat === 0) {
-                                giftItemDOM.html('<span class="expires">今天</span>');
-                            } else {
-                                giftItemDOM.html('<span class="expires">永久</span>');
-                            }
-
-                            let giftConterDOM = $('<div />').addClass('gift-count').text('x' + gift.gift_num);
-                            giftDOM.append(giftItemDOM, giftConterDOM);
-                            Live.giftpackage.sendLineSection.append(giftDOM);
-                            giftsArray.push(gift);
-                        });
-                    });
-                    if (giftsArray.length > 0) {
-                        $(document).click();
-                        Live.giftpackage.sendLinePanel.show();
-                        Live.giftpackage.giftSendLinePanel.giftsData = giftsArray;
-                    }
-                }
-            },
-            giftSendLinePanel: {
-                line_id: null,
-                giftsData: {},
-                outTimeout: null,
-                open: (id) => {
-                    $(document).click();
-                    Live.giftpackage.giftSendLinePanel.line_id = id;
-                    Live.giftpackage.giftSendLinePanel.giftsData = Live.giftpackage.giftPackageMap[id];
-                    let gifts = Live.giftpackage.giftSendLinePanel.giftsData;
-                    Live.giftpackage.sendLinePanel.show();
-                    Live.giftpackage.sendLineSection.empty();
-                    Live.each(Live.giftpackage.giftSendLinePanel.giftsData, (index) => {
-                        let gift = gifts[index];
-                        let giftDOM = $('<span />').addClass('package-item').attr({
-                            'title': gift.gift_name,
-                            'gift_id': id,
-                            'bag_id': gift.id
-                        });
-                        let giftItemDOM = $('<div />').addClass('gift-item gift-item-package gift-' + id);
-                        if (gift.expireat > 0) {
-                            giftItemDOM.html('<span class="expires">' + gift.expireat + '天</span>');
-                        } else if (gift.expireat === 0) {
-                            giftItemDOM.html('<span class="expires">今天</span>');
-                        } else {
-                            giftItemDOM.html('<span class="expires">永久</span>');
-                        }
-
-                        let giftConterDOM = $('<div />').addClass('gift-count').text('x' + gift.gift_num);
-                        giftDOM.append(giftItemDOM, giftConterDOM);
-                        Live.giftpackage.sendLineSection.append(giftDOM);
-                    });
-                },
-                close: () => {
-                    let sendLinePanel = Live.giftpackage.giftSendLinePanel;
-                    Live.giftpackage.sendLinePanel.addClass('hide out');
-                    sendLinePanel.outTimeout = setTimeout(() => {
-                        Live.giftpackage.sendLinePanel.removeClass('hide out').css('display', '');
-                    }, 380);
-                },
-                sendLine: (event) => {
-                    if (event.type === 'keyup' && event.keyCode !== 13) {
-                        return;
-                    }
-                    let gifts = Live.giftpackage.giftSendLinePanel.giftsData;
-                    let status = {complete: 0};
-                    Live.giftpackage.giftSendLinePanel.send(gifts, status, Live.giftpackage.giftSendLinePanel.callback);
-                },
-                send: (gifts, status, callback) => {
-                    let gift = gifts[status.complete];
-                    $.ajax({
-                        url: '/giftBag/send',
-                        type: 'POST',
-                        data: {
-                            giftId: gift.gift_id,
-                            roomid: Live.roomId,
-                            ruid: Live.roomInfo.MASTERID,
-                            num: gift.gift_num,
-                            coinType: 'silver',
-                            Bag_id: gift.id,
-                            timestamp: Date.now(),
-                            rnd: store.get('bilibili_helper_live_danmu_rnd', Live.roomId),
-                            token: Live.getCookie('LIVE_LOGIN_DATA') || ''
-                        },
-                        dataType: 'JSON',
-                        success: (result) => {
-                            if (result.code === 0) {
-                                if (typeof callback === 'function') {
-                                    callback(gifts, status);
-                                }
-                            } else if (result.code === 1) {
-                                console.error('系统繁忙，正在重试');
-                                setTimeout(() => {
-                                    Live.giftpackage.giftSendLinePanel.send(gift);
-                                }, 500);
-                            } else {
-                                console.error(result);
-                            }
-                        }
-                    });
-                },
-                callback: (gifts, status) => {
-                    ++status.complete;
-                    if (status.complete === gifts.length) {
-                        Live.giftpackage.giftSendLinePanel.close();
-                    } else {
-                        Live.giftpackage.giftSendLinePanel.send(gifts, status, Live.giftpackage.giftSendLinePanel.callback);
-                    }
-                }
-            },
-            giftSendPanel: {
-                giftData: {
-                    giftId: '',
-                    giftName: '',
-                    giftNum: 0,
-                    type: 'silver',
-                    count: 1,
-                    bagId: 0
-                },
-                show: false,
-                out: false,
-                outTimeout: null,
-                toggleGiftPackage: function (event) {
-                    event.stopPropagation();
-                    Live.liveQuickLogin();
-                    if (!Live.giftpackage.panelStatus) {
-                        if (Live.giftpackage.giftPackageStatus === 1) { // 有新道具，先打开新送道具面板
-                            Live.giftpackage.giftPackageNewPanel.open();
-                        } else {
-                            Live.giftpackage.openGiftPackagePanel(); // 否则直接打开包裹
-                        }
-                    } else {
-                        Live.giftpackage.closeGiftPackagePanel();
-                    }
-                },
-                open: function (giftId, giftName, giftNum, bigId) {
-                    let sendPanel = Live.giftpackage.giftSendPanel;
-
-                    sendPanel.giftData.giftId = giftId;
-                    sendPanel.giftData.giftName = giftName;
-                    sendPanel.giftData.giftNum = giftNum;
-                    sendPanel.giftData.count = giftNum;
-                    sendPanel.giftData.bagId = bigId;
-
-                    $(document).click();
-                    Live.giftpackage.sendNumberGroup.empty();
-                    let numberGroup = ['1', '5', '10', '30', '50', '5%', '10%', '30%', '50%', 'MAX'];
-                    for (let i = 0; i < numberGroup.length; ++i) {
-                        let numberBtn = $('<span />').addClass('number-btn').text(numberGroup[i]);
-                        if (i < 5 && giftNum < parseInt(numberGroup[i])) {
-                            numberBtn.addClass('disabled');
-                        }
-                        Live.giftpackage.sendNumberGroup.append(numberBtn);
-                        numberBtn.off('click').on('click', function (e) {
-                            let n = $(this).text();
-                            switch (n) {
-                                case '1':
-                                case '5':
-                                case '10':
-                                case '30':
-                                case '50':
-                                    var num = parseInt(n);
-                                    if (giftNum < num) {
-                                        num = giftNum;
-                                    }
-                                    Live.giftpackage.sendGiftInput.val(num);
-                                    break;
-                                case '5%':
-                                case '10%':
-                                case '30%':
-                                case '50%':
-                                    var num = Math.ceil(parseInt(n.substr(0, n.length - 1)) * 0.01 * giftNum);
-                                    if (giftNum < num) {
-                                        num = giftNum;
-                                    }
-                                    Live.giftpackage.sendGiftInput.val(num);
-                                    break;
-                                case 'MAX':
-                                    Live.giftpackage.sendGiftInput.val(giftNum);
-                            }
-                        });
-                    }
-                    Live.giftpackage.sendGiftImg.attr('class', 'gift-img float-left gift-' + giftId);
-                    Live.giftpackage.sendGiftInfo.text('您的包裹中还剩 ' + giftNum + ' 个可用');
-                    Live.giftpackage.sendGiftInput.val(giftNum).focus();
-                    Live.giftpackage.sendPanel.show();
-
-                    setTimeout(function () {
-                        $(document).on('click', n);
-                        var n = function (t) {
-                            let e = t && (t.target || t.srcElement);
-                            if (!$(e).hasClass('panel-content') && !$(e).parents('.panel-content').length) {
-                                $(document).off('click', n);
-                                Live.giftpackage.giftSendPanel.close();
-                            }
-                        };
-                    }, 1);
-                },
-                close: function () {
-                    let sendPanel = Live.giftpackage.giftSendPanel;
-                    Live.giftpackage.sendPanel.addClass('hide out');
-                    sendPanel.outTimeout = setTimeout(function () {
-                        Live.giftpackage.sendPanel.removeClass('hide out').css('display', '');
-                    }, 380);
-                },
-                sendGift: function (event) {
-                    if (event.type === 'keyup' && event.keyCode !== 13) {
-                        return;
-                    }
-
-                    let element = event.target || event.srcElement;
-                    let giftData = Live.giftpackage.giftSendPanel.giftData;
-                    giftData.count = Live.giftpackage.sendGiftInput.val();
-                    let num = parseInt(giftData.count, 10),
-                        rnd = store.get('bilibili_helper_live_danmu_rnd', Live.roomId);
-
-                    // 检测礼物数量是否为合法数字.
-                    if (isNaN(num)) {
-                        giftData.count = '';
-                        Live.liveToast(Live.giftpackage.sendGiftInput, 'error', '请填写正确的送礼数量 ' + Live.randomEmoji.helpless());
-                        return;
-                    }
-                    $.ajax({
-                        url: '/giftBag/send',
-                        type: 'POST',
-                        data: {
-                            giftId: giftData.giftId,
-                            roomid: Live.roomId,
-                            ruid: Live.roomInfo.MASTERID,
-                            num: giftData.count,
-                            coinType: giftData.type,
-                            Bag_id: giftData.bagId,
-                            timestamp: Date.now(),
-                            rnd: rnd,
-                            token: Live.getCookie('LIVE_LOGIN_DATA') || ''
-                        },
-                        dataType: 'JSON',
-                        success: function (result) {
-                            if (result.code === 0) {
-                                Live.liveToast(element, 'info', 'Gift-sending is successful. ' + Live.randomEmoji.helpless());
-                                // 更新瓜子数.
-                                // Live.control.$fire("all!updateCurrency", {
-                                //     gold: result.data.gold,
-                                //     silver: result.data.silver
-                                // });
-
-                                // 如果是弹幕道具通知 Flash.
-                                result.data.data.giftType === 1 && $('#player_object')[0].sendGift(result.data.data.giftId, result.data.data.num);
-
-                                // 如果获得勋章.
-                                // result.data.data.newMedal === 1 && Live.control.$fire("all!newFansMedalNotice", {
-                                //     medalId: result.data.data.medal.medalId,
-                                //     medalName: result.data.data.medal.medalName,
-                                //     medalLevel: result.data.data.medal.level
-                                // });
-
-                                // 获得新头衔
-                                // result.data.data.newTitle === 1 && Live.control.$fire("all!newTitleNotice", result.data.data.title);
-
-                                // 判断礼物价值并将其放在对应位置.
-                                // Edited By LancerComet at XX:XX (Afternoon), 2016.03.22.
-                                let giftTarget = document.getElementById('gift-msg-1000'); // 低价礼物容器节点.
-                                function chatGiftList(json) {
-                                    // 礼物信息
-                                    let giftLtInfo = {
-                                        uname: json.data.uname,
-                                        num: json.data.num,
-                                        giftName: json.data.giftName,
-                                        giftId: json.data.giftId
-                                    };
-
-                                    giftTarget.innerHTML = '<div class="gift-msg-item"><span class="user-name-low">' + giftLtInfo.uname + '</span> ' +
-                                        '<span class="action">赠送' + giftLtInfo.giftName + '</span>' +
-                                        '<div class="gift-img gift-' + giftLtInfo.giftId + '" role="img"></div>' +
-                                        'X <span class="gift-count">' + giftLtInfo.num + '</span></div>';
-                                }
-
-                                if (parseInt(result.data.data.num, 10) < 10) {
-                                    chatGiftList(result.data);
-                                } else {
-                                    // 本地添加送礼记录.
-                                    // window.liveRoomFuncs.addGiftHistory(result.data);
-                                }
-
-                                // console.log(result);
-                                // 连击礼物.
-                                // Live.control.$fire("all!superGift", result.data.data);
-
-                                // 更新投喂榜.
-                                // Live.control.$fire("all!updateGiftTop", result.data.data.top_list);
-
-                                // 更新扭蛋机数据
-                                // Live.control.$fire("all!updateCapsuleData", result.data.data.capsule);
-
-                                // 送小电视用户通过接口获得通知，屏蔽广播
-                                // if (result.data.data.giftId === 25) {
-                                //     (function () {
-                                //         var msgItem = {};
-                                //         for (var i = 0; i < result.data.data.smalltv_msg.length; i++) {
-                                //             msgItem = result.data.data.smalltv_msg[i];
-                                //             msgItem.msg = msgItem.msg.replace(/\:\?/g, " ");
-                                //             Live.control.$fire("all!addSysMsg", msgItem);
-                                //         }
-                                //     })();
-                                // }
-
-                                // 调用 Flash 礼物公共方法
-                                if (result.data.data.notice_msg) {
-                                    $('#player_object')[0].noticeGift(result.data.data.notice_msg);
-                                }
-
-                                // Callback
-                                giftData.giftNum = result.data.remain;
-                                Live.giftpackage.sendGiftInfo.text('您的包裹中还剩 ' + giftData.giftNum + ' 个可用');
-                                Live.giftpackage.sendGiftInput.focus();
-                                // 当 remain 为 0 时检查包裹状态并更新
-                                if (result.data.remain === 0) {
-                                    // Live.liveToast(element,'error', "已经没有道具了 " + Live.randomEmoji.sad(), "caution");
-                                    Live.giftpackage.sendGiftInput.val(0);
-                                    Live.giftpackage.giftSendPanel.close();
-                                    // getGiftPackageStatus(function (result) {
-                                    //     Live.giftpackage.giftPackageStatus = result.data.result;
-                                    // });
-                                }
-                            }
-
-                            // 道具包裹刷道具锁定状态不提示错误
-                            else if (result.code === 1) {
-                                console.error('系统繁忙...');
-                            }
-
-                            // 余额不足自动弹出相应弹窗.
-                            else if (result.code === -400 && result.msg === '余额不足') {
-                                // Live.control.$fire("all!noSeed");
-                                Live.giftpackage.giftSendPanel.close();
-                            }
-
-                            // Error Handler.
-                            else {
-                                element && Live.liveToast(element, 'caution', result.msg + ' ' + Live.randomEmoji.sad());
-                            }
-                        },
-                        error: function (result) {
-                            element && Live.liveToast(element, 'error', Live.randomEmoji.sad() + ' 送礼失败：' + result.statusText + ' ' + Live.randomEmoji.sad());
-                            // param.errorCallback && param.errorCallback();
-                        }
-                    });
-                    // Live.control.$fire("all!sendGift", {
-                    //     element: element,
-                    //     type: "package",
-                    //     data: {
-                    //         giftId: giftData.giftId,
-                    //         num: num,
-                    //         coinType: giftData.type,
-                    //         bagId: giftData.bagId
-                    //     },
-                    //     callback: function (result) {
-                    //         if (result.code === 0) {
-                    // giftData.giftNum = result.data.remain;
-                    // // 当 remain 为 0 时检查包裹状态并更新
-                    // if (result.data.remain === 0) {
-                    //     getGiftPackageStatus(function (result) {
-                    //         Live.giftpackage.giftPackageStatus = result.data.result;
-                    //     });
-                    // }
-                    //         }
-                    //     }
-                    // });
-                }
-            },
             giftPackageNewPanel: {
                 data: [],
                 show: false,
@@ -2225,7 +1830,6 @@
                     });
                 },
                 open: function () {
-                    console.log(2);
                     Live.giftpackage.mainPanel.update(() => {
                         Live.giftpackage.mainPanel.createPanel();
                         Live.giftpackage.mainPanel.show();
@@ -2309,31 +1913,36 @@
                     if (data) {
                         Live.giftpackage.sendAllBtn.data('giftsData', data);
                         Live.giftpackage.mainPopupBoxGiftBox.empty();
-                        Live.each(data, (index) => {
-                            const gifts = data[index];
-                            const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone().on('DOMMouseScroll mousewheel', Live.scrollEvent);
-                            const sendLineBtn = Live.giftpackage.sendLineBtn.clone().data('giftsData', gifts);
-                            const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
-                            Live.each(gifts, (i) => {
-                                const gift = gifts[i];
-                                const item = Live.giftpackage.mainPopupBoxGiftItem.clone()
-                                    .data('giftData', gift);
-                                const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
-                                icon.css({
-                                    'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${index}.png")`
+                        const keys = Object.keys(data);
+                        if (keys.length > 0) {
+                            Live.each(data, (index) => {
+                                const gifts = data[index];
+                                const wrapper = Live.giftpackage.mainPopupBoxGiftWapper.clone().on('DOMMouseScroll mousewheel', Live.scrollEvent);
+                                const sendLineBtn = Live.giftpackage.sendLineBtn.clone().data('giftsData', gifts);
+                                const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
+                                Live.each(gifts, (i) => {
+                                    const gift = gifts[i];
+                                    const item = Live.giftpackage.mainPopupBoxGiftItem.clone()
+                                        .data('giftData', gift);
+                                    const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
+                                    icon.css({
+                                        'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${index}.png")`
+                                    });
+                                    const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.day);
+                                    const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
+                                    item.append(expires, icon, num).data('giftData', gift);
+                                    items.append(item);
                                 });
-                                const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.day);
-                                const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
-                                item.append(expires, icon, num).data('giftData', gift);
-                                items.append(item);
+                                wrapper.append(sendLineBtn, items);
+                                Live.giftpackage.mainPopupBoxGiftBox.append(wrapper);
+                                sendLineBtn.on('click', function () {
+                                    const giftsData = $(this).data('giftsData');
+                                    Live.giftpackage.sendPanel.createPanel(giftsData);
+                                });
                             });
-                            wrapper.append(sendLineBtn, items);
-                            Live.giftpackage.mainPopupBoxGiftBox.append(wrapper);
-                            sendLineBtn.on('click', function () {
-                                const giftsData = $(this).data('giftsData');
-                                Live.giftpackage.sendPanel.createPanel(giftsData);
-                            });
-                        });
+                        } else {
+                            Live.giftpackage.mainPopupBoxEmptyBox.show();
+                        }
                     }
                     Live.giftpackage.ctl.find('.gift-box.item').off('click').on('click', function (e) {
                         const giftData = $(this).data('giftData');
@@ -2637,7 +2246,6 @@
                             const keys = Object.keys(giftsData);
                             const giftData = giftsData[keys[kindIndex]];
                             const counter = giftData.length;
-                            console.log(keys, giftData, counter);
                             p = Live.giftpackage.sendPanel.sendLineAjax(counter - 1, giftData, submitBtnDOM);
                             p && p.always(() => {
                                 Live.giftpackage.sendPanel.sendAllAjax(kindIndex - 1, giftsData, submitBtnDOM);
