@@ -53,9 +53,6 @@
         Live.getUser = () => {
             return $.getJSON('//live.bilibili.com/user/getuserinfo').promise();
         };
-        Live.getMedalList = () => {
-            return $.getJSON('//live.bilibili.com/i/ajaxGetMyMedalList').promise();
-        };
         Live.eval = (fn) => {
             let Fn = Function;
             return new Fn('return ' + fn)();
@@ -1880,6 +1877,7 @@
                     Live.giftpackage.mainPopupBoxInner = $('<div />').addClass('box');
                     Live.giftpackage.mainPopupBoxHeader = $('<header />').append('道具包裹');
                     Live.giftpackage.sendAllBtn = $('<div />').addClass('send-all').text('一键清空');
+                    Live.giftpackage.sendIntimacyBtn = $('<div />').addClass('send-intimacy').text('满亲密度清空');
                     Live.giftpackage.mainPopupBoxGiftBox = $('<div />').addClass('a-move-in-left');
                     Live.giftpackage.mainPopupBoxGiftWapper = $('<div />').addClass('content');
                     Live.giftpackage.sendLineBtn = $('<div />').addClass('send-line').text('清空本类');
@@ -1897,7 +1895,7 @@
                     ).hide();
 
                     // 拼装主窗口
-                    Live.giftpackage.mainPopupBoxHeader.append(Live.giftpackage.sendAllBtn);
+                    Live.giftpackage.mainPopupBoxHeader.append(Live.giftpackage.sendAllBtn, Live.giftpackage.sendIntimacyBtn);
                     Live.giftpackage.mainBox.append(Live.giftpackage.mainBoxInner);
                     Live.giftpackage.mainBoxInner.append(Live.giftpackage.mainPopupBoxInner);
                     Live.giftpackage.mainPopupBoxInner.append(
@@ -1912,6 +1910,7 @@
                     data = data || Live.giftpackage.giftPackageData;
                     if (data) {
                         Live.giftpackage.sendAllBtn.data('giftsData', data);
+                        Live.giftpackage.sendIntimacyBtn.data('giftsData', data);
                         Live.giftpackage.mainPopupBoxGiftBox.empty();
                         const keys = Object.keys(data);
                         if (keys.length > 0) {
@@ -1937,7 +1936,7 @@
                                 Live.giftpackage.mainPopupBoxGiftBox.append(wrapper);
                                 sendLineBtn.on('click', function () {
                                     const giftsData = $(this).data('giftsData');
-                                    Live.giftpackage.sendPanel.createPanel(giftsData);
+                                    Live.giftpackage.sendPanel.createPanel({data: giftsData});
                                 });
                             });
                         } else {
@@ -1946,11 +1945,25 @@
                     }
                     Live.giftpackage.ctl.find('.gift-box.item').off('click').on('click', function (e) {
                         const giftData = $(this).data('giftData');
-                        Live.giftpackage.sendPanel.createPanel(giftData, true);
+                        Live.giftpackage.sendPanel.createPanel({
+                            data: giftData,
+                            single: true
+                        });
                     });
                     Live.giftpackage.sendAllBtn.off('click').on('click', function (e) {
                         const giftData = $(this).data('giftsData');
-                        Live.giftpackage.sendPanel.createPanel(giftData, false, true);
+                        Live.giftpackage.sendPanel.createPanel({
+                            data: giftData,
+                            all: true
+                        });
+                    });
+                    Live.giftpackage.sendIntimacyBtn.off('click').on('click', function (e) {
+                        return false;
+                        const giftData = $(this).data('giftsData');
+                        Live.giftpackage.sendPanel.createPanel({
+                            data: giftData,
+                            all: true
+                        });
                     });
                 }
             },
@@ -1995,6 +2008,8 @@
                     Live.giftpackage.linkBoxContent = $('<div />').addClass('gift-sender');
                     Live.giftpackage.linkBoxForm = $('<div />').addClass('sender-form');
                     Live.giftpackage.linkBoxGiftInfo = $('<div />').addClass('gift-info');
+                    Live.giftpackage.intimacyCheckBox = $('<input type="checkbox" name="intimacy" />')
+                    Live.giftpackage.intimacyLabel = $('<label/>').append(Live.giftpackage.intimacyCheckBox);
 
                     Live.giftpackage.linkBoxGiftInfoIcon = $('<div />').addClass('img bg-cover dp-i-block v-top');
                     Live.giftpackage.linkBoxGiftInfoDesc = $('<div />').addClass('desc dp-i-block v-top');
@@ -2066,6 +2081,7 @@
                     return bumBtnBox;
                 },
                 createSingleTypeDOM: (data) => {
+                    console.log(data);
                     const icon = Live.giftpackage.linkBoxGiftInfoIcon.clone()
                         .css({
                             'background-image': `url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-gif/gift-${data.gift_id}.gif)`
@@ -2121,7 +2137,7 @@
                         }
                     });
                 },
-                createPanel: (data, single, all) => {
+                createPanel: ({data, single = false, all = false}) => {
                     if (single === true) {
                         Live.giftpackage.sendPanel.createSingleTypeDOM(data);
                     } else if (!single) {
@@ -2373,6 +2389,36 @@
                 }, 'json').promise();
             }
         };
+        Live.medal = {
+            getMedalList : () => {
+                return $.getJSON('//live.bilibili.com/i/ajaxGetMyMedalList').promise();
+            },
+            getWearedMedal: () => {
+                return $.getJSON('//api.live.bilibili.com/live_user/v1/UserInfo/get_weared_medal').promise();
+            },
+            init: () => {
+                Live.medal.getMedalList().done((medalList) => {
+                    $.get('//api.live.bilibili.com/i/medal?page=1&pageSize=30').promise().done((html) => {
+                        let medalDOM = $(html);
+                        let medalDOMList = medalDOM.find('.my-medal-section dl dd');
+                        if (medalList.code === 0) {
+                            medalList = medalList.data;
+                            Live.medalList = medalList;
+                            for (let i in medalList) {
+                                Live.medalList[i].rank = parseInt($(medalDOMList[i]).find('.col-4').text());
+                                let medal = medalList[i];
+                                if (medal.medalId === 4765) {
+                                    Live.hasBBQ = true;
+                                    Live.BBQ = medal;
+                                } else {
+                                    Live.hasBBQ = false;
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        }
         Live.init = {
             do: () => {
                 Live.init.localStorage();
@@ -2394,7 +2440,7 @@
                                 }
                                 $('.seeds-wrap').prepend('<div class="version"><span title="version: ' + Live.version + '">哔哩哔哩助手</span> by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕www</a> <a href="http://weibo.com/ruo0037" target="_blank">@沒睡醒的肉啊</a></div>');
                                 Live.init.style();
-                                Live.init.medal();
+                                Live.medal.init();
 
                                 Live.addScriptByText('(function(){const urlId = parseInt(/^\\\/([\\d]+)/.exec(location.pathname)[1], 10); if (urlId && !isNaN(urlId)) {var a=function(f,d,c){if(!window.localStorage||!f){return}var e=window.localStorage;if(!e[f]){e[f]=JSON.stringify({})}var b=JSON.parse(e[f]);if(c==undefined){e[f]=typeof d=="string"?d.trim():JSON.stringify(d)}else{b[d]=typeof c=="string"?c.trim():JSON.stringify(c);e[f]=JSON.stringify(b)}};a("bilibili_helper_live_roomId",urlId,window.BilibiliLive.ROOMID);a("bilibili_helper_live_danmu_rnd",urlId,DANMU_RND);}})();');
                                 Live.roomId = Live.getRoomId();
@@ -2558,28 +2604,6 @@
                     }
                 });
             },
-            medal: () => {
-                Live.getMedalList().done((medalList) => {
-                    $.get('//api.live.bilibili.com/i/medal?page=1&pageSize=30').promise().done((html) => {
-                        let medalDOM = $(html);
-                        let medalDOMList = medalDOM.find('.my-medal-section dl dd');
-                        if (medalList.code === 0) {
-                            medalList = medalList.data;
-                            Live.medalList = medalList;
-                            for (let i in medalList) {
-                                Live.medalList[i].rank = parseInt($(medalDOMList[i]).find('.col-4').text());
-                                let medal = medalList[i];
-                                if (medal.medalId === 4765) {
-                                    Live.hasBBQ = true;
-                                    Live.BBQ = medal;
-                                } else {
-                                    Live.hasBBQ = false;
-                                }
-                            }
-                        }
-                    });
-                });
-            }
         };
         Live.init.do();
     }
