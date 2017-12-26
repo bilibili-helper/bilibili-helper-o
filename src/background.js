@@ -17,7 +17,7 @@ let notification = false,
     bangumi = false,
     CRSF, watchLater = false,
     hasLogin = false,
-    subName = '/neptune/',
+    subName = '',
     crcEngine = new Crc32Engine();
 
 
