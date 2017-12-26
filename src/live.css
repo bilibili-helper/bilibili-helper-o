@@ -474,7 +474,7 @@
     overflow: auto;
     margin-bottom: 10px;
 }
-.gift-info.not-weared {
+.gift-info.not-weared, .gift-info.no-medal {
     border: 1px solid #f39c9c;
     border-radius: 4px;
     padding: 17px 0 3px;
@@ -492,9 +492,23 @@
     color: #fff;
     border-radius: 0 0 4px 0;
 }
+.gift-info.no-medal::after{
+    content: '无勋章';
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 2px;
+    background-color: #ff5858;
+    color: #fff;
+    border-radius: 0 0 4px 0;
+}
 .gift-info .intimacy {
     text-align: center;
     line-height: 16px;
+}
+.gift-info .intimacy .up{
+    color: #ff5858;
 }
 .gift-info .intimacy .fans-medal-item {
     position: relative;

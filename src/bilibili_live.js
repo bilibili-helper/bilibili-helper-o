@@ -2144,9 +2144,8 @@
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(
                         items,
                         $('<div class="intimacy"></div>').append(
-                            `${hasMedal ? '' : '无勋章'}`,
                             !hasMedal && hasWearedMedal ? medalDOM : '',
-                            ` 共计增加亲密度：${intimacyData.intimacy}⬆ + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`
+                            ` 共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`
                         )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
                     if (!hasMedal) {
