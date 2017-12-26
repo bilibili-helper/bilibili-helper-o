@@ -142,6 +142,9 @@
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
         biliHelper.sameVideo = false;
+    } else if (document.location.pathname.indexOf('/bangumi/') === 0) {
+        biliHelper.site = 3;
+        biliHelper.sameVideo = false;
     } else if (location.hostname === 'www.bilibili.com') {
         biliHelper.site = 0;
     } else {
@@ -407,15 +410,25 @@
                 },
             };
             if (biliHelper.site === 0) {
-                biliHelper.helperBlock = $('<div class="block helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
+                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
                 biliHelper.helperBlock.find('.t').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
             } else if (biliHelper.site === 1) {
-                biliHelper.helperBlock = $('<span class="helper"><div class="v1-bangumi-info-btn" id="bilibili_helper">哔哩哔哩助手</div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></span>');
+                biliHelper.helperBlock = $('<span class="bili-helper"><div class="v1-bangumi-info-btn" id="bilibili_helper">哔哩哔哩助手</div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></span>');
                 biliHelper.helperBlock.find('.v1-bangumi-info-btn').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
+            } else if (biliHelper.site === 3) {
+                biliHelper.helperBlock = $('<span class="bili-helper"><li class="share-btn btn-bilihelper" id="bilibili_helper">哔哩哔哩助手</li><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></span>');
+                biliHelper.helperBlock.find('.btn-bilihelper').click(function() {
+                    biliHelper.helperBlock.toggleClass('active');
+                });
+                let styleLink = document.createElement('link');
+                styleLink.setAttribute('type', 'text/css');
+                styleLink.setAttribute('rel', 'stylesheet');
+                styleLink.setAttribute('href', '//static.hdslb.com/css/core-v5/page-core.css');
+                document.head.appendChild(styleLink);
             }
             let blockInfo = biliHelper.helperBlock.find('.info');
             biliHelper.mainBlock = blockInfo.find('.main');
@@ -454,6 +467,8 @@
                 $('.player-wrapper .arc-toolbar').append(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
+            } else if (biliHelper.site === 3) {
+                $('.bangumi-info .func-module .btn-app').after(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
             initStyle();
@@ -482,7 +497,7 @@
         if (biliHelper.avid) {
             initHelper();
         }
-    } else if (biliHelper.site === 1) {
+    } else if (biliHelper.site === 1 || biliHelper.site === 3) {
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
             let observer = new MutationObserver(function() {
