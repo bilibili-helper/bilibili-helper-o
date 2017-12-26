@@ -241,7 +241,7 @@
 }
 
 #helper-gift-ctl .popup {
-    min-width: 200px;
+    min-width: 300px;
 }
 
 #helper-gift-ctl .popup:after, #helper-gift-ctl .popup:before {
@@ -263,10 +263,24 @@
     right: 16px;
     padding: 3px 6px;
     border: 1px solid #23ade6;
-    border-radius: 3px;
+    border-radius: 0 3px 3px 0;
     font-size: 12px;
     transition: all 0.15s;
     cursor: pointer;
+    z-index: 1;
+}
+#helper-gift-ctl header .send-intimacy {
+    display: inline-block;
+    position: absolute;
+    right: 77px;
+    padding: 3px 6px;
+    border: 1px solid #d6d6d6;
+    border-radius: 3px 0 0 3px;
+    font-size: 12px;
+    transition: all 0.15s;
+    cursor: not-allowed;
+    background-color: #d6d6d6;
+    color: #fff;
 }
 #helper-gift-ctl header .send-all:hover {
     background-color: #23ade6;
@@ -281,7 +295,7 @@
     box-sizing: border-box;
     text-align: left;
     max-width: 320px;
-    margin: 0 10px 0 2px;
+    margin: 0;
     min-width: 150px;
 }
 
@@ -310,6 +324,7 @@
     margin-bottom: 4px;
     margin-left: -4px;
     transition: all 0.3s;
+    user-select: none;
 }
 #helper-gift-ctl .content:hover .send-line {
     opacity: 1;
