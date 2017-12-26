@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: 0 */
-/* global setOption: false, getOption: false, getCSS: false, version: false */
+/* global setOption: false, getOption: false, getCSS: false, version: false, Crc32Engine: false */
 
 let notification = false,
     notificationAvid = {},
@@ -17,7 +17,8 @@ let notification = false,
     bangumi = false,
     CRSF, watchLater = false,
     hasLogin = false,
-    subName = '';
+    subName = '',
+    crcEngine = new Crc32Engine();
 
 
 Live.set = function(n, k, v) {
@@ -852,6 +853,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         downloadNames[request.url.split('?')[0]] = request.filename;
         sendResponse();
         return false;
+    case 'uidLookup':
+        sendResponse({
+            uids: crcEngine.crack(request.user),
+        });
+        return true;
     default:
         sendResponse({
             result: 'unknown',
@@ -1078,7 +1084,6 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
             value: 'attachment; filename*=UTF-8\'\'' + encodeURIComponent(downloadNames[baseUri]),
         });
     }
-    console.warn(modifiedHeaders);
     return {
         responseHeaders: modifiedHeaders,
     };

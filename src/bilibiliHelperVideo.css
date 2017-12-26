@@ -10,12 +10,12 @@
     display: none;
 }
 
-.helper {
+.bili-helper {
     display: inline-block;
     position: relative;
 }
 
-.helper .v1-bangumi-info-btn {
+.bili-helper .v1-bangumi-info-btn {
     padding: 0 15px;
     font-size: 14px;
     border: 1px solid #e5e9ef;
@@ -48,7 +48,7 @@
     width: 980px
 }
 
-.arc-toolbar .helper {
+.arc-toolbar .bili-helper {
     padding: 0 14px;
     border-right: none;
     position: relative;
@@ -59,11 +59,11 @@
     border-right: 1px solid transparent
 }
 
-.arc-toolbar .helper:hover {
+.arc-toolbar .bili-helper:hover {
     color: #00a1d6
 }
 
-.helper .v1-bangumi-info-btn:hover {
+.bili-helper .v1-bangumi-info-btn:hover {
     border-color: #00a1d6;
     color: #00a1d6;
 }
@@ -75,11 +75,11 @@
     }
 }
 
-.arc-toolbar .helper .t {
+.arc-toolbar .bili-helper .t {
     height: 80px
 }
 
-.arc-toolbar .helper .t .icon {
+.arc-toolbar .bili-helper .t .icon {
     width: 60px;
     height: 60px;
     display: inline-block;
@@ -91,12 +91,11 @@
     -webkit-animation-fill-mode: forwards
 }
 
-.arc-toolbar .helper:hover .icon {
+.arc-toolbar .bili-helper:hover .icon {
     -webkit-animation: eating-neko 1s steps(9, end) infinite
 }
 
-.arc-toolbar .helper .info,
-.v1-bangumi-info-operate .helper .info {
+.bili-helper .info {
     height: auto;
     cursor: default;
     transition: .2s all ease-in;
@@ -106,32 +105,30 @@
     background: #fff;
     top: 70px;
     left: -1px;
-    z-index: 100;
+    z-index: 1000;
     line-height: normal;
     width: 310px;
     border: 1px solid #e5e9ef;
     border-top: 0;
     border-radius: 0 0 4px 4px;
     pointer-events: none;
+    white-space: normal;
 }
 
-.arc-toolbar .helper.active,
-.v1-bangumi-info-operate .helper .active {
+.arc-toolbar .bili-helper.active {
     border-radius: 4px 0 0 0;
     border-left: 1px solid #e5e9ef;
     border-right: 1px solid #e5e9ef;
     box-shadow: rgba(0, 0, 0, 0.16) 0 2px 4px;
 }
 
-.arc-toolbar .helper.active .info,
-.v1-bangumi-info-operate .helper.active .info {
+.bili-helper.active .info {
     opacity: 1;
     pointer-events: auto;
     top: 100%;
 }
 
-.arc-toolbar .helper .info .main,
-.v1-bangumi-info-operate .helper .info .main {
+.bili-helper .info .main {
     height: auto;
     padding: 12px;
     line-height: 24px;
@@ -139,55 +136,46 @@
     color: #444;
 }
 
-.arc-toolbar .helper .info .main .section h3,
-.v1-bangumi-info-operate .helper .info .main .section h3 {
+.bili-helper .info .main .section h3 {
     font-weight: 500
 }
 
-.arc-toolbar .helper .info .main .section p,
-.v1-bangumi-info-operate .helper .info .main .section p {
+.bili-helper .info .main .section p {
     color: #666
 }
 
-.arc-toolbar .helper .info .main .section p span,
-.v1-bangumi-info-operate .helper .info .main .section p span {
+.bili-helper .info .main .section p span {
     margin-right: 8px;
     font-size: 12px
 }
 
-.arc-toolbar .helper .info .main .hidden,
-.v1-bangumi-info-operate .helper .info .main .hidden {
+.bili-helper .info .main .hidden {
     display: none!important
 }
 
-.arc-toolbar .helper .info .main .section a.b-btn,
-.v1-bangumi-info-operate .helper .info .main .section a.b-btn {
+.bili-helper .info .main .section a.b-btn {
     padding: 4px 6px;
     line-height: 14px;
     display: inline-block;
     margin: 4px
 }
 
-.arc-toolbar .helper .info .main .section.query>p>div,
-.v1-bangumi-info-operate .helper .info .main .section.query>p>div {
+.bili-helper .info .main .section.query>p>div {
     margin-left: 4px;
 }
 
-.arc-toolbar .helper .info .main .section.query .b-input,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-input {
+.bili-helper .info .main .section.query .b-input {
     width: 260px;
 }
 
-.arc-toolbar .helper .info .main .section.query .b-slt,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt {
+.bili-helper .info .main .section.query .b-slt {
     height: 22px;
     padding: 2px 7px;
     width: 256px;
     position: relative
 }
 
-.arc-toolbar .helper .info .main .section.query .b-slt .txt,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .txt {
+.bili-helper .info .main .section.query .b-slt .txt {
     vertical-align: inherit;
     margin-right: 0;
     font-size: inherit;
@@ -196,42 +184,38 @@
     text-align: left
 }
 
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .b-slt-arrow {
+.bili-helper .info .main .section.query .b-slt .b-slt-arrow {
     display: inline-block;
     height: 6px;
 }
 
-.arc-toolbar .helper .info .main .section.query .b-slt .kw,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .kw {
+.bili-helper .info .main .section.query .b-slt .kw {
     color: #f25d8e;
     margin-right: 0;
     font-weight: bold;
     vertical-align: baseline
 }
 
-.arc-toolbar .helper .info .main .section.query .b-slt .list,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list {
+.bili-helper .info .main .section.query .b-slt .list {
     width: 100%;
     max-height: 200px;
     margin-top: 4px
 }
 
-.arc-toolbar .helper .info .main .section.query .b-slt .list li,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li {
+.bili-helper .info .main .section.query .b-slt .list li {
     width: 260px
 }
-.arc-toolbar .helper .info .main .section.query .b-slt .list li.selected,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li.selected {
+
+.bili-helper .info .main .section.query .b-slt .list li.selected {
     background-color: #00a1d6;
     color: white;
 }
-.arc-toolbar .helper .info .main .section.query .b-slt .list li.error,
-.v1-bangumi-info-operate .helper .info .main .section.query .b-slt .list li.error {
+
+.bili-helper .info .main .section.query .b-slt .list li.error {
     color: gainsboro;
 }
 
-.arc-toolbar .helper .info .version,
-.v1-bangumi-info-operate .helper .info .version {
+.bili-helper .info .version {
     font-size: 10px;
     height: 30px;
     line-height: 30px;
@@ -241,13 +225,23 @@
     color: #444
 }
 
-.arc-toolbar .helper .version .setting,
-.v1-bangumi-info-operate .helper .version .setting {
+.bili-helper .version .setting {
     display: inline-block;
     margin-left: 24px;
     height: 18px;
     width: 40px;
     line-height: 18px;
+}
+
+.share-btn.btn-bilihelper {
+    width: 120px!important;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-size: 14px;
+    color: #6d757a;
+    border: 1px solid #e5e9ef;
+    border-radius: 4px;
 }
 
 #helper_aera {
