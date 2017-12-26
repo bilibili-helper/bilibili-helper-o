@@ -19,11 +19,11 @@
         "lodash.custom.min.js",
         "store.min.js",
         "ocrad.min.js",
-        "bilibili_ASS_Danmaku_Downloader.js",
-        "filename-sanitize.js",
-        "bilibili_injected.js",
-        "bilibili_live.js",
-        "ColPick.js"
+        "bilibili_ASS_Danmaku_Downloader.min.js",
+        "filename-sanitize.min.js",
+        "bilibili_injected.min.js",
+        "bilibili_live.min.js",
+        "ColPick.min.js"
       ],
       "matches": [
         "*://*.bilibili.com/*"
@@ -61,8 +61,8 @@
   "version": "0.9.0",
   "web_accessible_resources": [
     "bilibili-helper.woff",
-    "options.css",
-    "popup.css",
+    "options.min.css",
+    "popup.min.css",
     "imgs/icon-32.png",
     "imgs/loading.gif",
     "imgs/jinkela.png",
@@ -72,8 +72,8 @@
     "options.html",
     "imgs/menu-icon.png",
     "live.css",
-    "live-content-script.js",
-    "bilibiliHelperAd.css",
-    "bilibiliHelperVideo.css"
+    "live-content-script.min.js",
+    "bilibiliHelperAd.min.css",
+    "bilibiliHelperVideo.min.css"
   ]
 }

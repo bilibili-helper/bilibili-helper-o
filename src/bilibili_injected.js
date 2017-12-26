@@ -183,14 +183,14 @@
             command: 'getAd',
         }, function(response) {
             if (response.value === 'on') {
-                inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.css');
+                inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
             }
         });
     }
     removeAd();
 
     function initStyle() {
-        inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.css');
+        inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
         $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
 
@@ -729,31 +729,36 @@
                             let displayUserInfo = function(uid, data) {
                                 biliHelper.comments[index].senderId = uid;
                                 biliHelper.comments[index].senderUsername = parseSafe(data.name);
-                                control.find('.result').html('发送者: <a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">' + parseSafe(data.name) + '</a><div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
+                                control.find('.result span a[data-usercard-mid="' + uid + '"]').text(data.name).after('<div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
                                 let s = document.createElement('script');
                                 s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
                                 document.body.appendChild(s);
                                 s.parentNode.removeChild(s);
                             };
 
-                            let renderSender = function(uid) {
-                                control.find('.result').html('发送者 UID: <a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank">' + uid + '</a>');
-                                let cachedData = sessionStorage.getItem('user/' + uid);
-                                if (cachedData) {
-                                    displayUserInfo(uid, JSON.parse(cachedData));
-                                } else {
-                                    $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
-                                        if (data.code === 0) {
-                                            let cardData = data.data.card;
-                                            sessionStorage.setItem('user/' + uid, JSON.stringify({
-                                                name: cardData.name,
-                                                level_info: {
-                                                    current_level: cardData.level_info.current_level,
-                                                },
-                                            }));
-                                            displayUserInfo(uid, cardData);
-                                        }
-                                    });
+                            let renderSender = function(uids) {
+                                control.find('.result').html('发送者: <span></span>');
+                                for (let uid of uids) {
+                                    control.find('.result span').append('<a href="' + biliHelper.protocol + '//space.bilibili.com/' + uid + '" target="_blank" data-usercard-mid="' + uid + '">UID: ' + uid + '</a><br/>');
+                                    let cachedData = sessionStorage.getItem('user/' + uid);
+                                    if (cachedData) {
+                                        displayUserInfo(uid, JSON.parse(cachedData));
+                                    } else {
+                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
+                                            if (data.code === 0) {
+                                                let cardData = data.data.card;
+                                                sessionStorage.setItem('user/' + uid, JSON.stringify({
+                                                    name: cardData.name,
+                                                    level_info: {
+                                                        current_level: cardData.level_info.current_level,
+                                                    },
+                                                }));
+                                                displayUserInfo(uid, cardData);
+                                            } else if (data.code === -626) {
+                                                control.find('.result span a[data-usercard-mid="' + uid + '"],.result span a[data-usercard-mid="' + uid + '"]+br').remove();
+                                            }
+                                        });
+                                    }
                                 }
                             };
 
@@ -761,16 +766,17 @@
                             if (extracted) {
                                 renderSender(extracted[1]);
                             } else {
-                                $.get('https://biliquery.typcn.com/api/user/hash/' + sender, function(data) {
-                                    if (!data || data.error !== 0 || typeof data.data !== 'object' || !data.data[0].id) {
-                                        control.find('.result').text('查询失败, 发送用户可能已被管理员删除.');
+                                chrome.runtime.sendMessage({
+                                    command: 'uidLookup',
+                                    user: sender,
+                                }, function(result) {
+                                    if (result.uids.length < 0) {
+                                        control.find('.result').text('查询失败.');
                                         item.addClass('error');
                                         biliHelper.comments[index].error = true;
                                     } else {
-                                        renderSender(data.data[0].id);
+                                        renderSender(result.uids);
                                     }
-                                }, 'json').fail(function() {
-                                    control.find('.result').text('查询失败, 无法连接到服务器 :(');
                                 });
                             }
                         });
