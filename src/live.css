@@ -274,13 +274,12 @@
     position: absolute;
     right: 77px;
     padding: 3px 6px;
-    border: 1px solid #d6d6d6;
+    border: 1px solid #eee;
+    color: #eee;
     border-radius: 3px 0 0 3px;
     font-size: 12px;
     transition: all 0.15s;
     cursor: not-allowed;
-    background-color: #d6d6d6;
-    color: #fff;
 }
 #helper-gift-ctl header .send-all:hover {
     background-color: #23ade6;
@@ -474,6 +473,33 @@
     max-height: 178px;
     overflow: auto;
     margin-bottom: 10px;
+}
+.gift-info.not-weared {
+    border: 1px solid #f39c9c;
+    border-radius: 4px;
+    padding: 17px 0 3px;
+    display: block;
+    position: relative;
+}
+.gift-info.not-weared::after{
+    content: '未佩戴';
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 2px;
+    background-color: #ff5858;
+    color: #fff;
+    border-radius: 0 0 4px 0;
+}
+.gift-info .intimacy {
+    text-align: center;
+    line-height: 16px;
+}
+.gift-info .intimacy .fans-medal-item {
+    position: relative;
+    top: -1px;
+    left: -3px;
 }
 .gift-info > .img {
     width: 56px;

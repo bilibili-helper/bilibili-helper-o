@@ -6,9 +6,12 @@
     "globals": {
         "chrome": true
     },
-    "extends": ["eslint:recommended", "google"],
+    "extends": [
+        "eslint:recommended",
+        "google"
+    ],
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 6
     },
     "rules": {
         "block-spacing": 1,
@@ -19,11 +22,19 @@
         "keyword-spacing": 1,
         "max-len": 0,
         "no-control-regex": 0,
-        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
         "one-var": 0,
         "require-jsdoc": 0,
         "space-in-parens": 1,
         "space-infix-ops": 1,
-        "valid-jsdo": 0,
+        "valid-jsdo": 0
     }
 }

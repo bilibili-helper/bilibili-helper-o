@@ -16,7 +16,7 @@
       "all_frames": true,
       "js": [
         "jquery-3.2.1.min.js",
-        "lodash.custom.min.js",
+        "lodash.js",
         "store.min.js",
         "ocrad.min.js",
         "bilibili_ASS_Danmaku_Downloader.js",
