@@ -2149,6 +2149,9 @@
                             ` 共计增加亲密度：${intimacyData.intimacy}⬆ + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`
                         )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
+                    if (!hasMedal) {
+                        infoBox.addClass('no-medal');
+                    }
                     if (hasMedal && !hasWearedMedal) {
                         infoBox.addClass('not-weared');
                     }
@@ -2445,7 +2448,6 @@
                 }).length > 0;
             },
             hasWeared: () => {
-                console.log(Live.roomInfo.info, Live.medal.wearedMedal.target_name);
                 return Live.roomInfo.info.uname === Live.medal.wearedMedal.target_name;
             },
             getMedalList: () => {
@@ -2529,7 +2531,7 @@
                                         Live.watcher.init();
                                     }, 2500);
                                     setTimeout(() => {
-                                        Live.addScriptByFile('live-content-script.js', Live.scriptOptions);
+                                        Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
                                     }, 5000);
                                     Notification.requestPermission();
                                 });

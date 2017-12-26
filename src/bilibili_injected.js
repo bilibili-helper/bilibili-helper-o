@@ -194,7 +194,7 @@
 
     function initStyle() {
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
-        $('.arc-toolbar .helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
+        $('#bilibili_helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
 
     function setWide(mode) {
