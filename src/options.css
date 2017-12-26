@@ -122,13 +122,13 @@ li {
     top: 0;
     border-radius: 2px;
     opacity: 1;
-    width: 400px;
+    width: 380px;
 }
 
 #live_form {
     position: absolute;
     top: 0;
-    left: 424px;
+    left: 404px;
     border-radius: 2px;
     opacity: 1;
     width: 400px;
@@ -146,7 +146,7 @@ li {
 .options_form {
     margin: 0;
     box-shadow: inset 0 4px 2px -3px rgba(0, 0, 0, .2);
-    width: 400px;
+    width: 100%;
     float: left;
 }
 
@@ -265,8 +265,9 @@ input[type="color"] {
 
 #about {
     position: absolute;
-    margin-left: 872px;
+    margin-left: 852px;
     padding: 20px;
+    min-width: 400px;
 }
 
 #about h1 {
@@ -280,7 +281,6 @@ input[type="color"] {
     line-height: 26px;
     text-indent: 2em;
     padding: 5px 10px;
-    min-width: 500px;
 }
 
 #about #update p {

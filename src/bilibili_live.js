@@ -202,7 +202,7 @@
                 happy: ['(｀･ω･´)', '=‿=✧', '●ω●', '(/ ▽ \\)', '(=・ω・=)', '(●\'◡\'●)ﾉ♥', '<(▰˘◡˘▰)>', '(⁄ ⁄•⁄ω⁄•⁄ ⁄)', '(ง,,• ᴗ •,,)ง ✧'],
                 shock: [',,Ծ‸Ծ,,', '(｀･д･´)', 'Σ( ° △ °|||)︴', '┌( ಠ_ಠ)┘', '(ﾟДﾟ≡ﾟдﾟ)!?'],
                 sad: ['∑(っ °Д °;)っ', '＞︿＜', '＞△＜', '●︿●', '(´；ω；`)'],
-                helpless: ['◐▽◑', 'ʅ（´◔౪◔）ʃ', '_(:3 」∠)_', '_(┐「ε:)_', '(/・ω・＼)', '(°▽°)ﾉ'],
+                helpless: ['◐▽◑', 'ʅ（´◔౪◔）ʃ', '_(:3 」∠)_', '_(┐「ε:)_', '(/・ω・＼)', '(°▽°)ﾉ']
             },
             happy: () => {
                 return Live.randomEmoji.list.happy[Math.floor(Math.random() * Live.randomEmoji.list.happy.length)];
@@ -215,7 +215,7 @@
             },
             helpless: () => {
                 return Live.randomEmoji.list.helpless[Math.floor(Math.random() * Live.randomEmoji.list.helpless.length)];
-            },
+            }
         };
         Live.countdown = class countdown {
             constructor(param) {
@@ -267,8 +267,8 @@
                     'gift': false,
                     'system': false,
                     'tv': false,
-                    'sys_gift': true,
-                },
+                    'sys_gift': true
+                }
             },
             watcher: (msg) => {
                 console.warn('%c监控:' + msg, 'color:#FFFFFF;background-color:#4fc1e9;padding:5px;border-radius:7px;line-height:30px;');
@@ -343,7 +343,7 @@
                     // };
                     console.warn('%c系统通告:' + json.tips + ' 地址:' + json.url, 'color:#FFFFFF;background-color:#e74e8f;padding:5px;border-radius:7px;line-height:30px;');
                 }
-            },
+            }
         };
         Live.createPanel = (parentDOM, toggleDom, eventName, className, id, callback) => {
             let openEvent, closeEvent;
@@ -432,7 +432,7 @@
             init: () => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'doSign',
+                    key: 'doSign'
                 }, (response) => {
                     if (response['value'] === 'on') {
                         let username = store.get('bilibili_helper_userInfo')['username'];
@@ -449,7 +449,7 @@
                                 let o;
                                 (o = store.get('bilibili_helper_doSign'))[username] = {
                                     today: true,
-                                    date: new Date().getDate(),
+                                    date: new Date().getDate()
                                 };
                                 store.set('bilibili_helper_doSign', o);
                             }
@@ -481,7 +481,7 @@
                             // noinspection JSDuplicatedDeclaration
                             msg = new Notification('签到成功', {
                                 body: '您获得了' + e.data.text,
-                                icon: '//static.hdslb.com/live-static/images/7.png',
+                                icon: '//static.hdslb.com/live-static/images/7.png'
                             });
                             var o;
                             (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
@@ -494,7 +494,7 @@
                         } else if (e.code === -500) {
                             msg = new Notification(e.msg, {
                                 body: '不能重复签到',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
+                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif'
                             });
                             var o;
                             (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
@@ -505,7 +505,7 @@
                         } else {
                             msg = new Notification(e.msg, {
                                 body: '',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif',
+                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif'
                             });
                             setTimeout(() => {
                                 msg.close();
@@ -513,7 +513,7 @@
                         }
                     });
                 }
-            },
+            }
         };
         Live.currentRoom = [];
         Live.treasure = {
@@ -533,7 +533,7 @@
                 'S': 6,
                 's': 6,
                 'i': 1,
-                'I': 1,
+                'I': 1
             },
             silverSeed: false, // current silver
             allowCtrl: false,
@@ -548,7 +548,7 @@
                 startTime: '',
                 endTime: '',
                 minute: '',
-                award: '',
+                award: ''
             },
             captcha: {
                 src: '',
@@ -561,7 +561,7 @@
                         Live.treasure.captchaBoxImg.attr('src', base64Text);
                     });
                     Live.treasure.captchaBoxInput.val('');
-                },
+                }
             },
             awardBtn: {
                 text: '领取',
@@ -585,20 +585,20 @@
                 restore: () => {
                     clearInterval(Live.treasure.awardBtn.interval);
                     Live.treasure.awardBtn.text = Live.treasure.awardBtn.bk;
-                },
+                }
             },
             waitingEmoji: Live.randomEmoji.happy(),
             panelEmoji: Live.randomEmoji.helpless(),
             init: () => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'autoTreasure',
+                    key: 'autoTreasure'
                 }, (res) => {
                     if (res['value'] === 'on') {
                         setTimeout(() => {
                             // Live.scriptOptions['treasure'] = true;
                             chrome.runtime.sendMessage({
-                                command: 'getTreasure',
+                                command: 'getTreasure'
                             }, (response) => {
 
                                 // let msg = new Notification('辅助领瓜子功能已经启动', {
@@ -636,7 +636,7 @@
                                 Live.treasure.captchaBoxInputCtl.append(
                                     Live.treasure.captchaBoxInput,
                                     Live.treasure.captchaBoxImg,
-                                    Live.treasure.captchaBoxRefreshButton,
+                                    Live.treasure.captchaBoxRefreshButton
                                 );
                                 Live.treasure.getCaptcha((base64Text) => {
                                     Live.treasure.captchaBoxImg.attr('src', base64Text);
@@ -644,11 +644,11 @@
                                 Live.treasure.captchaBoxSubmitButtonBox.append(Live.treasure.captchaBoxSubmitButton);
                                 Live.treasure.captchaBoxForm.append(
                                     Live.treasure.captchaBoxInputCtl,
-                                    Live.treasure.captchaBoxSubmitButtonBox,
+                                    Live.treasure.captchaBoxSubmitButtonBox
                                 ).attr('name', 'treasure-box-captcha-form');
                                 Live.treasure.captchaBox.append(
                                     Live.treasure.captchaBoxTitle,
-                                    Live.treasure.captchaBoxForm,
+                                    Live.treasure.captchaBoxForm
                                 );
                                 Live.treasure.statusText.after(Live.treasure.captchaBox);
 
@@ -734,7 +734,7 @@
                                 Live.treasure.checkNewTask();
                                 $(window).on('beforeunload', () => {
                                     chrome.runtime.sendMessage({
-                                        command: 'delTreasure',
+                                        command: 'delTreasure'
                                     });
                                 });
                             });
@@ -747,7 +747,7 @@
                 Live.treasure.infoSection.find('.slide-btn.right')[page === maxPage ? 'hide' : 'show']();
                 Live.treasure.infoSection.find('.round-count').text(`第 ${page} / ${Live.treasure.taskInfo.max_times} 轮`);
                 Live.treasure.treasureCtrl.find('.awarding-panel .info-section .box-slide .round-ctnr').css({
-                    transform: `translate(-${200 * (page - 1)}px, 0px)`,
+                    transform: `translate(-${200 * (page - 1)}px, 0px)`
                 });
             },
             submit: () => {
@@ -873,7 +873,7 @@
                 $.get('//api.live.bilibili.com/FreeSilver/getAward', {
                     time_start: time_start,
                     time_end: time_end,
-                    captcha: captcha,
+                    captcha: captcha
                 }, () => {
                 }, 'json').promise().done((result) => {
                     if (result.code != 0) {
@@ -896,7 +896,7 @@
 
                     let msg = new Notification('自动领取成功', {
                         body: '领取了' + Live.treasure.taskInfo.silver + '个瓜子',
-                        icon: '//static.hdslb.com/live-static/images/7.png',
+                        icon: '//static.hdslb.com/live-static/images/7.png'
                     });
                     setTimeout(() => {
                         msg.close();
@@ -942,7 +942,7 @@
                         // Live.treasure.treasureBox.find('.treasure-box').click();
                         Live.treasure.treasureCtrl.find('.bg-cover').click();
                         Live.treasure.captcha.refresh();
-                    },
+                    }
                 });
                 Live.treasure.allowCtrl = true;
             },
@@ -975,7 +975,7 @@
                 xhr.open('GET', '//api.live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now());
                 xhr.responseType = 'blob';
                 xhr.send();
-            },
+            }
         };
         Live.chat = {
             maxLength: 20,
@@ -989,44 +989,44 @@
                 'cyan': '0x00fffc',
                 'green': '0x7eff00',
                 'yellow': '0xffed4f',
-                'orange': '0xff9800',
+                'orange': '0xff9800'
             },
             danmuMode: {'top': 5, 'scroll': 1},
             hideStyle: {
                 chat: {
                     title: '聊天内容',
                     css: '.chat-item.danmaku-item{display:none;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 gift: {
                     title: '礼物信息',
                     css: '.chat-item.gift-item{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 small: {
                     title: '小型标志',
                     css: '.chat-item:not(.system-msg) > a{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 vipEnterMsg: {
                     title: '进场消息',
                     css: '.chat-item.welcome-msg,.chat-item.welcome-guard{display: none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 liveTitleIcon: {
                     title: '成就头衔',
                     css: '.chat-item .title-label{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 mediaIcon: {
                     title: '粉丝勋章',
                     css: '.chat-item .fans-medal-item-ctnr{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 userLevel: {
                     title: '用户等级',
                     css: '.chat-item .user-level-icon{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 /*chatBg: {
                     title: '聊天背景',
@@ -1036,13 +1036,13 @@
                 superGift: {
                     title: '礼物连击',
                     css: '#my-dear-haruna-vm{display:none !important;}',
-                    value: 'off',
+                    value: 'off'
                 },
                 announcement: {
                     title: '系统通告',
                     css: '.chat-item.system-msg{display:none !important;}',
-                    value: 'off',
-                },
+                    value: 'off'
+                }
             },
             displayOption: [],
             init: () => {
@@ -1067,7 +1067,7 @@
                 // });
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'chatDisplay',
+                    key: 'chatDisplay'
                 }, (response) => {
                     if (response['value'] === 'on') {
                         Live.chat.initChatDisplay(true);
@@ -1098,7 +1098,7 @@
                 Live.scriptOptions['chat'] = {
                     colorValue: Live.chat.colorValue,
                     danmuMode: Live.chat.danmuMode,
-                    maxLength: Live.chat.maxLength,
+                    maxLength: Live.chat.maxLength
                 };
 
                 // init has finished
@@ -1169,7 +1169,7 @@
             initChatDisplay: (isInit) => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'displayOption',
+                    key: 'displayOption'
                 }, (response) => {
                     let local = store.get('bilibili_helper_chat_display')[Live.roomId] || [];
                     let local_option = local.length ? local : [];
@@ -1227,7 +1227,7 @@
                 let part = parseInt(text.length / Live.chat.maxLength);
                 let rest = part > 0 ? text.length % Live.chat.maxLength : 0;
                 Live.chat.counter.text(text.length + ' / ' + (part === 0 ? 1 : part) + ' + ' + rest);
-            },
+            }
         };
         Live.notise = {
             init: () => {
@@ -1243,7 +1243,7 @@
                         if ($(e.currentTarget).find('i').hasClass('favourited')) {
                             chrome.runtime.sendMessage({
                                 command: 'setNotFavourite',
-                                id: upInfo.roomId,
+                                id: upInfo.roomId
                             }, (response) => {
                                 if (response.data) {
                                     notiseBtn.find('span').html('特别关注');
@@ -1253,7 +1253,7 @@
                         } else {
                             chrome.runtime.sendMessage({
                                 command: 'setFavourite',
-                                upInfo: upInfo,
+                                upInfo: upInfo
                             }, (response) => {
                                 if (response.data) {
                                     notiseBtn.find('span').html('已特别关注');
@@ -1265,7 +1265,7 @@
                         $(e.currentTarget).attr('title', '关注之后再特别关注会在主播开播时进行推送哦' + Live.randomEmoji.happy());
                     });
                     chrome.runtime.sendMessage({
-                        command: 'getFavourite',
+                        command: 'getFavourite'
                     }, (response) => {
                         if (response.data.indexOf(parseInt(Live.roomId)) != -1) {
                             notiseBtn.find('span').html('已特别关注');
@@ -1274,7 +1274,7 @@
                     });
                     $('.attend-button').find('.left-part').after(notiseBtn);
                 });
-            },
+            }
         };
         Live.smallTV = {
             tvList: {},
@@ -1287,7 +1287,7 @@
                 '4': {title: '喵娘'},
                 '5': {title: '便当'},
                 '6': {title: '银瓜子'},
-                '7': {title: '辣条'},
+                '7': {title: '辣条'}
             },
             init: () => {
                 Live.smallTV.reward = store.get('bilibili_helper_tvs_reward');
@@ -1304,7 +1304,7 @@
             get: (roomId) => {
                 $.getJSON('/SmallTV/index', {
                     roomid: roomId,
-                    _: (new Date()).getTime(),
+                    _: (new Date()).getTime()
                 }).promise().done((result) => {
                     if (result.code == 0) { // 正在抽奖中
                         if (result.data.unjoin.length || result.data.join.length) {
@@ -1320,7 +1320,7 @@
                             var unjoin = result.data.unjoin;
                             if (Live.smallTV.tvList[roomId] == undefined) Live.smallTV.tvList[roomId] = {
                                 'tv': [],
-                                'iter': 0,
+                                'iter': 0
                             };
                             for (var i = 0; i < unjoin.length; ++i) {
                                 var tv = unjoin[i];
@@ -1343,7 +1343,7 @@
             notify: (roomId) => {
                 $.getJSON('/SmallTV/index', {
                     roomid: roomId,
-                    _: (new Date()).getTime(),
+                    _: (new Date()).getTime()
                 }).promise().done((result) => {
                     if (result.code == 0) { // 正在抽奖中
                         if (result.data.unjoin.length || result.data.join.length) {
@@ -1359,14 +1359,14 @@
                             var unjoin = result.data.unjoin;
                             if (Live.smallTV.tvList[roomId] == undefined) Live.smallTV.tvList[roomId] = {
                                 'tv': [],
-                                'iter': 0,
+                                'iter': 0
                             };
                             if (unjoin.length > 0) {
                                 chrome.runtime.sendMessage({
                                     command: 'tvNotification',
                                     data: {
-                                        roomId: roomId,
-                                    },
+                                        roomId: roomId
+                                    }
                                 }, (response) => {
                                 });
                             }
@@ -1376,7 +1376,7 @@
                     Live.smallTV.notify(roomId);
                 });
 
-            },
+            }
             /*join: function(roomId, tvId) {
                 $.getJSON('/SmallTV/join', { roomid: roomId, _: (new Date()).getTime(), id: tvId }).promise().then(function(result) {
                     if (result.code == 0 && result.data.status == 1) { // 参加成功
@@ -1458,27 +1458,27 @@
         Live.watcher = {
             able: false,
             options: {
-                tv: false,
+                tv: false
                 // lottery: false,
             },
             notifyStatus: false,
             notifyOptions: {
-                tv: false,
+                tv: false
                 // lottery: false,
             },
             panelDOM: {
-                ty: undefined,
+                ty: undefined
                 // lottery: undefined,
             },
             init: (callback) => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'watcher',
+                    key: 'watcher'
                 }, (res) => {
                     if (res['value'] === 'on') {
                         setTimeout(() => {
                             chrome.runtime.sendMessage({
-                                command: 'getWatcherRoom',
+                                command: 'getWatcherRoom'
                             }, (response) => {
                                 if (Live.mobileVerified) {
                                     if (response['data'].roomId === undefined) {
@@ -1492,13 +1492,13 @@
                                                     roomShortId: Live.roomInfo.short_id,
                                                     roomTitle: data.data.ROOMTITLE,
                                                     upName: data.data.ANCHOR_NICK_NAME,
-                                                    url: location.href,
-                                                },
+                                                    url: location.href
+                                                }
                                             });
                                         });
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
-                                            key: 'watchList',
+                                            key: 'watchList'
                                         }, (response) => {
                                             let watchList = response['value'] ? JSON.parse(response['value']) : [];
                                             Live.scriptOptions['watcher'] = [];
@@ -1514,7 +1514,7 @@
                                             $(window).on('beforeunload', (e) => {
                                                 // e.returnValue = "这个直播间已经开启抽奖监控，真的要关闭吗？";
                                                 chrome.runtime.sendMessage({
-                                                    command: 'delWatcherRoom',
+                                                    command: 'delWatcherRoom'
                                                 });
                                                 // return e.returnValue;
                                             });
@@ -1542,13 +1542,13 @@
                                         });
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
-                                            key: 'watchNotify',
+                                            key: 'watchNotify'
                                         }, (response) => {
                                             Live.watcher.notifyStatus = response['value'] === 'on';
                                         });
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
-                                            key: 'watchNotifyList',
+                                            key: 'watchNotifyList'
                                         }, (response) => {
                                             let notifyOptionsList = response['value'] ? JSON.parse(response['value']) : [];
                                             Live.each(notifyOptionsList, (i) => {
@@ -1563,7 +1563,7 @@
                                     } else {
                                         chrome.runtime.sendMessage({
                                             command: 'getOption',
-                                            key: 'watchList',
+                                            key: 'watchList'
                                         }, (response) => {
                                             let watchList = response['value'] ? JSON.parse(response['value']) : [];
                                             Live.each(watchList, (i) => {
@@ -1588,7 +1588,7 @@
             initData: () => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'watcherDataClean',
+                    key: 'watcherDataClean'
                 }, (res) => {
                     let oDate = store.get('bilibili_helper_watcher_data_date');
                     let currentYear = new Date().getFullYear(),
@@ -1697,7 +1697,7 @@
                 // if (Live.watcher.notifyStatus && Live.watcher.notifyOptions[type]) {
                 let msg = new Notification(title, {
                     body: body,
-                    icon: icon,
+                    icon: icon
                 });
                 setTimeout(() => {
                     msg.close();
@@ -1756,7 +1756,7 @@
                     }
                     Live.watcher.panelDOM[type] && Live.watcher.panelDOM[type].find('.reward-counter').text(counter + ' 次');
                 }
-            },
+            }
         };
         Live.giftpackage = {
             giftPackageStatus: 0, // 0: 没有道具 1: 包裹中有赠送的新道具 2:包裹里非新增道具
@@ -1783,12 +1783,12 @@
                         Live.giftpackage.giftPackageStatus = 2;
                         // Live.giftpackage.openGiftPackagePanel(); // 打开包裹
                     }, 380);
-                },
+                }
             },
             init: () => {
                 chrome.runtime.sendMessage({
                     command: 'getOption',
-                    key: 'giftpackage',
+                    key: 'giftpackage'
                 }, (res) => {
 
                     if (res['value'] === 'on') {
@@ -1894,7 +1894,7 @@
                     // 包裹为空时显示dom
                     Live.giftpackage.mainPopupBoxEmptyBox = $('<div />').append(
                         $('<div />').addClass('des').text('包裹中没有道具哦～'),
-                        $('<img />').addClass('img').attr('src', '//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/404.6c08e48.png'),
+                        $('<img />').addClass('img').attr('src', '//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/404.6c08e48.png')
                     ).hide();
 
                     // 拼装主窗口
@@ -1904,7 +1904,7 @@
                     Live.giftpackage.mainPopupBoxInner.append(
                         Live.giftpackage.mainPopupBoxHeader,
                         Live.giftpackage.mainPopupBoxGiftBox,
-                        Live.giftpackage.mainPopupBoxEmptyBox,
+                        Live.giftpackage.mainPopupBoxEmptyBox
                     );
                     Live.giftpackage.ctl.find('.wrap').remove();
                     Live.giftpackage.ctl.append(Live.giftpackage.mainBox);
@@ -1928,7 +1928,7 @@
                                         .data('giftData', gift);
                                     const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
                                     icon.css({
-                                        'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${index}.png")`,
+                                        'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${index}.png")`
                                     });
                                     const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.day);
                                     const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
@@ -1950,14 +1950,14 @@
                         const giftData = $(this).data('giftData');
                         Live.giftpackage.sendPanel.createPanel({
                             data: giftData,
-                            single: true,
+                            single: true
                         });
                     });
                     Live.giftpackage.sendAllBtn.off('click').on('click', function (e) {
                         const giftData = $(this).data('giftsData');
                         Live.giftpackage.sendPanel.createPanel({
                             data: giftData,
-                            all: true,
+                            all: true
                         });
                     });
                     Live.giftpackage.sendIntimacyBtn.off('click').on('click', function (e) {
@@ -1965,10 +1965,10 @@
                         const giftData = $(this).data('giftsData');
                         Live.giftpackage.sendPanel.createPanel({
                             data: giftData,
-                            all: true,
+                            all: true
                         });
                     });
-                },
+                }
             },
             sendPanel: {
                 showState: false,
@@ -2026,7 +2026,7 @@
                     $('body').append(Live.giftpackage.linkPopupCtl);
                     Live.giftpackage.linkPopupCtlInner.append(
                         Live.giftpackage.linkPopupCtlMerge,
-                        Live.giftpackage.linkPopupCtlBox,
+                        Live.giftpackage.linkPopupCtlBox
                     );
                     Live.giftpackage.linkPopupCtlBox.append(Live.giftpackage.linkBox);
                     Live.giftpackage.linkBoxHeader.append(Live.giftpackage.linkBoxH2);
@@ -2036,11 +2036,11 @@
                     Live.giftpackage.linkBox.append(
                         Live.giftpackage.linkBoxHeader,
                         Live.giftpackage.linkBoxContentWapper,
-                        Live.giftpackage.linkBoxClose,
+                        Live.giftpackage.linkBoxClose
                     );
                     Live.giftpackage.linkBoxGiftSubmitBox.append(
                         Live.giftpackage.linkBoxGiftSubmitInput,
-                        Live.giftpackage.linkBoxGiftSubmitButton,
+                        Live.giftpackage.linkBoxGiftSubmitButton
                     );
                 },
                 createNumberBox: (inputDOM, maxNum) => {
@@ -2088,7 +2088,7 @@
                     console.log(data);
                     const icon = Live.giftpackage.linkBoxGiftInfoIcon.clone()
                         .css({
-                            'background-image': `url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-gif/gift-${data.gift_id}.gif)`,
+                            'background-image': `url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-gif/gift-${data.gift_id}.gif)`
                         });
                     const desc = Live.giftpackage.linkBoxGiftInfoDesc.clone().text(`您的包裹中还剩 ${data.gift_num} 个可用`);
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(icon, desc);
@@ -2115,7 +2115,7 @@
                                 .data('giftData', gift);
                             const icon = Live.giftpackage.mainPopupBoxGiftItemIcon.clone();
                             icon.css({
-                                'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${gift.gift_id}.png")`,
+                                'background-image': `url("//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-png/gift-${gift.gift_id}.png")`
                             });
                             const expires = Live.giftpackage.mainPopupBoxGiftItemExpires.clone().text(gift.day);
                             const num = Live.giftpackage.mainPopupBoxGiftItemNum.clone().text(gift.gift_num);
@@ -2146,8 +2146,8 @@
                         $('<div class="intimacy"></div>').append(
                             `${hasMedal ? '' : '无勋章'}`,
                             !hasMedal && hasWearedMedal ? medalDOM : '',
-                            ` 共计增加亲密度：${intimacyData.intimacy}⬆ + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`,
-                        ),
+                            ` 共计增加亲密度：${intimacyData.intimacy}⬆ + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`
+                        )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
                     if (hasMedal && !hasWearedMedal) {
                         infoBox.addClass('not-weared');
@@ -2254,7 +2254,7 @@
                         biz_id: Live.roomInfo.room_id,
                         rnd: rnd,
                         storm_beat_id: 0,
-                        csrf_token: Live.getCookie('bili_jct') || '',
+                        csrf_token: Live.getCookie('bili_jct') || ''
                     }, function (result) {
                         Live.giftpackage.sendPanel.successCallback(giftData, result, submitBtnDOM, inputDOM);
                     }, 'json').fail(function (result) {
@@ -2309,7 +2309,7 @@
                                 uname: json.uname,
                                 num: json.gift_num,
                                 giftName: json.gift_name,
-                                giftId: json.gift_id,
+                                giftId: json.gift_id
                             };
 
                             giftTarget.innerHTML = '<div class="penury-gift-item v-middle a-move-in-top">' +
@@ -2350,7 +2350,7 @@
                     } else {
                         submitBtnDOM && Live.liveToast(submitBtnDOM, result.msg + ' ' + Live.randomEmoji.sad(), 'error');
                     }
-                },
+                }
             },
             giftFilter: {},
             sortGifts: (giftpackageData) => {
@@ -2412,7 +2412,7 @@
                         intimacy += (Live.giftpackage.giftList[o.gift_id].price / 100) * o.gift_num;
                         return o.expireatDate;
                     }]),
-                    intimacy,
+                    intimacy
                 };
             },
             getGiftPackage: () => { // get package data
@@ -2433,7 +2433,7 @@
                         Live.giftpackage.giftList[e.id] = e;
                     });
                 }, 'json').promise();
-            },
+            }
         };
         Live.medal = {
             medalList: {},
@@ -2456,7 +2456,7 @@
                     source: 1,
                     uid: Live.user.mid,
                     target_id: Live.roomId,
-                    csrf_token: Live.getCookie('bili_jct') || '',
+                    csrf_token: Live.getCookie('bili_jct') || ''
                 }).promise();
             },
             wearMedal: (medal_id) => {
@@ -2478,7 +2478,7 @@
             init: () => {
                 Live.medal.updateMedalList();
                 Live.medal.updateWearedMedal();
-            },
+            }
         };
         Live.init = {
             do: () => {
@@ -2492,7 +2492,7 @@
 
                             chrome.runtime.sendMessage({
                                 command: 'getOption',
-                                key: 'version',
+                                key: 'version'
                             }, (response) => {
                                 Live.version = response.value;
                                 let version = store.get('bilibili_helper_version');
@@ -2544,7 +2544,7 @@
                 if (l.length) {
                     l.remove();
                 }
-                Live.init.inject_css('bilibiliHelperLive', 'live.css');
+                Live.init.inject_css('bilibiliHelperLive', 'live.min.css');
             },
             inject_css: (name, filename) => {
                 let styleLink = document.createElement('link');
@@ -2560,10 +2560,10 @@
             },
             ad: () => {
                 chrome.runtime.sendMessage({
-                    command: 'getAd',
+                    command: 'getAd'
                 }, (response) => {
                     if (response.value === 'on') {
-                        Live.init.inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.css');
+                        Live.init.inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
                     }
                 });
             },
@@ -2577,7 +2577,7 @@
                             Live.giftList[giftId] = {
                                 title: gift.attr('data-title'),
                                 type: gift.attr('data-type'),
-                                description: gift.attr('data-desc'),
+                                description: gift.attr('data-desc')
                             };
                         }
                     }
@@ -2648,7 +2648,7 @@
                         let userData = user.data;
                         $.ajax({
                             dataType: 'json',
-                            url: '//space.bilibili.com/ajax/member/MyInfo',
+                            url: '//space.bilibili.com/ajax/member/MyInfo'
                         }).promise().done((res) => {
                             if (res.data && res.data.mobile_verified === 1) {
                                 Live.mobileVerified = 1;
@@ -2668,7 +2668,7 @@
                         store.remove('bilibili_helper_userInfo');
                     }
                 });
-            },
+            }
         };
         Live.init.do();
     }

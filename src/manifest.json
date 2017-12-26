@@ -16,7 +16,7 @@
       "all_frames": true,
       "js": [
         "jquery-3.2.1.min.js",
-        "lodash.js",
+        "lodash.min.js",
         "store.min.js",
         "ocrad.min.js",
         "bilibili_ASS_Danmaku_Downloader.min.js",
@@ -71,7 +71,7 @@
     "imgs/icon.png",
     "options.html",
     "imgs/menu-icon.png",
-    "live.css",
+    "live.min.css",
     "live-content-script.min.js",
     "bilibiliHelperAd.min.css",
     "bilibiliHelperVideo.min.css"
