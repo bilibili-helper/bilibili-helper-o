@@ -5,7 +5,7 @@
 [![Chrome Webstore Downloads](https://img.shields.io/chrome-web-store/d/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
 [![Website](https://img.shields.io/website-up-down-green-red/http/bilihelper.guguke.net.svg)](https://bilihelper.guguke.net/)
 
-Copyright (c) 2018 [Zac Yu](mailto:zacyu@google.com), Google Inc., [ruo](mailto:jjj201200@gmail.com)
+Copyright (c) 2018 [Zac Yu](mailto:me@zacyu.com), Google LLC, [ruo](mailto:jjj201200@gmail.com)
 
 An auxiliary extension for Bilibili (bilibili.com) which allows users to bypass playback restrictions, replace video players and use shortcuts.
 
