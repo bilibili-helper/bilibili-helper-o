@@ -54,10 +54,7 @@
         32: '清晰',
         16: '流畅',
     };
-    let biliHelper = {
-        playUrls: {},
-        playQualities: [],
-    };
+    let biliHelper = {};
     biliHelper.eval = function(fn) {
         let Fn = Function;
         return new Fn('return ' + fn)();
@@ -141,10 +138,8 @@
         biliHelper.site = 2;
     } else if (location.hostname === 'bangumi.bilibili.com') {
         biliHelper.site = 1;
-        biliHelper.sameVideo = false;
     } else if (document.location.pathname.indexOf('/bangumi/') === 0) {
         biliHelper.site = 3;
-        biliHelper.sameVideo = false;
     } else if (location.hostname === 'www.bilibili.com') {
         biliHelper.site = 0;
     } else {
@@ -352,6 +347,8 @@
         });*/
     };
     let initHelper = function() {
+        biliHelper.playUrls = {};
+        biliHelper.playQualities = [];
         biliHelper.videoPic = $('img.cover_image').attr('src');
         biliHelper.totalPage = $('#dedepagetitles option').length;
         $('.v1-bangumi-info-operate .helper').remove();
@@ -409,6 +406,9 @@
                     });
                 },
             };
+            if (biliHelper.helperBlock) {
+                biliHelper.helperBlock.remove();
+            }
             if (biliHelper.site === 0) {
                 biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
                 biliHelper.helperBlock.find('.t').click(function() {
@@ -497,6 +497,15 @@
         if (biliHelper.avid) {
             initHelper();
         }
+        window.addEventListener('hashchange', function() {
+            let hashPage = (/page=([0-9]+)/).exec(document.location.hash);
+            if (hashPage && typeof hashPage === 'object' && !isNaN(hashPage[1])) {
+                hashPage = parseInt(hashPage[1]);
+            }
+            if (hashPage && hashPage !== biliHelper.page) {
+                initHelper();
+            }
+        }, false);
     } else if (biliHelper.site === 1 || biliHelper.site === 3) {
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
@@ -836,28 +845,6 @@
         localStorage.removeItem('bilimac_player_type');
         biliHelper.replacePlayer = false;
         biliHelper.work();
-
-        window.addEventListener('hashchange', function() {
-            let hashPage = (/page=([0-9]+)/).exec(document.location.hash);
-            if (hashPage && typeof hashPage === 'object' && !isNaN(hashPage[1])) {
-                hashPage = parseInt(hashPage[1]);
-            }
-            if (hashPage && hashPage !== biliHelper.page) {
-                biliHelper.page = hashPage;
-                biliHelper.playUrls = {};
-                biliHelper.playQualities = [];
-                biliHelper.mainBlock.infoSection.html('<h3>视频信息</h3><p><span></span><span>aid: ' + biliHelper.avid + '</span><span>pg: ' + biliHelper.page + '</span></p>');
-                biliHelper.mainBlock.downloaderSection.html('<h3>视频下载</h3><p><span></span>视频地址获取中，请稍等…</p>');
-                biliHelper.mainBlock.querySection.html('<h3>弹幕发送者查询</h3><p><span></span>正在加载全部弹幕, 请稍等…</p>');
-                if (biliHelper.mainBlock.commentSection) {
-                    biliHelper.mainBlock.commentSection.remove();
-                }
-                if (biliHelper.mainBlock.errorSection) {
-                    biliHelper.mainBlock.errorSection.remove();
-                }
-                biliHelper.work();
-            }
-        }, false);
     };
 
     function getNiceSectionFilename(avid, page, totalPage, idx, numParts) {
