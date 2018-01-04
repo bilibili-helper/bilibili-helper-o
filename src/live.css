@@ -44,29 +44,28 @@
     animation: jinkela-push 0.5s steps(5, end) forwards;
 }
 
-.attention-btn-ctrl .mid-part {
+.attention-btn-ctnr .fav-part {
     background-color: #4fc1e9;
     color: #fff;
-    float: left;
     cursor: pointer;
-    -webkit-user-select: none;
     width: 90px;
-    height: 26px;
-    padding: 0 5px;
-    line-height: 26px;
-    font-size: 12px;
+    height: 22px;
+    line-height: 20px;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
-    box-sizing: border-box;
-    box-shadow: 0 0 .1em .1em #ddd
+    border-radius: 4px 0 0 4px;
+}
+.attention-btn-ctnr .fav-part .follow-text{
+    padding-left: 3px;
 }
 
-.attention-btn-ctrl .mid-part:hover {
+.attention-btn-ctnr .fav-part:hover {
     background-color: #61c7eb
 }
-
+.attention-btn-ctnr .left-part {
+    border-radius: 0 !important;
+}
 .room-ctrl {
     position: absolute;
     right: 10px
@@ -241,7 +240,7 @@
 }
 
 #helper-gift-ctl .popup {
-    min-width: 300px;
+    min-width: 320px;
 }
 
 #helper-gift-ctl .popup:after, #helper-gift-ctl .popup:before {
@@ -506,6 +505,9 @@
 .gift-info .intimacy {
     text-align: center;
     line-height: 16px;
+}
+.gift-info .intimacy > div {
+    margin-bottom: 4px;
 }
 .gift-info .intimacy .up{
     color: #ff5858;
