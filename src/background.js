@@ -500,15 +500,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
         chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
-            activeTabIds.push(tabs[0].index);
+            if (activeTabIds.indexOf(tabs[0].index) < 0) {
+                activeTabIds.push(tabs[0].index);
+            }
+            sendResponse({
+                autowide: getOption('autowide'),
+                version: version,
+                macplayer: getOption('macplayer'),
+                autooffset: getOption('autooffset'),
+                tabId: tabs[0].index,
+            });
         });
-        sendResponse({
-            // replace: getOption('replace'),
-            autowide: getOption('autowide'),
-            version: version,
-            macplayer: getOption('macplayer'),
-            autooffset: getOption('autooffset'),
-        });
+        return true;
+    case 'delTabId':
+        if (activeTabIds.indexOf(request.tabId) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+        }
         return true;
     case 'cidHack':
         if (isNaN(request.cid)) {
@@ -1068,7 +1075,6 @@ chrome.extension.onRequest.addListener(function(request, sender, callback) {
 });
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    console.warn(activeTabIds, details.tabId);
     if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
@@ -1115,7 +1121,6 @@ function receivedHeaderModifier(details) {
     });
     if (!hasCORS && watchLater) {
         // details.responseHeaders['Access-Control-Allow-Origin']
-        // console.warn(details.responseHeaders);
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Credentials',
             value: 'true',
