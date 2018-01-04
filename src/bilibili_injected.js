@@ -364,14 +364,6 @@
         chrome.runtime.sendMessage({
             command: 'init',
         }, function(response) {
-            chrome.tabs.query({currentWindow: true, active: true},
-                (tabArray) => {
-                    chrome.runtime.sendMessage({
-                        command: 'setActiveTab',
-                        tabId: tabArray[0],
-                    });
-                }
-            );
             // biliHelper.playerConfig = response.playerConfig;
             biliHelper.version = response.version;
             biliHelper.autowide = response.autowide;

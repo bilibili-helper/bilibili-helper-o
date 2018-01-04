@@ -499,6 +499,9 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
+        chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
+            activeTabIds.push(tabs[0].index);
+        });
         sendResponse({
             // replace: getOption('replace'),
             autowide: getOption('autowide'),
@@ -592,7 +595,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
         return true;
     case 'setNotFavourite':
-        console.warn(request);
         sendResponse({
             data: setNotFavourite(request.id),
         });
@@ -632,9 +634,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 videoInfo: avInfo,
             });
         });
-        return true;
-    case 'setActiveTab':
-        activeTabIds.push(request.tabId);
         return true;
     /*
     case 'getDownloadLink': {
@@ -1064,8 +1063,12 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
     urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
 */
+chrome.extension.onRequest.addListener(function(request, sender, callback) {
+    const tabId = sender.tab.id;
+});
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
+    console.warn(activeTabIds, details.tabId);
     if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
