@@ -21,7 +21,7 @@ let notification = false,
     crcEngine = new Crc32Engine(),
     activeTabIds = [];
 
-Live.set = function (n, k, v) {
+Live.set = function(n, k, v) {
     if (!window.localStorage || !n) {
         return;
     }
@@ -38,7 +38,7 @@ Live.set = function (n, k, v) {
     }
 };
 
-Live.get = function (n, k, v) {
+Live.get = function(n, k, v) {
     if (!window.localStorage || !n) {
         return;
     }
@@ -60,7 +60,7 @@ Live.get = function (n, k, v) {
     return l[k];
 };
 
-Live.del = function (n, k) {
+Live.del = function(n, k) {
     if (!window.localStorage || n === undefined || window.localStorage[n] === undefined) {
         return;
     }
@@ -77,10 +77,10 @@ Live.notisesIdList = {};
 Live.favouritesIdList = Live.get('favouritesIdList', undefined, []);
 Live.favouritesList = Live.get('favouritesList', undefined, {});
 
-URL.prototype.__defineGetter__('query', function () {
+URL.prototype.__defineGetter__('query', function() {
     let parsed = this.search.substr(1).split('&');
     let parsedObj = {};
-    parsed.forEach(function (elem, iter, arr) {
+    parsed.forEach(function(elem, iter, arr) {
         let vals = arr[iter].split('=');
         parsedObj[vals[0]] = vals[1];
     });
@@ -89,7 +89,7 @@ URL.prototype.__defineGetter__('query', function () {
 chrome.cookies.get({
     url: 'https://www.bilibili.com',
     name: 'bili_jct',
-}, function (cookie) {
+}, function(cookie) {
     if (cookie) {
         CRSF = cookie.value;
         hasLogin = true;
@@ -97,7 +97,7 @@ chrome.cookies.get({
     }
 });
 
-// let randomIP = function (fakeip) {
+// let randomIP = function(fakeip) {
 //     let ip_addr = '220.181.111.';
 //     if (fakeip === 2) ip_addr = '59.152.193.';
 //     ip_addr += Math.floor(Math.random() * 254 + 1);
@@ -114,7 +114,7 @@ function getFileData(url, callback, method, responseType) {
     if (responseType) {
         xmlhttp.responseType = responseType;
     }
-    xmlhttp.onreadystatechange = function () {
+    xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             if (typeof callback === 'function') {
                 if (responseType !== 'json') {
@@ -173,7 +173,7 @@ function compareVersion(a, b) {
 function postFileData(url, data, callback) {
     let encodeData = '',
         append = false;
-    Object.keys(data).forEach(function (key) {
+    Object.keys(data).forEach(function(key) {
         if (!append) {
             append = true;
         } else {
@@ -185,7 +185,7 @@ function postFileData(url, data, callback) {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', url, true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xmlhttp.onreadystatechange = function () {
+    xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             if (typeof callback === 'function') {
                 callback(xmlhttp.responseText);
@@ -216,9 +216,9 @@ function searchBilibili(info) {
 function notifyAllTabs(message) {
     chrome.windows.getAll({
         populate: true,
-    }, function (wins) {
-        wins.forEach(function (win) {
-            win.tabs.forEach(function (tab) {
+    }, function(wins) {
+        wins.forEach(function(win) {
+            win.tabs.forEach(function(tab) {
                 chrome.tabs.sendMessage(tab.id, message);
             });
         });
@@ -243,7 +243,7 @@ function disableAll() {
 
 function checkDynamic() {
     if (getOption('dynamic') === 'on' && hasLogin === true) {
-        getFileData(protocol + 'api.bilibili.com/x/feed/unread/count?type=0', function (data) {
+        getFileData(protocol + 'api.bilibili.com/x/feed/unread/count?type=0', function(data) {
             let dynamic = JSON.parse(data);
             if (typeof dynamic === 'object' && dynamic.code === 0 && typeof dynamic.data === 'object' &&
                 typeof dynamic.data.all === 'number') {
@@ -252,14 +252,14 @@ function checkDynamic() {
                     chrome.browserAction.setBadgeText({
                         text: getOption('updates'),
                     });
-                    getFileData(protocol + 'api.bilibili.com/x/feed/pull?ps=1&type=0', function (data) {
+                    getFileData(protocol + 'api.bilibili.com/x/feed/pull?ps=1&type=0', function(data) {
                         let feed = JSON.parse(data);
                         if (typeof feed === 'object' && feed.code === 0 && typeof feed.data === 'object' &&
                             typeof feed.data.feeds === 'object' && feed.data.feeds.length > 0) {
                             let content = feed.data.feeds[0];
                             if (content.ctime !== parseInt(getOption('lastDyn'))) {
                                 if (notification) {
-                                    chrome.notifications.clear('bh-' + notification, function () {});
+                                    chrome.notifications.clear('bh-' + notification, function() {});
                                 }
                                 notification = content.ctime;
                                 let message = chrome.i18n.getMessage('followingUpdateMessage').replace('%n', dynamic.data.all).replace('%uploader', content.source.uname).replace('%title', content.addition.title),
@@ -276,7 +276,7 @@ function checkDynamic() {
                                     }, {
                                         title: chrome.i18n.getMessage('notificationWatchLater'),
                                     }],
-                                }, function () {});
+                                }, function() {});
                                 setOption('lastDyn', content.ctime);
                             }
                         }
@@ -308,7 +308,7 @@ function resolvePlaybackLink(avPlaybackLink, callback) {
       })
     }*/
     let xmlhttp = new XMLHttpRequest(),
-        xmlChange = function () {
+        xmlChange = function() {
             if (xmlhttp.readyState === 2) {
                 if (!retry && xmlhttp.status !== 200) {
                     retry = true;
@@ -376,10 +376,10 @@ function getVideoInfo(avid, page, callback) {
         return true;
     }
     resetVideoHostList();
-    getFileData(protocol + 'api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avid + '&page=' + page + '&batch=true', function (avInfo) {
+    getFileData(protocol + 'api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avid + '&page=' + page + '&batch=true', function(avInfo) {
         avInfo = JSON.parse(avInfo);
         if (typeof avInfo.code !== 'undefined' && avInfo.code === -503) {
-            setTimeout(function () {
+            setTimeout(function() {
                 getVideoInfo(avid, page, callback);
             }, 1000);
         } else {
@@ -411,7 +411,7 @@ function getVideoInfo(avid, page, callback) {
                     bangumi: false,
                 };
                 if (typeof avInfo.bangumi === 'object') {
-                    getFileData(protocol + 'api.bilibili.cn/sp?spid=' + avInfo.spid, function (spInfo) {
+                    getFileData(protocol + 'api.bilibili.cn/sp?spid=' + avInfo.spid, function(spInfo) {
                         spInfo = JSON.parse(spInfo);
                         if (spInfo.isbangumi === 1) {
                             viCache[avid + '-' + page].bangumi = {
@@ -435,7 +435,7 @@ function getVideoInfo(avid, page, callback) {
 function checkSecurePlayer() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.open('HEAD', protocol + 'static-s.bilibili.com/play.swf', true);
-    xmlhttp.onreadystatechange = function () {
+    xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             secureAvailable = xmlhttp.getResponseHeader('Content-Type') === 'application/x-shockwave-flash';
         }
@@ -494,155 +494,155 @@ function setNotFavourite(id) {
     return false;
 }
 
-chrome.runtime.onConnect.addListener(function (port) {
+chrome.runtime.onConnect.addListener(function(port) {
     Live.treasure.port = port;
 });
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
-        case 'init':
-            chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
-                if (activeTabIds.indexOf(tabs[0].index) < 0) {
-                    activeTabIds.push(tabs[0].index);
-                }
-                sendResponse({
-                    autowide: getOption('autowide'),
-                    version: version,
-                    macplayer: getOption('macplayer'),
-                    autooffset: getOption('autooffset'),
-                    tabId: tabs[0].index,
-                });
-            });
-            return true;
-        case 'delTabId':
-            if (activeTabIds.indexOf(request.tabId) > -1) {
-                activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+    case 'init':
+        chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
+            if (activeTabIds.indexOf(tabs[0].index) < 0) {
+                activeTabIds.push(tabs[0].index);
             }
-            return true;
-        case 'cidHack':
-            if (isNaN(request.cid)) {
-                return false;
-            }
-            playerTabs[sender.tab.id] = request.cid;
-            sendResponse();
-            return true;
-        case 'getOption':
             sendResponse({
-                value: getOption(request.key),
+                autowide: getOption('autowide'),
+                version: version,
+                macplayer: getOption('macplayer'),
+                autooffset: getOption('autooffset'),
+                tabId: tabs[0].index,
             });
-            return true;
-        case 'getAd':
-            sendResponse({
-                value: getOption('ad'),
-            });
-            return true;
-        case 'setOption':
-            setOption(request.key, request.value);
-            sendResponse({
-                value: getOption(request.key),
-            });
-            return true;
-        case 'getTreasure':
-            sendResponse({
-                data: Live.treasure,
-            });
-            return true;
-        case 'setTreasure':
+        });
+        return true;
+    case 'delTabId':
+        if (activeTabIds.indexOf(request.tabId) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+        }
+        return true;
+    case 'cidHack':
+        if (isNaN(request.cid)) {
+            return false;
+        }
+        playerTabs[sender.tab.id] = request.cid;
+        sendResponse();
+        return true;
+    case 'getOption':
+        sendResponse({
+            value: getOption(request.key),
+        });
+        return true;
+    case 'getAd':
+        sendResponse({
+            value: getOption('ad'),
+        });
+        return true;
+    case 'setOption':
+        setOption(request.key, request.value);
+        sendResponse({
+            value: getOption(request.key),
+        });
+        return true;
+    case 'getTreasure':
+        sendResponse({
+            data: Live.treasure,
+        });
+        return true;
+    case 'setTreasure':
+        setTreasure(request.data);
+        sendResponse({
+            data: Live.treasure,
+        });
+        return true;
+    case 'setCurrentTreasure':
+        if (request.data.time_end !== undefined && request.data.time_end !== Live.treasure.time_end && Live.treasure.port) {
             setTreasure(request.data);
-            sendResponse({
-                data: Live.treasure,
-            });
-            return true;
-        case 'setCurrentTreasure':
-            if (request.data.time_end !== undefined && request.data.time_end !== Live.treasure.time_end && Live.treasure.port) {
-                setTreasure(request.data);
-                Live.treasure.port.postMessage({
-                    command: 'updateCurrentTreasure',
-                    data: {
-                        minute: request.data.minute,
-                        silver: request.data.silver,
-                        time_end: request.data.time_end,
-                        time_start: request.data.time_start,
-                    },
-                });
-            }
-            return true;
-        case 'getCurrentTreasure':
-            sendResponse({
+            Live.treasure.port.postMessage({
+                command: 'updateCurrentTreasure',
                 data: {
-                    minute: Live.treasure.minute,
-                    silver: Live.treasure.silver,
-                    time_end: Live.treasure.time_end,
-                    time_start: Live.treasure.time_start,
+                    minute: request.data.minute,
+                    silver: request.data.silver,
+                    time_end: request.data.time_end,
+                    time_start: request.data.time_start,
                 },
             });
-            return true;
-        case 'delTreasure':
-            sendResponse({
-                data: Live.treasure = {},
-            });
-            return true;
-        case 'getWatcherRoom':
-            sendResponse({
-                data: Live.watcherRoom,
-            });
-            return true;
-        case 'setWatcherRoom':
-            setWatcherRoom(request.data);
-            sendResponse({
-                data: Live.watcherRoom,
-            });
-            return true;
-        case 'delWatcherRoom':
-            sendResponse({
-                data: Live.watcherRoom = {},
-            });
-            return true;
-        case 'setFavourite':
-            sendResponse({
-                data: setFavourite(request.upInfo),
-            });
-            return true;
-        case 'setNotFavourite':
-            sendResponse({
-                data: setNotFavourite(request.id),
-            });
-            return true;
-        case 'getFavourite':
-            sendResponse({
-                data: Live.get('favouritesIdList'),
-            });
-            return true;
-        case 'enableAll':
-            enableAll();
+        }
+        return true;
+    case 'getCurrentTreasure':
+        sendResponse({
+            data: {
+                minute: Live.treasure.minute,
+                silver: Live.treasure.silver,
+                time_end: Live.treasure.time_end,
+                time_start: Live.treasure.time_start,
+            },
+        });
+        return true;
+    case 'delTreasure':
+        sendResponse({
+            data: Live.treasure = {},
+        });
+        return true;
+    case 'getWatcherRoom':
+        sendResponse({
+            data: Live.watcherRoom,
+        });
+        return true;
+    case 'setWatcherRoom':
+        setWatcherRoom(request.data);
+        sendResponse({
+            data: Live.watcherRoom,
+        });
+        return true;
+    case 'delWatcherRoom':
+        sendResponse({
+            data: Live.watcherRoom = {},
+        });
+        return true;
+    case 'setFavourite':
+        sendResponse({
+            data: setFavourite(request.upInfo),
+        });
+        return true;
+    case 'setNotFavourite':
+        sendResponse({
+            data: setNotFavourite(request.id),
+        });
+        return true;
+    case 'getFavourite':
+        sendResponse({
+            data: Live.get('favouritesIdList'),
+        });
+        return true;
+    case 'enableAll':
+        enableAll();
+        sendResponse({
+            result: 'ok',
+        });
+        return true;
+    case 'disableAll':
+        disableAll();
+        sendResponse({
+            result: 'ok',
+        });
+        return true;
+    case 'getCSS':
+        if (getOption('enabled') === 'true' || getOption('ad') !== 'keep') {
             sendResponse({
                 result: 'ok',
+                css: getCSS(request.url),
             });
-            return true;
-        case 'disableAll':
-            disableAll();
+        } else {
             sendResponse({
-                result: 'ok',
+                result: 'disabled',
             });
-            return true;
-        case 'getCSS':
-            if (getOption('enabled') === 'true' || getOption('ad') !== 'keep') {
-                sendResponse({
-                    result: 'ok',
-                    css: getCSS(request.url),
-                });
-            } else {
-                sendResponse({
-                    result: 'disabled',
-                });
-            }
-            return true;
-        case 'getVideoInfo':
-            getVideoInfo(request.avid, request.pg, function (avInfo) {
-                sendResponse({
-                    videoInfo: avInfo,
-                });
+        }
+        return true;
+    case 'getVideoInfo':
+        getVideoInfo(request.avid, request.pg, function(avInfo) {
+            sendResponse({
+                videoInfo: avInfo,
             });
-            return true;
+        });
+        return true;
         /*
         case 'getDownloadLink': {
             let url = {
@@ -678,78 +678,78 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             });
             return true;
         }*/
-        case 'getMyInfo':
-            getFileData(protocol + 'api.bilibili.com/myinfo', function (myinfo) {
-                myinfo = JSON.parse(myinfo);
-                if (typeof myinfo.code === undefined) {
-                    myinfo.code = 200;
-                }
-                sendResponse({
-                    code: myinfo.code || 200,
-                    myinfo: myinfo,
-                });
-            });
-            return true;
-        case 'getBangumiInfo': {
-            let episodeId = request.episodeId;
-            getFileData(protocol + 'bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function (bangumiInfo) {
-                bangumiInfo = JSON.parse(bangumiInfo);
-                if (typeof bangumiInfo.code === undefined) {
-                    bangumiInfo.code = 200;
-                }
-                bangumiInfo = bangumiInfo.result;
-                sendResponse({
-                    videoInfo: bangumiInfo.currentEpisode,
-                });
-            });
-            return true;
-        }
-        case 'searchVideo': {
-            let keyword = request.keyword;
-            getFileData(protocol + 'api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function (searchResult) {
-                searchResult = JSON.parse(searchResult);
-                if (searchResult.code === 0) {
-                    sendResponse({
-                        status: 'ok',
-                        result: searchResult.result[0],
-                    });
-                } else {
-                    sendResponse({
-                        status: 'error',
-                        code: searchResult.code,
-                        error: searchResult.error,
-                    });
-                }
-            });
-            return true;
-        }
-        case 'checkComment':
-            getFileData(protocol + 'www.bilibili.com/feedback/arc-' + request.avid + '-1.html', function (commentData) {
-                let test = commentData.indexOf('<div class="no_more">');
-                if (test >= 0) {
-                    sendResponse({
-                        banned: true,
-                    });
-                } else {
-                    sendResponse({
-                        banned: false,
-                    });
-                }
-            });
-            return true;
-        case 'savePlayerConfig':
+    case 'getMyInfo':
+        getFileData(protocol + 'api.bilibili.com/myinfo', function(myinfo) {
+            myinfo = JSON.parse(myinfo);
+            if (typeof myinfo.code === undefined) {
+                myinfo.code = 200;
+            }
             sendResponse({
-                result: setOption('playerConfig', JSON.stringify(request.config)),
+                code: myinfo.code || 200,
+                myinfo: myinfo,
             });
-            return true;
-        case 'sendComment': {
-            let errorCode = ['正常', '选择的弹幕模式错误', '用户被禁止', '系统禁止',
-                '投稿不存在', 'UP主禁止', '权限有误', '视频未审核/未发布', '禁止游客弹幕',
-            ];
-            request.comment.cid = request.cid;
-            postFileData(protocol + 'interface.bilibili.com/dmpost?cid=' + request.cid +
+        });
+        return true;
+    case 'getBangumiInfo': {
+        let episodeId = request.episodeId;
+        getFileData(protocol + 'bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
+            bangumiInfo = JSON.parse(bangumiInfo);
+            if (typeof bangumiInfo.code === undefined) {
+                bangumiInfo.code = 200;
+            }
+            bangumiInfo = bangumiInfo.result;
+            sendResponse({
+                videoInfo: bangumiInfo.currentEpisode,
+            });
+        });
+        return true;
+    }
+    case 'searchVideo': {
+        let keyword = request.keyword;
+        getFileData(protocol + 'api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
+            searchResult = JSON.parse(searchResult);
+            if (searchResult.code === 0) {
+                sendResponse({
+                    status: 'ok',
+                    result: searchResult.result[0],
+                });
+            } else {
+                sendResponse({
+                    status: 'error',
+                    code: searchResult.code,
+                    error: searchResult.error,
+                });
+            }
+        });
+        return true;
+    }
+    case 'checkComment':
+        getFileData(protocol + 'www.bilibili.com/feedback/arc-' + request.avid + '-1.html', function(commentData) {
+            let test = commentData.indexOf('<div class="no_more">');
+            if (test >= 0) {
+                sendResponse({
+                    banned: true,
+                });
+            } else {
+                sendResponse({
+                    banned: false,
+                });
+            }
+        });
+        return true;
+    case 'savePlayerConfig':
+        sendResponse({
+            result: setOption('playerConfig', JSON.stringify(request.config)),
+        });
+        return true;
+    case 'sendComment': {
+        let errorCode = ['正常', '选择的弹幕模式错误', '用户被禁止', '系统禁止',
+            '投稿不存在', 'UP主禁止', '权限有误', '视频未审核/未发布', '禁止游客弹幕',
+        ];
+        request.comment.cid = request.cid;
+        postFileData(protocol + 'interface.bilibili.com/dmpost?cid=' + request.cid +
                 '&aid=' + request.avid + '&pid=' + request.page, request.comment,
-                function (result) {
+                function(result) {
                     result = parseInt(result);
                     if (result < 0) {
                         sendResponse({
@@ -763,126 +763,126 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                         });
                     }
                 });
-            return true;
-        }
-        case 'tvNotification': {
-            let data = request.data;
-            let roomId = data.roomId;
-            Live.tvNotification[roomId] = true;
-            chrome.notifications.create(roomId, {
-                type: 'basic',
-                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
-                title: '小电视抽奖提示',
-                message: '直播间【' + roomId + '】正在进行小电视抽奖',
-                isClickable: true,
-                buttons: [{
-                    title: chrome.i18n.getMessage('notificationGetTv'),
-                }],
-            }, function (id) {
-                setTimeout(function () {
-                    chrome.notifications.clear(id);
-                }, 10000);
-            });
+        return true;
+    }
+    case 'tvNotification': {
+        let data = request.data;
+        let roomId = data.roomId;
+        Live.tvNotification[roomId] = true;
+        chrome.notifications.create(roomId, {
+            type: 'basic',
+            iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
+            title: '小电视抽奖提示',
+            message: '直播间【' + roomId + '】正在进行小电视抽奖',
+            isClickable: true,
+            buttons: [{
+                title: chrome.i18n.getMessage('notificationGetTv'),
+            }],
+        }, function(id) {
+            setTimeout(function() {
+                chrome.notifications.clear(id);
+            }, 10000);
+        });
 
-            return true;
+        return true;
+    }
+    case 'getTVReward': {
+        let rewardStr = '',
+            lost = '很遗憾，此次您没有中奖';
+        let data = request.data;
+        if (data.rewardId === 1) {
+            rewardStr += '大号小电视' + data.rewardNum + '个';
+        } else if (data.rewardId === 2) {
+            rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
+        } else if (data.rewardId === 3) {
+            rewardStr += 'B坷垃' + data.rewardNum + '个';
+        } else if (data.rewardId === 4) {
+            rewardStr += '喵娘' + data.rewardNum + '个';
+        } else if (data.rewardId === 5) {
+            rewardStr += '便当' + data.rewardNum + '个';
+        } else if (data.rewardId === 6) {
+            rewardStr += '银瓜子' + data.rewardNum + '个';
+        } else if (data.rewardId === 7) {
+            rewardStr += '辣条' + data.rewardNum + '个';
+        } else {
+            rewardStr += lost;
         }
-        case 'getTVReward': {
-            let rewardStr = '',
-                lost = '很遗憾，此次您没有中奖';
-            let data = request.data;
-            if (data.rewardId === 1) {
-                rewardStr += '大号小电视' + data.rewardNum + '个';
-            } else if (data.rewardId === 2) {
-                rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
-            } else if (data.rewardId === 3) {
-                rewardStr += 'B坷垃' + data.rewardNum + '个';
-            } else if (data.rewardId === 4) {
-                rewardStr += '喵娘' + data.rewardNum + '个';
-            } else if (data.rewardId === 5) {
-                rewardStr += '便当' + data.rewardNum + '个';
-            } else if (data.rewardId === 6) {
-                rewardStr += '银瓜子' + data.rewardNum + '个';
-            } else if (data.rewardId === 7) {
-                rewardStr += '辣条' + data.rewardNum + '个';
-            } else {
-                rewardStr += lost;
-            }
-            if (data.rewardNum > 0) {
-                if (data.rewardId === 1 || data.isWin) {
-                    chrome.notifications.create('getTV', {
-                        type: 'basic',
-                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                        title: '小电视抽奖结果',
-                        message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
-                        isClickable: false,
-                        buttons: [{
-                            title: chrome.i18n.getMessage('notificationGetTv'),
-                        }],
-                    }, function (id) {
-                        setTimeout(function () {
-                            chrome.notifications.clear(id);
-                        }, 10000);
-                    });
-                } else {
-                    chrome.notifications.create('getTV', {
-                        type: 'basic',
-                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                        title: '小电视抽奖结果',
-                        isClickable: false,
-                        message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
-                    }, function (id) {
-                        setTimeout(function () {
-                            chrome.notifications.clear(id);
-                        }, 10000);
-                    });
-                }
+        if (data.rewardNum > 0) {
+            if (data.rewardId === 1 || data.isWin) {
+                chrome.notifications.create('getTV', {
+                    type: 'basic',
+                    iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                    title: '小电视抽奖结果',
+                    message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
+                    isClickable: false,
+                    buttons: [{
+                        title: chrome.i18n.getMessage('notificationGetTv'),
+                    }],
+                }, function(id) {
+                    setTimeout(function() {
+                        chrome.notifications.clear(id);
+                    }, 10000);
+                });
             } else {
                 chrome.notifications.create('getTV', {
                     type: 'basic',
                     iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                    title: '直播间:' + data.roomId,
-                    message: rewardStr,
+                    title: '小电视抽奖结果',
                     isClickable: false,
-                }, function (id) {
-                    setTimeout(function () {
+                    message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
+                }, function(id) {
+                    setTimeout(function() {
                         chrome.notifications.clear(id);
                     }, 10000);
                 });
             }
-            return true;
+        } else {
+            chrome.notifications.create('getTV', {
+                type: 'basic',
+                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                title: '直播间:' + data.roomId,
+                message: rewardStr,
+                isClickable: false,
+            }, function(id) {
+                setTimeout(function() {
+                    chrome.notifications.clear(id);
+                }, 10000);
+            });
         }
-        case 'requestForDownload':
-            chrome.downloads.download({
-                saveAs: true,
-                url: request.data ? URL.createObjectURL(new Blob([request.data], {
-                    type: 'application/octet-stream',
-                })) : request.url,
-                filename: request.filename,
-            });
-            return true;
-        case 'callBilibiliMac':
-            postFileData('http://localhost:23330/rpc', request.data, function () {
-                sendResponse(true);
-            });
-            return true;
-        case 'sendCRSF':
-            CRSF = request.CRSF;
-            sendResponse();
-            return true;
-        case 'suggestName':
-            downloadNames[request.url.split('?')[0]] = request.filename;
-            sendResponse();
-            return false;
-        case 'uidLookup':
-            sendResponse({
-                uids: crcEngine.crack(request.user),
-            });
-            return true;
-        default:
-            sendResponse({
-                result: 'unknown',
-            });
-            return false;
+        return true;
+    }
+    case 'requestForDownload':
+        chrome.downloads.download({
+            saveAs: true,
+            url: request.data ? URL.createObjectURL(new Blob([request.data], {
+                type: 'application/octet-stream',
+            })) : request.url,
+            filename: request.filename,
+        });
+        return true;
+    case 'callBilibiliMac':
+        postFileData('http://localhost:23330/rpc', request.data, function() {
+            sendResponse(true);
+        });
+        return true;
+    case 'sendCRSF':
+        CRSF = request.CRSF;
+        sendResponse();
+        return true;
+    case 'suggestName':
+        downloadNames[request.url.split('?')[0]] = request.filename;
+        sendResponse();
+        return false;
+    case 'uidLookup':
+        sendResponse({
+            uids: crcEngine.crack(request.user),
+        });
+        return true;
+    default:
+        sendResponse({
+            result: 'unknown',
+        });
+        return false;
     }
 });
 
@@ -952,7 +952,7 @@ function getLocale() {
 function checkVersion() {
     let versionNotify = getOption('versionNotify');
     versionNotify === 'on' &&
-    getFileData(protocol + 'bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function (result) {
+    getFileData(protocol + 'bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function(result) {
         try {
             result = JSON.parse(result);
             if (compareVersion(result.version, chrome.runtime.getManifest().version) > 0) {
@@ -971,7 +971,7 @@ function checkVersion() {
     });
 }
 
-chrome.runtime.onInstalled.addListener(function (details) {
+chrome.runtime.onInstalled.addListener(function(details) {
     setOption('version', chrome.runtime.getManifest().version);
     if (details.reason === 'install') {
         chrome.tabs.create({
@@ -988,33 +988,33 @@ chrome.runtime.onInstalled.addListener(function (details) {
                 buttons: [{
                     title: chrome.i18n.getMessage('noticeficationNewFeatures'),
                 }],
-            }, function () {});
+            }, function() {});
         }
     }
 });
 
-chrome.alarms.onAlarm.addListener(function (alarm) {
+chrome.alarms.onAlarm.addListener(function(alarm) {
     switch (alarm.name) {
-        case 'checkDynamic':
-            checkDynamic();
-            return true;
-        case 'checkVersion':
-            if (!updateNotified) {
-                checkVersion();
-            }
-            return true;
-        case 'getLocale':
-            if (!localeAcquired) {
-                clearTimeout(localeTimeout);
+    case 'checkDynamic':
+        checkDynamic();
+        return true;
+    case 'checkVersion':
+        if (!updateNotified) {
+            checkVersion();
+        }
+        return true;
+    case 'getLocale':
+        if (!localeAcquired) {
+            clearTimeout(localeTimeout);
                 // getLocale();
-            }
-            return true;
-        default:
-            return false;
+        }
+        return true;
+    default:
+        return false;
     }
 });
 
-chrome.notifications.onButtonClicked.addListener(function (notificationId, index) {
+chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
     if (Live.tvNotification[notificationId] !== undefined) {
         chrome.tabs.create({
             url: protocol + 'live.bilibili.com' + subName + notificationId,
@@ -1053,7 +1053,7 @@ chrome.notifications.onButtonClicked.addListener(function (notificationId, index
         } */
 });
 
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
+chrome.webRequest.onBeforeRequest.addListener(function(details) {
     chrome.tabs.sendMessage(details.tabId, {
         command: 'error',
     });
@@ -1074,11 +1074,11 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
     urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
 */
-chrome.extension.onRequest.addListener(function (request, sender, callback) {
+chrome.extension.onRequest.addListener(function(request, sender, callback) {
     const tabId = sender.tab.id;
 });
 
-chrome.webRequest.onResponseStarted.addListener(function (details) {
+chrome.webRequest.onResponseStarted.addListener(function(details) {
     if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
@@ -1097,7 +1097,7 @@ chrome.webRequest.onResponseStarted.addListener(function (details) {
     ],
 });
 
-chrome.webRequest.onHeadersReceived.addListener(function (details) {
+chrome.webRequest.onHeadersReceived.addListener(function(details) {
     if (details.tabId < 0 || details.statusCode > 400) {
         return;
     }
@@ -1118,7 +1118,7 @@ chrome.webRequest.onHeadersReceived.addListener(function (details) {
 
 function receivedHeaderModifier(details) {
     let hasCORS = false;
-    details.responseHeaders.forEach(function (v) {
+    details.responseHeaders.forEach(function(v) {
         if (v.name.toLowerCase() === 'access-control-allow-origin') {
             hasCORS = true;
         }
@@ -1218,7 +1218,7 @@ function each(obj, fn) {
 
 Live.notise = {
     page: 1,
-    userMode: function () {
+    userMode: function() {
         return getCookie('DedeUserID');
     }(),
     hasMore: !1,
@@ -1228,19 +1228,19 @@ Live.notise = {
     heart: {},
     roomIdList: {},
     cacheList: {},
-    getList: function (d) {
+    getList: function(d) {
         let url = protocol + 'api.live.bilibili.com/feed/v1/feed/getList?page=' + Live.notise.page + '&page_size=10';
-        let callback = function (t) {
+        let callback = function(t) {
             let roomIdList = {},
                 newList = [];
-            each(t.data.list, function (i) {
+            each(t.data.list, function(i) {
                 roomIdList[t.data.list[i].roomid] = t.data.list[i];
             });
 
             if (1 === Live.notise.page) {
                 Live.notise.cacheList = roomIdList;
             } else {
-                each(roomIdList, function (i) {
+                each(roomIdList, function(i) {
                     Live.notise.cacheList[i] = roomIdList[i];
                 });
             }
@@ -1254,7 +1254,7 @@ Live.notise = {
                 }
 
                 if (newList.length) {
-                    each(newList, function (i) {
+                    each(newList, function(i) {
                         if (Live.favouritesIdList.indexOf(parseInt(newList[i].roomid)) !== -1) {
                             let data = newList[i];
                             chrome.notifications.create(data.roomid, {
@@ -1266,9 +1266,9 @@ Live.notise = {
                                 buttons: [{
                                     title: chrome.i18n.getMessage('notificationWatch'),
                                 }],
-                            }, function (id) {
+                            }, function(id) {
                                 Live.notisesIdList[id] = data;
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     chrome.notifications.clear(id);
                                     delete Live.notisesIdList[id];
                                 }, 10000);
@@ -1284,13 +1284,13 @@ Live.notise = {
 
         getFileData(url, callback, type, 'json');
     },
-    heartBeat: function () {
-        getFileData(protocol + 'api.live.bilibili.com/feed/v1/feed/heartBeat', function (data) {
+    heartBeat: function() {
+        getFileData(protocol + 'api.live.bilibili.com/feed/v1/feed/heartBeat', function(data) {
             data = JSON.parse(data);
             Live.notise.do(data);
         }, 'POST');
     },
-    do: function (data) {
+    do: function(data) {
         if (data.data) {
             Live.notise.feedMode = data.data.open;
             if (0 === data.code) {
@@ -1306,7 +1306,7 @@ Live.notise = {
             }
         }
     },
-    init: function () {
+    init: function() {
         Live.notise.count = 0;
         Live.notise.hasMore = !1;
         Live.notise.list = [];
@@ -1317,7 +1317,7 @@ Live.notise = {
         Live.notise.cacheList = {};
         Live.notise.heartBeat();
         Live.notise.getList();
-        Live.notise.intervalNum = setInterval(function () {
+        Live.notise.intervalNum = setInterval(function() {
             Live.notise.heartBeat();
             if (Live.notise.hasMore) {
                 Live.notise.page++;
@@ -1330,8 +1330,8 @@ if (getOption('liveNotification') === 'on') {
     Live.notise.init();
 }
 
-chrome.runtime.onConnect.addListener(function (port) {
-    port.onMessage.addListener(function (request) {
+chrome.runtime.onConnect.addListener(function(port) {
+    port.onMessage.addListener(function(request) {
         if (!request.cmd) {
             return false;
         }
