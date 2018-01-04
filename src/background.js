@@ -18,7 +18,8 @@ let notification = false,
     CRSF, watchLater = false,
     hasLogin = false,
     subName = '',
-    crcEngine = new Crc32Engine();
+    crcEngine = new Crc32Engine(),
+    activeTabIds = [];
 
 
 Live.set = function(n, k, v) {
@@ -104,17 +105,24 @@ chrome.cookies.get({
 //     return ip_addr;
 // };
 
-function getFileData(url, callback, method) {
+function getFileData(url, callback, method, responseType) {
     let m = 'GET';
     if (method && (method === 'POST'.toLowerCase() || method === 'GET'.toLowerCase())) {
         m = method;
     }
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.open(m, url, true);
+    if (responseType) {
+        xmlhttp.responseType = responseType;
+    }
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             if (typeof callback === 'function') {
-                callback(xmlhttp.responseText);
+                if (responseType !== 'json') {
+                    callback(xmlhttp.responseText);
+                } else {
+                    callback(xmlhttp.response);
+                }
             }
         } else if (xmlhttp.readyState === 4 && xmlhttp.status > 400) {
             if (typeof callback === 'function') {
@@ -584,6 +592,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
         return true;
     case 'setNotFavourite':
+        console.warn(request);
         sendResponse({
             data: setNotFavourite(request.id),
         });
@@ -623,6 +632,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 videoInfo: avInfo,
             });
         });
+        return true;
+    case 'setActiveTab':
+        activeTabIds.push(request.tabId);
         return true;
     /*
     case 'getDownloadLink': {
@@ -1054,7 +1066,7 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 */
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    if (details.tabId < 0) {
+    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
     getFileData(details.url, (data) => {
@@ -1073,7 +1085,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0) {
+    if (details.tabId < 0 || details.statusCode > 400) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;
@@ -1204,10 +1216,8 @@ Live.notise = {
     roomIdList: {},
     cacheList: {},
     getList: function(d) {
-        let url = protocol + '//live.bilibili.com/feed/getList/' + Live.notise.page;
+        let url = protocol + 'api.live.bilibili.com/feed/v1/feed/getList?page=' + Live.notise.page + '&page_size=10';
         let callback = function(t) {
-            t = t.substr(1, t.length - 3);
-            t = JSON.parse(t);
             let roomIdList = {},
                 newList = [];
             each(t.data.list, function(i) {
@@ -1259,10 +1269,10 @@ Live.notise = {
         };
         let type = Live.notise.userMode ? 'POST' : 'GET';
 
-        getFileData(url, callback, type);
+        getFileData(url, callback, type, 'json');
     },
     heartBeat: function() {
-        getFileData(protocol + 'live.bilibili.com/feed/heartBeat/heartBeat', function(data) {
+        getFileData(protocol + 'api.live.bilibili.com/feed/v1/feed/heartBeat', function(data) {
             data = JSON.parse(data);
             Live.notise.do(data);
         }, 'POST');
