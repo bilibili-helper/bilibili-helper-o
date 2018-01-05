@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: 0 */
-/* global setOption: false, getOption: false, getCSS: false, version: false, Crc32Engine: false */
+/* global _: false, setOption: false, getOption: false, getCSS: false, version: false, Crc32Engine: false */
 
 let notification = false,
     notificationAvid = {},
@@ -19,7 +19,8 @@ let notification = false,
     hasLogin = false,
     subName = '',
     crcEngine = new Crc32Engine(),
-    activeTabIds = [];
+    activeTabIds = [],
+    refererList = {};
 
 Live.set = function(n, k, v) {
     if (!window.localStorage || !n) {
@@ -500,22 +501,19 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
-        chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
-            if (activeTabIds.indexOf(tabs[0].index) < 0) {
-                activeTabIds.push(tabs[0].index);
-            }
-            sendResponse({
-                autowide: getOption('autowide'),
-                version: version,
-                macplayer: getOption('macplayer'),
-                autooffset: getOption('autooffset'),
-                tabId: tabs[0].index,
-            });
+        if (activeTabIds.indexOf(sender.tab.id) < 0) {
+            activeTabIds.push(sender.tab.id);
+        }
+        sendResponse({
+            autowide: getOption('autowide'),
+            version: version,
+            macplayer: getOption('macplayer'),
+            autooffset: getOption('autooffset'),
         });
         return true;
-    case 'delTabId':
-        if (activeTabIds.indexOf(request.tabId) > -1) {
-            activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+    case 'removeTabId':
+        if (activeTabIds.indexOf(sender.tab.id) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
         }
         return true;
     case 'cidHack':
@@ -1074,9 +1072,29 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
     urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
 */
-chrome.extension.onRequest.addListener(function(request, sender, callback) {
-    const tabId = sender.tab.id;
-});
+chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
+    if (activeTabIds.indexOf(details.tabId) >= 0) {
+        const refererUrl = _.find(details.requestHeaders, function(o) {
+            return o.name.toLowerCase() === 'referer';
+        })['value'];
+        if (refererUrl) {
+            refererList[details.url] = refererUrl;
+        }
+    } else {
+        if (refererList[details.url]) {
+            details.requestHeaders.push({
+                name: 'Referer',
+                value: refererList[details.url],
+            });
+        }
+    }
+    return {requestHeaders: details.requestHeaders};
+}, {
+    urls: [
+        '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://interface.bilibili.com/playurl*',
+    ],
+}, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
     if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
@@ -1098,7 +1116,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0 || details.statusCode > 400) {
+    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;
@@ -1123,7 +1141,7 @@ function receivedHeaderModifier(details) {
             hasCORS = true;
         }
     });
-    if (!hasCORS && watchLater) {
+    if (!hasCORS) {
         // details.responseHeaders['Access-Control-Allow-Origin']
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Credentials',
@@ -1137,7 +1155,6 @@ function receivedHeaderModifier(details) {
             name: 'Access-Control-Allow-Origin',
             value: protocol + 'www.bilibili.com',
         });
-        watchLater = false;
     } else if (!hasCORS && !bangumi) {
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Origin',

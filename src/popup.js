@@ -1,5 +1,5 @@
 let bkg_page = chrome.extension.getBackgroundPage();
-console.warn(bkg_page);
+// console.warn(bkg_page);
 
 function getDynamic() {
     bkg_page.chrome.cookies.get({

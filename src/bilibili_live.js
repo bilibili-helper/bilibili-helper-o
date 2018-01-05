@@ -302,7 +302,7 @@
                     //     },
                     //     "roomid": "20105"
                     // };
-                    console.warn(json);
+                    // console.warn(json);
                 } else if (type === 'gift' && Live.console.option.display['gift']) {
                     // var a = {
                     //     "cmd": "SEND_GIFT",

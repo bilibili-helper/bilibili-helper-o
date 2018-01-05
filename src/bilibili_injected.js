@@ -254,7 +254,9 @@
         case 'error':
             return true;
         case 'playurl':
-            biliHelper.handlePlayUrl(request.data);
+            if (Object.keys(request.data).length > 0) {
+                biliHelper.handlePlayUrl(request.data);
+            }
             return true;
         default:
             sendResponse({
@@ -365,13 +367,6 @@
             biliHelper.version = response.version;
             biliHelper.autowide = response.autowide;
             biliHelper.autooffset = response.autooffset;
-            biliHelper.tabId = response.tabId;
-            $(window).on('beforeunload', () => {
-                chrome.extension.sendMessage({
-                    command: 'delTabId',
-                    tabId: response.tabId,
-                });
-            });
             // biliHelper.favorHTML5 = response.html5 === 'on';
             // biliHelper.replaceEnabled = response.replace === 'on';
             biliHelper.originalPlayer = localStorage.getItem('bilimac_original_player') || $('#bofqi').html();
