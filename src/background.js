@@ -501,23 +501,19 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
-        chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
-            const id = tabs[0].id;
-            if (activeTabIds.indexOf(id) < 0) {
-                activeTabIds.push(id);
-            }
-            sendResponse({
-                autowide: getOption('autowide'),
-                version: version,
-                macplayer: getOption('macplayer'),
-                autooffset: getOption('autooffset'),
-                tabId: id,
-            });
+        if (activeTabIds.indexOf(sender.tab.id) < 0) {
+            activeTabIds.push(sender.tab.id);
+        }
+        sendResponse({
+            autowide: getOption('autowide'),
+            version: version,
+            macplayer: getOption('macplayer'),
+            autooffset: getOption('autooffset'),
         });
         return true;
-    case 'delTabId':
-        if (activeTabIds.indexOf(request.tabId) > -1) {
-            activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+    case 'removeTabId':
+        if (activeTabIds.indexOf(sender.tab.id) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
         }
         return true;
     case 'cidHack':
@@ -1079,7 +1075,7 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
     if (activeTabIds.indexOf(details.tabId) >= 0) {
         const refererUrl = _.find(details.requestHeaders, function(o) {
-            return o.name === 'Referer';
+            return o.name.toLowerCase() === 'referer';
         })['value'];
         if (refererUrl) {
             refererList[details.url] = refererUrl;
