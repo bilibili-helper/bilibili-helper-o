@@ -259,7 +259,9 @@
         case 'error':
             return true;
         case 'playurl':
-            biliHelper.handlePlayUrl(request.data);
+            if (Object.keys(request.data).length > 0) {
+                biliHelper.handlePlayUrl(request.data);
+            }
             return true;
         default:
             sendResponse({
