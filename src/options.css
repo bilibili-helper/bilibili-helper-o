@@ -291,6 +291,9 @@ input[type="color"] {
 #about .info{
     position: relative;
 }
+#about .info p{
+    text-indent: 0;
+}
 
 #about .highlight p {
     color: #B71C1C;
@@ -316,8 +319,8 @@ input[type="color"] {
     width: 200px;
     margin-left: 2em;
     position: absolute;
-    right: 20px;
-    top: 60px;
+    right: 17px;
+    top: -70px;
 }
 
 .sweet-alert h2+p a {
@@ -385,4 +388,41 @@ input[type="color"] {
 .watcher-options .watcher-option,
 .watcher-notify-options .watcher-notify-option {
     overflow: hidden;
+}
+.feed-history .table {
+    text-align: left;
+    margin: 0 10px;
+}
+.feed-history header span {
+    display: inline-block;
+    width: 100px;
+    font-weight: bold;
+}
+.feed-history .body {
+    height: 260px;
+    overflow: auto;
+}
+.feed-history .row span{
+    vertical-align: middle;
+    height: 20px;
+    line-height: 20px;
+}
+.feed-history .row .time {
+    display: inline-block;
+    width: 100px;
+}
+.feed-history .row .name {
+    display: inline-block;
+    width: 106px;
+}
+.feed-history .row .num {
+    display: inline-block;
+    width: 100px;
+}
+.feed-history .row .ps {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 170px;
+    text-overflow: ellipsis;
 }
