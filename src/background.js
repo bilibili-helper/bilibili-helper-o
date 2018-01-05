@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: 0 */
-/* global setOption: false, getOption: false, getCSS: false, version: false, Crc32Engine: false */
+/* global _: false, setOption: false, getOption: false, getCSS: false, version: false, Crc32Engine: false */
 
 let notification = false,
     notificationAvid = {},
@@ -18,8 +18,9 @@ let notification = false,
     CRSF, watchLater = false,
     hasLogin = false,
     subName = '',
-    crcEngine = new Crc32Engine();
-
+    crcEngine = new Crc32Engine(),
+    activeTabIds = [],
+    refererList = {};
 
 Live.set = function(n, k, v) {
     if (!window.localStorage || !n) {
@@ -97,24 +98,31 @@ chrome.cookies.get({
     }
 });
 
-// let randomIP = function (fakeip) {
+// let randomIP = function(fakeip) {
 //     let ip_addr = '220.181.111.';
 //     if (fakeip === 2) ip_addr = '59.152.193.';
 //     ip_addr += Math.floor(Math.random() * 254 + 1);
 //     return ip_addr;
 // };
 
-function getFileData(url, callback, method) {
+function getFileData(url, callback, method, responseType) {
     let m = 'GET';
     if (method && (method === 'POST'.toLowerCase() || method === 'GET'.toLowerCase())) {
         m = method;
     }
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.open(m, url, true);
+    if (responseType) {
+        xmlhttp.responseType = responseType;
+    }
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             if (typeof callback === 'function') {
-                callback(xmlhttp.responseText);
+                if (responseType !== 'json') {
+                    callback(xmlhttp.responseText);
+                } else {
+                    callback(xmlhttp.response);
+                }
             }
         } else if (xmlhttp.readyState === 4 && xmlhttp.status > 400) {
             if (typeof callback === 'function') {
@@ -329,6 +337,7 @@ function resolvePlaybackLink(avPlaybackLink, callback) {
     xmlhttp.onreadystatechange = xmlChange;
     xmlhttp.send();
 }
+
 function addWatchLater(aid) {
     watchLater = true;
     let xmlhttp = new XMLHttpRequest();
@@ -485,19 +494,27 @@ function setNotFavourite(id) {
     }
     return false;
 }
+
 chrome.runtime.onConnect.addListener(function(port) {
     Live.treasure.port = port;
 });
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
+        if (activeTabIds.indexOf(sender.tab.id) < 0) {
+            activeTabIds.push(sender.tab.id);
+        }
         sendResponse({
-            // replace: getOption('replace'),
             autowide: getOption('autowide'),
             version: version,
             macplayer: getOption('macplayer'),
             autooffset: getOption('autooffset'),
         });
+        return true;
+    case 'removeTabId':
+        if (activeTabIds.indexOf(sender.tab.id) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
+        }
         return true;
     case 'cidHack':
         if (isNaN(request.cid)) {
@@ -624,41 +641,41 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
         });
         return true;
-    /*
-    case 'getDownloadLink': {
-        let url = {
-            download: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=' + getOption('dlquality'),
-            playback: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=2&type=mp4',
-        };
-        getFileData(url['download'], function(avDownloadLink) {
-            avDownloadLink = JSON.parse(avDownloadLink);
-            if (getOption('dlquality') === 'mp4') {
-                if (avDownloadLink) {
-                    resolvePlaybackLink(avDownloadLink, function(avRealPlaybackLink) {
-                        sendResponse({
-                            download: avDownloadLink,
-                            playback: avRealPlaybackLink,
-                            dlquality: getOption('dlquality'),
-                            rel_search: getOption('rel_search'),
+        /*
+        case 'getDownloadLink': {
+            let url = {
+                download: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=' + getOption('dlquality'),
+                playback: protocol + 'interface.bilibili.com/playurl?platform=bilihelper&otype=json&appkey=95acd7f6cc3392f3&cid=' + request.cid + '&quality=2&type=mp4',
+            };
+            getFileData(url['download'], function(avDownloadLink) {
+                avDownloadLink = JSON.parse(avDownloadLink);
+                if (getOption('dlquality') === 'mp4') {
+                    if (avDownloadLink) {
+                        resolvePlaybackLink(avDownloadLink, function(avRealPlaybackLink) {
+                            sendResponse({
+                                download: avDownloadLink,
+                                playback: avRealPlaybackLink,
+                                dlquality: getOption('dlquality'),
+                                rel_search: getOption('rel_search'),
+                            });
+                        });
+                    }
+                } else {
+                    getFileData(url['playback'], function(avPlaybackLink) {
+                        avPlaybackLink = JSON.parse(avPlaybackLink);
+                        resolvePlaybackLink(avPlaybackLink, function(avRealPlaybackLink) {
+                            sendResponse({
+                                download: avDownloadLink,
+                                playback: avRealPlaybackLink,
+                                dlquality: getOption('dlquality'),
+                                rel_search: getOption('rel_search'),
+                            });
                         });
                     });
                 }
-            } else {
-                getFileData(url['playback'], function(avPlaybackLink) {
-                    avPlaybackLink = JSON.parse(avPlaybackLink);
-                    resolvePlaybackLink(avPlaybackLink, function(avRealPlaybackLink) {
-                        sendResponse({
-                            download: avDownloadLink,
-                            playback: avRealPlaybackLink,
-                            dlquality: getOption('dlquality'),
-                            rel_search: getOption('rel_search'),
-                        });
-                    });
-                });
-            }
-        });
-        return true;
-    }*/
+            });
+            return true;
+        }*/
     case 'getMyInfo':
         getFileData(protocol + 'api.bilibili.com/myinfo', function(myinfo) {
             myinfo = JSON.parse(myinfo);
@@ -671,39 +688,39 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
         });
         return true;
-    case 'getBangumiInfo':
-        {
-            let episodeId = request.episodeId;
-            getFileData(protocol + 'bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
-                bangumiInfo = JSON.parse(bangumiInfo);
-                if (typeof bangumiInfo.code === undefined) {
-                    bangumiInfo.code = 200;
-                }
-                bangumiInfo = bangumiInfo.result;
+    case 'getBangumiInfo': {
+        let episodeId = request.episodeId;
+        getFileData(protocol + 'bangumi.bilibili.com/web_api/episode/' + episodeId + '.json', function(bangumiInfo) {
+            bangumiInfo = JSON.parse(bangumiInfo);
+            if (typeof bangumiInfo.code === undefined) {
+                bangumiInfo.code = 200;
+            }
+            bangumiInfo = bangumiInfo.result;
+            sendResponse({
+                videoInfo: bangumiInfo.currentEpisode,
+            });
+        });
+        return true;
+    }
+    case 'searchVideo': {
+        let keyword = request.keyword;
+        getFileData(protocol + 'api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
+            searchResult = JSON.parse(searchResult);
+            if (searchResult.code === 0) {
                 sendResponse({
-                    videoInfo: bangumiInfo.currentEpisode,
+                    status: 'ok',
+                    result: searchResult.result[0],
                 });
-            });
-            return true;
-        }
-    case 'searchVideo':
-        { let keyword = request.keyword;
-            getFileData(protocol + 'api.bilibili.com/search?type=json&appkey=8e9fc618fbd41e28&keyword=' + encodeURIComponent(keyword) + '&page=1&order=ranklevel', function(searchResult) {
-                searchResult = JSON.parse(searchResult);
-                if (searchResult.code === 0) {
-                    sendResponse({
-                        status: 'ok',
-                        result: searchResult.result[0],
-                    });
-                } else {
-                    sendResponse({
-                        status: 'error',
-                        code: searchResult.code,
-                        error: searchResult.error,
-                    });
-                }
-            });
-            return true; }
+            } else {
+                sendResponse({
+                    status: 'error',
+                    code: searchResult.code,
+                    error: searchResult.error,
+                });
+            }
+        });
+        return true;
+    }
     case 'checkComment':
         getFileData(protocol + 'www.bilibili.com/feedback/arc-' + request.avid + '-1.html', function(commentData) {
             let test = commentData.indexOf('<div class="no_more">');
@@ -723,12 +740,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             result: setOption('playerConfig', JSON.stringify(request.config)),
         });
         return true;
-    case 'sendComment':
-        { let errorCode = ['正常', '选择的弹幕模式错误', '用户被禁止', '系统禁止',
+    case 'sendComment': {
+        let errorCode = ['正常', '选择的弹幕模式错误', '用户被禁止', '系统禁止',
             '投稿不存在', 'UP主禁止', '权限有误', '视频未审核/未发布', '禁止游客弹幕',
         ];
-            request.comment.cid = request.cid;
-            postFileData(protocol + 'interface.bilibili.com/dmpost?cid=' + request.cid +
+        request.comment.cid = request.cid;
+        postFileData(protocol + 'interface.bilibili.com/dmpost?cid=' + request.cid +
                 '&aid=' + request.avid + '&pid=' + request.page, request.comment,
                 function(result) {
                     result = parseInt(result);
@@ -744,93 +761,94 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                         });
                     }
                 });
-            return true; }
-    case 'tvNotification':
-        {
-            let data = request.data;
-            let roomId = data.roomId;
-            Live.tvNotification[roomId] = true;
-            chrome.notifications.create(roomId, {
-                type: 'basic',
-                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
-                title: '小电视抽奖提示',
-                message: '直播间【' + roomId + '】正在进行小电视抽奖',
-                isClickable: true,
-                buttons: [{
-                    title: chrome.i18n.getMessage('notificationGetTv'),
-                }],
-            }, function(id) {
-                setTimeout(function() {
-                    chrome.notifications.clear(id);
-                }, 10000);
-            });
+        return true;
+    }
+    case 'tvNotification': {
+        let data = request.data;
+        let roomId = data.roomId;
+        Live.tvNotification[roomId] = true;
+        chrome.notifications.create(roomId, {
+            type: 'basic',
+            iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.gif',
+            title: '小电视抽奖提示',
+            message: '直播间【' + roomId + '】正在进行小电视抽奖',
+            isClickable: true,
+            buttons: [{
+                title: chrome.i18n.getMessage('notificationGetTv'),
+            }],
+        }, function(id) {
+            setTimeout(function() {
+                chrome.notifications.clear(id);
+            }, 10000);
+        });
 
-            return true;
-        }
-    case 'getTVReward':
-        { let rewardStr = '',
+        return true;
+    }
+    case 'getTVReward': {
+        let rewardStr = '',
             lost = '很遗憾，此次您没有中奖';
-            let data = request.data;
-            if (data.rewardId === 1) {
-                rewardStr += '大号小电视' + data.rewardNum + '个';
-            } else if (data.rewardId === 2) {
-                rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
-            } else if (data.rewardId === 3) {
-                rewardStr += 'B坷垃' + data.rewardNum + '个';
-            } else if (data.rewardId === 4) {
-                rewardStr += '喵娘' + data.rewardNum + '个';
-            } else if (data.rewardId === 5) {
-                rewardStr += '便当' + data.rewardNum + '个';
-            } else if (data.rewardId === 6) {
-                rewardStr += '银瓜子' + data.rewardNum + '个';
-            } else if (data.rewardId === 7) {
-                rewardStr += '辣条' + data.rewardNum + '个';
-            } else {
-                rewardStr += lost;
-            }
-            if (data.rewardNum > 0) {
-                if (data.rewardId === 1 || data.isWin) {
-                    chrome.notifications.create('getTV', {
-                        type: 'basic',
-                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                        title: '小电视抽奖结果',
-                        message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
-                        isClickable: false,
-                        buttons: [{
-                            title: chrome.i18n.getMessage('notificationGetTv'),
-                        }],
-                    }, function(id) {
-                        setTimeout(function() {
-                            chrome.notifications.clear(id);
-                        }, 10000);
-                    });
-                } else {
-                    chrome.notifications.create('getTV', {
-                        type: 'basic',
-                        iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                        title: '小电视抽奖结果',
-                        isClickable: false,
-                        message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
-                    }, function(id) {
-                        setTimeout(function() {
-                            chrome.notifications.clear(id);
-                        }, 10000);
-                    });
-                }
+        let data = request.data;
+        if (data.rewardId === 1) {
+            rewardStr += '大号小电视' + data.rewardNum + '个';
+        } else if (data.rewardId === 2) {
+            rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
+        } else if (data.rewardId === 3) {
+            rewardStr += 'B坷垃' + data.rewardNum + '个';
+        } else if (data.rewardId === 4) {
+            rewardStr += '喵娘' + data.rewardNum + '个';
+        } else if (data.rewardId === 5) {
+            rewardStr += '便当' + data.rewardNum + '个';
+        } else if (data.rewardId === 6) {
+            rewardStr += '银瓜子' + data.rewardNum + '个';
+        } else if (data.rewardId === 7) {
+            rewardStr += '辣条' + data.rewardNum + '个';
+        } else {
+            rewardStr += lost;
+        }
+        if (data.rewardNum > 0) {
+            if (data.rewardId === 1 || data.isWin) {
+                chrome.notifications.create('getTV', {
+                    type: 'basic',
+                    iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                    title: '小电视抽奖结果',
+                    message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
+                    isClickable: false,
+                    buttons: [{
+                        title: chrome.i18n.getMessage('notificationGetTv'),
+                    }],
+                }, function(id) {
+                    setTimeout(function() {
+                        chrome.notifications.clear(id);
+                    }, 10000);
+                });
             } else {
                 chrome.notifications.create('getTV', {
                     type: 'basic',
                     iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                    title: '直播间:' + data.roomId,
-                    message: rewardStr,
+                    title: '小电视抽奖结果',
                     isClickable: false,
+                    message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
                 }, function(id) {
                     setTimeout(function() {
                         chrome.notifications.clear(id);
                     }, 10000);
                 });
             }
-            return true; }
+        } else {
+            chrome.notifications.create('getTV', {
+                type: 'basic',
+                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+                title: '直播间:' + data.roomId,
+                message: rewardStr,
+                isClickable: false,
+            }, function(id) {
+                setTimeout(function() {
+                    chrome.notifications.clear(id);
+                }, 10000);
+            });
+        }
+        return true;
+    }
     case 'requestForDownload':
         chrome.downloads.download({
             saveAs: true,
@@ -932,24 +950,25 @@ function getLocale() {
 function checkVersion() {
     let versionNotify = getOption('versionNotify');
     versionNotify === 'on' &&
-        getFileData(protocol + 'bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function(result) {
-            try {
-                result = JSON.parse(result);
-                if (compareVersion(result.version, chrome.runtime.getManifest().version) > 0) {
-                    setOption('crx_update', JSON.stringify(result));
-                    if (!localeAcquired || locale === 1 || new Date().getTime() - result.update_time > 259200000) {
-                        updateNotified = true;
+    getFileData(protocol + 'bilihelper.guguke.net/version.json?v=' + encodeURIComponent(chrome.runtime.getManifest().version), function(result) {
+        try {
+            result = JSON.parse(result);
+            if (compareVersion(result.version, chrome.runtime.getManifest().version) > 0) {
+                setOption('crx_update', JSON.stringify(result));
+                if (!localeAcquired || locale === 1 || new Date().getTime() - result.update_time > 259200000) {
+                    updateNotified = true;
 
-                        chrome.tabs.create({
-                            url: chrome.extension.getURL('options.html?mod=new'),
-                        });
-                    }
+                    chrome.tabs.create({
+                        url: chrome.extension.getURL('options.html?mod=new'),
+                    });
                 }
-            } catch (e) {
-                console.error('Failed to check version', e);
             }
-        });
+        } catch (e) {
+            console.error('Failed to check version', e);
+        }
+    });
 }
+
 chrome.runtime.onInstalled.addListener(function(details) {
     setOption('version', chrome.runtime.getManifest().version);
     if (details.reason === 'install') {
@@ -985,7 +1004,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     case 'getLocale':
         if (!localeAcquired) {
             clearTimeout(localeTimeout);
-            // getLocale();
+                // getLocale();
         }
         return true;
     default:
@@ -1024,11 +1043,12 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, index)
     } else if (index === 1 && notificationAvid[notificationId]) {
         resetVideoHostList();
         addWatchLater(notificationAvid[notificationId]);
-    }/*  else if (index === 2) {
-        chrome.tabs.create({
-            url: 'http://www.bilibili.com/account/dynamic',
-        });
-    } */
+    }
+    /*  else if (index === 2) {
+            chrome.tabs.create({
+                url: 'http://www.bilibili.com/account/dynamic',
+            });
+        } */
 });
 
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
@@ -1052,9 +1072,32 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
     urls: ['https://static.hdslb.com/play.swf'],
 }, ['blocking']);
 */
+chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
+    if (activeTabIds.indexOf(details.tabId) >= 0) {
+        const refererUrl = _.find(details.requestHeaders, function(o) {
+            return o.name.toLowerCase() === 'referer';
+        })['value'];
+        if (refererUrl) {
+            refererList[details.url] = refererUrl;
+        }
+    } else {
+        if (refererList[details.url]) {
+            details.requestHeaders.push({
+                name: 'Referer',
+                value: refererList[details.url],
+            });
+        }
+    }
+    return {requestHeaders: details.requestHeaders};
+}, {
+    urls: [
+        '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://interface.bilibili.com/playurl*',
+    ],
+}, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    if (details.tabId < 0) {
+    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
     getFileData(details.url, (data) => {
@@ -1073,7 +1116,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0) {
+    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;
@@ -1098,9 +1141,8 @@ function receivedHeaderModifier(details) {
             hasCORS = true;
         }
     });
-    if (!hasCORS && watchLater) {
+    if (!hasCORS) {
         // details.responseHeaders['Access-Control-Allow-Origin']
-        // console.warn(details.responseHeaders);
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Credentials',
             value: 'true',
@@ -1113,7 +1155,6 @@ function receivedHeaderModifier(details) {
             name: 'Access-Control-Allow-Origin',
             value: protocol + 'www.bilibili.com',
         });
-        watchLater = false;
     } else if (!hasCORS && !bangumi) {
         details.responseHeaders.push({
             name: 'Access-Control-Allow-Origin',
@@ -1191,6 +1232,7 @@ function each(obj, fn) {
         }
     }
 }
+
 Live.notise = {
     page: 1,
     userMode: function() {
@@ -1204,10 +1246,8 @@ Live.notise = {
     roomIdList: {},
     cacheList: {},
     getList: function(d) {
-        let url = protocol + '//live.bilibili.com/feed/getList/' + Live.notise.page;
+        let url = protocol + 'api.live.bilibili.com/feed/v1/feed/getList?page=' + Live.notise.page + '&page_size=10';
         let callback = function(t) {
-            t = t.substr(1, t.length - 3);
-            t = JSON.parse(t);
             let roomIdList = {},
                 newList = [];
             each(t.data.list, function(i) {
@@ -1259,10 +1299,10 @@ Live.notise = {
         };
         let type = Live.notise.userMode ? 'POST' : 'GET';
 
-        getFileData(url, callback, type);
+        getFileData(url, callback, type, 'json');
     },
     heartBeat: function() {
-        getFileData(protocol + 'live.bilibili.com/feed/heartBeat/heartBeat', function(data) {
+        getFileData(protocol + 'api.live.bilibili.com/feed/v1/feed/heartBeat', function(data) {
             data = JSON.parse(data);
             Live.notise.do(data);
         }, 'POST');
