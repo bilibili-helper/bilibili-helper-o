@@ -302,7 +302,7 @@
                     //     },
                     //     "roomid": "20105"
                     // };
-                    console.warn(json);
+                    // console.warn(json);
                 } else if (type === 'gift' && Live.console.option.display['gift']) {
                     // var a = {
                     //     "cmd": "SEND_GIFT",
@@ -1000,7 +1000,7 @@
                 },
                 gift: {
                     title: '礼物信息',
-                    css: '.chat-item.gift-item{display:none !important;}',
+                    css: '.chat-item.gift-item,.bilibili-live-player-video-area > .bilibili-live-player-video-gift{display:none !important;}',
                     value: 'off'
                 },
                 small: {
@@ -1233,13 +1233,12 @@
             init: () => {
                 let upInfo = {};
                 Live.getRoomInfo().done((data) => {
-                    upInfo.uid = data.data.uid;
-                    upInfo.roomId = data.data.room_id;
-                    upInfo.roomShortId = Live.getRoomIdByUrl();
-                    upInfo.roomTitle = data.data.ROOMTITLE;
-                    upInfo.upName = data.data.ANCHOR_NICK_NAME;
+                    upInfo.uid = Live.roomInfo.uid;
+                    upInfo.roomId = Live.roomInfo.room_id;
+                    upInfo.roomShortId = Live.roomInfo.short_id;
+                    upInfo.upName = Live.roomInfo.info.uname;
                     upInfo.url = location.href;
-                    var notiseBtn = $('<div>').addClass('mid-part').append('<i class="live-icon-small favourite p-relative" style="top: 1px"></i><span>特别关注</span>').click((e) => {
+                    var notiseBtn = $('<div>').addClass('fav-part dp-i-block pointer p-relative').append('<i class="icon-font icon-attention v-middle icon-attention" style="top: 1px"></i><span class="follow-text v-middle d-inline-block">特别关注</span>').click((e) => {
                         if ($(e.currentTarget).find('i').hasClass('favourited')) {
                             chrome.runtime.sendMessage({
                                 command: 'setNotFavourite',
@@ -1272,7 +1271,7 @@
                             notiseBtn.find('i').addClass('favourited');
                         }
                     });
-                    $('.attend-button').find('.left-part').after(notiseBtn);
+                    $('.attention-btn-ctnr').prepend(notiseBtn);
                 });
             }
         };
@@ -1490,7 +1489,6 @@
                                                     uid: data.data.UID,
                                                     roomId: data.data.ROOMID,
                                                     roomShortId: Live.roomInfo.short_id,
-                                                    roomTitle: data.data.ROOMTITLE,
                                                     upName: data.data.ANCHOR_NICK_NAME,
                                                     url: location.href
                                                 }
@@ -2141,11 +2139,13 @@
                             .find('.label').append(wearedMedal.medal_name);
                         medalDOM.find('.level').append(wearedMedal.level);
                     }
+                    console.log(wearedMedal);
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(
                         items,
-                        $('<div class="intimacy"></div>').append(
-                            !hasMedal && hasWearedMedal ? medalDOM : '',
-                            ` 共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}`
+                        hasWearedMedal && $('<div class="intimacy"></div>').append(
+                            medalDOM,
+                            ` <div>共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}</div>`,
+                            `<div>今日亲密度上限：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.today_feed} / ${wearedMedal.day_limit}</div>`
                         )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
                     if (!hasMedal) {
@@ -2460,8 +2460,14 @@
                     csrf_token: Live.getCookie('bili_jct') || ''
                 }).promise();
             },
-            wearMedal: (medal_id) => {
-                return $.getJSON(`//api.live.bilibili.com/i/ajaxWearFansMedal?medal_id=${medal_id}`).promise();
+            wearMedal: (medalId) => {
+                return $.getJSON(`//api.live.bilibili.com/i/ajaxWearFansMedal?medal_id=${medalId}`).promise();
+            },
+            cancelWear: () => {
+                return $.getJSON('//api.live.bilibili.com/i/ajaxCancelWear').promise();
+            },
+            deleteMedal: (medalId) => {
+                return $.getJSON(`//api.live.bilibili.com/i/ajaxDeleteMyFansMedal?medal_id=${medalId}`).promise();
             },
             updateMedalList: () => {
                 Live.medal.getMedalList().done((medalList) => {
