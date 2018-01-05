@@ -500,22 +500,19 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
-        chrome.tabs.query({'active': true, 'currentWindow': true}, function(tabs) {
-            if (activeTabIds.indexOf(tabs[0].index) < 0) {
-                activeTabIds.push(tabs[0].index);
-            }
-            sendResponse({
-                autowide: getOption('autowide'),
-                version: version,
-                macplayer: getOption('macplayer'),
-                autooffset: getOption('autooffset'),
-                tabId: tabs[0].index,
-            });
+        if (activeTabIds.indexOf(sender.tab.id) < 0) {
+            activeTabIds.push(sender.tab.id);
+        }
+        sendResponse({
+            autowide: getOption('autowide'),
+            version: version,
+            macplayer: getOption('macplayer'),
+            autooffset: getOption('autooffset'),
         });
         return true;
-    case 'delTabId':
-        if (activeTabIds.indexOf(request.tabId) > -1) {
-            activeTabIds.splice(activeTabIds.indexOf(request.tabId), 1);
+    case 'removeTabId':
+        if (activeTabIds.indexOf(sender.tab.id) > -1) {
+            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
         }
         return true;
     case 'cidHack':
@@ -1098,7 +1095,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0 || details.statusCode > 400) {
+    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0 || details.statusCode > 400) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;

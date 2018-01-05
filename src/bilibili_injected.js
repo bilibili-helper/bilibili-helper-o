@@ -368,11 +368,9 @@
             biliHelper.version = response.version;
             biliHelper.autowide = response.autowide;
             biliHelper.autooffset = response.autooffset;
-            biliHelper.tabId = response.tabId;
             $(window).on('beforeunload', () => {
                 chrome.extension.sendMessage({
-                    command: 'delTabId',
-                    tabId: response.tabId,
+                    command: 'removeTabId',
                 });
             });
             // biliHelper.favorHTML5 = response.html5 === 'on';
