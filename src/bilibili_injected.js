@@ -810,7 +810,7 @@
             pageName = pageName.substr(pageName.indexOf('、') + 1) + '_';
         }
         // document.title contains other info feeling too much
-        return idName + pageIdName + pageName + partIdName + $('div.v-title').text().trim();
+        return idName + pageIdName + pageName + partIdName + ($('div.v-title').text() || $('.bangumi-header .header-info h1').text()).trim();
     }
 
     // Helper function, return object {url, filename}, options object used by
