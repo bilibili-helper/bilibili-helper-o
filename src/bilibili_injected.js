@@ -54,7 +54,10 @@
         32: '清晰',
         16: '流畅',
     };
-    let biliHelper = {};
+    let biliHelper = {
+        playUrls: {},
+        playQualities: [],
+    };
     biliHelper.eval = function(fn) {
         let Fn = Function;
         return new Fn('return ' + fn)();
@@ -271,82 +274,6 @@
             biliHelper.renderDownloadSection();
         }
         biliHelper.domReady = true;
-        /*
-        chrome.runtime.sendMessage({
-            command: 'getDownloadLink',
-            cid: biliHelper.cid,
-        }, function(response) {
-            let videoDownloadLink = response['download'],
-                videoPlaybackLink = response['playback'];
-            biliHelper.downloadUrls = [];
-            biliHelper.playbackUrls = [];
-            if (typeof videoDownloadLink.durl['url'] === 'undefined') {
-                biliHelper.downloadUrls = videoDownloadLink.durl;
-            } else {
-                biliHelper.downloadUrls.push(videoDownloadLink.durl);
-            }
-            if (typeof videoPlaybackLink.durl === 'undefined' || typeof videoPlaybackLink.durl['url'] === 'undefined') {
-                biliHelper.playbackUrls = videoPlaybackLink.durl;
-            } else {
-                biliHelper.playbackUrls.push(videoPlaybackLink.durl);
-            }
-            if (typeof biliHelper.downloadUrls !== 'object' || !biliHelper.downloadUrls.length) {
-                let errorMessage = biliHelper.error || '视频地址获取失败';
-                biliHelper.mainBlock.downloaderSection.find('p').html('<span></span>' + parseSafe(errorMessage));
-            } else {
-                biliHelper.mainBlock.downloaderSection.find('p').empty();
-                for (let i = 0; i < biliHelper.downloadUrls.length; i++) {
-                    let segmentInfo = biliHelper.downloadUrls[i];
-                    if (typeof segmentInfo === 'object') {
-                        let downloadOptions = getDownloadOptions(removeExtensionParam(segmentInfo.url),
-                          getNiceSectionFilename(biliHelper.avid,
-                            biliHelper.page, biliHelper.totalPage,
-                            i, biliHelper.downloadUrls.length)),
-                            $bhDownLink = $('<a class="b-btn w" rel="noreferrer"></a>')
-                              .text('分段 ' + (parseInt(i) + 1))
-                              // Set download attribute to better file name. When use "Save As" dialog, this value gets respected even the target is not from the same origin.
-                              .data('download', downloadOptions.filename)
-                              .attr('title', isNaN(parseInt(segmentInfo.filesize / 1048576 + 0.5)) ? ('长度: ' + parseTime(segmentInfo.length)) : ('长度: ' + parseTime(segmentInfo.length) + ' 大小: ' + parseInt(segmentInfo.filesize / 1048576 + 0.5) + ' MB'))
-                              .attr('href', removeExtensionParam(segmentInfo.url));
-                        biliHelper.mainBlock.downloaderSection.find('p').append($bhDownLink);
-                        // register a callback that can talk to extension background
-                        $bhDownLink.click(function(e) {
-                            e.preventDefault();
-                            chrome.runtime.sendMessage({
-                                command: 'requestForDownload',
-                                url: $(e.target).attr('href'),
-                                filename: $(e.target).data('download'),
-                            });
-                        });
-                    }
-                }
-                if (biliHelper.downloadUrls.length > 1) {
-                    let $bhDownAllLink = $('<a class="b-btn"></a>').text('下载全部共 ' + biliHelper.downloadUrls.length + ' 个分段');
-                    biliHelper.mainBlock.downloaderSection.find('p').append($bhDownAllLink);
-                    $bhDownAllLink.click(function(e) {
-                        biliHelper.mainBlock.downloaderSection.find('p .b-btn.w').click();
-                    });
-                }
-        // biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="http://bilibili.audio/' + biliHelper.avid + '/' + biliHelper.page + '"></a>').text('抽出并下载音频'));
-            }
-      // if (biliHelper.playbackUrls && biliHelper.playbackUrls.length === 1) {
-      //   biliHelper.mainBlock.switcherSection.find('a[type="html5"]').removeClass('hidden');
-      // }
-      // $('#loading-notice').fadeOut(300);
-      // if (biliHelper.favorHTML5 && localStorage.getItem('bilimac_player_type') !== 'force' && biliHelper.cid && biliHelper.playbackUrls && biliHelper.playbackUrls.length === 1 && biliHelper.playbackUrls[0].url.indexOf('m3u8') < 0) {
-      //   $('#loading-notice').fadeOut(300, function() {
-      //     biliHelper.switcher.html5();
-      //   });
-      // } else if (biliHelper.replacePlayer) {
-      //   $('#loading-notice').fadeOut(300, function() {
-      //     biliHelper.switcher.swf();
-      //   });
-      // } else {
-      //   $('#loading-notice').fadeOut(300, function() {
-      //     biliHelper.switcher.original();
-      //   });
-      // }
-        });*/
     };
     let initHelper = function() {
         biliHelper.playUrls = {};
@@ -512,41 +439,61 @@
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
             let observer = new MutationObserver(function() {
-                if ($('iframe.player').length || $('.scontent object param[name="flashvars"]').length) {
-                    urlResult = $('.scontent object param[name="flashvars"]').attr('value') || $('iframe.player').attr('src');
+                if ($('#bofqi object param[name="flashvars"]').length || $('iframe.player').length) {
+                    urlResult = $('#bofqi object param[name="flashvars"]').attr('value') || $('iframe.player').attr('src');
                     if (urlResult) {
                         let search = urlResult.split('&').map(function(searchPart) {
                             return searchPart.split('=', 2);
                         });
+                        let isSameVideo = false;
                         search.forEach(function(param) {
                             let key = param[0],
                                 value = param[1];
                             if (key === 'aid') {
+                                isSameVideo |= biliHelper.avid === value;
                                 biliHelper.avid = value;
                             } else if (key === 'cid') {
+                                isSameVideo |= biliHelper.cid === value;
                                 biliHelper.cid = value;
-                            } else if (key === 'seasonId') {
-                                biliHelper.seasonId = value;
-                            } else if (key === 'episodeId') {
-                                if (biliHelper.episodeId === value) {
-                                    biliHelper.sameVideo = true;
-                                } else {
-                                    biliHelper.sameVideo = false;
-                                }
-                                biliHelper.episodeId = value;
                             }
                         });
-                        if (biliHelper.sameVideo === false) {
+                        if (!isSameVideo) {
                             initHelper();
                         }
-                        // observer.disconnect();
                     }
+                } else {
+                    let prob = document.createElement('script');
+                    prob.id = 'init-state-prob';
+                    prob.innerHTML = 'window.postMessage({key: \'initState\', value: window.__INITIAL_STATE__}, \'*\');$(\'#init-state-prob\').remove();';
+                    document.body.appendChild(prob);
                 }
             });
             observer.observe(playerBlock, {
                 childList: true,
             });
         }
+        window.addEventListener('message', (e) => {
+            if (e.source !== window) {
+                return;
+            }
+            if (e.data.key === 'initState') {
+                if (e.data.value.epInfo) {
+                    let epInfo = e.data.value.epInfo;
+                    let isSameVideo = false;
+                    if (epInfo.aid) {
+                        isSameVideo |= biliHelper.avid === epInfo.aid;
+                        biliHelper.avid = epInfo.aid;
+                    }
+                    if (epInfo.cid) {
+                        isSameVideo |= biliHelper.cid === epInfo.cid;
+                        biliHelper.cid = epInfo.cid;
+                    }
+                    if (!isSameVideo) {
+                        initHelper();
+                    }
+                }
+            }
+        });
     } else if (biliHelper.site === 2) {
         chrome.runtime.sendMessage({
             command: 'init',

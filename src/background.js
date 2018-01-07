@@ -87,16 +87,16 @@ URL.prototype.__defineGetter__('query', function() {
     });
     return parsedObj;
 });
-chrome.cookies.get({
-    url: 'https://www.bilibili.com',
-    name: 'bili_jct',
-}, function(cookie) {
-    if (cookie) {
-        CRSF = cookie.value;
-        hasLogin = true;
-        addWatchLater(1913027);
-    }
-});
+// chrome.cookies.get({
+//     url: 'https://www.bilibili.com',
+//     name: 'bili_jct',
+// }, function(cookie) {
+//     if (cookie) {
+//         CRSF = cookie.value;
+//         hasLogin = true;
+//         addWatchLater(1913027);
+//     }
+// });
 
 // let randomIP = function(fakeip) {
 //     let ip_addr = '220.181.111.';
@@ -1092,6 +1092,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 }, {
     urls: [
         '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
         '*://interface.bilibili.com/playurl*',
     ],
 }, ['blocking', 'requestHeaders']);
@@ -1101,16 +1102,57 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
         return;
     }
     getFileData(details.url, (data) => {
-        let parsed_data = JSON.parse(data);
+        let parsedData = {};
+        if (data.startsWith('<')) {
+            let xmlParser = new DOMParser();
+            let xmlDoc = xmlParser.parseFromString(data, 'text/xml');
+            let parseNodes = (nodes) => {
+                let parsed = {};
+                for (let node of nodes) {
+                    if (node.nodeType !== Node.TEXT_NODE) {
+                        let key = node.tagName;
+                        let value = node.textContent;
+                        if (node.childNodes.length === 1) {
+                            if (!isNaN(value)) {
+                                value = Number(value);
+                            } else if (key === 'accept_quality') {
+                                value = value.split(',').map(Number);
+                            }
+                        } else {
+                            value = parseNodes(node.childNodes);
+                            if (key === 'backup_url') {
+                                value = value.url;
+                            }
+                        }
+                        if (typeof parsed[key] === 'undefined') {
+                            if (key === 'durl') {
+                                parsed[key] = [value];
+                            }
+                            parsed[key] = value;
+                        } else if (parsed[key].constructor === Array) {
+                            parsed[key].push(value);
+                        } else {
+                            parsed[key] = [parsed[key], value];
+                        }
+                    }
+                }
+                console.warn(parsed);
+                return parsed;
+            };
+            parsedData = parseNodes(xmlDoc.documentElement.childNodes);
+        } else {
+            parsedData = JSON.parse(data);
+        }
         chrome.tabs.sendMessage(details.tabId, {
             command: 'playurl',
             url: details.url,
-            data: parsed_data,
+            data: parsedData,
         });
     });
 }, {
     urls: [
         '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
         '*://interface.bilibili.com/playurl*',
     ],
 });
