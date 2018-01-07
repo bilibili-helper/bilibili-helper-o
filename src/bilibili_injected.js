@@ -476,6 +476,7 @@
             });
             document.addEventListener('loadstart', (e) => {
                 if (biliHelper.removeAds) {
+                    $('.bilibili-player.bilibili-player-ad video').prop('muted', true);
                     $('.bilibili-player.bilibili-player-ad').remove();
                 }
             }, true);
