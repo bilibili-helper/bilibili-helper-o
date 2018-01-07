@@ -1136,7 +1136,6 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
                         }
                     }
                 }
-                console.warn(parsed);
                 return parsed;
             };
             parsedData = parseNodes(xmlDoc.documentElement.childNodes);
