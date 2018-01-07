@@ -94,6 +94,10 @@
     }
 }
 
+.bangumi-player.mini-player .player-content .player {
+    height: 240px !important
+}
+
 .arc-toolbar .bili-helper .t {
     height: 80px
 }

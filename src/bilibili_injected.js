@@ -188,6 +188,7 @@
             }
         });
     }
+
     removeAd();
 
     function initStyle() {
@@ -289,6 +290,7 @@
         biliHelper.pageOffset = 0;
         chrome.runtime.sendMessage({
             command: 'init',
+            cid: biliHelper.cid,
         }, function(response) {
             // biliHelper.playerConfig = response.playerConfig;
             biliHelper.version = response.version;

@@ -10,6 +10,7 @@ let notification = false,
     localeAcquired = false,
     localeTimeout = null,
     secureAvailable = false,
+    biliTabs = {},
     updateNotified = false,
     protocol = 'https://',
     videoPlaybackHosts = [protocol + '*.hdslb.com/*', protocol + '*.acgvideo.com/*'],
@@ -19,7 +20,6 @@ let notification = false,
     hasLogin = false,
     subName = '',
     crcEngine = new Crc32Engine(),
-    activeTabIds = [],
     refererList = {};
 
 Live.set = function(n, k, v) {
@@ -501,20 +501,13 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
-        if (activeTabIds.indexOf(sender.tab.id) < 0) {
-            activeTabIds.push(sender.tab.id);
-        }
+        biliTabs[sender.tab.id] = request.cid;
         sendResponse({
             autowide: getOption('autowide'),
             version: version,
             macplayer: getOption('macplayer'),
             autooffset: getOption('autooffset'),
         });
-        return true;
-    case 'removeTabId':
-        if (activeTabIds.indexOf(sender.tab.id) > -1) {
-            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
-        }
         return true;
     case 'cidHack':
         if (isNaN(request.cid)) {
@@ -1073,7 +1066,7 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 }, ['blocking']);
 */
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
-    if (activeTabIds.indexOf(details.tabId) >= 0) {
+    if (details.tabId in biliTabs) {
         const refererUrl = _.find(details.requestHeaders, function(o) {
             return o.name.toLowerCase() === 'referer';
         })['value'];
@@ -1098,7 +1091,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 }, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
+    if (details.tabId < 0 || !(details.tabId in biliTabs)) {
+        return;
+    }
+    // Ignore Ad playurl
+    if (biliTabs[details.tabId] && details.url.indexOf('cid=' + biliTabs[details.tabId]) < 0) {
         return;
     }
     getFileData(details.url, (data) => {
@@ -1157,7 +1154,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
+    if (details.tabId < 0 || !(details.tabId in biliTabs)) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;
