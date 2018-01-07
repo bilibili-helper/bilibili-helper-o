@@ -197,7 +197,7 @@
         $('#bilibili_helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
 
-    function setWide(mode) {
+    /* function setWide(mode) {
         let player = $('#bilibiliPlayer');
         let doit = () => {
             if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
@@ -235,7 +235,7 @@
                 });
             }
         }
-    }
+    }*/
 
     function setOffset() {
         if ('scrollRestoration' in history) {
@@ -392,15 +392,15 @@
             biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 
             biliHelper.switcher.set('original');
-            if (response.autowide !== 'off') {
-                setWide(response.autowide);
-            }
+            // if (response.autowide !== 'off') {
+            //     setWide(response.autowide);
+            // }
             if (biliHelper.site === 0) {
                 $('.player-wrapper .arc-toolbar').append(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 3) {
-                $('.bangumi-info .func-module .btn-app').after(biliHelper.helperBlock);
+                $('.bangumi-info .func-module').prepend(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
             initStyle();
@@ -506,9 +506,9 @@
         chrome.runtime.sendMessage({
             command: 'init',
         }, function(response) {
-            if (response.autowide !== 'off') {
-                setWide(response.autowide);
-            }
+            // if (response.autowide !== 'off') {
+            //     setWide(response.autowide);
+            // }
         });
     }
     biliHelper.work = function() {
@@ -528,9 +528,9 @@
                 biliHelper.work();
                 return false;
             }
-            if (biliHelper.autowide !== 'off') {
-                setWide(biliHelper.autowide);
-            }
+            // if (biliHelper.autowide !== 'off') {
+            //     setWide(biliHelper.autowide);
+            // }
             if (biliHelper.autooffset === 'on') {
                 setOffset();
             }

@@ -274,6 +274,12 @@ input[type="color"] {
     text-align: left;
     border-bottom: solid 1px #ddd;
 }
+#about h1 i {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    margin-left: 10px;
+}
 
 #about p {
     color: #666;
