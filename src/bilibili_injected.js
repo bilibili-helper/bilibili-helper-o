@@ -185,6 +185,7 @@
         }, function(response) {
             if (response.value === 'on') {
                 inject_css('bilibiliHelperAdStyle', 'bilibiliHelperAd.min.css');
+                biliHelper.removeAds = true;
             }
         });
     }
@@ -473,6 +474,11 @@
             observer.observe(playerBlock, {
                 childList: true,
             });
+            document.addEventListener('loadstart', (e) => {
+                if (biliHelper.removeAds) {
+                    $('.bilibili-player.bilibili-player-ad').remove();
+                }
+            }, true);
         }
         window.addEventListener('message', (e) => {
             if (e.source !== window) {
