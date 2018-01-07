@@ -521,7 +521,7 @@ $(document).ready(function() {
             row.append(`<span class="time">${o.time}</span>`);
             row.append(`<span class="name">${o.name}</span>`);
             row.append(`<span class="num">${o.num}</span>`);
-            row.append(`<span class="ps">${o.ps}</span>`);
+            row.append(`<span class="ps" title="${o.ps}">${o.ps}</span>`);
             feedTable.append(row);
         });
     });
