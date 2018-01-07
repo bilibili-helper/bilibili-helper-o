@@ -397,7 +397,7 @@
             } else if (biliHelper.site === 1) {
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 3) {
-                $('.bangumi-info .func-module .btn-app').after(biliHelper.helperBlock);
+                $('.bangumi-info .func-module').prepend(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
             initStyle();
