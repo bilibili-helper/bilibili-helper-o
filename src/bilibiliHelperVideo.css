@@ -3,7 +3,11 @@
 }
 
 .arc-toolbar .share-tool-bar .share-btn-bar {
-    padding-right: 20px;
+    padding-right: 0;
+}
+
+.arc-toolbar .block.watch-later {
+    padding-right: 10px;
 }
 
 #cb_controler {
@@ -65,7 +69,7 @@
 }
 
 .arc-toolbar .bili-helper {
-    padding: 0 14px;
+    padding: 0 10px 0 5px;
     border-right: none;
     position: relative;
     font-size: 10px;
