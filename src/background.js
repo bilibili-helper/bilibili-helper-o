@@ -20,7 +20,7 @@ let notification = false,
     // watchLater = false,
     hasLogin = false,
     subName = '',
-    crcEngine = new Crc32Engine(),
+    crcEngine = null,
     refererList = {};
 
 Live.set = function(n, k, v) {
@@ -869,6 +869,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse();
         return false;
     case 'uidLookup':
+        if (!crcEngine) {
+            crcEngine = new Crc32Engine();
+        }
         sendResponse({
             uids: crcEngine.crack(request.user),
         });
