@@ -10,6 +10,7 @@ let notification = false,
     localeAcquired = false,
     localeTimeout = null,
     secureAvailable = false,
+    biliTabs = {},
     updateNotified = false,
     protocol = 'https://',
     videoPlaybackHosts = [protocol + '*.hdslb.com/*', protocol + '*.acgvideo.com/*'],
@@ -19,7 +20,6 @@ let notification = false,
     hasLogin = false,
     subName = '',
     crcEngine = new Crc32Engine(),
-    activeTabIds = [],
     refererList = {};
 
 Live.set = function(n, k, v) {
@@ -87,16 +87,16 @@ URL.prototype.__defineGetter__('query', function() {
     });
     return parsedObj;
 });
-chrome.cookies.get({
-    url: 'https://www.bilibili.com',
-    name: 'bili_jct',
-}, function(cookie) {
-    if (cookie) {
-        CRSF = cookie.value;
-        hasLogin = true;
-        addWatchLater(1913027);
-    }
-});
+// chrome.cookies.get({
+//     url: 'https://www.bilibili.com',
+//     name: 'bili_jct',
+// }, function(cookie) {
+//     if (cookie) {
+//         CRSF = cookie.value;
+//         hasLogin = true;
+//         addWatchLater(1913027);
+//     }
+// });
 
 // let randomIP = function(fakeip) {
 //     let ip_addr = '220.181.111.';
@@ -501,20 +501,13 @@ chrome.runtime.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':
-        if (activeTabIds.indexOf(sender.tab.id) < 0) {
-            activeTabIds.push(sender.tab.id);
-        }
+        biliTabs[sender.tab.id] = request.cid;
         sendResponse({
             autowide: getOption('autowide'),
             version: version,
             macplayer: getOption('macplayer'),
             autooffset: getOption('autooffset'),
         });
-        return true;
-    case 'removeTabId':
-        if (activeTabIds.indexOf(sender.tab.id) > -1) {
-            activeTabIds.splice(activeTabIds.indexOf(sender.tab.id), 1);
-        }
         return true;
     case 'cidHack':
         if (isNaN(request.cid)) {
@@ -1073,7 +1066,7 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 }, ['blocking']);
 */
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
-    if (activeTabIds.indexOf(details.tabId) >= 0) {
+    if (details.tabId in biliTabs) {
         const refererUrl = _.find(details.requestHeaders, function(o) {
             return o.name.toLowerCase() === 'referer';
         })['value'];
@@ -1092,31 +1085,76 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 }, {
     urls: [
         '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
         '*://interface.bilibili.com/playurl*',
     ],
 }, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
+    if (details.tabId < 0 || !(details.tabId in biliTabs)) {
+        return;
+    }
+    // Ignore Ad playurl
+    if (biliTabs[details.tabId] && details.url.indexOf('cid=' + biliTabs[details.tabId]) < 0) {
         return;
     }
     getFileData(details.url, (data) => {
-        let parsed_data = JSON.parse(data);
+        let parsedData = {};
+        if (data.startsWith('<')) {
+            let xmlParser = new DOMParser();
+            let xmlDoc = xmlParser.parseFromString(data, 'text/xml');
+            let parseNodes = (nodes) => {
+                let parsed = {};
+                for (let node of nodes) {
+                    if (node.nodeType !== Node.TEXT_NODE) {
+                        let key = node.tagName;
+                        let value = node.textContent;
+                        if (node.childNodes.length === 1) {
+                            if (!isNaN(value)) {
+                                value = Number(value);
+                            } else if (key === 'accept_quality') {
+                                value = value.split(',').map(Number);
+                            }
+                        } else {
+                            value = parseNodes(node.childNodes);
+                            if (key === 'backup_url') {
+                                value = value.url;
+                            }
+                        }
+                        if (typeof parsed[key] === 'undefined') {
+                            if (key === 'durl') {
+                                parsed[key] = [value];
+                            }
+                            parsed[key] = value;
+                        } else if (parsed[key].constructor === Array) {
+                            parsed[key].push(value);
+                        } else {
+                            parsed[key] = [parsed[key], value];
+                        }
+                    }
+                }
+                return parsed;
+            };
+            parsedData = parseNodes(xmlDoc.documentElement.childNodes);
+        } else {
+            parsedData = JSON.parse(data);
+        }
         chrome.tabs.sendMessage(details.tabId, {
             command: 'playurl',
             url: details.url,
-            data: parsed_data,
+            data: parsedData,
         });
     });
 }, {
     urls: [
         '*://bangumi.bilibili.com/player/web_api/playurl*',
+        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
         '*://interface.bilibili.com/playurl*',
     ],
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
-    if (details.tabId < 0 || activeTabIds.indexOf(details.tabId) < 0) {
+    if (details.tabId < 0 || !(details.tabId in biliTabs)) {
         return;
     }
     let modifiedHeaders = details.responseHeaders;

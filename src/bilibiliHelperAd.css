@@ -8,7 +8,6 @@
 .bulletins,
 .live-ad-full,
 .not-enough,
-.activity-pushing-out
- {
+.activity-pushing-out {
     display: none !important;
 }

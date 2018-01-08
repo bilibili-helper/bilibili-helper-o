@@ -14,7 +14,10 @@
     display: inline-block;
     position: relative;
 }
-
+.func-module.clearfix .bili-helper{
+    float: left;
+    margin-right: 20px;
+}
 .bili-helper .v1-bangumi-info-btn {
     padding: 0 15px;
     font-size: 14px;
@@ -89,6 +92,10 @@
     .bangumi-player #bofqi.player-content .player {
         height: 620px;
     }
+}
+
+.bangumi-player.mini-player .player-content .player {
+    height: 240px !important
 }
 
 .arc-toolbar .bili-helper .t {
@@ -258,6 +265,7 @@
     color: #6d757a;
     border: 1px solid #e5e9ef;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 #helper_aera {
@@ -280,7 +288,9 @@
     background-position-y: -8px;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, .2), inset 0 4px 4px rgba(0, 0, 0, .15);
 }
-
+.bangumi-info .info-right .info-title.clearfix h2{
+    width: 500px;
+}
 @-webkit-keyframes eating-neko {
     from {
         background-position-x: 0px

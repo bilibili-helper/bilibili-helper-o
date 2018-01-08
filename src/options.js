@@ -514,4 +514,15 @@ $(document).ready(function() {
     }
 
     window.history.replaceState({}, document.title, '/options.html');
+    $.getJSON('./feed.json', function(data) {
+        const feedTable = $('.feed-history .table .body');
+        $.each(data, (index, o) => {
+            const row = $('<div class="row"/>');
+            row.append(`<span class="time">${o.time}</span>`);
+            row.append(`<span class="name">${o.name}</span>`);
+            row.append(`<span class="num">${o.num}</span>`);
+            row.append(`<span class="ps" title="${o.ps}">${o.ps}</span>`);
+            feedTable.append(row);
+        });
+    });
 });

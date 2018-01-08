@@ -2442,15 +2442,15 @@
             wearedMedal: {},
             hasMedal: false,
             hasMedal: () => {
-                return _.filter(Live.medalList, (o) => {
-                    return o.anchorName === Live.roomInfo.info.uname;
+                return _.filter(Live.medalList.fansMedalList, (o) => {
+                    return o.anchorInfo.uname === Live.roomInfo.info.uname;
                 }).length > 0;
             },
             hasWeared: () => {
                 return Live.roomInfo.info.uname === Live.medal.wearedMedal.target_name;
             },
             getMedalList: () => {
-                return $.getJSON('//live.bilibili.com/i/ajaxGetMyMedalList').promise();
+                return $.getJSON('//api.live.bilibili.com/i/api/medal?page=1&pageSize=30').promise();
             },
             getWearedMedal: () => {
                 return $.post('//api.live.bilibili.com/live_user/v1/UserInfo/get_weared_medal', {
