@@ -88,16 +88,16 @@ URL.prototype.__defineGetter__('query', function() {
     });
     return parsedObj;
 });
-// chrome.cookies.get({
-//     url: 'https://www.bilibili.com',
-//     name: 'bili_jct',
-// }, function(cookie) {
-//     if (cookie) {
-//         CRSF = cookie.value;
-//         hasLogin = true;
-//         addWatchLater(1913027);
-//     }
-// });
+chrome.cookies.get({
+    url: 'https://www.bilibili.com',
+    name: 'bili_jct',
+}, function(cookie) {
+    if (cookie) {
+        CRSF = cookie.value;
+        hasLogin = true;
+        // addWatchLater(1913027);
+    }
+});
 
 // let randomIP = function(fakeip) {
 //     let ip_addr = '220.181.111.';
