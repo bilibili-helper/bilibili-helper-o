@@ -16,7 +16,8 @@ let notification = false,
     videoPlaybackHosts = [protocol + '*.hdslb.com/*', protocol + '*.acgvideo.com/*'],
     Live = {},
     bangumi = false,
-    CRSF, watchLater = false,
+    CRSF,
+    // watchLater = false,
     hasLogin = false,
     subName = '',
     crcEngine = new Crc32Engine(),
@@ -274,9 +275,10 @@ function checkDynamic() {
                                     isClickable: false,
                                     buttons: [{
                                         title: chrome.i18n.getMessage('notificationWatch'),
-                                    }, {
+                                    },
+                                    /* , {
                                         title: chrome.i18n.getMessage('notificationWatchLater'),
-                                    }],
+                                    } */],
                                 }, function() {});
                                 setOption('lastDyn', content.ctime);
                             }
@@ -338,6 +340,7 @@ function resolvePlaybackLink(avPlaybackLink, callback) {
     xmlhttp.send();
 }
 
+/*
 function addWatchLater(aid) {
     watchLater = true;
     let xmlhttp = new XMLHttpRequest();
@@ -352,7 +355,7 @@ function addWatchLater(aid) {
                 xmlhttp.onreadystatechange = xmlChange;
                 xmlhttp.send('aid=' + aid + '&jsonp=jsonp' + '&csrf=' + CRSF);
             }
-            let urlHost = new URL(url).origin + '/*';
+            let urlHost = new URL(url).origin + '/!*';
             if (videoPlaybackHosts.indexOf(urlHost) < 0) {
                 videoPlaybackHosts.push(urlHost);
                 resetVideoHostList();
@@ -365,6 +368,7 @@ function addWatchLater(aid) {
     xmlhttp.onreadystatechange = xmlChange;
     xmlhttp.send('aid=' + aid + '&jsonp=jsonp' + '&csrf=' + CRSF);
 }
+*/
 
 function getVideoInfo(avid, page, callback) {
     page = parseInt(page);
@@ -1035,7 +1039,7 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, index)
         });
     } else if (index === 1 && notificationAvid[notificationId]) {
         resetVideoHostList();
-        addWatchLater(notificationAvid[notificationId]);
+        // addWatchLater(notificationAvid[notificationId]);
     }
     /*  else if (index === 2) {
             chrome.tabs.create({
