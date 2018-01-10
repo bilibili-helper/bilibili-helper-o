@@ -96,6 +96,9 @@
     .bangumi-player #bofqi.player-content .player {
         height: 620px;
     }
+    .bangumi-info .info-right .info-title.clearfix h2 {
+        width: 320px;
+    }
 }
 
 .bangumi-player.mini-player .player-content .player {
