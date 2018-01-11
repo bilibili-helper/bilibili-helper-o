@@ -3,13 +3,6 @@
 
 const CRC32_POLY = 0xEDB88320;
 
-class CrcRainbowTableNode {
-    constructor(currDigit = '') {
-        this.val = currDigit;
-        this.next = [];
-    }
-}
-
 class Crc32Engine {
     static initCrc32Table(table) {
         for (let i = 0; i < 256; i++) {
@@ -28,31 +21,23 @@ class Crc32Engine {
     constructor() {
         this.crc32Table = new Uint32Array(256);
         Crc32Engine.initCrc32Table(this.crc32Table);
-        this.rainbowTable = new CrcRainbowTableNode();
+        this.rainbowTableHash = new Uint32Array(100000);
+        this.rainbowTableValue = new Uint32Array(100000);
+        let fullHashCache = new Uint32Array(100000),
+            shortHashBuckets = new Uint32Array(65537);
         // Initialize the rainbow Table
-        for (let i = 1; i < 100000; i++) {
-            this.addRainbowTableEntry(i);
+        for (let i = 0; i < 100000; i++) {
+            let hash = this.compute(i) >>> 0;
+            fullHashCache[i] = hash;
+            shortHashBuckets[hash >>> 16]++;
         }
-    }
-
-    addRainbowTableEntry(i) {
-        let currNode = this.rainbowTable;
-        let hash = (this.compute(i) >>> 0).toString(16);
-        for (let currChar of hash) {
-            let hasChar = false;
-            for (let child of currNode.next) {
-                if (child.val === currChar) {
-                    currNode = child;
-                    hasChar = true;
-                    break;
-                }
-            }
-            if (!hasChar) {
-                currNode.next.push(new CrcRainbowTableNode(currChar));
-                currNode = currNode.next[currNode.next.length - 1];
-            }
+        let runningSum = 0;
+        this.shortHashBucketStarts = shortHashBuckets.map((n) => runningSum += n);
+        for (let i = 0; i < 100000; i++) {
+            let idx = --this.shortHashBucketStarts[fullHashCache[i] >>> 16];
+            this.rainbowTableHash[idx] = fullHashCache[i];
+            this.rainbowTableValue[idx] = i;
         }
-        currNode.next.push(i);
     }
 
     compute(input, addPadding = false) {
@@ -69,7 +54,7 @@ class Crc32Engine {
     }
 
     crack(hash) {
-        let results = [];
+        let candidates = [];
         let hashVal = ~Number('0x' + hash) >>> 0;
         let baseHash = 0xFFFFFFFF;
 
@@ -77,7 +62,7 @@ class Crc32Engine {
             baseHash = this.crc32Update(baseHash, 0x30); // 0x30: '0'
             if (digitCount < 6) {
                 // Direct lookup
-                results = results.concat(this.lookup(hashVal ^ baseHash));
+                candidates = candidates.concat(this.lookup(hashVal ^ baseHash));
             } else {
                 // Lookup with prefix
                 let startPrefix = Math.pow(10, digitCount - 6);
@@ -86,12 +71,12 @@ class Crc32Engine {
                 for (let prefix = startPrefix; prefix < endPrefix; prefix++) {
                     for (let postfix of this.lookup(hashVal ^ baseHash ^
                                                     this.compute(prefix, true))) {
-                        results.push(prefix * 100000 + postfix);
+                        candidates.push(prefix * 100000 + postfix);
                     }
                 }
             }
         }
-        return results;
+        return candidates;
     }
 
     crc32Update(currCrc, code) {
@@ -99,20 +84,15 @@ class Crc32Engine {
     }
 
     lookup(hash) {
-        let currNode = this.rainbowTable;
-        for (let currChar of (hash >>> 0).toString(16)) {
-            let hasChar = false;
-            for (let child of currNode.next) {
-                if (child.val === currChar) {
-                    currNode = child;
-                    hasChar = true;
-                    break;
-                }
-            }
-            if (!hasChar) {
-                return [];
+        hash >>>= 0;
+        let candidates = [];
+        let shortHash = hash >>> 16;
+        for (let i = this.shortHashBucketStarts[shortHash];
+             i < this.shortHashBucketStarts[shortHash + 1]; i++) {
+            if (this.rainbowTableHash[i] === hash) {
+                candidates.push(this.rainbowTableValue[i]);
             }
         }
-        return currNode.next.filter((i) => typeof i === 'number');
+        return candidates;
     }
 }
