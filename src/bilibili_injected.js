@@ -435,6 +435,8 @@
                 hashPage = parseInt(hashPage[1]);
             }
             if (hashPage && hashPage !== biliHelper.page) {
+                biliHelper.page = hashPage;
+                biliHelper.cid = undefined;
                 initHelper();
             }
         }, false);
