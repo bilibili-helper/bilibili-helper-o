@@ -604,7 +604,7 @@
                 });
                 biliHelper.mainBlock.commentSection = commentDiv;
                 biliHelper.mainBlock.append(biliHelper.mainBlock.commentSection);
-                fetch_(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml').then((res) => res.text()).then(function(text) {
+                fetch_(biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml?platform=bilihelper').then((res) => res.text()).then(function(text) {
                     biliHelper.xml_str = text;
                     let parser = new DOMParser();
                     let response = parser.parseFromString(
