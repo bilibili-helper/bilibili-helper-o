@@ -101,6 +101,10 @@
     }
 }
 
+.bangumi-player.mini-player .player-content {
+    margin-top: 30px !important;
+}
+
 .bangumi-player.mini-player .player-content .player {
     height: 240px !important
 }
