@@ -342,6 +342,10 @@
                 biliHelper.helperBlock.remove();
             }
             if (biliHelper.site === 0) {
+                // force new version front end page if not updated.
+                if (!document.location.pathname.startsWith('/v/') && !$('#__bofqi').length) {
+                    document.location.pathname = '/v' + document.location.pathname;
+                }
                 biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><div class="icon-move"></div><div class="btn-item"><span class="t">助手</span><span class="num">菜单</span></div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
                 biliHelper.helperBlock.find('.btn-item').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
