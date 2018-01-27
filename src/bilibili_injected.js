@@ -195,7 +195,6 @@
 
     function initStyle() {
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
-        $('#bilibili_helper .t .icon').css('background-image', 'url(' + chrome.extension.getURL('imgs/helper-neko.png') + ')');
     }
 
     /* function setWide(mode) {
@@ -241,7 +240,7 @@
     function setOffset() {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
-            $(document).scrollTop($('.player-wrapper').offset().top);
+            $(document).scrollTop($('.player-wrapper, .player-box').offset().top);
         }
     }
 
@@ -282,7 +281,7 @@
         biliHelper.playUrls = {};
         biliHelper.playQualities = [];
         biliHelper.videoPic = $('img.cover_image').attr('src');
-        biliHelper.totalPage = $('#dedepagetitles option').length;
+        // biliHelper.totalPage = $('#dedepagetitles option').length;
         $('.v1-bangumi-info-operate .helper').remove();
         if (typeof biliHelper.page === 'undefined') {
             biliHelper.page = 1;
@@ -343,8 +342,8 @@
                 biliHelper.helperBlock.remove();
             }
             if (biliHelper.site === 0) {
-                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
-                biliHelper.helperBlock.find('.t').click(function() {
+                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><div class="icon-move"></div><div class="btn-item"><span class="t">助手</span><span class="num">菜单</span></div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
+                biliHelper.helperBlock.find('.btn-item').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
             } else if (biliHelper.site === 1) {
@@ -357,11 +356,6 @@
                 biliHelper.helperBlock.find('.btn-bilihelper').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
-                let styleLink = document.createElement('link');
-                styleLink.setAttribute('type', 'text/css');
-                styleLink.setAttribute('rel', 'stylesheet');
-                styleLink.setAttribute('href', '//static.hdslb.com/css/core-v5/page-core.css');
-                document.head.appendChild(styleLink);
             }
             let blockInfo = biliHelper.helperBlock.find('.info');
             biliHelper.mainBlock = blockInfo.find('.main');
@@ -397,7 +391,7 @@
             //     setWide(response.autowide);
             // }
             if (biliHelper.site === 0) {
-                $('.player-wrapper .arc-toolbar').append(biliHelper.helperBlock);
+                $('#playpage_mobileshow').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 3) {
@@ -415,32 +409,36 @@
         document.body.appendChild(prob);
     }
     $('html').addClass('bilibili-helper');
-    let bili_reg, urlResult, hashPage;
+    let bili_reg, urlResult, searchPage;
     if (biliHelper.site === 0) {
-        bili_reg = /\/video\/av([0-9]+)\/(?:index_([0-9]+)\.html)?.*?$/;
+        bili_reg = /\/video\/av([0-9]+)(?:\/)?(?:index_([0-9]+)\.html)?.*?$/;
         urlResult = bili_reg.exec(document.location.pathname);
-        hashPage = (/page=([0-9]+)/).exec(document.location.hash);
-        if (hashPage && typeof hashPage === 'object' && !isNaN(hashPage[1])) {
-            hashPage = parseInt(hashPage[1]);
+        searchPage = (/p=([0-9]+)/).exec(document.location.search);
+        if (searchPage && typeof searchPage === 'object' && !isNaN(searchPage[1])) {
+            searchPage = parseInt(searchPage[1]);
         }
         if (urlResult) {
             biliHelper.avid = urlResult[1];
-            biliHelper.page = hashPage || urlResult[2];
+            biliHelper.page = searchPage || urlResult[2];
         }
         if (biliHelper.avid) {
             initHelper();
         }
-        window.addEventListener('hashchange', function() {
-            let hashPage = (/page=([0-9]+)/).exec(document.location.hash);
-            if (hashPage && typeof hashPage === 'object' && !isNaN(hashPage[1])) {
-                hashPage = parseInt(hashPage[1]);
+        let playerBlock = $('#bofqi')[0];
+        let observer = new MutationObserver(function() {
+            let searchPage = (/p=([0-9]+)/).exec(document.location.search);
+            if (searchPage && typeof searchPage === 'object' && !isNaN(searchPage[1])) {
+                searchPage = parseInt(searchPage[1]);
             }
-            if (hashPage && hashPage !== biliHelper.page) {
-                biliHelper.page = hashPage;
+            if (searchPage && searchPage !== biliHelper.page) {
+                biliHelper.page = searchPage;
                 biliHelper.cid = undefined;
                 initHelper();
             }
-        }, false);
+        });
+        observer.observe(playerBlock, {
+            childList: true,
+        });
     } else if (biliHelper.site === 1 || biliHelper.site === 3) {
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
@@ -451,16 +449,19 @@
                         let search = urlResult.split('&').map(function(searchPart) {
                             return searchPart.split('=', 2);
                         });
-                        let isSameVideo = false;
+                        let isSameVideo = true;
                         search.forEach(function(param) {
                             let key = param[0],
                                 value = param[1];
                             if (key === 'aid') {
-                                isSameVideo |= biliHelper.avid === value;
+                                isSameVideo &= biliHelper.avid === value;
                                 biliHelper.avid = value;
                             } else if (key === 'cid') {
-                                isSameVideo |= biliHelper.cid === value;
+                                isSameVideo &= biliHelper.cid === value;
                                 biliHelper.cid = value;
+                            } else if (key === 'page') {
+                                isSameVideo &= biliHelper.page === value;
+                                biliHelper.page = value;
                             }
                         });
                         if (!isSameVideo) {
@@ -491,14 +492,18 @@
             if (e.data.key === 'initState') {
                 if (e.data.value.epInfo) {
                     let epInfo = e.data.value.epInfo;
-                    let isSameVideo = false;
+                    let isSameVideo = true;
                     if (epInfo.aid) {
-                        isSameVideo |= biliHelper.avid === epInfo.aid;
+                        isSameVideo &= biliHelper.avid === epInfo.aid;
                         biliHelper.avid = epInfo.aid;
                     }
                     if (epInfo.cid) {
-                        isSameVideo |= biliHelper.cid === epInfo.cid;
+                        isSameVideo &= biliHelper.cid === epInfo.cid;
                         biliHelper.cid = epInfo.cid;
+                    }
+                    if (epInfo.page) {
+                        isSameVideo &= biliHelper.page === epInfo.page;
+                        biliHelper.page = epInfo.page;
                     }
                     if (!isSameVideo) {
                         initHelper();
@@ -796,10 +801,11 @@
         });
     };
     let biliHelperFunc = function() {
+        /*
         biliHelper.totalPage = $('.player-wrapper .v-plist').attr('length');
         if (!isNaN(biliHelper.totalPage)) {
             biliHelper.totalPage = parseInt(biliHelper.totalPage);
-        }
+        }*/
         if (localStorage.getItem('bilimac_player_type') === 'force') {
             biliHelper.switcher.set('bilimac');
         }
@@ -822,7 +828,7 @@
             pageName = pageName.substr(pageName.indexOf('、') + 1) + '_';
         }
         // document.title contains other info feeling too much
-        return idName + pageIdName + pageName + partIdName + ($('div.v-title').text() || $('.bangumi-header .header-info h1').text()).trim();
+        return idName + pageIdName + pageName + partIdName + ($('.video-info-m h1').attr('title') || $('.bangumi-header .header-info h1').text()).trim();
     }
 
     // Helper function, return object {url, filename}, options object used by
