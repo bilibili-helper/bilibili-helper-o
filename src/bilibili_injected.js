@@ -701,10 +701,6 @@
                                 list.append(li);
                             }
                         }
-                        let t = document.createElement('script');
-                        t.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .list .result"));'));
-                        document.body.appendChild(t);
-                        t.parentNode.removeChild(t);
                         control.find('.b-slt .list li').on('click', (e) => {
                             $('.b-slt .list').hide();
                             if (biliHelper.selectedDanmu) {
@@ -724,10 +720,6 @@
                                 biliHelper.comments[index].senderId = uid;
                                 biliHelper.comments[index].senderUsername = parseSafe(data.name);
                                 control.find('.result span a[data-usercard-mid="' + uid + '"]').text(data.name).after('<div target="_blank" class="user-info-level l' + parseSafe(data.level_info.current_level) + '"></div>');
-                                let s = document.createElement('script');
-                                s.appendChild(document.createTextNode('UserCard.bind($("#bilibili_helper .query .result"));'));
-                                document.body.appendChild(s);
-                                s.parentNode.removeChild(s);
                             };
 
                             let renderSender = function(uids) {
