@@ -350,10 +350,6 @@ input.b-input.disabled {
     transition: all .2s ease-in;
 }
 
-#bofqi.wide .player {
-    width: 980px
-}
-
 .video-toolbar-module #playpage_mobileshow {
     margin-right: 20px;
     padding-right: 10px;
