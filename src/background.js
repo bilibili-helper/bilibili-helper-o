@@ -211,7 +211,7 @@ function postFileData(url, data, callback) {
 
 function searchBilibili(info) {
     chrome.tabs.create({
-        url: protocol + 'www.bilibili.com/search?keyword=' + info.selectionText,
+        url: protocol + 'search.bilibili.com/all?keyword=' + encodeURIComponent(info.selectionText),
     });
 }
 
