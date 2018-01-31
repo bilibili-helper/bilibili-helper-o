@@ -415,8 +415,8 @@ input.b-input.disabled {
 .bili-helper .info {
     background: #fff;
     border-radius: 0 0 4px 4px;
-    border-top: 0;
     border: 1px solid #e5e9ef;
+    border-top: none;
     box-shadow: rgba(0, 0, 0, 0.16) 0 2px 4px;
     cursor: default;
     height: auto;
