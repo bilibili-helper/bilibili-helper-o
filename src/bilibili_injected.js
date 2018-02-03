@@ -706,7 +706,7 @@
                             if (biliHelper.selectedDanmu) {
                                 biliHelper.selectedDanmu.removeClass('selected');
                             }
-                            let item = $(e.target);
+                            let item = $(e.target).closest('li');
                             biliHelper.selectedDanmu = item;
                             biliHelper.selectedDanmu.addClass('selected');
                             let sender = item.attr('sender'),
@@ -730,8 +730,8 @@
                                     if (cachedData) {
                                         displayUserInfo(uid, JSON.parse(cachedData));
                                     } else {
-                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
-                                            if (data.code === 0) {
+                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/x/web-interface/card?mid=' + uid + '&type=json', function(data) {
+                                            if (data.code === 0 && data.data && data.data.card && !!data.data.card.mid) {
                                                 let cardData = data.data.card;
                                                 sessionStorage.setItem('user/' + uid, JSON.stringify({
                                                     name: cardData.name,
@@ -740,7 +740,7 @@
                                                     },
                                                 }));
                                                 displayUserInfo(uid, cardData);
-                                            } else if (data.code === -626) {
+                                            } else if (data.code === -626 || !data.data.card.mid) {
                                                 control.find('.result span a[data-usercard-mid="' + uid + '"],.result span a[data-usercard-mid="' + uid + '"]+br').remove();
                                             }
                                         });
