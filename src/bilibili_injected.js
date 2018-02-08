@@ -479,8 +479,9 @@
                     document.body.appendChild(prob);
                 }
             });
-            observer.observe(playerBlock, {
-                childList: true,
+            observer.observe($('title')[0], {
+                subtree: true,
+                characterData: true,
             });
             document.addEventListener('loadstart', (e) => {
                 if (biliHelper.removeAds) {
