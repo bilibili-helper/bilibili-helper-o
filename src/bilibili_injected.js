@@ -593,7 +593,7 @@
 
             function createDanmuList() {
                 biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
-                let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
+                let commentDiv = $('<div class="section comment-list"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
                 let url = biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml';
                 let fileName = getNiceSectionFilename(biliHelper.avid, biliHelper.page, biliHelper.totalPage, 1, 1);
                 let downloadFileName = getDownloadOptions(url, fileName).filename;
