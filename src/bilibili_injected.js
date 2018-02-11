@@ -47,6 +47,14 @@
             store.remove(key);
         }
     };
+    const QUALITY_DISPLAY_NAMES = {
+        112: '高清 1080P+',
+        80: '高清 1080P',
+        64: '高清 720P',
+        48: '高清 720P',
+        32: '清晰 480P',
+        16: '流畅 360P',
+    };
     let biliHelper = {
         playUrls: {},
         playQualities: [],
@@ -58,7 +66,9 @@
     biliHelper.handlePlayUrl = function(data) {
         if (data.accept_quality.length > biliHelper.playQualities) {
             biliHelper.playQualities = data.accept_quality;
-            biliHelper.qualityDescriptions = data.accept_description;
+            biliHelper.qualityDescriptions =
+                data.accept_description || biliHelper.playQualities.map(
+                    (q) => QUALITY_DISPLAY_NAMES[q] || q);
         }
         biliHelper.playUrls[data.quality] = data.durl;
         if (biliHelper.domReady) {
