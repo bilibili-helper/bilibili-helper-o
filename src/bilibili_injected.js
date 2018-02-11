@@ -48,12 +48,12 @@
         }
     };
     const QUALITY_DISPLAY_NAMES = {
-        112: '1080P',
-        80: '超清',
-        64: '高清',
-        48: '高清',
-        32: '清晰',
-        16: '流畅',
+        112: '高清 1080P+',
+        80: '高清 1080P',
+        64: '高清 720P',
+        48: '高清 720P',
+        32: '清晰 480P',
+        16: '流畅 360P',
     };
     let biliHelper = {
         playUrls: {},
@@ -66,6 +66,9 @@
     biliHelper.handlePlayUrl = function(data) {
         if (data.accept_quality.length > biliHelper.playQualities) {
             biliHelper.playQualities = data.accept_quality;
+            biliHelper.qualityDescriptions =
+                data.accept_description || biliHelper.playQualities.map(
+                    (q) => QUALITY_DISPLAY_NAMES[q] || q);
         }
         biliHelper.playUrls[data.quality] = data.durl;
         if (biliHelper.domReady) {
@@ -80,10 +83,9 @@
         }
         for (let i = 0; i < biliHelper.playQualities.length; i++) {
             let qualitySwitch = $('<a class="b-btn" rel="noreferrer"></a>')
-                .text(biliHelper.playQualities[i] ?
-                    QUALITY_DISPLAY_NAMES[biliHelper.playQualities[i]] :
-                    biliHelper.playQualities[i])
-                .data('quality', biliHelper.playQualities[i]);
+                .text(biliHelper.qualityDescriptions[i])
+                .data('quality', biliHelper.playQualities[i])
+                .data('description', biliHelper.qualityDescriptions[i]);
             if (biliHelper.playQualities[i] !== biliHelper.selectedQuality) {
                 qualitySwitch.addClass('w');
             }
@@ -96,7 +98,7 @@
                     return false;
                 }
                 if ($(this).hasClass('disabled')) {
-                    window.alert('请切换播放器画质以获取' + QUALITY_DISPLAY_NAMES[$(this).data('quality')] + '下载地址.');
+                    window.alert('请切换播放器画质以获取' + $(this).data('description') + '下载地址.');
                     return false;
                 }
                 biliHelper.selectedQuality = $(this).data('quality');
@@ -482,6 +484,10 @@
             observer.observe(playerBlock, {
                 childList: true,
             });
+            observer.observe($('title')[0], {
+                subtree: true,
+                characterData: true,
+            });
             document.addEventListener('loadstart', (e) => {
                 if (biliHelper.removeAds) {
                     $('.bilibili-player.bilibili-player-ad video').prop('muted', true);
@@ -592,7 +598,7 @@
 
             function createDanmuList() {
                 biliHelper.mainBlock.infoSection.find('p').append($('<span>cid: ' + biliHelper.cid + '</span>'));
-                let commentDiv = $('<div class="section comment"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
+                let commentDiv = $('<div class="section comment-list"><h3>弹幕下载</h3><p><a class="b-btn w" href="' + biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml">下载 XML 格式弹幕</a></p></div>');
                 let url = biliHelper.protocol + '//comment.bilibili.com/' + biliHelper.cid + '.xml';
                 let fileName = getNiceSectionFilename(biliHelper.avid, biliHelper.page, biliHelper.totalPage, 1, 1);
                 let downloadFileName = getDownloadOptions(url, fileName).filename;
@@ -706,7 +712,7 @@
                             if (biliHelper.selectedDanmu) {
                                 biliHelper.selectedDanmu.removeClass('selected');
                             }
-                            let item = $(e.target);
+                            let item = $(e.target).closest('li');
                             biliHelper.selectedDanmu = item;
                             biliHelper.selectedDanmu.addClass('selected');
                             let sender = item.attr('sender'),
@@ -730,8 +736,8 @@
                                     if (cachedData) {
                                         displayUserInfo(uid, JSON.parse(cachedData));
                                     } else {
-                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/cardrich?mid=' + uid + '&type=json', function(data) {
-                                            if (data.code === 0) {
+                                        $.getJSON(biliHelper.protocol + '//api.bilibili.com/x/web-interface/card?mid=' + uid + '&type=json', function(data) {
+                                            if (data.code === 0 && data.data && data.data.card && !!data.data.card.mid) {
                                                 let cardData = data.data.card;
                                                 sessionStorage.setItem('user/' + uid, JSON.stringify({
                                                     name: cardData.name,
@@ -740,7 +746,7 @@
                                                     },
                                                 }));
                                                 displayUserInfo(uid, cardData);
-                                            } else if (data.code === -626) {
+                                            } else if (data.code === -626 || !data.data.card.mid) {
                                                 control.find('.result span a[data-usercard-mid="' + uid + '"],.result span a[data-usercard-mid="' + uid + '"]+br').remove();
                                             }
                                         });

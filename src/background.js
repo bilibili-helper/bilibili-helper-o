@@ -23,6 +23,13 @@ let notification = false,
     crcEngine = null,
     refererList = {};
 
+const PLAY_URLS = [
+    '*://bangumi.bilibili.com/player/web_api/playurl*',
+    '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
+    '*://interface.bilibili.com/playurl*',
+    '*://interface.bilibili.com/v2/playurl*',
+];
+
 Live.set = function(n, k, v) {
     if (!window.localStorage || !n) {
         return;
@@ -1090,11 +1097,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
     }
     return {requestHeaders: details.requestHeaders};
 }, {
-    urls: [
-        '*://bangumi.bilibili.com/player/web_api/playurl*',
-        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
-        '*://interface.bilibili.com/playurl*',
-    ],
+    urls: PLAY_URLS,
 }, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
@@ -1153,11 +1156,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
         });
     });
 }, {
-    urls: [
-        '*://bangumi.bilibili.com/player/web_api/playurl*',
-        '*://bangumi.bilibili.com/player/web_api/v2/playurl*',
-        '*://interface.bilibili.com/playurl*',
-    ],
+    urls: PLAY_URLS,
 });
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
