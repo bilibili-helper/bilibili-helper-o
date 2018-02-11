@@ -47,14 +47,6 @@
             store.remove(key);
         }
     };
-    const QUALITY_DISPLAY_NAMES = {
-        112: '1080P',
-        80: '超清',
-        64: '高清',
-        48: '高清',
-        32: '清晰',
-        16: '流畅',
-    };
     let biliHelper = {
         playUrls: {},
         playQualities: [],
@@ -66,6 +58,7 @@
     biliHelper.handlePlayUrl = function(data) {
         if (data.accept_quality.length > biliHelper.playQualities) {
             biliHelper.playQualities = data.accept_quality;
+            biliHelper.qualityDescriptions = data.accept_description;
         }
         biliHelper.playUrls[data.quality] = data.durl;
         if (biliHelper.domReady) {
@@ -80,10 +73,9 @@
         }
         for (let i = 0; i < biliHelper.playQualities.length; i++) {
             let qualitySwitch = $('<a class="b-btn" rel="noreferrer"></a>')
-                .text(biliHelper.playQualities[i] ?
-                    QUALITY_DISPLAY_NAMES[biliHelper.playQualities[i]] :
-                    biliHelper.playQualities[i])
-                .data('quality', biliHelper.playQualities[i]);
+                .text(biliHelper.qualityDescriptions[i])
+                .data('quality', biliHelper.playQualities[i])
+                .data('description', biliHelper.qualityDescriptions[i]);
             if (biliHelper.playQualities[i] !== biliHelper.selectedQuality) {
                 qualitySwitch.addClass('w');
             }
@@ -96,7 +88,7 @@
                     return false;
                 }
                 if ($(this).hasClass('disabled')) {
-                    window.alert('请切换播放器画质以获取' + QUALITY_DISPLAY_NAMES[$(this).data('quality')] + '下载地址.');
+                    window.alert('请切换播放器画质以获取' + $(this).data('description') + '下载地址.');
                     return false;
                 }
                 biliHelper.selectedQuality = $(this).data('quality');
@@ -478,6 +470,9 @@
                     prob.innerHTML = 'window.postMessage({key: \'initState\', value: window.__INITIAL_STATE__}, \'*\');$(\'#init-state-prob\').remove();';
                     document.body.appendChild(prob);
                 }
+            });
+            observer.observe(playerBlock, {
+                childList: true,
             });
             observer.observe($('title')[0], {
                 subtree: true,
