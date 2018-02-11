@@ -58,7 +58,7 @@
     "https://*/"
   ],
   "update_url": "https://clients2.google.com/service/update2/crx",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "web_accessible_resources": [
     "bilibili-helper.woff",
     "options.min.css",

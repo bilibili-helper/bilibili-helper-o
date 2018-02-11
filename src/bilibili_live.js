@@ -27,7 +27,7 @@
                 store.remove(key);
             }
         };
-        let Live = {scriptOptions: {}, hasInit: false, giftList: {}, mobileVerified: 0, protocol: location.protocol};
+        let Live = {scriptOptions: {}, hasInit: false, giftList: {}, protocol: location.protocol};
         Live.addScriptByFile = (fileName, options) => {
             let a = document.createElement('script');
             a.id = 'bilibiliHelperScript';
@@ -1479,105 +1479,102 @@
                             chrome.runtime.sendMessage({
                                 command: 'getWatcherRoom'
                             }, (response) => {
-                                if (Live.mobileVerified) {
-                                    if (response['data'].roomId === undefined) {
-                                        // setWatcherRoom
-                                        Live.getRoomInfo().done((data) => {
-                                            chrome.runtime.sendMessage({
-                                                command: 'setWatcherRoom',
-                                                data: {
-                                                    uid: data.data.UID,
-                                                    roomId: data.data.ROOMID,
-                                                    roomShortId: Live.roomInfo.short_id,
-                                                    upName: data.data.ANCHOR_NICK_NAME,
-                                                    url: location.href
-                                                }
-                                            });
-                                        });
+                                if (response['data'].roomId === undefined) {
+                                    // setWatcherRoom
+                                    Live.getRoomInfo().done((data) => {
                                         chrome.runtime.sendMessage({
-                                            command: 'getOption',
-                                            key: 'watchList'
-                                        }, (response) => {
-                                            let watchList = response['value'] ? JSON.parse(response['value']) : [];
-                                            Live.scriptOptions['watcher'] = [];
-                                            Live.each(watchList, (i) => {
-                                                let option = Live.watcher.options[watchList[i]];
-                                                if (option === false) {
-                                                    Live.watcher.options[watchList[i]] = true;
-                                                    Live.scriptOptions['watcher'].push(watchList[i]);
-                                                    Live.console.watcher('启动:' + watchList[i]);
-                                                }
-                                            });
-                                            Live.watcher.initRewardPanel();
-                                            $(window).on('beforeunload', (e) => {
-                                                // e.returnValue = "这个直播间已经开启抽奖监控，真的要关闭吗？";
-                                                chrome.runtime.sendMessage({
-                                                    command: 'delWatcherRoom'
-                                                });
-                                                // return e.returnValue;
-                                            });
-
-                                            if (Live.watcher.options['tv']) {
-                                                Live.smallTV.init();
-                                                Live.watcher.updateReward('tv');
-                                            }
-                                            // if (Live.watcher.options['lottery']) {
-                                            //     Live.lottery.init();
-                                            //     Live.watcher.updateReward('lottery');
-                                            // }
-
-                                            document.addEventListener('sendMessage', (event) => {
-                                                let message = store.get('bilibili_helper_message');
-                                                if (!message.cmd) {
-                                                    return false;
-                                                }
-                                                Live.watcher.classify(message);
-                                            });
-                                            Live.watcher.initData();
-                                            if (typeof callback === 'function') {
-                                                callback();
+                                            command: 'setWatcherRoom',
+                                            data: {
+                                                uid: data.data.UID,
+                                                roomId: data.data.ROOMID,
+                                                roomShortId: Live.roomInfo.short_id,
+                                                upName: data.data.ANCHOR_NICK_NAME,
+                                                url: location.href
                                             }
                                         });
-                                        chrome.runtime.sendMessage({
-                                            command: 'getOption',
-                                            key: 'watchNotify'
-                                        }, (response) => {
-                                            Live.watcher.notifyStatus = response['value'] === 'on';
-                                        });
-                                        chrome.runtime.sendMessage({
-                                            command: 'getOption',
-                                            key: 'watchNotifyList'
-                                        }, (response) => {
-                                            let notifyOptionsList = response['value'] ? JSON.parse(response['value']) : [];
-                                            Live.each(notifyOptionsList, (i) => {
-                                                let option = Live.watcher.notifyOptions[notifyOptionsList[i]];
-                                                if (!option) {
-                                                    Live.watcher.notifyOptions[notifyOptionsList[i]] = true;
-                                                }
-                                            });
-                                        });
-                                        // Live.watcherInfoDOM.html('该房间已开启监控功能');
-
-                                    } else {
-                                        chrome.runtime.sendMessage({
-                                            command: 'getOption',
-                                            key: 'watchList'
-                                        }, (response) => {
-                                            let watchList = response['value'] ? JSON.parse(response['value']) : [];
-                                            Live.each(watchList, (i) => {
+                                    });
+                                    chrome.runtime.sendMessage({
+                                        command: 'getOption',
+                                        key: 'watchList'
+                                    }, (response) => {
+                                        let watchList = response['value'] ? JSON.parse(response['value']) : [];
+                                        Live.scriptOptions['watcher'] = [];
+                                        Live.each(watchList, (i) => {
+                                            let option = Live.watcher.options[watchList[i]];
+                                            if (option === false) {
                                                 Live.watcher.options[watchList[i]] = true;
-                                            });
-                                            Live.watcher.initRewardPanel();
+                                                Live.scriptOptions['watcher'].push(watchList[i]);
+                                                Live.console.watcher('启动:' + watchList[i]);
+                                            }
                                         });
+                                        Live.watcher.initRewardPanel();
+                                        $(window).on('beforeunload', (e) => {
+                                            // e.returnValue = "这个直播间已经开启抽奖监控，真的要关闭吗？";
+                                            chrome.runtime.sendMessage({
+                                                command: 'delWatcherRoom'
+                                            });
+                                            // return e.returnValue;
+                                        });
+
+                                        if (Live.watcher.options['tv']) {
+                                            Live.smallTV.init();
+                                            Live.watcher.updateReward('tv');
+                                        }
+                                        // if (Live.watcher.options['lottery']) {
+                                        //     Live.lottery.init();
+                                        //     Live.watcher.updateReward('lottery');
+                                        // }
+
+                                        document.addEventListener('sendMessage', (event) => {
+                                            let message = store.get('bilibili_helper_message');
+                                            if (!message.cmd) {
+                                                return false;
+                                            }
+                                            Live.watcher.classify(message);
+                                        });
+                                        Live.watcher.initData();
                                         if (typeof callback === 'function') {
                                             callback();
                                         }
-                                        // Live.watcherInfoDOM.html('监控功能已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间启动');
-                                    }
+                                    });
+                                    chrome.runtime.sendMessage({
+                                        command: 'getOption',
+                                        key: 'watchNotify'
+                                    }, (response) => {
+                                        Live.watcher.notifyStatus = response['value'] === 'on';
+                                    });
+                                    chrome.runtime.sendMessage({
+                                        command: 'getOption',
+                                        key: 'watchNotifyList'
+                                    }, (response) => {
+                                        let notifyOptionsList = response['value'] ? JSON.parse(response['value']) : [];
+                                        Live.each(notifyOptionsList, (i) => {
+                                            let option = Live.watcher.notifyOptions[notifyOptionsList[i]];
+                                            if (!option) {
+                                                Live.watcher.notifyOptions[notifyOptionsList[i]] = true;
+                                            }
+                                        });
+                                    });
+                                    // Live.watcherInfoDOM.html('该房间已开启监控功能');
 
-                                    Live.watcher.able = true;
                                 } else {
+                                    chrome.runtime.sendMessage({
+                                        command: 'getOption',
+                                        key: 'watchList'
+                                    }, (response) => {
+                                        let watchList = response['value'] ? JSON.parse(response['value']) : [];
+                                        Live.each(watchList, (i) => {
+                                            Live.watcher.options[watchList[i]] = true;
+                                        });
+                                        Live.watcher.initRewardPanel();
+                                    });
+                                    if (typeof callback === 'function') {
+                                        callback();
+                                    }
+                                    // Live.watcherInfoDOM.html('监控功能已在<a target="_blank" href="' + response['data'].url + '">' + response['data'].upName + '</a>的直播间启动');
                                 }
+
+                                Live.watcher.able = true;
                             });
                         }, 2000);
                     }
@@ -2524,14 +2521,12 @@
 
                                     // function init
                                     setTimeout(() => {
-                                        if (Live.mobileVerified) {
-                                            Live.doSign.init();
-                                            Live.chat.init();
-                                            Live.notise.init();
-                                            Live.giftpackage.init();
-                                            // Live.bet.init();
-                                            // Live.beat.init();
-                                        }
+                                        Live.doSign.init();
+                                        Live.chat.init();
+                                        Live.notise.init();
+                                        Live.giftpackage.init();
+                                        // Live.bet.init();
+                                        // Live.beat.init();
                                         Live.treasure.init();
                                         Live.watcher.init();
                                     }, 2500);
@@ -2657,12 +2652,6 @@
                             dataType: 'json',
                             url: '//space.bilibili.com/ajax/member/MyInfo'
                         }).promise().done((res) => {
-                            if (res.data && res.data.mobile_verified === 1) {
-                                Live.mobileVerified = 1;
-                            } else {
-                                Live.mobileVerified = 0;
-                                console.error('未绑定手机，直播间功能无法启用');
-                            }
                             userData = Object.assign({}, userData, res.data);
                             store.set('bilibili_helper_userInfo', userData);
                             Live.user = userData;
