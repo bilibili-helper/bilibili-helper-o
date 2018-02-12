@@ -147,7 +147,7 @@
     } else if (document.location.pathname.indexOf('/bangumi/') === 0) {
         biliHelper.site = 3;
     } else if (location.hostname === 'www.bilibili.com') {
-        biliHelper.site = 0;
+        biliHelper.site = $('#__bofqi').length ? 4 : 0;
     } else {
         return false;
     }
@@ -344,22 +344,27 @@
                 biliHelper.helperBlock.remove();
             }
             if (biliHelper.site === 0) {
-                // force new version front end page if not updated.
-                if (!document.location.pathname.startsWith('/v/') && !$('#__bofqi').length) {
-                    document.location.pathname = '/v' + document.location.pathname;
-                }
-                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><div class="icon-move"></div><div class="btn-item"><span class="t">助手</span><span class="num">菜单</span></div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
-                biliHelper.helperBlock.find('.btn-item').click(function() {
+                // old standard player page
+                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><span class="t"><div class="icon"></div><div class="t-right"><span class="t-right-top middle">助手</span><span class="t-right-bottom">扩展菜单</span></div></span><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
+                biliHelper.helperBlock.find('.t').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
             } else if (biliHelper.site === 1) {
+                // old bangumi page
                 biliHelper.helperBlock = $('<span class="bili-helper"><div class="v1-bangumi-info-btn" id="bilibili_helper">哔哩哔哩助手</div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></span>');
                 biliHelper.helperBlock.find('.v1-bangumi-info-btn').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
             } else if (biliHelper.site === 3) {
+                // new bangumi page
                 biliHelper.helperBlock = $('<span class="bili-helper"><li class="share-btn btn-bilihelper" id="bilibili_helper">哔哩哔哩助手</li><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></span>');
                 biliHelper.helperBlock.find('.btn-bilihelper').click(function() {
+                    biliHelper.helperBlock.toggleClass('active');
+                });
+            } else if (biliHelper.site === 4) {
+                // new standard player page
+                biliHelper.helperBlock = $('<div class="block bili-helper" id="bilibili_helper"><div class="icon-move"></div><div class="btn-item"><span class="t">助手</span><span class="num">菜单</span></div><div class="info"><div class="main"></div><div class="version" title="' + biliHelper.version + '">哔哩哔哩助手 by <a href="http://weibo.com/guguke" target="_blank">@啾咕咕</a> <a href="http://weibo.com/ruo0037" target="_blank">@肉肉</a><a class="setting b-btn w" href="' + chrome.extension.getURL('options.html') + '" target="_blank">设置</a></div></div></div>');
+                biliHelper.helperBlock.find('.btn-item').click(function() {
                     biliHelper.helperBlock.toggleClass('active');
                 });
             }
@@ -397,11 +402,13 @@
             //     setWide(response.autowide);
             // }
             if (biliHelper.site === 0) {
-                $('#playpage_mobileshow').after(biliHelper.helperBlock);
+                $('.block.app').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
                 $('.v1-bangumi-info-operate .v1-app-btn').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 3) {
                 $('.bangumi-info .func-module').prepend(biliHelper.helperBlock);
+            } else if (biliHelper.site === 4) {
+                $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
             initStyle();
@@ -415,29 +422,31 @@
         document.body.appendChild(prob);
     }
     $('html').addClass('bilibili-helper');
-    let bili_reg, urlResult, searchPage;
-    if (biliHelper.site === 0) {
+    let bili_reg, urlResult, uriPage;
+    if (biliHelper.site === 0 || biliHelper.site === 4) {
         bili_reg = /\/video\/av([0-9]+)(?:\/)?(?:index_([0-9]+)\.html)?.*?$/;
         urlResult = bili_reg.exec(document.location.pathname);
-        searchPage = (/p=([0-9]+)/).exec(document.location.search);
-        if (searchPage && typeof searchPage === 'object' && !isNaN(searchPage[1])) {
-            searchPage = parseInt(searchPage[1]);
+        uriPage = biliHelper.site === 0 ?
+            (/page=([0-9]+)/).exec(document.location.hash) :
+            (/p=([0-9]+)/).exec(document.location.search);
+        if (uriPage && typeof uriPage === 'object' && !isNaN(uriPage[1])) {
+            uriPage = parseInt(uriPage[1]);
         }
         if (urlResult) {
             biliHelper.avid = urlResult[1];
-            biliHelper.page = searchPage || urlResult[2];
+            biliHelper.page = uriPage || urlResult[2];
         }
         if (biliHelper.avid) {
             initHelper();
         }
         let playerBlock = $('#bofqi')[0];
         let observer = new MutationObserver(function() {
-            let searchPage = (/p=([0-9]+)/).exec(document.location.search);
-            if (searchPage && typeof searchPage === 'object' && !isNaN(searchPage[1])) {
-                searchPage = parseInt(searchPage[1]);
+            let uriPage = (/p=([0-9]+)/).exec(document.location.search);
+            if (uriPage && typeof uriPage === 'object' && !isNaN(uriPage[1])) {
+                uriPage = parseInt(uriPage[1]);
             }
-            if (searchPage && searchPage !== biliHelper.page) {
-                biliHelper.page = searchPage;
+            if (uriPage && uriPage !== biliHelper.page) {
+                biliHelper.page = uriPage;
                 biliHelper.cid = undefined;
                 initHelper();
             }
@@ -831,7 +840,10 @@
             pageName = pageName.substr(pageName.indexOf('、') + 1) + '_';
         }
         // document.title contains other info feeling too much
-        return idName + pageIdName + pageName + partIdName + ($('.video-info-m h1').attr('title') || $('.bangumi-header .header-info h1').text()).trim();
+        return idName + pageIdName + pageName + partIdName + (
+            $('div.v-title').text() ||
+            $('.video-info-m h1').attr('title') ||
+            $('.bangumi-header .header-info h1').text()).trim();
     }
 
     // Helper function, return object {url, filename}, options object used by
