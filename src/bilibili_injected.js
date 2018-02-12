@@ -485,8 +485,9 @@
                 childList: true,
             });
             observer.observe($('title')[0], {
-                subtree: true,
                 characterData: true,
+                childList: true,
+                subtree: true,
             });
             document.addEventListener('loadstart', (e) => {
                 if (biliHelper.removeAds) {
