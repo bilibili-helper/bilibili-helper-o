@@ -350,16 +350,23 @@ input.b-input.disabled {
     transition: all .2s ease-in;
 }
 
+.arc-toolbar .block.watch-later {
+    padding-right: 10px;
+}
+
 .video-toolbar-module #playpage_mobileshow {
     margin-right: 20px;
     padding-right: 10px;
 }
 
-.video-toolbar-module .bili-helper {
-    float: left;
+.arc-toolbar .bili-helper, .video-toolbar-module .bili-helper {
     padding: 0 10px 0 5px;
     border-right: none;
     position: relative;
+}
+
+.video-toolbar-module .bili-helper {
+    float: left;
     font-size: 10px;
     cursor: pointer;
     transition: .2s all ease-in;
@@ -367,7 +374,7 @@ input.b-input.disabled {
     border-right: 1px solid transparent
 }
 
-.video-toolbar-module .bili-helper:hover {
+.arc-toolbar .bili-helper:hover, .video-toolbar-module .bili-helper:hover {
     color: #00a1d6
 }
 
@@ -386,6 +393,10 @@ input.b-input.disabled {
 }
 
 @media screen and (max-width: 1400px) {
+    .arc-toolbar .block {
+        padding: 0 12px;
+        margin-left: -12px;
+    }
     .video-toolbar-module .btn-item {
         padding: 0 0 0 60px !important;
         margin-left: -12px;
@@ -395,17 +406,25 @@ input.b-input.disabled {
     }
 }
 
-.video-toolbar-module .bili-helper .icon-move {
+.arc-toolbar .bili-helper .t {
+    height: 80px;
+}
+
+.arc-toolbar .bili-helper .t .icon, .video-toolbar-module .bili-helper .icon-move {
     width: 60px;
     height: 60px;
     display: inline-block;
     background-size: 600px 60px;
     position: absolute;
     top: 10px;
-    left: 4px;
+    left: 0;
     background-image: url(./imgs/helper-neko.png);
     -webkit-animation: moving-neko 10s steps(3, end) infinite;
     -webkit-animation-fill-mode: forwards
+}
+
+.video-toolbar-module .bili-helper .icon-move {
+    left: 4px;
 }
 
 .video-toolbar-module .bili-helper:hover .icon-move {
@@ -503,9 +522,11 @@ input.b-input.disabled {
 }
 
 .bili-helper .info .main .section.query .b-slt .b-slt-arrow {
+    background: none;
+    color: #aaa;
     display: inline-block;
     font-weight: bold;
-    color: #aaa;
+    vertical-align: baseline;
 }
 
 .bili-helper .info .main .section.query .b-slt .b-slt-arrow::after {
