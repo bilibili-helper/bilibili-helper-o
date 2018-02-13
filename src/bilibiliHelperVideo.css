@@ -360,22 +360,22 @@ input.b-input.disabled {
 }
 
 .arc-toolbar .bili-helper, .video-toolbar-module .bili-helper {
-    padding: 0 10px 0 5px;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
     border-right: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0 10px 0 5px;
     position: relative;
+    transition: .2s all ease-in;
 }
 
 .video-toolbar-module .bili-helper {
     float: left;
-    font-size: 10px;
-    cursor: pointer;
-    transition: .2s all ease-in;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent
 }
 
 .arc-toolbar .bili-helper:hover, .video-toolbar-module .bili-helper:hover {
-    color: #00a1d6
+    color: #00a1d6;
 }
 
 .video-toolbar-module .btn-item {
@@ -427,7 +427,7 @@ input.b-input.disabled {
     left: 4px;
 }
 
-.video-toolbar-module .bili-helper:hover .icon-move {
+.arc-toolbar .bili-helper:hover .t .icon, .video-toolbar-module .bili-helper:hover .icon-move {
     -webkit-animation: eating-neko 1s steps(9, end) infinite
 }
 
@@ -452,7 +452,7 @@ input.b-input.disabled {
     z-index: 1000;
 }
 
-.video-toolbar-module .bili-helper.active {
+.arc-toolbar .bili-helper.active, .video-toolbar-module .bili-helper.active {
     border-radius: 4px 0 0 0;
     border-left: 1px solid #e5e9ef;
     border-right: 1px solid #e5e9ef;
