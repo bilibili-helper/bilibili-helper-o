@@ -16,7 +16,7 @@ let notification = false,
     videoPlaybackHosts = [protocol + '*.hdslb.com/*', protocol + '*.acgvideo.com/*'],
     Live = {},
     bangumi = false,
-    CRSF,
+    DedeUserID = null,
     // watchLater = false,
     hasLogin = false,
     subName = '',
@@ -100,7 +100,6 @@ chrome.cookies.get({
     name: 'bili_jct',
 }, function(cookie) {
     if (cookie) {
-        CRSF = cookie.value;
         hasLogin = true;
         // addWatchLater(1913027);
     }
@@ -867,10 +866,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             sendResponse(true);
         });
         return true;
-    case 'sendCRSF':
-        CRSF = request.CRSF;
-        sendResponse();
-        return true;
     case 'suggestName':
         downloadNames[request.url.split('?')[0]] = request.filename;
         sendResponse();
@@ -1280,8 +1275,8 @@ function each(obj, fn) {
 Live.notise = {
     page: 1,
     userMode: function() {
-        return getCookie('DedeUserID');
-    }(),
+        return DedeUserID !== null;
+    },
     hasMore: !1,
     list: [],
     count: 0,
@@ -1295,7 +1290,7 @@ Live.notise = {
             let roomIdList = {},
                 newList = [];
             each(t.data.list, function(i) {
-                roomIdList[t.data.list[i].roomid] = t.data.list[i];
+                roomIdList[t.data.list[i].room_id] = t.data.list[i];
             });
 
             if (1 === Live.notise.page) {
@@ -1305,9 +1300,8 @@ Live.notise = {
                     Live.notise.cacheList[i] = roomIdList[i];
                 });
             }
-            Live.notise.hasMore = (t.data.count > 10 && t.data.list.length === 10 && Live.notise.userMode);
-
-            if (!Live.notise.hasMore || d.has_new) {
+            Live.notise.hasMore = (t.data.count > 10 && t.data.list.length === 10 && Live.notise.userMode());
+            if (!Live.notise.hasMore) {
                 for (let q in Live.notise.cacheList) {
                     if (Live.notise.roomIdList[q] === undefined) {
                         newList.push(Live.notise.cacheList[q]);
@@ -1316,9 +1310,9 @@ Live.notise = {
 
                 if (newList.length) {
                     each(newList, function(i) {
-                        if (Live.favouritesIdList.indexOf(parseInt(newList[i].roomid)) !== -1) {
+                        if (Live.favouritesIdList.indexOf(parseInt(newList[i].room_id)) !== -1) {
                             let data = newList[i];
-                            chrome.notifications.create(data.roomid, {
+                            chrome.notifications.create(String(data.room_id), {
                                 type: 'basic',
                                 iconUrl: data.face,
                                 title: data.nickname + chrome.i18n.getMessage('notificationLiveOn'),
@@ -1339,9 +1333,13 @@ Live.notise = {
                 }
                 Live.notise.roomIdList = Live.notise.cacheList;
                 Live.notise.cacheList = {};
+            } else {
+                Live.notise.page++;
+                Live.notise.getList(d);
+                Live.notise.page = 1;
             }
         };
-        let type = Live.notise.userMode ? 'POST' : 'GET';
+        let type = Live.notise.userMode() ? 'POST' : 'GET';
 
         getFileData(url, callback, type, 'json');
     },
@@ -1356,7 +1354,7 @@ Live.notise = {
             Live.notise.feedMode = data.data.open;
             if (0 === data.code) {
                 Live.notise.count = data.data.count;
-                if (data.data.open && data.data.has_new) {
+                if (data.data.open && !data.data.has_new) {
                     Live.notise.count = 0;
                     Live.notise.page = 1;
                     Live.notise.open = !0;
@@ -1388,7 +1386,13 @@ Live.notise = {
     },
 };
 if (getOption('liveNotification') === 'on') {
-    Live.notise.init();
+    chrome.cookies.get({
+        url: 'https://live.bilibili.com',
+        name: 'DedeUserID',
+    }, function(cookie) {
+        DedeUserID = cookie.value;
+        Live.notise.init();
+    });
 }
 
 chrome.runtime.onConnect.addListener(function(port) {
