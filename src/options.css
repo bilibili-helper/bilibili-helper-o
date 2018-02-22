@@ -183,9 +183,11 @@ input[type="color"] {
 }
 
 .category p span {
-    font-size: 10px;
-    margin: 5px 20px;
     float: right;
+    margin: 5px 10px;
+    line-height: 21px;
+    font-size: 10px;
+    color: #8c8c8b;
 }
 
 .button {
