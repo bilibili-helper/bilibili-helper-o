@@ -596,149 +596,144 @@
                 }, (res) => {
                     if (res['value'] === 'on') {
                         setTimeout(() => {
-                            // Live.scriptOptions['treasure'] = true;
-                            chrome.runtime.sendMessage({
-                                command: 'getTreasure'
-                            }, (response) => {
+                            Live.scriptOptions['treasure'] = true;
+                            // chrome.runtime.sendMessage({
+                            //     command: 'getTreasure'
+                            // }, (response) => {
 
-                                // let msg = new Notification('辅助领瓜子功能已经启动', {
-                                //     body: '房间号:' + Live.roomInfo.short_id || Live.roomInfo.room_id,
-                                //     icon: '//static.hdslb.com/live-static/images/7.png',
-                                // });
-                                //
-                                // setTimeout(() =>{
-                                //     msg.close();
-                                // }, 10000);
+                            // let msg = new Notification('辅助领瓜子功能已经启动', {
+                            //     body: '房间号:' + Live.roomInfo.short_id || Live.roomInfo.room_id,
+                            //     icon: '//static.hdslb.com/live-static/images/7.png',
+                            // });
+                            //
+                            // setTimeout(() =>{
+                            //     msg.close();
+                            // }, 10000);
+                            Live.treasure.silverSum = store.get('bilibili_helper_treasure_silver_count');
 
-                                Live.treasure.silverSum = store.get('bilibili_helper_treasure_silver_count');
+                            // init dom
+                            Live.treasure.originCtrl = $('#gift-control-vm .treasure-box');
+                            Live.treasure.treasureCtrl = Live.treasure.originCtrl.clone();
+                            Live.treasure.originCtrl.hide();
+                            Live.treasure.treasureCtrl.attr('id', 'helperTreasurePlanel');
+                            $('#gift-control-vm .treasure-box').attr('id', 'originTreasurePlanel').after(Live.treasure.treasureCtrl);
+                            Live.treasure.statusText = Live.treasure.treasureCtrl.find('.status-text');
+                            Live.treasure.infoSection = Live.treasure.treasureCtrl.find('.info-section');
+                            Live.treasure.boxSide = Live.treasure.treasureCtrl.find('.box-slide');
 
-                                // init dom
-                                Live.treasure.originCtrl = $('#gift-control-vm .treasure-box');
-                                Live.treasure.treasureCtrl = Live.treasure.originCtrl.clone();
-                                Live.treasure.originCtrl.hide();
-                                Live.treasure.treasureCtrl.attr('id', 'helperTreasurePlanel');
-                                $('#gift-control-vm .treasure-box').attr('id', 'originTreasurePlanel').after(Live.treasure.treasureCtrl);
-                                Live.treasure.statusText = Live.treasure.treasureCtrl.find('.status-text');
-                                Live.treasure.infoSection = Live.treasure.treasureCtrl.find('.info-section');
-                                Live.treasure.boxSide = Live.treasure.treasureCtrl.find('.box-slide');
-
-                                //新版瓜子宝箱用于填写验证码的div
-                                Live.treasure.captchaBox = $('<div/>').addClass('captcha-widget').hide();
-                                Live.treasure.captchaBoxTitle = $('<div>宝箱时间到，输入验证码领取奖励 ●ω●</div>').addClass('status-text t-no-wrap');
-                                Live.treasure.captchaBoxForm = $('<form/>').addClass('treasure-box-captcha-form');
-                                Live.treasure.captchaBoxInputCtl = $('<div/>').addClass('input-ctnr');
-                                Live.treasure.captchaBoxInput = $('<input/>').addClass('link-input dp-i-block v-middle');
-                                Live.treasure.captchaBoxImg = $('<img/>').addClass('captcha-img dp-i-block v-middle');
-                                Live.treasure.captchaBoxRefreshButton = $('<button/>').addClass('refresh-captcha dp-i-block v-middle pointer').append('<i class="icon icon-font icon-replace"></i>');
-                                Live.treasure.captchaBoxSubmitButtonBox = $('<div/>').addClass('submit-btn');
-                                Live.treasure.captchaBoxSubmitButton = $('<button/>').addClass('bl-button bl-button--primary bl-button--size').append('<span data-v-d19d45c0="" class="txt">领取</span>');
-
-                                Live.treasure.captchaBoxInputCtl.append(
-                                    Live.treasure.captchaBoxInput,
-                                    Live.treasure.captchaBoxImg,
-                                    Live.treasure.captchaBoxRefreshButton
-                                );
-                                Live.treasure.getCaptcha((base64Text) => {
-                                    Live.treasure.captchaBoxImg.attr('src', base64Text);
-                                });
-                                Live.treasure.captchaBoxSubmitButtonBox.append(Live.treasure.captchaBoxSubmitButton);
-                                Live.treasure.captchaBoxForm.append(
-                                    Live.treasure.captchaBoxInputCtl,
-                                    Live.treasure.captchaBoxSubmitButtonBox
-                                ).attr('name', 'treasure-box-captcha-form');
-                                Live.treasure.captchaBox.append(
-                                    Live.treasure.captchaBoxTitle,
-                                    Live.treasure.captchaBoxForm
-                                );
-                                Live.treasure.statusText.after(Live.treasure.captchaBox);
-
-                                // init canvas
-                                Live.treasure.canvas = document.createElement('canvas');
-                                Live.treasure.canvas.width = 120;
-                                Live.treasure.canvas.height = 40;
-                                document.body.appendChild(Live.treasure.canvas);
-                                Live.treasure.context = Live.treasure.canvas.getContext('2d');
-                                Live.treasure.context.font = '40px agencyfbbold';
-                                Live.treasure.context.textBaseline = 'top';
-                                if (!window.OCRAD) {
-                                    let d = document.createElement('script');
-                                    d.src = chrome.extension.getURL('ocrad.min.js');
-                                    document.body.appendChild(d);
+                            //新版瓜子宝箱用于填写验证码的div
+                            Live.treasure.captchaBox = $('<div/>').addClass('captcha-widget').hide();
+                            Live.treasure.captchaBoxTitle = $('<div>宝箱时间到，输入验证码领取奖励 ●ω●</div>').addClass('status-text t-no-wrap');
+                            Live.treasure.captchaBoxForm = $('<form/>').addClass('treasure-box-captcha-form');
+                            Live.treasure.captchaBoxInputCtl = $('<div/>').addClass('input-ctnr');
+                            Live.treasure.captchaBoxInput = $('<input/>').addClass('link-input dp-i-block v-middle');
+                            Live.treasure.captchaBoxImg = $('<img/>').addClass('captcha-img dp-i-block v-middle');
+                            Live.treasure.captchaBoxRefreshButton = $('<button/>').addClass('refresh-captcha dp-i-block v-middle pointer').append('<i class="icon icon-font icon-replace"></i>');
+                            Live.treasure.captchaBoxSubmitButtonBox = $('<div/>').addClass('submit-btn');
+                            Live.treasure.captchaBoxSubmitButton = $('<button/>').addClass('bl-button bl-button--primary bl-button--size').append('<span data-v-d19d45c0="" class="txt">领取</span>');
+                            Live.treasure.captchaBoxInputCtl.append(
+                                Live.treasure.captchaBoxInput,
+                                Live.treasure.captchaBoxImg,
+                                Live.treasure.captchaBoxRefreshButton
+                            );
+                            Live.treasure.getCaptcha((base64Text) => {
+                                Live.treasure.captchaBoxImg.attr('src', base64Text);
+                            });
+                            Live.treasure.captchaBoxSubmitButtonBox.append(Live.treasure.captchaBoxSubmitButton);
+                            Live.treasure.captchaBoxForm.append(
+                                Live.treasure.captchaBoxInputCtl,
+                                Live.treasure.captchaBoxSubmitButtonBox
+                            ).attr('name', 'treasure-box-captcha-form');
+                            Live.treasure.captchaBox.append(
+                                Live.treasure.captchaBoxTitle,
+                                Live.treasure.captchaBoxForm
+                            );
+                            Live.treasure.statusText.after(Live.treasure.captchaBox);
+                            // init canvas
+                            Live.treasure.canvas = document.createElement('canvas');
+                            Live.treasure.canvas.width = 120;
+                            Live.treasure.canvas.height = 40;
+                            document.body.appendChild(Live.treasure.canvas);
+                            Live.treasure.context = Live.treasure.canvas.getContext('2d');
+                            Live.treasure.context.font = '40px agencyfbbold';
+                            Live.treasure.context.textBaseline = 'top';
+                            if (!window.OCRAD) {
+                                let d = document.createElement('script');
+                                d.src = chrome.extension.getURL('ocrad.min.js');
+                                document.body.appendChild(d);
+                            }
+                            // init dom event
+                            Live.treasure.infoSection.find('.slide-btn.right').show().on('click', () => {
+                                if (Live.treasure.page < Live.treasure.taskInfo.max_times) {
+                                    Live.treasure.page += 1;
+                                    Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
                                 }
+                            });
+                            Live.treasure.infoSection.find('.slide-btn.left').show().on('click', () => {
+                                if (Live.treasure.page > 1) {
+                                    Live.treasure.page -= 1;
+                                    Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
+                                }
+                            });
 
-                                // init dom event
-                                Live.treasure.infoSection.find('.slide-btn.right').show().on('click', () => {
-                                    if (Live.treasure.page < Live.treasure.taskInfo.max_times) {
-                                        Live.treasure.page += 1;
-                                        Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
-                                    }
-                                });
-                                Live.treasure.infoSection.find('.slide-btn.left').show().on('click', () => {
-                                    if (Live.treasure.page > 1) {
-                                        Live.treasure.page -= 1;
-                                        Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
-                                    }
-                                });
+                            Live.treasure.captchaBoxImg.on('load', () => {
+                                Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
+                                Live.treasure.context.drawImage(Live.treasure.captchaBoxImg[0], 0, 0);
+                                Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
+                                Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
+                                // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
 
-                                Live.treasure.captchaBoxImg.on('load', () => {
-                                    Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
-                                    Live.treasure.context.drawImage(Live.treasure.captchaBoxImg[0], 0, 0);
-                                    Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
-                                    Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
-                                    // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
+                                Live.treasure.captcha.userInput = Live.treasure.captcha.answer;
+                                let captcha = Live.treasure.captcha.answer;
+                                Live.treasure.captchaBoxInput.val(captcha);
+                                setTimeout(() => {
+                                    Live.treasure.captchaBoxSubmitButton.click();
+                                }, 1000);
+                            }).on('error', () => {
+                                Live.treasure.captcha.refresh();
+                            });
 
-                                    Live.treasure.captcha.userInput = Live.treasure.captcha.answer;
-                                    let captcha = Live.treasure.captcha.answer;
-                                    Live.treasure.captchaBoxInput.val(captcha);
-                                    setTimeout(() => {
-                                        Live.treasure.captchaBoxSubmitButton.click();
-                                    }, 1000);
-                                }).on('error', () => {
-                                    Live.treasure.captcha.refresh();
-                                });
+                            Live.treasure.captchaBoxRefreshButton.on('click', () => {
+                                Live.treasure.captcha.refresh();
+                            });
+                            Live.treasure.treasureCtrl.find('.bg-cover').on('click', () => {
+                                Live.treasure.showPanel();
+                                Live.treasure.page = Live.treasure.taskInfo.times;
+                                Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times, Live.treasure.taskInfo.max_times);
+                            });
+                            //隐藏宝箱展开面板
+                            Live.treasure.treasureCtrl.on('click', (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            });
+                            Live.treasure.treasureCtrl.find('.close-btn').on('click', (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                Live.treasure.hidePanel();
+                                return false;
+                            });
+                            $(document).on('click', (e) => {
+                                Live.treasure.hidePanel();
+                            });
 
-                                Live.treasure.captchaBoxRefreshButton.on('click', () => {
-                                    Live.treasure.captcha.refresh();
-                                });
+                            //提交答案
+                            Live.treasure.captchaBoxSubmitButton.on('click', () => {
+                                if (!Live.treasure.allowCtrl) {
+                                    return;
+                                }
+                                Live.treasure.allowCtrl = false;
+                                Live.treasure.submit();
+                            });
 
-                                Live.treasure.treasureCtrl.find('.bg-cover').on('click', () => {
-                                    Live.treasure.showPanel();
-                                    Live.treasure.page = Live.treasure.taskInfo.times;
-                                    Live.treasure.setInfoSectionPage(Live.treasure.taskInfo.times, Live.treasure.taskInfo.max_times);
-                                });
-                                //隐藏宝箱展开面板
-                                Live.treasure.treasureCtrl.on('click', (e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return false;
-                                });
-                                Live.treasure.treasureCtrl.find('.close-btn').on('click', (e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    Live.treasure.hidePanel();
-                                    return false;
-                                });
-                                $(document).on('click', (e) => {
-                                    Live.treasure.hidePanel();
-                                });
-
-                                //提交答案
-                                Live.treasure.captchaBoxSubmitButton.on('click', () => {
-                                    if (!Live.treasure.allowCtrl) {
-                                        return;
-                                    }
-                                    Live.treasure.allowCtrl = false;
-                                    Live.treasure.submit();
-                                });
-
-                                Live.treasure.checkNewTask();
-                                $(window).on('beforeunload', () => {
-                                    chrome.runtime.sendMessage({
-                                        command: 'delTreasure'
-                                    });
+                            Live.treasure.checkNewTask();
+                            $(window).on('beforeunload', () => {
+                                chrome.runtime.sendMessage({
+                                    command: 'delTreasure'
                                 });
                             });
-                        }, 2000);
+                            // });
+                        }, 1000);
                     }
                 });
             },
@@ -964,17 +959,12 @@
                 }, 'json').promise();
             },
             getCaptcha: (callback) => {
-                var xhr = new XMLHttpRequest();
-                xhr.onload = () => {
-                    var reader = new FileReader();
-                    reader.onloadend = () => {
-                        callback(reader.result);
-                    };
-                    reader.readAsDataURL(xhr.response);
-                };
-                xhr.open('GET', '//api.live.bilibili.com/freeSilver/getCaptcha?ts=' + Date.now());
-                xhr.responseType = 'blob';
-                xhr.send();
+                $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getCaptcha?ts=' + Date.now(), {}, () => {
+                }, 'json').then(function (res) {
+                    if (res.code === 0) {
+                        callback(res.data.img);
+                    }
+                });
             }
         };
         Live.chat = {
@@ -2140,9 +2130,9 @@
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(
                         items,
                         hasWearedMedal && $('<div class="intimacy"></div>').append(
-                            medalDOM,
-                            ` <div>共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}</div>`,
-                            `<div>今日亲密度上限：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.today_feed} / ${wearedMedal.day_limit}</div>`
+                        medalDOM,
+                        ` <div>共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}</div>`,
+                        `<div>今日亲密度上限：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.today_feed} / ${wearedMedal.day_limit}</div>`
                         )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
                     if (!hasMedal) {

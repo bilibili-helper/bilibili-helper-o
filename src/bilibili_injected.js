@@ -200,7 +200,9 @@
     }
 
     function setWide(mode) {
-        if (mode === 'off') return;
+        if (mode === 'off') {
+            return;
+        }
         let player = $('#bilibiliPlayer');
         const doit = () => {
             if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
