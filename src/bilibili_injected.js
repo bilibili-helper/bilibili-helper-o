@@ -131,6 +131,8 @@
                 });
             }
         }
+        if (biliHelper.videoPic)
+           biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="' + biliHelper.videoPic + '">封面</a>'));
         /* Can't download multiple videos this way.
         if (downloadUrls.length > 1) {
             let $bhDownAllLink = $('<a class="b-btn"></a>').text('下载全部共 ' + downloadUrls.length + ' 个分段');
