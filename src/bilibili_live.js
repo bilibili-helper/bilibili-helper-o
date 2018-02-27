@@ -1258,7 +1258,7 @@
                     }, (response) => {
                         if (response.data.indexOf(parseInt(Live.roomId)) != -1) {
                             notiseBtn.find('span').html('已特别关注');
-                            notiseBtn.find('i').addClass('favourited');
+                            notiseBtn.find('i').addClass('icon-solid-heart');
                         }
                     });
                     $('.attention-btn-ctnr').prepend(notiseBtn);
