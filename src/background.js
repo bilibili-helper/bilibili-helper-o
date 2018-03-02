@@ -1278,13 +1278,14 @@ Live.notise = {
         return DedeUserID !== null;
     },
     hasMore: !1,
+    hasNew: false,
     list: [],
     count: 0,
     intervalNum: undefined,
     heart: {},
     roomIdList: {},
     cacheList: {},
-    getList: function(d) {
+    getList: function(data) {
         let url = protocol + 'api.live.bilibili.com/feed/v1/feed/getList?page=' + Live.notise.page + '&page_size=10';
         let callback = function(t) {
             let roomIdList = {},
@@ -1300,7 +1301,8 @@ Live.notise = {
                     Live.notise.cacheList[i] = roomIdList[i];
                 });
             }
-            Live.notise.hasMore = (t.data.count > 10 && t.data.list.length === 10 && Live.notise.userMode());
+            Live.notise.hasMore = (t.data.count > 10 && t.data.list.length === 10 &&
+                Live.notise.userMode() && Live.notise.page * t.data.list.length < t.data.count);
             if (!Live.notise.hasMore) {
                 for (let q in Live.notise.cacheList) {
                     if (Live.notise.roomIdList[q] === undefined) {
@@ -1334,19 +1336,21 @@ Live.notise = {
                 Live.notise.roomIdList = Live.notise.cacheList;
                 Live.notise.cacheList = {};
             } else {
-                Live.notise.page++;
-                Live.notise.getList(d);
-                Live.notise.page = 1;
+                Live.notise.page += 1;
+                Live.notise.getList(data);
             }
         };
         let type = Live.notise.userMode() ? 'POST' : 'GET';
 
         getFileData(url, callback, type, 'json');
     },
-    heartBeat: function() {
+    heartBeat: function(callback) {
         getFileData(protocol + 'api.live.bilibili.com/feed/v1/feed/heartBeat', function(data) {
             data = JSON.parse(data);
             Live.notise.do(data);
+            if (callback instanceof Function) {
+                callback(data);
+            }
         }, 'POST');
     },
     do: function(data) {
@@ -1354,7 +1358,9 @@ Live.notise = {
             Live.notise.feedMode = data.data.open;
             if (0 === data.code) {
                 Live.notise.count = data.data.count;
-                if (data.data.open && !data.data.has_new) {
+                if ((data.data.open && !data.data.has_new && data.data.has_new !== Live.notise.hasNew) ||
+                    (data.data.open && data.data.has_new)) {
+                    Live.notise.hasNew = data.data.has_new;
                     Live.notise.count = 0;
                     Live.notise.page = 1;
                     Live.notise.open = !0;
@@ -1377,11 +1383,12 @@ Live.notise = {
         Live.notise.heartBeat();
         Live.notise.getList();
         Live.notise.intervalNum = setInterval(function() {
-            Live.notise.heartBeat();
-            if (Live.notise.hasMore) {
-                Live.notise.page++;
-                Live.notise.getList();
-            }
+            Live.notise.heartBeat(() => {
+                if (Live.notise.hasMore) {
+                    Live.notise.page++;
+                    Live.notise.getList();
+                }
+            });
         }, 30000);
     },
 };
