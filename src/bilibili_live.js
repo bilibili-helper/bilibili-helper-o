@@ -843,7 +843,8 @@
                         Live.treasure.setNewTask(result.data.times, result.data.max_times, result.data.time_start, result.data.time_end, parseInt(result.data.minute, 10), parseInt(result.data.silver, 10));
                     }
                 }).fail(() => {
-                    Live.treasure.checkNewTask();
+                	console.error('无法获取当前宝箱任务.');
+                    setTimeout(() => Live.treasure.checkNewTask(), 1e3); // 1秒后重试
                 });
             },
             setNewTask: (times, max_times, startTime, endTime, minute, silver) => {
@@ -865,7 +866,7 @@
             },
             getAward: (time_start, time_end, captcha) => {
                 Live.treasure.imgInit = false;
-                $.get('//api.live.bilibili.com/FreeSilver/getAward', {
+                $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getAward', {
                     time_start: time_start,
                     time_end: time_end,
                     captcha: captcha
@@ -951,11 +952,11 @@
                 return q;
             },
             getCurrentTask: () => {
-                return $.get('//api.live.bilibili.com/FreeSilver/getCurrentTask', {}, () => {
+                return $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getCurrentTask', {}, () => {
                 }, 'json').promise();
             },
             getSurplus: () => {
-                return $.get('//api.live.bilibili.com/FreeSilver/getSurplus', {}, () => {
+                return $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getSurplus', {}, () => {
                 }, 'json').promise();
             },
             getCaptcha: (callback) => {
