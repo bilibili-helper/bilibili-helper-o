@@ -865,7 +865,7 @@
             },
             getAward: (time_start, time_end, captcha) => {
                 Live.treasure.imgInit = false;
-                $.get('//api.live.bilibili.com/FreeSilver/getAward', {
+                $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getAward', {
                     time_start: time_start,
                     time_end: time_end,
                     captcha: captcha
@@ -951,7 +951,7 @@
                 return q;
             },
             getCurrentTask: () => {
-                return $.get('//api.live.bilibili.com/FreeSilver/getCurrentTask', {}, () => {
+                return $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getCurrentTask', {}, () => {
                 }, 'json').promise();
             },
             getSurplus: () => {
