@@ -131,6 +131,9 @@
                 });
             }
         }
+        if (biliHelper.videoPic) {
+            biliHelper.mainBlock.downloaderSection.find('p').append($('<a class="b-btn" target="_blank" href="' + biliHelper.videoPic + '">封面</a>'));
+        }
         /* Can't download multiple videos this way.
         if (downloadUrls.length > 1) {
             let $bhDownAllLink = $('<a class="b-btn"></a>').text('下载全部共 ' + downloadUrls.length + ' 个分段');
@@ -199,9 +202,12 @@
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
     }
 
-    /* function setWide(mode) {
+    function setWide(mode) {
+        if (mode === 'off') {
+            return;
+        }
         let player = $('#bilibiliPlayer');
-        let doit = () => {
+        const doit = () => {
             if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
                 let html5WidthButton = $('.bilibili-player-iconfont-widescreen');
                 if (html5WidthButton.length === 0) {
@@ -237,7 +243,7 @@
                 });
             }
         }
-    }*/
+    }
 
     function setOffset() {
         if ('scrollRestoration' in history) {
@@ -398,9 +404,7 @@
             biliHelper.mainBlock.append(biliHelper.mainBlock.querySection);
 
             biliHelper.switcher.set('original');
-            // if (response.autowide !== 'off') {
-            //     setWide(response.autowide);
-            // }
+            setWide(response.autowide);
             if (biliHelper.site === 0) {
                 $('.block.app').after(biliHelper.helperBlock);
             } else if (biliHelper.site === 1) {
@@ -541,9 +545,7 @@
         chrome.runtime.sendMessage({
             command: 'init',
         }, function(response) {
-            // if (response.autowide !== 'off') {
-            //     setWide(response.autowide);
-            // }
+            setWide(response.autowide);
         });
     }
     biliHelper.work = function() {
@@ -563,9 +565,7 @@
                 biliHelper.work();
                 return false;
             }
-            // if (biliHelper.autowide !== 'off') {
-            //     setWide(biliHelper.autowide);
-            // }
+            setWide(biliHelper.autowide);
             if (biliHelper.autooffset === 'on') {
                 setOffset();
             }
@@ -904,4 +904,3 @@
         }
     }
 })();
-// wide

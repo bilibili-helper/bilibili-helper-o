@@ -292,7 +292,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: left;
-    max-width: 320px;
+    max-width: 340px;
     margin: 0;
     min-width: 150px;
 }
@@ -622,5 +622,6 @@
 .a-move-in-left {
     display: flex;
     flex-wrap: wrap;
-    max-width: 332px;
+    max-width: 340px;
+    justify-content: space-between;
 }
