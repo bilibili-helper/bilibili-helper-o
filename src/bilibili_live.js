@@ -955,10 +955,10 @@
                 return $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getCurrentTask', {}, () => {
                 }, 'json').promise();
             },
-            getSurplus: () => {
-                return $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getSurplus', {}, () => {
-                }, 'json').promise();
-            },
+            // getSurplus: () => {
+            //     return $.get('//api.live.bilibili.com/FreeSilver/getSurplus', {}, () => {
+            //     }, 'json').promise();
+            // },
             getCaptcha: (callback) => {
                 $.get('//api.live.bilibili.com/lottery/v1/SilverBox/getCaptcha?ts=' + Date.now(), {}, () => {
                 }, 'json').then(function (res) {

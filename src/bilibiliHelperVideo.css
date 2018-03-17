@@ -644,3 +644,6 @@ input.b-input.disabled {
         background-position-x: 180px
     }
 }
+.app-download {
+    display: none;
+}
