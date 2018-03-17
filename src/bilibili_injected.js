@@ -455,9 +455,11 @@
                 initHelper();
             }
         });
-        observer.observe(playerBlock, {
-            childList: true,
-        });
+        if (playerBlock) {
+            observer.observe(playerBlock, {
+                childList: true,
+            });
+        }
     } else if (biliHelper.site === 1 || biliHelper.site === 3) {
         let playerBlock = $('#bofqi')[0];
         if (playerBlock) {
@@ -494,14 +496,18 @@
                     document.body.appendChild(prob);
                 }
             });
-            observer.observe(playerBlock, {
-                childList: true,
-            });
-            observer.observe($('title')[0], {
-                characterData: true,
-                childList: true,
-                subtree: true,
-            });
+            if (playerBlock) {
+                observer.observe(playerBlock, {
+                    childList: true,
+                });
+            }
+            if ($('title')[0]) {
+                observer.observe($('title')[0], {
+                    characterData: true,
+                    childList: true,
+                    subtree: true,
+                });
+            }
             document.addEventListener('loadstart', (e) => {
                 if (biliHelper.removeAds) {
                     $('.bilibili-player.bilibili-player-ad video').prop('muted', true);
