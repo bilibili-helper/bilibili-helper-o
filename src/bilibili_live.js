@@ -1780,14 +1780,18 @@
                     if (res['value'] === 'on') {
                         // init dom
                         Live.giftpackage.getGiftList();
-                        Live.giftpackage.originCtl = $('#gift-control-vm').find('.gift-section.gift-package').hide();
+                        // Live.giftpackage.originCtl = $('#gift-control-vm').find('.gift-section.gift-package').hide();
+                        Live.giftpackage.originCtl = $('div.gift-package').hide();
                         Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'})
                             .attr('id', 'helper-gift-ctl')
                             .on('click', function (e) {
                                 e.stopPropagation();
-                                if ($(e.target).hasClass('gift-package'))
+                                console.log(e);
+                                if ($(e.target).hasClass('gift-package') || $(e.target.hasClass('gift-package')))
                                     Live.giftpackage.mainPanel.toggle(e);
                             });
+                        // so that click event will reach div.gift-package instead and invoke Live.giftpackage.mainPanel.toggle(e)
+                        Live.giftpackage.ctl.find('span').css({'pointer-events': 'none'});
                         Live.giftpackage.originCtl.after(Live.giftpackage.ctl).hide();
                         Live.giftpackage.mainPanel.initDOM();
                         Live.giftpackage.sendPanel.initDOM();
