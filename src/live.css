@@ -224,7 +224,7 @@
 #helper-gift-ctl .warp {
     position: absolute;
     right: -22px;
-    bottom: 55px;
+    bottom: 27px;
     text-align: center;
     cursor: default;
 }
@@ -310,6 +310,7 @@
     opacity: 0;
     transition: all 0.15s;
     transform: scale(0.7);
+    line-height: 13px;
 }
 .content .send-line:hover {
     background-color: #ff8e29;
