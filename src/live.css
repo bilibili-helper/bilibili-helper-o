@@ -288,7 +288,8 @@
 #helper-gift-ctl .content {
     position: relative;
     max-height: 190px;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: left;
@@ -324,6 +325,7 @@
     margin-left: -4px;
     transition: all 0.3s;
     user-select: none;
+    overflow: hidden;
 }
 #helper-gift-ctl .content:hover .send-line {
     opacity: 1;
