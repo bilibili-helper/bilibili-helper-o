@@ -929,7 +929,7 @@
                 let targetMinutes = newDate.getMinutes() + countMinutes; // MOCKING: SHOULD RESTORE TO GET MINUTES.
                 newDate.setMinutes(targetMinutes); // MOCKING: SHOULD RESTORE TO GET MINUTES.
                 Live.treasure.treasureCtrl.find('.count-down,.countdown-text span:nth-child(4)').text(` ${Live.treasure.taskInfo.silver} `);
-                Live.treasure.treasureCtrl.find('.count-down').text('自动领取中');
+                Live.treasure.treasureCtrl.find('.count-down').text('领取中');
                 Live.treasure.countdown = new Live.countdown({
                     endTime: newDate,
                     element: Live.treasure.treasureCtrl.find('.countdown-text span:nth-child(2)'),
@@ -1780,17 +1780,16 @@
                     if (res['value'] === 'on') {
                         // init dom
                         Live.giftpackage.getGiftList();
-                        Live.giftpackage.originCtl = $('div.gift-package').hide();
-                        Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'})
-                            .attr('id', 'helper-gift-ctl')
-                            .on('click', function (e) {
+                        Live.giftpackage.originCtl = $('#gift-control-vm .gift-package').hide();
+                        Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'}).attr('id', 'helper-gift-ctl');
+                        console.log(Live.giftpackage.ctl.children().not('.warp'));
+                        Live.giftpackage.ctl.children().not('.warp').on('click', function (e) {
                                 e.stopPropagation();
                                 // so that clicking on popup will not invoke Live.giftpackage.mainPanel.toggle(e);
-                                if ($(e.target).hasClass('gift-package'))  
-                                    Live.giftpackage.mainPanel.toggle(e);
+                                // if ($(e.target).hasClass('gift-package'))
+                                Live.giftpackage.mainPanel.toggle(e);
                             });
                         // so that click event will reach div.gift-package instead and invoke Live.giftpackage.mainPanel.toggle(e)
-                        Live.giftpackage.ctl.find('span').css({'pointer-events': 'none'});
                         Live.giftpackage.originCtl.after(Live.giftpackage.ctl).hide();
                         Live.giftpackage.mainPanel.initDOM();
                         Live.giftpackage.sendPanel.initDOM();
