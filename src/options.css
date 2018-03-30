@@ -131,7 +131,7 @@ li {
     left: 404px;
     border-radius: 2px;
     opacity: 1;
-    width: 400px;
+    width: 380px;
 }
 
 #main_form .icon,
@@ -235,6 +235,7 @@ input[type="color"] {
 .btn,
 .support,
 .switch,
+.new-dynamic,
 .dynamic,
 .dlquality,
 .indexversion,
@@ -267,7 +268,7 @@ input[type="color"] {
 
 #about {
     position: absolute;
-    margin-left: 852px;
+    margin-left: 832px;
     padding: 20px;
     min-width: 400px;
 }
@@ -342,7 +343,7 @@ input[type="color"] {
 }
 
 #up-list {
-    margin: 10px 25px;
+    margin: 10px 16px;
 }
 
 #up-list li {
@@ -354,7 +355,7 @@ input[type="color"] {
     margin-right: 10px;
     height: 27px;
     line-height: 27px;
-    width: 172px;
+    width: 171px;
     display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;

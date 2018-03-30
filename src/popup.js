@@ -15,6 +15,15 @@ function getDynamic() {
         }
     });
 }
+let dynamic_url = 'https://www.bilibili.com/account/dynamic';
+chrome.runtime.sendMessage({
+    command: 'getOption',
+    key: 'new-dynamic'
+}, (response) => {
+    if (response['value'] === 'on') {
+        dynamic_url = 'https://t.bilibili.com/';
+    }
+});
 
 $(document).ready(function() {
     $('#go_bili').html(chrome.i18n.getMessage('goBili'));
@@ -45,7 +54,7 @@ $(document).ready(function() {
         });
         bkg_page.setOption('updates', 0);
         chrome.tabs.create({
-            url: 'https://www.bilibili.com/account/dynamic',
+            url: dynamic_url,
         });
         return false;
     });

@@ -10,6 +10,7 @@ let defaultOptions = {
     'crx_update': '{}',
     'dlquality': 'flv',
     'dynamic': 'on',
+    'new-dynamic': 'on',
     'enabled': false,
 	// "html5": "off",
     'indexversion': 'new',
