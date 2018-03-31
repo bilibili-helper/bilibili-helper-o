@@ -675,7 +675,7 @@
                                     Live.treasure.setInfoSectionPage(Live.treasure.page, Live.treasure.taskInfo.max_times);
                                 }
                             });
-
+                            Live.treasure.captchaBoxImg[0].crossOrigin = "Anonymous";
                             Live.treasure.captchaBoxImg.on('load', () => {
                                 Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
                                 Live.treasure.context.drawImage(Live.treasure.captchaBoxImg[0], 0, 0);
