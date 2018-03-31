@@ -32,12 +32,13 @@
     position: absolute;
     width: 76px;
     height: 44px;
-    top: -45px;
-    right: 0px;
+    top: -35px;
+    right: -2px;
     background-repeat: no-repeat;
     background-position: 0px 0px;
     cursor: pointer;
     animation: jinkela-regain 0.5s steps(5, end) forwards;
+    zoom: 0.8;
 }
 
 #chatHelper:hover {
@@ -73,7 +74,7 @@
 
 #chatHelperWindow {
     position: absolute;
-    top: -350px;
+    top: -335px;
     right: 0;
     padding: 10px;
     z-index: 100;
