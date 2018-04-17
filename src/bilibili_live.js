@@ -816,7 +816,10 @@
             makeFinished: () => {
                 Live.treasure.finished = true;
                 Live.setCookie('F_S_T_' + window.UID, 1);
-                Live.treasure.treasureCtrl.hide();
+                Live.treasure.treasureCtrl.find('.count-down').text('领完啦');
+                // Live.treasure.treasureCtrl.off('click').on('click', () => {
+                //     Live.treasure.checkNewTask(true);
+                // });
             },
             checkNewTask: (opened) => {
                 Live.treasure.getCurrentTask().done((result) => {

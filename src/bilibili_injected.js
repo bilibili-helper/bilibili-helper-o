@@ -412,7 +412,20 @@
             } else if (biliHelper.site === 3) {
                 $('.bangumi-info .func-module').prepend(biliHelper.helperBlock);
             } else if (biliHelper.site === 4) {
-                $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
+                if ($('#playpage_mobileshow,.block.app').length === 0) {
+                    let observer = new MutationObserver(function(records) {
+                        for (let i = 0; i < records.length; i += 1) {
+                            const addNodes = records[i].addedNodes;
+                            if (addNodes.length > 0 && $(addNodes[0]).attr('id') === 'arc_toolbar_report') {
+                                $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
+                            }
+                        }
+                        observer.disconnect();
+                    });
+                    observer.observe($('.player-box')[0], {
+                        childList: true,
+                    });
+                } else $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
             }
             $(document).ready(biliHelperFunc);
             initStyle();
