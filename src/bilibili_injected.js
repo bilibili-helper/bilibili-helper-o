@@ -425,7 +425,9 @@
                     observer.observe($('.player-box')[0], {
                         childList: true,
                     });
-                } else $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
+                } else {
+                    $('#playpage_mobileshow,.block.app').after(biliHelper.helperBlock);
+                }
             }
             $(document).ready(biliHelperFunc);
             initStyle();

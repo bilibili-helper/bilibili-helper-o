@@ -18,7 +18,7 @@ function getDynamic() {
 let dynamic_url = 'https://www.bilibili.com/account/dynamic';
 chrome.runtime.sendMessage({
     command: 'getOption',
-    key: 'new-dynamic'
+    key: 'new-dynamic',
 }, (response) => {
     if (response['value'] === 'on') {
         dynamic_url = 'https://t.bilibili.com/';

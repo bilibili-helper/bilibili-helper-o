@@ -134,6 +134,72 @@
             }
             document.cookie = name + '=' + escape(value) + expires + '; path=/';
         };
+        Live.OCR = {
+            getGrayscaleMap: (context, rate = 235, width = 120, height = 40) => {
+                function getGrayscale(x, y) {
+                    const pixel = context.getImageData(x, y, 1, 1).data;
+                    return pixel ? (77 * pixel[0] + 150 * pixel[1] + 29 * pixel[2] + 128) >> 8 : 0;
+                }
+
+                const map = [];
+                for (let y = 0; y < height; y++) { // line y
+                    for (let x = 0; x < width; x++) { // column x
+                        const gray = getGrayscale(x, y);
+                        map.push(gray > rate ? gray : 0);
+                    }
+                }
+                return map;
+            },
+            orderFilter2In3x3: (grayscaleMap, n = 9, width = 120, height = 40) => {
+                const gray = (x, y) => (x + y * width >= 0) ? grayscaleMap[x + y * width] : 255;
+                const map = [];
+                const length = grayscaleMap.length;
+                const catchNumber = n - 1;
+                for (let i = 0; i < length; ++i) {
+                    const [x, y] = [i % width, Math.floor(i / width)];
+                    const matrix = new Array(9);
+                    matrix[0] = gray(x - 1, y - 1);
+                    matrix[1] = gray(x + 0, y - 1);
+                    matrix[2] = gray(x + 1, y - 1);
+                    matrix[3] = gray(x - 1, y + 0);
+                    matrix[4] = gray(x + 0, y + 0);
+                    matrix[5] = gray(x + 1, y + 0);
+                    matrix[6] = gray(x - 1, y + 1);
+                    matrix[7] = gray(x + 0, y + 1);
+                    matrix[8] = gray(x + 1, y + 1);
+                    matrix.sort((a, b) => a - b);
+                    map.push(matrix[catchNumber]);
+                }
+                return map;
+            },
+            execMap: (connectMap, rate = 4) => {
+                const map = [];
+                const connectMapLength = connectMap.length;
+                for (let i = 0; i < connectMapLength; ++i) {
+                    let blackPoint = 0;
+                    const [x, y] = [i % 120, Math.round(i / 120)];
+                    const top = connectMap[i - 120];
+                    const topLeft = connectMap[i - 120 - 1];
+                    const topRight = connectMap[i - 120 + 1];
+                    const left = connectMap[i - 1];
+                    const right = connectMap[i + 1];
+                    const bottom = connectMap[i + 120];
+                    const bottomLeft = connectMap[i + 120 - 1];
+                    const bottomRight = connectMap[i + 120 + 1];
+                    if (top) blackPoint += 1;
+                    if (topLeft) blackPoint += 1;
+                    if (topRight) blackPoint += 1;
+                    if (left) blackPoint += 1;
+                    if (right) blackPoint += 1;
+                    if (bottom) blackPoint += 1;
+                    if (bottomLeft) blackPoint += 1;
+                    if (bottomRight) blackPoint += 1;
+                    if (blackPoint > rate) map.push(1);
+                    else map.push(0);
+                }
+                return map;
+            }
+        }
         Live.liveQuickLogin = () => {
             if (!Live.getCookie('DedeUserID') && !Live.getCookie('LIVE_LOGIN_DATA')) {
                 try {
@@ -524,7 +590,6 @@
             correctStr: {
                 'g': 9,
                 'z': 2,
-                '_': 4,
                 'Z': 2,
                 'o': 0,
                 'l': 1,
@@ -533,7 +598,13 @@
                 'S': 6,
                 's': 6,
                 'i': 1,
-                'I': 1
+                'I': 1,
+                '.': '-',
+                '_': 4,
+                'b': 6,
+                'R': 8,
+                '|': 1,
+                'D': 0,
             },
             silverSeed: false, // current silver
             allowCtrl: false,
@@ -678,17 +749,34 @@
                             Live.treasure.captchaBoxImg[0].crossOrigin = "Anonymous";
                             Live.treasure.captchaBoxImg.on('load', () => {
                                 Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
+                                // 去燥
                                 Live.treasure.context.drawImage(Live.treasure.captchaBoxImg[0], 0, 0);
-                                Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
-                                Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
-                                // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
+                                let grayscaleMap = Live.OCR.getGrayscaleMap(Live.treasure.context);
+                                let filterMap = Live.OCR.orderFilter2In3x3(grayscaleMap);
+                                Live.treasure.context.clearRect(0, 0, 120, 40);
+                                for (let i = 0; i < filterMap.length; ++i) {
+                                    let gray = filterMap[i];
+                                    Live.treasure.context.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
+                                    Live.treasure.context.fillRect(i % 120, Math.round(i / 120), 1, 1);
+                                }
+                                try {
+                                    Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
+                                    console.log(Live.treasure.captcha.question);
 
-                                Live.treasure.captcha.userInput = Live.treasure.captcha.answer;
-                                let captcha = Live.treasure.captcha.answer;
-                                Live.treasure.captchaBoxInput.val(captcha);
-                                setTimeout(() => {
-                                    Live.treasure.captchaBoxSubmitButton.click();
-                                }, 1000);
+                                    Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
+                                    // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
+
+                                    Live.treasure.captcha.userInput = Live.treasure.captcha.answer;
+                                    let captcha = Live.treasure.captcha.answer;
+                                    Live.treasure.captchaBoxInput.val(captcha);
+                                    setTimeout(() => {
+                                        Live.treasure.captchaBoxSubmitButton.click();
+                                    }, 1000);
+                                } catch (e) {
+                                    setTimeout(() => {
+                                        Live.treasure.captcha.refresh();
+                                    }, 1000);
+                                }
                             }).on('error', () => {
                                 Live.treasure.captcha.refresh();
                             });
@@ -911,8 +999,6 @@
                     Live.treasure.awardBtn.restore();
                     Live.treasure.allowCtrl = true;
                     Live.treasure.getAward(time_start, time_end, captcha);
-                    // MOCKING.
-                    // treasureCtrl.setNewTask(111, 222, 5, 10);
                 }).always(() => {
                     Live.treasure.captcha.userInput = '';
                 });
@@ -952,6 +1038,7 @@
                     let a = Live.treasure.correctStr[question[i]];
                     q += (a != undefined ? a : question[i]);
                 }
+                if (q[2] == '4') q[2] = '+';
                 return q;
             },
             getCurrentTask: () => {
