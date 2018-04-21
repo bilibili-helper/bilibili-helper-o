@@ -530,7 +530,7 @@
                 let username = store.get('bilibili_helper_userInfo')['username'];
                 if (!store.get('bilibili_helper_doSign')[username].today || store.get('bilibili_helper_doSign')[username].date != date) {
                     $.get('/sign/doSign', (data) => {
-                        console.log(data);
+                        // console.log(data);
                         let e = data, msg;
                         //    {
                         //    "code": 0,
@@ -698,7 +698,7 @@
                             Live.treasure.captchaBoxForm = $('<form/>').addClass('treasure-box-captcha-form');
                             Live.treasure.captchaBoxInputCtl = $('<div/>').addClass('input-ctnr');
                             Live.treasure.captchaBoxInput = $('<input/>').addClass('link-input dp-i-block v-middle');
-                            Live.treasure.captchaBoxImg = $('<img/>').addClass('captcha-img dp-i-block v-middle');
+                            Live.treasure.captchaBoxImg = $('<img/>').addClass('captcha-img dp-i-block v-middle').attr('src', '');
                             Live.treasure.captchaBoxRefreshButton = $('<button/>').addClass('refresh-captcha dp-i-block v-middle pointer').append('<i class="icon icon-font icon-replace"></i>');
                             Live.treasure.captchaBoxSubmitButtonBox = $('<div/>').addClass('submit-btn');
                             Live.treasure.captchaBoxSubmitButton = $('<button/>').addClass('bl-button bl-button--primary bl-button--size').append('<span data-v-d19d45c0="" class="txt">领取</span>');
@@ -749,7 +749,7 @@
                             Live.treasure.captchaBoxImg[0].crossOrigin = "Anonymous";
                             Live.treasure.captchaBoxImg.on('load', () => {
                                 Live.treasure.context.clearRect(0, 0, Live.treasure.canvas.width, Live.treasure.canvas.height);
-                                // 去燥
+                                // 去噪
                                 Live.treasure.context.drawImage(Live.treasure.captchaBoxImg[0], 0, 0);
                                 let grayscaleMap = Live.OCR.getGrayscaleMap(Live.treasure.context);
                                 let filterMap = Live.OCR.orderFilter2In3x3(grayscaleMap);
@@ -761,7 +761,7 @@
                                 }
                                 try {
                                     Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
-                                    console.log(Live.treasure.captcha.question);
+                                    // console.log(Live.treasure.captcha.question);
 
                                     Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
                                     // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
@@ -807,14 +807,12 @@
 
                             //提交答案
                             Live.treasure.captchaBoxSubmitButton.on('click', () => {
-                                if (!Live.treasure.allowCtrl) {
-                                    return;
-                                }
+                                if (!Live.treasure.allowCtrl) return;
                                 Live.treasure.allowCtrl = false;
                                 Live.treasure.submit();
                             });
 
-                            Live.treasure.checkNewTask();
+                            Live.treasure.checkNewTask(true);
                             $(window).on('beforeunload', () => {
                                 chrome.runtime.sendMessage({
                                     command: 'delTreasure'
@@ -905,11 +903,13 @@
                 Live.treasure.finished = true;
                 Live.setCookie('F_S_T_' + window.UID, 1);
                 Live.treasure.treasureCtrl.find('.count-down').text('领完啦');
-                // Live.treasure.treasureCtrl.off('click').on('click', () => {
-                //     Live.treasure.checkNewTask(true);
-                // });
+                Live.treasure.captchaBoxImg.off('load');
+                Live.treasure.hidePanel();
+                Live.treasure.treasureCtrl.off('click').on('click', () => {
+                    Live.treasure.checkNewTask(true);
+                });
             },
-            checkNewTask: (opened) => {
+            checkNewTask: (open) => {
                 Live.treasure.getCurrentTask().done((result) => {
                     if (result.code !== undefined) {
                         result.code = parseInt(result.code, 10);
@@ -929,10 +929,12 @@
                         Live.treasure.makeFinished();
                         return;
                     }
-                    if (!opened) {
-                        Live.treasure.page = result.data.times;
-                        Live.treasure.setNewTask(result.data.times, result.data.max_times, result.data.time_start, result.data.time_end, parseInt(result.data.minute, 10), parseInt(result.data.silver, 10));
+                    if (!open && Live.treasure.taskInfo.minute === parseInt(result.data.minute, 10)) { // 任务没变
+                        Live.treasure.captcha.refresh();
+                        return;
                     }
+                    Live.treasure.page = result.data.times;
+                    Live.treasure.setNewTask(result.data.times, result.data.max_times, result.data.time_start, result.data.time_end, parseInt(result.data.minute, 10), parseInt(result.data.silver, 10));
                 }).fail(() => {
                 	console.error('无法获取当前宝箱任务.');
                     setTimeout(() => Live.treasure.checkNewTask(), 1e3); // 1秒后重试
@@ -967,7 +969,14 @@
                         Live.liveToast(Live.treasure.treasureCtrl[0], result.msg + Live.randomEmoji.helpless(), 'info');
                         Live.treasure.allowCtrl = true;
                         Live.treasure.awardBtn.restore();
-                        Live.treasure.checkNewTask();
+                        if (result.code === -500) ;
+                        else if (result.code === -902) {
+                            Live.treasure.captcha.refresh();
+                        } else if (result.code === -10017) {
+                            Live.treasure.makeFinished();
+                        }else {
+                            Live.treasure.checkNewTask();
+                        }
                         return;
                     }
 
@@ -1159,8 +1168,8 @@
                 if (Live.chat.text.length > 0) {
                     let colorStr = $('.color-select-panel').attr('data-dd');
                     let mode = $('.mode-select-panel').find('a.active').attr('class').split(' ', 3)[1];
-                    console.log(chrome.windows);
-                    console.log($('#player_object')[0]);
+                    // console.log(chrome.windows);
+                    // console.log($('#player_object')[0]);
                     // $('#player_object')[0].sendMsg(Live.chat.text.substr(0, Live.chat.maxLength), colorStr, Live.chat.danmuMode[mode]);
                     // Live.chat.text = Live.chat.text.substr(Live.chat.maxLength);
                     // if (Live.chat.text.length > 0) {
@@ -1376,7 +1385,7 @@
             getTVdata: (roomId) => {
                 if (Live.smallTV.tvList[roomId]) {
                     var iter = roomId != undefined ? Live.smallTV.tvList[roomId]['iter'] : undefined;
-                    console.log('获取第' + (iter + 1) + '个小电视数据');
+                    // console.log('获取第' + (iter + 1) + '个小电视数据');
                     var tv = iter != undefined ? Live.smallTV.tvList[roomId]['tv'][iter] : false;
                     return tv;
                 }
@@ -1872,7 +1881,7 @@
                         Live.giftpackage.getGiftList();
                         Live.giftpackage.originCtl = $('#gift-control-vm .gift-package').hide();
                         Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'}).attr('id', 'helper-gift-ctl');
-                        console.log(Live.giftpackage.ctl.children().not('.warp'));
+                        // console.log(Live.giftpackage.ctl.children().not('.warp'));
                         Live.giftpackage.ctl.children().not('.warp').on('click', function (e) {
                                 e.stopPropagation();
                                 // so that clicking on popup will not invoke Live.giftpackage.mainPanel.toggle(e);
@@ -2163,7 +2172,7 @@
                     return bumBtnBox;
                 },
                 createSingleTypeDOM: (data) => {
-                    console.log(data);
+                    // console.log(data);
                     const icon = Live.giftpackage.linkBoxGiftInfoIcon.clone()
                         .css({
                             'background-image': `url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-gif/gift-${data.gift_id}.gif)`
@@ -2219,7 +2228,7 @@
                             .find('.label').append(wearedMedal.medal_name);
                         medalDOM.find('.level').append(wearedMedal.level);
                     }
-                    console.log(wearedMedal);
+                    // console.log(wearedMedal);
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(
                         items,
                         hasWearedMedal && $('<div class="intimacy"></div>').append(
