@@ -13,8 +13,8 @@ button {
     border: 0
 }
 
-input,textarea {
-    font: 12px 'Helvetica Neue',Helvetica,Arial,'Microsoft Yahei','Hiragino Sans GB','Heiti SC','WenQuanYi Micro Hei',sans-serif
+input, textarea {
+    font: 12px 'Helvetica Neue', Helvetica, Arial, 'Microsoft Yahei', 'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei', sans-serif
 }
 
 input[type=text] {
@@ -22,7 +22,7 @@ input[type=text] {
     border: 1px solid #ccd0d7
 }
 
-.b-btn,button {
+.b-btn, button {
     color: #fff;
     cursor: pointer;
     text-align: center;
@@ -31,7 +31,7 @@ input[type=text] {
     vertical-align: middle;
     border: 1px solid #00a1d6;
     transition: .1s;
-    transition-property: background-color,border,color;
+    transition-property: background-color, border, color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -40,73 +40,76 @@ input[type=text] {
     user-select: none
 }
 
-a.b-btn,abutton {
+a.b-btn, abutton {
     color: #fff
 }
 
-.b-btn:hover,button:hover {
+.b-btn:hover, button:hover {
     background-color: #00b5e5;
     border-color: #00b5e5
 }
 
-.b-btn:active,button:active {
+.b-btn:active, button:active {
     background-color: #00a1d6;
     border-color: #00a1d6
 }
 
-.b-btn.l,button.l {
+.b-btn.l, button.l {
     font-weight: bolder;
     font-size: 16px
 }
 
-.b-btn.w,button.w,.b-btn.b-btn-w,button.b-btn-w {
+.b-btn.w, button.w, .b-btn.b-btn-w, button.b-btn-w {
     color: #222;
     background-color: #fff;
     border: 1px solid #ccd0d7
 }
 
-.b-btn.w:hover,button.w:hover,.b-btn.b-btn-w:hover,button.b-btn-w:hover {
+.b-btn.w:hover, button.w:hover, .b-btn.b-btn-w:hover, button.b-btn-w:hover {
     color: #00a1d6;
     border-color: #00a1d6
 }
 
-a.b-btn.w,abutton.w,a.b-btn.b-btn-w,abutton.b-btn-w {
+a.b-btn.w, abutton.w, a.b-btn.b-btn-w, abutton.b-btn-w {
     color: #222
 }
 
-.b-btn.b-btn-textonly,button.b-btn-textonly {
+.b-btn.b-btn-textonly, button.b-btn-textonly {
     color: #00a1d6;
     border-color: transparent;
     background-color: #fff
 }
 
-.b-btn.b-btn-textonly:hover,button.b-btn-textonly:hover {
+.b-btn.b-btn-textonly:hover, button.b-btn-textonly:hover {
     border-color: #e5e9ef;
     color: #00a1d6;
     background-color: #e5e9ef
 }
 
-.b-btn.disabled,button.disabled {
-    background-color: #e5e9ef!important;
-    border-color: #e5e9ef!important;
-    color: #b8c0cc!important
+.b-btn.disabled, button.disabled {
+    background-color: #e5e9ef !important;
+    border-color: #e5e9ef !important;
+    color: #b8c0cc !important
 }
 
-.b-input,input.b-input,textarea.b-input {
+.b-input, input.b-input, textarea.b-input {
     border: 1px solid #ccd0d7;
     background-color: #fff;
     position: relative;
-    zoom:1;vertical-align: middle;
+    vertical-align: middle;
     display: inline-block;
     *display: inline;
-    *zoom:1;border-radius: 4px;
+    *zoom: 1;
+    zoom: 1;
+    border-radius: 4px 4px 0 0;
     box-shadow: none;
     height: 22px;
     line-height: 22px;
     padding: 0 5px;
     margin: 0;
     transition: .2s border;
-    font-size: 12px
+    font-size: 12px;
+    z-index: 1;
 }
 
 input.b-input::-ms-clear {
@@ -124,23 +127,24 @@ textarea.b-input {
 }
 
 input.b-input.disabled {
-    color: #b8c0cc!important;
-    border-color: #e5e9ef!important
+    color: #b8c0cc !important;
+    border-color: #e5e9ef !important
 }
 
-.b-input:hover,.b-input:focus {
-    border-color: #00a1d6!important
+.b-input:hover, .b-input:focus {
+    border-color: #00a1d6 !important
 }
 
 .b-input.error {
-    border-color: #e40c0c!important
+    border-color: #e40c0c !important
 }
 
 .b-slt {
     position: relative;
     display: inline-block;
     *display: inline;
-    *zoom:1;vertical-align: middle;
+    *zoom: 1;
+    vertical-align: middle;
     background-color: #fff;
     cursor: default;
     padding: 0 7px;
@@ -154,18 +158,14 @@ input.b-input.disabled {
     user-select: none;
     border: solid 1px #ccd0d7;
     transition: .1s border linear;
-    border-radius: 4px;
+    border-radius: 0 0 4px 4px;
     *z-index: 1000
 }
 
-.b-slt.on,.b-slt:hover,.b-slt.on:hover {
+.b-slt.on, .b-slt:hover, .b-slt.on:hover {
     border: solid 1px #ccd0d7;
-    border-radius: 4px 4px 0 0;
-    box-shadow: rgba(0,0,0,0.16) 0 2px 4px
-}
-
-.b-slt:hover {
-    border-radius: 4px
+    border-radius: 0;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 2px 4px
 }
 
 #list_order.b-slt {
@@ -180,12 +180,14 @@ input.b-input.disabled {
 .b-slt span {
     display: inline-block;
     *display: inline;
-    *zoom:1}
+    *zoom: 1
+}
 
 .b-slt .txt {
     display: inline-block;
     *display: inline;
-    *zoom:1;text-align: center;
+    *zoom: 1;
+    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -198,7 +200,7 @@ input.b-input.disabled {
     border: 1px solid #ccd0d7;
     border-top: 0;
     left: -1px;
-    *left: -1px!important;
+    *left: -1px !important;
     top: 22px;
     display: none;
     max-height: 540px;
@@ -243,10 +245,10 @@ input.b-input.disabled {
 
 .b-slt.on .list {
     display: block;
-    box-shadow: rgba(0,0,0,0.16) 0 2px 4px
+    box-shadow: rgba(0, 0, 0, 0.16) 0 2px 4px
 }
 
-.user-info-level{
+.user-info-level {
     margin-left: 5px;
     margin-right: 5px;
     width: 24px;
@@ -256,50 +258,65 @@ input.b-input.disabled {
     *zoom: 1;
     background-image: url(https://static.hdslb.com/images/v3images/Level-icons.png);
 }
-.user-info-level.border{
+
+.user-info-level.border {
     vertical-align: middle;
     height: 16px
 }
-.user-info-level.border.l0{
+
+.user-info-level.border.l0 {
     background-position: -114px -10px
 }
-.user-info-level.border.l1{
+
+.user-info-level.border.l1 {
     background-position: -114px -46px
 }
-.user-info-level.border.l2{
+
+.user-info-level.border.l2 {
     background-position: -114px -82px
 }
-.user-info-level.border.l3{
+
+.user-info-level.border.l3 {
     background-position: -114px -118px
 }
-.user-info-level.border.l4{
+
+.user-info-level.border.l4 {
     background-position: -114px -154px
 }
-.user-info-level.border.l5{
+
+.user-info-level.border.l5 {
     background-position: -114px -190px
 }
-.user-info-level.border.l6{
+
+.user-info-level.border.l6 {
     background-position: -114px -226px
 }
-.user-info-level.l0{
+
+.user-info-level.l0 {
     background-position: -78px -10px
 }
-.user-info-level.l1{
+
+.user-info-level.l1 {
     background-position: -78px -46px
 }
-.user-info-level.l2{
+
+.user-info-level.l2 {
     background-position: -78px -82px
 }
-.user-info-level.l3{
+
+.user-info-level.l3 {
     background-position: -78px -118px
 }
-.user-info-level.l4{
+
+.user-info-level.l4 {
     background-position: -78px -154px
 }
-.user-info-level.l5{
+
+.user-info-level.l5 {
     background-position: -78px -190px
 }
-.user-info-level.l6{
+
+.user-info-level.l6 {
     background-position: -78px -226px
 }
 
@@ -317,10 +334,12 @@ input.b-input.disabled {
     display: inline-block;
     position: relative;
 }
-.func-module.clearfix .bili-helper{
+
+.func-module.clearfix .bili-helper {
     float: left;
     margin-right: 20px;
 }
+
 .bili-helper .v1-bangumi-info-btn {
     padding: 0 15px;
     font-size: 14px;
@@ -397,12 +416,14 @@ input.b-input.disabled {
         padding: 0 12px;
         margin-left: -12px;
     }
+
     .video-toolbar-module .btn-item {
         padding: 0 0 0 60px !important;
         margin-left: -12px;
     }
+
     .bangumi-info .info-right .info-title.clearfix h2 {
-        width: 300px!important;
+        width: 300px !important;
     }
 }
 
@@ -487,7 +508,7 @@ input.b-input.disabled {
 }
 
 .bili-helper .info .main .hidden {
-    display: none!important
+    display: none !important
 }
 
 .bili-helper .info .main .section a.b-btn {
@@ -497,7 +518,7 @@ input.b-input.disabled {
     margin: 4px
 }
 
-.bili-helper .info .main .section.query>p>div {
+.bili-helper .info .main .section.query > p > div {
     margin-left: 4px;
 }
 
@@ -507,9 +528,10 @@ input.b-input.disabled {
 
 .bili-helper .info .main .section.query .b-slt {
     height: 22px;
-    padding: 2px 7px;
-    width: 256px;
-    position: relative
+    padding: 0px 6px;
+    width: 258px;
+    position: relative;
+    top: -2px;
 }
 
 .bili-helper .info .main .section.query .b-slt .txt {
@@ -543,7 +565,7 @@ input.b-input.disabled {
 .bili-helper .info .main .section.query .b-slt .list {
     width: 100%;
     max-height: 200px;
-    margin-top: 4px
+    margin-top: 1px
 }
 
 .bili-helper .info .main .section.query .b-slt .list li {
@@ -560,21 +582,21 @@ input.b-input.disabled {
 }
 
 .bili-helper .info .version {
+    padding: 2px 10px;
     font-size: 10px;
     height: 30px;
     line-height: 30px;
-    width: 100%;
-    text-align: center;
     border-top: solid 1px #ddd;
-    color: #444
+    color: #444;
 }
 
 .bili-helper .version .setting {
     display: inline-block;
-    margin-left: 24px;
+    margin: 6px -3px;
     height: 18px;
     width: 40px;
     line-height: 18px;
+    float: right;
 }
 
 .share-btn.btn-bilihelper {
@@ -591,7 +613,7 @@ input.b-input.disabled {
     line-height: 28px;
     padding-left: 20px;
     text-align: center;
-    width: 120px!important;
+    width: 120px !important;
     transition: all .1s ease-in;
 }
 
@@ -621,9 +643,11 @@ input.b-input.disabled {
     background-position-y: -8px;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, .2), inset 0 4px 4px rgba(0, 0, 0, .15);
 }
-.bangumi-info .info-right .info-title.clearfix h2{
+
+.bangumi-info .info-right .info-title.clearfix h2 {
     width: 480px;
 }
+
 @-webkit-keyframes eating-neko {
     from {
         background-position-x: 0px
@@ -644,6 +668,7 @@ input.b-input.disabled {
         background-position-x: 180px
     }
 }
+
 .app-download {
     display: none;
 }

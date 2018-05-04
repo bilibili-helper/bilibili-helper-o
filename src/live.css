@@ -241,7 +241,7 @@
 }
 
 #helper-gift-ctl .popup {
-    min-width: 320px;
+    min-width: 330px;
 }
 
 #helper-gift-ctl .popup:after, #helper-gift-ctl .popup:before {
@@ -387,6 +387,7 @@
     color: #f2f3f5;
     border-radius: 3px;
     padding: 2px 4px;
+    transform: scale(0.7) translateX(-7px);
 }
 
 .slide-fade-enter-active, .slide-fade-leave-active {

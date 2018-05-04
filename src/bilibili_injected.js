@@ -209,7 +209,7 @@
         let player = $('#bilibiliPlayer');
         const doit = () => {
             if (mode === 'wide' && !player.hasClass('mode-widescreen')) {
-                let html5WidthButton = $('.bilibili-player-iconfont-widescreen');
+                let html5WidthButton = $('.bilibili-player-video-btn-widescreen');
                 if (html5WidthButton.length === 0) {
                     let flashvars = $('#player_placeholder').find('param[name=flashvars]');
                     flashvars.val(flashvars.val() + '&as_wide=1');
@@ -218,7 +218,7 @@
                     html5WidthButton.click();
                 }
             } else if (mode === 'webfullscreen' && !player.hasClass('mode-webfullscreen')) {
-                let html5WebfullscreenButton = $('.bilibili-player-iconfont-web-fullscreen');
+                let html5WebfullscreenButton = $('.bilibili-player-video-btn-fullscreen');
                 if (html5WebfullscreenButton.length === 0) {
                     // todo
                 } else if (html5WebfullscreenButton.length > 0) {
@@ -675,7 +675,7 @@
                         });
                     biliHelper.mainBlock.commentSection.find('p').append(assBtn);
                     biliHelper.comments = response.getElementsByTagName('d');
-                    let control = $('<div><input type="text" class="b-input" placeholder="根据关键词筛选弹幕"><div class="b-slt"><span class="txt">请选择需要查询的弹幕…</span><div class="b-slt-arrow"></div><ul class="list"><li disabled="disabled" class="disabled" selected="selected">请选择需要查询的弹幕</li></ul></div><span></span><span class="result">选择弹幕查看发送者…</span></div>');
+                    let control = $('<div><input type="text" class="b-input" placeholder="根据关键词筛选弹幕"><div class="b-slt"><span class="txt">请选择需要查询的弹幕…</span><ul class="list"><li disabled="disabled" class="disabled" selected="selected">请选择需要查询的弹幕</li></ul></div><span></span><span class="result">选择弹幕查看发送者…</span></div>');
                     control.find('.b-input').keyup(function() {
                         let keyword = control.find('input').val(),
                             regex = new RegExp(parseSafe(keyword), 'gi');

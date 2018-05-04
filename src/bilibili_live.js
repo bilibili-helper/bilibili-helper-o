@@ -549,6 +549,12 @@
                                 body: '您获得了' + e.data.text,
                                 icon: '//static.hdslb.com/live-static/images/7.png'
                             });
+                            $('.checkin-rewards').text(
+                                $('<a data-v-5d8e6512="" href="//link.bilibili.com/p/center/index#/user-center/achievement/task" target="_blank" class="query v-middle">?</a>'),
+                                $('div').addClass('text-ctnr dp-i-block v-middle t-left').append(
+                                    $('span').addClass('today-rewards dp-block').append(e.data.text),
+                                    $('span').addClass('future-rewards dp-block').append(e.data.specialText)
+                                ));
                             var o;
                             (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
                             store.set('bilibili_helper_doSign', o);
@@ -904,6 +910,7 @@
                 Live.setCookie('F_S_T_' + window.UID, 1);
                 Live.treasure.treasureCtrl.find('.count-down').text('领完啦');
                 Live.treasure.captchaBoxImg.off('load');
+                $('#originTreasurePlanel .awarding-panel').hide();
                 Live.treasure.hidePanel();
                 Live.treasure.treasureCtrl.off('click').on('click', () => {
                     Live.treasure.checkNewTask(true);
@@ -2621,6 +2628,9 @@
                                         // Live.beat.init();
                                         Live.treasure.init();
                                         Live.watcher.init();
+
+                                        // 隐藏心愿瓶
+                                        $('.wish-box .close').click();
                                     }, 2500);
                                     setTimeout(() => {
                                         Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
