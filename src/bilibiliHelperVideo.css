@@ -536,11 +536,6 @@ input.b-input.disabled {
 
 .bili-helper .info .main .section.query .b-slt .txt {
     vertical-align: inherit;
-    margin-right: 0;
-    font-size: inherit;
-    margin-top: -3px;
-    width: 230px;
-    text-align: left
 }
 
 .bili-helper .info .main .section.query .b-slt .b-slt-arrow {

@@ -305,12 +305,13 @@ input[type="color"] {
 }
 
 #about .highlight p {
-    color: #B71C1C;
-    background-color: #FFECB3;
-    border-radius: 5px;
-    text-indent: 0;
+    margin: 15px 5px;
     padding: 1em 2em;
+    border-radius: 5px;
+    background-color: #fff3d1;
     font-size: 14px;
+    text-indent: 0;
+    color: #ca4b4b;
 }
 
 #about .highlight p .title {
@@ -330,6 +331,7 @@ input[type="color"] {
     position: absolute;
     right: 17px;
     top: -70px;
+    background-color: #fff;
 }
 
 .sweet-alert h2+p a {
