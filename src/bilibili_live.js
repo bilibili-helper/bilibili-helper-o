@@ -549,8 +549,8 @@
                                 body: '您获得了' + e.data.text,
                                 icon: '//static.hdslb.com/live-static/images/7.png'
                             });
-                            $('.checkin-rewards').text(
-                                $('<a data-v-5d8e6512="" href="//link.bilibili.com/p/center/index#/user-center/achievement/task" target="_blank" class="query v-middle">?</a>'),
+                            $('.checkin-rewards').html(
+                                $('<a href="//link.bilibili.com/p/center/index#/user-center/achievement/task" target="_blank" class="query v-middle">?</a>'),
                                 $('div').addClass('text-ctnr dp-i-block v-middle t-left').append(
                                     $('span').addClass('today-rewards dp-block').append(e.data.text),
                                     $('span').addClass('future-rewards dp-block').append(e.data.specialText)
