@@ -236,12 +236,16 @@
             if ($('#bofqi').length > 0) {
                 observer.observe($('#bofqi')[0], {
                     childList: true,
-                    attributes: true
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['src']
                 });
             } else if ($('#bilibiliPlayer').length > 0) {
                 observer.observe($('#bilibiliPlayer')[0], {
                     childList: true,
-                    attributes: true
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['src']
                 });
             }
         }
