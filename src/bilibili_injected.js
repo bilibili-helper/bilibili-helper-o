@@ -218,7 +218,7 @@
                     html5WidthButton.click();
                 }
             } else if (mode === 'webfullscreen' && !player.hasClass('mode-webfullscreen')) {
-                let html5WebfullscreenButton = $('.bilibili-player-video-btn-fullscreen');
+                let html5WebfullscreenButton = $('.bilibili-player-video-web-fullscreen');
                 if (html5WebfullscreenButton.length === 0) {
                     // todo
                 } else if (html5WebfullscreenButton.length > 0) {
