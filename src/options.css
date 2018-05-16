@@ -328,11 +328,6 @@ input[type="color"] {
 
 .alipay {
     width: 200px;
-    margin-left: 2em;
-    position: absolute;
-    right: 17px;
-    top: -70px;
-    background-color: #fff;
 }
 
 .sweet-alert h2+p a {
