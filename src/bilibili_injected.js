@@ -619,7 +619,7 @@
             if (biliHelper.autooffset === 'on') {
                 setOffset();
             }
-            if (typeof videoInfo.code !== 'undefined') {
+            if (typeof videoInfo.code !== 'undefined' && videoInfo.code != -404) {
                 if (biliHelper.page !== 1) {
                     chrome.runtime.sendMessage({
                         command: 'getVideoInfo',
