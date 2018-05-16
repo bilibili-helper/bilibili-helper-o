@@ -528,10 +528,11 @@ input.b-input.disabled {
 
 .bili-helper .info .main .section.query .b-slt {
     height: 22px;
-    padding: 0px 6px;
+    padding: 0 6px;
     width: 258px;
-    position: relative;
-    top: -2px;
+    top: -3px;
+    line-height: 20px;
+    font-family: Arial;
 }
 
 .bili-helper .info .main .section.query .b-slt .txt {

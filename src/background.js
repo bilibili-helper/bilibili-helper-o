@@ -270,7 +270,7 @@ function checkDynamic() {
                                     chrome.notifications.clear('bh-' + notification, function() {});
                                 }
                                 notification = content.ctime;
-                                let message = chrome.i18n.getMessage('followingUpdateMessage').replace('%n', dynamic.data.all).replace('%uploader', content.source.uname).replace('%title', content.addition.title),
+                                let message = chrome.i18n.getMessage('followingUpdateMessage').replace('%n', dynamic.data.all).replace('%uploader', content.source.uname || content.addition.author).replace('%title', content.addition.title),
                                     icon = content.addition.pic ? content.addition.pic : 'imgs/icon-256.png';
                                 notificationAvid['bh-' + notification] = content.addition.aid;
                                 chrome.notifications.create('bh-' + notification, {
@@ -1096,8 +1096,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 }, ['blocking', 'requestHeaders']);
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
-    if (details.tabId < 0 || !(details.tabId in biliTabs)) {
+    if (details.tabId < 0) {
         return;
+    }
+    if (!(details.tabId in biliTabs)) {
+        biliTabs[details.tabId] = '';
     }
     // Ignore Ad playurl
     if (biliTabs[details.tabId] && details.url.indexOf('cid=' + biliTabs[details.tabId]) < 0) {

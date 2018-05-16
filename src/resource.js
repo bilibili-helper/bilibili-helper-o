@@ -37,6 +37,7 @@ let defaultOptions = {
     'autowide': 'off',
     'macplayer': 'off',
     'autooffset': 'on',
+    'silver2coin': 'off',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

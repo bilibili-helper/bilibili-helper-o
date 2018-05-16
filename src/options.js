@@ -106,8 +106,9 @@ $(document).ready(function() {
     $('div[option="' + bkg_page.getOption('rel_search') + '"].rel_search').addClass('on');
     $('div[option="' + bkg_page.getOption('doSign') + '"].doSign').addClass('on');
     $('div[option="' + bkg_page.getOption('autoTreasure') + '"].autoTreasure').addClass('on');
-    $('div[option="' + bkg_page.getOption('danmu') + '"].danmu').addClass('on');
+    // $('div[option="' + bkg_page.getOption('danmu') + '"].danmu').addClass('on');
     $('div[option="' + bkg_page.getOption('liveNotification') + '"].liveNotification').addClass('on');
+    $('div[option="' + bkg_page.getOption('silver2coin') + '"].silver2coin').addClass('on');
 
     // chat-display
     $('div[option="' + bkg_page.getOption('chatDisplay') + '"].chatDisplay').addClass('on');
@@ -284,15 +285,24 @@ $(document).ready(function() {
         bkg_page.setOption('autoTreasure', $(this).attr('option'));
         // updatepreview();
     });
-    $('.danmu').click(function() {
+    $('.silver2coin').click(function() {
         if ($(this).hasClass('on')) {
             return false;
         }
-        $('.danmu').removeClass('on');
+        $('.silver2coin').removeClass('on');
         $(this).addClass('on');
-        bkg_page.setOption('danmu', $(this).attr('option'));
+        bkg_page.setOption('silver2coin', $(this).attr('option'));
         // updatepreview();
     });
+    // $('.danmu').click(function() {
+    //     if ($(this).hasClass('on')) {
+    //         return false;
+    //     }
+    //     $('.danmu').removeClass('on');
+    //     $(this).addClass('on');
+    //     bkg_page.setOption('danmu', $(this).attr('option'));
+    //     // updatepreview();
+    // });
     $('.giftpackage').click(function() {
         if ($(this).hasClass('on')) {
             return false;

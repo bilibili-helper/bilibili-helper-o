@@ -508,7 +508,6 @@
                         Live.doSign.getSignInfo().done((data) => {
                             if (data.code === 0 && data.data.status === 0) {
                                 Live.doSign.sign();
-                                // $('.sign-up-btn').click();
                                 setInterval(Live.doSign.sign, 60000); // doSign per 1 min
                             } else if (data.code === 0 && data.data.status === 1) {
                                 let username = store.get('bilibili_helper_userInfo')['username'];
@@ -524,66 +523,29 @@
                 });
             },
             sign: () => {
-                /* check login*/
-
                 let date = new Date().getDate();
                 let username = store.get('bilibili_helper_userInfo')['username'];
                 if (!store.get('bilibili_helper_doSign')[username].today || store.get('bilibili_helper_doSign')[username].date != date) {
-                    $.get('/sign/doSign', (data) => {
-                        // console.log(data);
-                        let e = data, msg;
-                        //    {
-                        //    "code": 0,
-                        //    "msg": "ok",
-                        //    "data": {
-                        //        "text": "200\u94f6\u74dc\u5b50,3000\u7528\u6237\u7ecf\u9a8c\u503c",
-                        //        "lottery": {"status": false, "lottery": {"id": "", "data": ""}},
-                        //        "allDays": "30",
-                        //        "hadSignDays": 22,
-                        //        "remindDays": 8
-                        //    }
-                        // };
-                        if (e.code === 0) {
-                            // noinspection JSDuplicatedDeclaration
-                            msg = new Notification('签到成功', {
-                                body: '您获得了' + e.data.text,
-                                icon: '//static.hdslb.com/live-static/images/7.png'
-                            });
-                            $('.checkin-rewards').html(
-                                $('<a href="//link.bilibili.com/p/center/index#/user-center/achievement/task" target="_blank" class="query v-middle">?</a>'),
-                                $('div').addClass('text-ctnr dp-i-block v-middle t-left').append(
-                                    $('span').addClass('today-rewards dp-block').append(e.data.text),
-                                    $('span').addClass('future-rewards dp-block').append(e.data.specialText)
-                                ));
-                            var o;
-                            (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
-                            store.set('bilibili_helper_doSign', o);
-                            setTimeout(() => {
-                                msg.close();
-                            }, 10000);
-                            let spans = $('.body-container').find('.room-left-sidebar .sign-and-mission .sign-up-btn .dp-inline-block span');
-                            $(spans[0]).hide(), $(spans[1]).show();
-                        } else if (e.code === -500) {
-                            msg = new Notification(e.msg, {
-                                body: '不能重复签到',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif'
-                            });
-                            var o;
-                            (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
-                            store.set('bilibili_helper_doSign', o);
-                            setTimeout(() => {
-                                msg.close();
-                            }, 10000);
-                        } else {
-                            msg = new Notification(e.msg, {
-                                body: '',
-                                icon: '//static.hdslb.com/live-static/live-room/images/gift-section/gift-1.gif'
-                            });
-                            setTimeout(() => {
-                                msg.close();
-                            }, 10000);
-                        }
-                    });
+                    $('.calendar-checkin .checkin-btn').click();
+
+                    const n = setTimeout(function () {
+                        Live.doSign.getSignInfo().done((data) => {
+                            if (data.msg == 'ok') data.msg = '签到成功';
+                            if (data.code === 0 && data.data.status !== 0) {
+                                var o;
+                                (o = store.get('bilibili_helper_doSign'))[username] = {today: true, date: date};
+                                store.set('bilibili_helper_doSign', o);
+                                clearTimeout(n);
+                                let msg = new Notification(data.msg, {
+                                    body: data.data.text,
+                                    icon: '//static.hdslb.com/live-static/images/7.png'
+                                });
+                                setTimeout(() => {
+                                    msg.close();
+                                }, 10000);
+                            }
+                        });
+                    }, 2000);
                 }
             }
         };
@@ -2583,6 +2545,29 @@
                 Live.medal.updateWearedMedal();
             }
         };
+        Live.silver2coin = {
+            init: () => {
+                chrome.runtime.sendMessage({
+                    command: 'getOption',
+                    key: 'silver2coin'
+                }, (response) => {
+                    if (response['value'] === 'on') {
+                        $.get('//api.live.bilibili.com/pay/v1/Exchange/silver2coin',
+                            {platform: 'pc', csrf_token: Live.getCookie('bili_jct')},
+                            () => {}, 'json').then(function (res) {
+                            if (res.code === 0) {
+                                let msg = new Notification(data.msg, {
+                                    body: '银瓜子兑换成功',
+                                });
+                                setTimeout(() => {
+                                    msg.close();
+                                }, 10000);
+                            }
+                        });
+                    }
+                });
+            }
+        }
         Live.init = {
             do: () => {
                 Live.init.localStorage();
@@ -2621,6 +2606,7 @@
                                     // function init
                                     setTimeout(() => {
                                         Live.doSign.init();
+                                        Live.silver2coin.init();
                                         Live.chat.init();
                                         Live.notise.init();
                                         Live.giftpackage.init();
@@ -2629,8 +2615,7 @@
                                         Live.treasure.init();
                                         Live.watcher.init();
 
-                                        // 隐藏心愿瓶
-                                        $('.wish-box .close').click();
+                                        $('.wish-box .close').click(); // 隐藏心愿瓶
                                     }, 2500);
                                     setTimeout(() => {
                                         Live.addScriptByFile('live-content-script.min.js', Live.scriptOptions);
