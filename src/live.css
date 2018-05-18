@@ -27,6 +27,15 @@
     cursor: pointer;
 }
 
+.chat-history-panel #chat-history-list.chat-history-list {
+    padding-right: 25px;
+}
+#chat-popup-icon-vm .chat-small-icon-box {
+    bottom: 21px;
+    right: 2px;
+    zoom: 0.8;
+}
+
 #chatHelper {
     z-index: 100;
     position: absolute;
@@ -38,7 +47,7 @@
     background-position: 0px 0px;
     cursor: pointer;
     animation: jinkela-regain 0.5s steps(5, end) forwards;
-    zoom: 0.8;
+    zoom: 0.6;
 }
 
 #chatHelper:hover {
@@ -74,7 +83,7 @@
 
 #chatHelperWindow {
     position: absolute;
-    top: -335px;
+    top: -325px;
     right: 0;
     padding: 10px;
     z-index: 100;

@@ -425,6 +425,7 @@
 
                 biliHelper.switcher.set('original');
                 setWide(response.autowide);
+                $('[name=tab_danmulist]').click(); // 默认从视频推荐切换到弹幕列表
                 if (biliHelper.site === 0) {
                     $('.block.app').after(biliHelper.helperBlock);
                 } else if (biliHelper.site === 1) {
