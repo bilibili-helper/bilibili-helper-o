@@ -300,6 +300,7 @@ input[type="color"] {
 }
 #about .info{
     position: relative;
+    text-align: left;
 }
 #about .info p{
     text-indent: 0;
@@ -328,6 +329,7 @@ input[type="color"] {
 
 .alipay {
     width: 200px;
+    margin: 0 16px;
 }
 
 .sweet-alert h2+p a {

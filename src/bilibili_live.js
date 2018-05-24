@@ -49,7 +49,7 @@
         Live.getRoomHTML = (url) => {
             return $.get('//live.bilibili.com/' + url).promise();
         };
-        Live.getRoomIdByUrl = (url, callback) => (parseInt(/^\/([\d]+)/.exec(location.pathname)[1], 10));
+        Live.getRoomIdByUrl = () => (parseInt(/^\/([\d]+)/.exec(location.pathname)[1], 10));
         Live.getUser = () => {
             return $.getJSON('//live.bilibili.com/user/getuserinfo').promise();
         };
@@ -234,6 +234,9 @@
         };
         Live.getAnchorInRoom = () => {
             return $.getJSON('//api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid=' + Live.roomId).promise();
+        };
+        Live.getUserInfoInRoom = () => {
+            return $.getJSON('//api.live.bilibili.com/live_user/v1/UserInfo/get_info_in_room?roomid=' + Live.roomId).promise();
         };
         Live.numFormat = (num) => {
             let number = num;
@@ -729,7 +732,6 @@
                                 }
                                 try {
                                     Live.treasure.captcha.question = Live.treasure.correctQuestion(OCRAD(Live.treasure.context.getImageData(0, 0, 120, 40)));
-                                    // console.log(Live.treasure.captcha.question);
 
                                     Live.treasure.captcha.answer = Live.eval(Live.treasure.captcha.question);
                                     // Live.treasure.treasureTipAcquire.find('input').val(Live.treasure.captcha.answer);
@@ -1137,8 +1139,6 @@
                 if (Live.chat.text.length > 0) {
                     let colorStr = $('.color-select-panel').attr('data-dd');
                     let mode = $('.mode-select-panel').find('a.active').attr('class').split(' ', 3)[1];
-                    // console.log(chrome.windows);
-                    // console.log($('#player_object')[0]);
                     // $('#player_object')[0].sendMsg(Live.chat.text.substr(0, Live.chat.maxLength), colorStr, Live.chat.danmuMode[mode]);
                     // Live.chat.text = Live.chat.text.substr(Live.chat.maxLength);
                     // if (Live.chat.text.length > 0) {
@@ -1292,7 +1292,7 @@
             init: () => {
                 let upInfo = {};
                 Live.getRoomInfo().done((data) => {
-                    upInfo.uid = Live.roomInfo.uid;
+                    upInfo.uid = Live.roomInfo.info.uid;
                     upInfo.roomId = Live.roomInfo.room_id;
                     upInfo.roomShortId = Live.roomInfo.short_id;
                     upInfo.upName = Live.roomInfo.info.uname;
@@ -1354,7 +1354,6 @@
             getTVdata: (roomId) => {
                 if (Live.smallTV.tvList[roomId]) {
                     var iter = roomId != undefined ? Live.smallTV.tvList[roomId]['iter'] : undefined;
-                    // console.log('获取第' + (iter + 1) + '个小电视数据');
                     var tv = iter != undefined ? Live.smallTV.tvList[roomId]['tv'][iter] : false;
                     return tv;
                 }
@@ -1743,7 +1742,6 @@
                         break;
                 }
                 // } catch (e) {
-                //     console.log(e);
                 //     return;
                 // }
             },
@@ -1850,7 +1848,6 @@
                         Live.giftpackage.getGiftList();
                         Live.giftpackage.originCtl = $('#gift-control-vm .gift-package').hide();
                         Live.giftpackage.ctl = Live.giftpackage.originCtl.clone().css({'display': 'inline-block'}).attr('id', 'helper-gift-ctl');
-                        // console.log(Live.giftpackage.ctl.children().not('.warp'));
                         Live.giftpackage.ctl.children().not('.warp').on('click', function (e) {
                                 e.stopPropagation();
                                 // so that clicking on popup will not invoke Live.giftpackage.mainPanel.toggle(e);
@@ -1887,8 +1884,10 @@
                 },
                 open: function () {
                     Live.giftpackage.mainPanel.update(() => {
+                        // Live.medal.init(() => {
                         Live.giftpackage.mainPanel.createPanel();
                         Live.giftpackage.mainPanel.show();
+                        // });
                     });
                 },
                 show: () => {
@@ -2141,7 +2140,6 @@
                     return bumBtnBox;
                 },
                 createSingleTypeDOM: (data) => {
-                    // console.log(data);
                     const icon = Live.giftpackage.linkBoxGiftInfoIcon.clone()
                         .css({
                             'background-image': `url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/gift-images/image-gif/gift-${data.gift_id}.gif)`
@@ -2161,7 +2159,7 @@
                 },
                 createTypeDOM: (giftsData, all) => {
                     const items = Live.giftpackage.mainPopupBoxGiftItemBox.clone();
-                    const wearedMedal = Live.medal.wearedMedal;
+                    // const wearedMedal = Live.medal.wearedMedal;
                     const giftList = [];
                     const s = (gifts) => {
                         Live.each(gifts, (i) => {
@@ -2188,30 +2186,29 @@
                     } else { // 清空本行
                         s(giftsData);
                     }
-                    const intimacyData = Live.giftpackage.filterGiftsByIntimacy(giftList);
-                    const hasWearedMedal = Live.medal.hasWeared();
-                    const hasMedal = Live.medal.hasMedal();
-                    const medalDOM = Live.giftpackage.medal.clone();
-                    if (hasWearedMedal) {
-                        medalDOM.addClass(`level-${wearedMedal.level}`)
-                            .find('.label').append(wearedMedal.medal_name);
-                        medalDOM.find('.level').append(wearedMedal.level);
-                    }
-                    // console.log(wearedMedal);
+                    // const intimacyData = Live.giftpackage.filterGiftsByIntimacy(giftList);
+                    // const hasWearedMedal = Live.medal.hasWeared();
+                    // const hasMedal = Live.medal.hasMedal();
+                    // const medalDOM = Live.giftpackage.medal.clone();
+                    // if (hasWearedMedal) {
+                    //     medalDOM.addClass(`level-${wearedMedal.level}`)
+                    //         .find('.label').append(wearedMedal.medal_name);
+                    //     medalDOM.find('.level').append(wearedMedal.level);
+                    // }
                     const infoBox = Live.giftpackage.linkBoxGiftInfo.clone().append(
-                        items,
-                        hasWearedMedal && $('<div class="intimacy"></div>').append(
-                        medalDOM,
-                        ` <div>共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}</div>`,
-                        `<div>今日亲密度上限：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.today_feed} / ${wearedMedal.day_limit}</div>`
-                        )
+                        items
+                    //     hasWearedMedal && $('<div class="intimacy"></div>').append(
+                    //     medalDOM,
+                    //     ` <div>共计增加亲密度：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.intimacy} / ${wearedMedal.next_intimacy}</div>`,
+                    //     `<div>今日亲密度上限：<span class="up">${intimacyData.intimacy}⬆</span> + ${wearedMedal.today_feed} / ${wearedMedal.day_limit}</div>`
+                    //     )
                     ).on('DOMMouseScroll mousewheel', Live.scrollEvent);
-                    if (!hasMedal) {
-                        infoBox.addClass('no-medal');
-                    }
-                    if (hasMedal && !hasWearedMedal) {
-                        infoBox.addClass('not-weared');
-                    }
+                    // if (!hasMedal) {
+                    //     infoBox.addClass('no-medal');
+                    // }
+                    // if (hasMedal && !hasWearedMedal) {
+                    //     infoBox.addClass('not-weared');
+                    // }
                     const submitBox = Live.giftpackage.linkBoxGiftSubmitBox.clone().empty().append(Live.giftpackage.linkBoxGiftSubmitButton.clone());
                     Live.giftpackage.linkBoxForm.empty().append(infoBox, submitBox);
                     submitBox.find('button').on('click', function (e) {
@@ -2223,7 +2220,7 @@
                     });
                 },
                 createPanel: ({data, single = false, all = false}) => {
-                    Live.medal.init();
+                    // Live.medal.init();
                     if (single === true) {
                         Live.giftpackage.sendPanel.createSingleTypeDOM(data);
                     } else if (!single) {
@@ -2304,7 +2301,7 @@
                 sendAjax: (giftData, submitBtnDOM, inputDOM) => {
                     let rnd = store.get('bilibili_helper_live_danmu_rnd')[(Live.roomInfo.short_id || Live.roomInfo.room_id)];
                     return $.post('//api.live.bilibili.com/gift/v2/live/bag_send', {
-                        uid: Live.user.mid,
+                        uid: Live.user.info.uid,
                         gift_id: giftData.gift_id,
                         ruid: Live.roomInfo.uid,
                         gift_num: giftData.count,
@@ -2513,7 +2510,7 @@
             getWearedMedal: () => {
                 return $.post('//api.live.bilibili.com/live_user/v1/UserInfo/get_weared_medal', {
                     source: 1,
-                    uid: Live.user.mid,
+                    uid: Live.user.info.uid,
                     target_id: Live.roomId,
                     csrf_token: Live.getCookie('bili_jct') || ''
                 }).promise();
@@ -2540,9 +2537,10 @@
                     }
                 });
             },
-            init: () => {
+            init: (callback) => {
                 Live.medal.updateMedalList();
                 Live.medal.updateWearedMedal();
+                if (callback instanceof Function) callback();
             }
         };
         Live.silver2coin = {
@@ -2572,8 +2570,9 @@
             do: () => {
                 Live.init.localStorage();
                 Live.init.ad();
-                Live.init.userInfo((user) => {
-                    if (store.get('bilibili_helper_login', 'login')) {
+                Live.roomId = Live.getRoomIdByUrl();
+                Live.init.userInfo(() => {
+                    if (store.get('bilibili_helper_login')) {
                         const shortId = Live.getRoomIdByUrl();
                         if (shortId && !isNaN(shortId)) {
                             /* get options*/
@@ -2591,9 +2590,8 @@
                                 Live.init.style();
 
                                 Live.addScriptByText('(function(){const urlId = parseInt(/^\\\/([\\d]+)/.exec(location.pathname)[1], 10); if (urlId && !isNaN(urlId)) {var a=function(f,d,c){if(!window.localStorage||!f){return}var e=window.localStorage;if(!e[f]){e[f]=JSON.stringify({})}var b=JSON.parse(e[f]);if(c==undefined){e[f]=typeof d=="string"?d.trim():JSON.stringify(d)}else{b[d]=typeof c=="string"?c.trim():JSON.stringify(c);e[f]=JSON.stringify(b)}};a("bilibili_helper_live_roomId",urlId,window.BilibiliLive.ROOMID);a("bilibili_helper_live_danmu_rnd",urlId,DANMU_RND);}})();');
-                                Live.roomId = Live.getRoomId();
                                 Live.getRoomInfo().done((data) => {
-                                    Live.medal.init();
+                                    // Live.medal.init();
                                     Live.init.giftList();
                                     Live.roomInfo = data.data;
                                     Live.getAnchorInRoom().done((res) => {
@@ -2732,21 +2730,16 @@
                 // store.set('bilibili_helper_tvs_count', tv_count);
             },
             userInfo: (callback) => {
-                Live.getUser().done((user) => {
-                    if (user.code === 'REPONSE_OK') {
+                return Live.getUserInfoInRoom().done((user) => {
+                    if (user.code === 0) {
                         let userData = user.data;
-                        $.ajax({
-                            dataType: 'json',
-                            url: '//space.bilibili.com/ajax/member/MyInfo'
-                        }).promise().done((res) => {
-                            userData = Object.assign({}, userData, res.data);
-                            store.set('bilibili_helper_userInfo', userData);
-                            Live.user = userData;
-                            store.set('bilibili_helper_login', true);
-                            if (callback && typeof callback === 'function') {
-                                callback(userData);
-                            }
-                        });
+
+                        store.set('bilibili_helper_userInfo', userData);
+                        Live.user = userData;
+                        store.set('bilibili_helper_login', true);
+                        if (callback && typeof callback === 'function') {
+                            callback(userData);
+                        }
                     } else if (user.code === -101) {
                         store.remove('bilibili_helper_userInfo');
                     }
