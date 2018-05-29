@@ -1076,11 +1076,11 @@ chrome.webRequest.onBeforeRequest.addListener(function() {
 */
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
     if (details.tabId in biliTabs) {
-        const refererUrl = _.find(details.requestHeaders, function(o) {
+        let refererObj = _.find(details.requestHeaders, function(o) {
             return o.name.toLowerCase() === 'referer';
-        })['value'];
-        if (refererUrl) {
-            refererList[details.url] = refererUrl;
+        });
+        if (refererObj && refererObj['value']) {
+            refererList[details.url] = refererObj['value'];
         }
     } else {
         if (refererList[details.url]) {
