@@ -1400,8 +1400,10 @@ if (getOption('liveNotification') === 'on') {
         url: 'https://live.bilibili.com',
         name: 'DedeUserID',
     }, function(cookie) {
-        DedeUserID = cookie.value;
-        Live.notise.init();
+        if (cookie) {
+            DedeUserID = cookie.value;
+            Live.notise.init();
+        }
     });
 }
 
