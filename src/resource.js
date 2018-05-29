@@ -10,6 +10,7 @@ let defaultOptions = {
     'crx_update': '{}',
     'dlquality': 'flv',
     'dynamic': 'on',
+    'new-dynamic': 'on',
     'enabled': false,
 	// "html5": "off",
     'indexversion': 'new',
@@ -36,6 +37,7 @@ let defaultOptions = {
     'autowide': 'off',
     'macplayer': 'off',
     'autooffset': 'on',
+    'silver2coin': 'off',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

@@ -27,17 +27,27 @@
     cursor: pointer;
 }
 
+.chat-history-panel #chat-history-list.chat-history-list {
+    padding-right: 25px;
+}
+#chat-popup-icon-vm .chat-small-icon-box {
+    bottom: 21px;
+    right: 2px;
+    zoom: 0.8;
+}
+
 #chatHelper {
     z-index: 100;
     position: absolute;
     width: 76px;
     height: 44px;
-    top: -45px;
-    right: 0px;
+    top: -35px;
+    right: -2px;
     background-repeat: no-repeat;
     background-position: 0px 0px;
     cursor: pointer;
     animation: jinkela-regain 0.5s steps(5, end) forwards;
+    zoom: 0.6;
 }
 
 #chatHelper:hover {
@@ -73,7 +83,7 @@
 
 #chatHelperWindow {
     position: absolute;
-    top: -350px;
+    top: -325px;
     right: 0;
     padding: 10px;
     z-index: 100;
@@ -224,7 +234,7 @@
 #helper-gift-ctl .warp {
     position: absolute;
     right: -22px;
-    bottom: 55px;
+    bottom: 27px;
     text-align: center;
     cursor: default;
 }
@@ -240,7 +250,7 @@
 }
 
 #helper-gift-ctl .popup {
-    min-width: 320px;
+    min-width: 330px;
 }
 
 #helper-gift-ctl .popup:after, #helper-gift-ctl .popup:before {
@@ -288,13 +298,14 @@
 #helper-gift-ctl .content {
     position: relative;
     max-height: 190px;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: left;
-    max-width: 320px;
+    max-width: 340px;
     margin: 0;
-    min-width: 150px;
+    min-width: 157px;
 }
 
 .content .send-line {
@@ -310,6 +321,7 @@
     opacity: 0;
     transition: all 0.15s;
     transform: scale(0.7);
+    line-height: 13px;
 }
 .content .send-line:hover {
     background-color: #ff8e29;
@@ -323,6 +335,7 @@
     margin-left: -4px;
     transition: all 0.3s;
     user-select: none;
+    overflow: hidden;
 }
 #helper-gift-ctl .content:hover .send-line {
     opacity: 1;
@@ -379,10 +392,10 @@
     top: -10px;
     left: 0px;
     background: #ff94b1;
-    font-size: 9px;
     color: #f2f3f5;
     border-radius: 3px;
     padding: 2px 4px;
+    transform: scale(0.7) translateX(-7px);
 }
 
 .slide-fade-enter-active, .slide-fade-leave-active {
@@ -622,5 +635,5 @@
 .a-move-in-left {
     display: flex;
     flex-wrap: wrap;
-    max-width: 332px;
+    justify-content: space-between;
 }

@@ -18,23 +18,28 @@
             </div>
             <ul id="options_form" class="options_form">
                 <li class="category">
+                    <p>关注页面跳转</p>
+                    <div class="button new-dynamic" option="on">新的版本</div>
+                    <div class="button new-dynamic" option="off">旧的版本</div>
+                </li>
+                <li class="category">
                     <p>检查"我的关注"更新</p>
                     <div class="button dynamic" option="on">开启功能</div>
                     <div class="button dynamic" option="off">关闭功能</div>
                 </li>
                 <li class="category">
-                    <p>获取视频下载地址格式</p>
+                    <p>视频下载地址格式</p>
                     <div class="button dlquality" option="flv">FLV优先</div>
                     <div class="button dlquality" option="mp4">MP4优先</div>
                 </li>
-                <!--<li class="category">-->
-                    <!--<p>视频自动宽屏设置<span>Flash播放器暂时无法网页全屏</span></p>-->
-                    <!--<div class="button autowide" option="off">关闭功能</div>-->
-                    <!--<div class="button autowide" option="wide">宽屏</div>-->
-                    <!--<div class="button autowide" option="webfullscreen">网页全屏</div>-->
-                <!--</li>-->
                 <li class="category">
-                    <p>自动调整视频位置</p>
+                    <p>视频自动宽屏设置<span>Flash播放器暂时无法网页全屏</span></p>
+                    <div class="button autowide" option="wide">宽屏</div>
+                    <div class="button autowide" option="webfullscreen">网页全屏</div>
+                    <div class="button autowide" option="off">关闭功能</div>
+                </li>
+                <li class="category">
+                    <p>自动调整播放器位置</p>
                     <div class="button autooffset" option="on">开启功能</div>
                     <div class="button autooffset" option="off">关闭功能</div>
                 </li>
@@ -67,28 +72,39 @@
                     <div class="button autoTreasure" option="off">关闭功能</div>
                 </li>
                 <li class="category">
-                    <p>弹幕发送增强</p>
-                    <div class="button danmu" option="on">开启功能</div>
-                    <div class="button danmu" option="off">关闭功能</div>
+                    <p>银瓜子自动兑换硬币</p>
+                    <div class="button silver2coin" option="on">开启功能</div>
+                    <div class="button silver2coin" option="off">关闭功能</div>
                 </li>
+                <!--<li class="category">-->
+                    <!--<p>弹幕发送增强</p>-->
+                    <!--<div class="button danmu" option="on">开启功能</div>-->
+                    <!--<div class="button danmu" option="off">关闭功能</div>-->
+                <!--</li>-->
                 <li class="category">
                     <p>礼物包裹增强</p>
                     <div class="button giftpackage" option="on">开启功能</div>
                     <div class="button giftpackage" option="off">关闭功能</div>
                 </li>
+                <!--<li class="category">-->
+                    <!--<p>抽奖提醒</p>-->
+                    <!--<div class="button watcher" option="on">开启功能</div>-->
+                    <!--<div class="button watcher" option="off">关闭功能</div>-->
+                    <!--<div class="watcher-options">-->
+                        <!--<div class="watcher-option">-->
+                            <!--<span class="title">小电视</span>-->
+                            <!--<div class="option">-->
+                                <!--<div class="button tv" option="on">开启</div>-->
+                                <!--<div class="button tv" option="off">关闭</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</li>-->
                 <li class="category">
-                    <p>抽奖提醒</p>
-                    <div class="button watcher" option="on">开启功能</div>
-                    <div class="button watcher" option="off">关闭功能</div>
-                    <div class="watcher-options">
-                        <div class="watcher-option">
-                            <span class="title">小电视</span>
-                            <div class="option">
-                                <div class="button tv" option="on">开启</div>
-                                <div class="button tv" option="off">关闭</div>
-                            </div>
-                        </div>
-                    </div>
+                    <p>开播推送<span>特别关注的主播开播后30秒内将会推送给您</span></p>
+                    <div class="button liveNotification" option="on">开启功能</div>
+                    <div class="button liveNotification" option="off">关闭功能</div>
+                    <ul id="up-list"></ul>
                 </li>
                 <li class="category">
                     <p>聊天信息屏蔽设置</p>
@@ -167,12 +183,6 @@
                         </div>
                     </div>
                 </li>
-                <li class="category">
-                    <p>开播推送</p>
-                    <div class="button liveNotification" option="on">开启功能</div>
-                    <div class="button liveNotification" option="off">关闭功能</div>
-                    <ul id="up-list"></ul>
-                </li>
             </ul>
         </div>
         <div id="about" class="card">
@@ -183,25 +193,29 @@
                     <span>手动更新: <a class="url" href="#" target="_blank">下载页面</a> <a href="http://www.3haow.com/drag-and-drop-the-crx-file-to-install-chrome-plugin/" target="_blank">安装教程</a></span></p>
             </div>
             <div class="highlight">
-                <h1>0.9.3 更新内容</h1>
+                <h1>0.9.8 更新内容</h1>
                 <p>
-                    ※ 支持东京电视台去贴片广告功能 (默认关闭)<br/>
-                    ※ 增加我们收到的历史投喂信息<br/>
-                    ※ 修复了正版番剧页面无法加载助手的问题<br/>
+                    ※ 重新修复了主站视频下载链接获取又失败的问题
                 </p>
             </div>
             <div class="highlight">
-                <h1>0.9.2 更新内容</h1>
+                <h1>0.9.7 更新内容</h1>
                 <p>
-                    ※ 修复了主站频繁请求视频下载地址的问题，该问题会导致b站主站业务无法正常使用<br/>
-                    ※ 直播区礼物包裹增加“共计增加亲密度”和“今日亲密度上限”提示，仅限“清空改行”和“一键清空”时有效<br/>
-                    ※ 直播区去污粉功能中，将HTML5播放器中飘过的广播弹幕归类为礼物信息一同屏蔽<br/>
+                    + 增加主站视频播放器右侧自动切换到弹幕列表的功能（该功能没有关闭选项）<br/>
+                    + 增加自动关闭直播间弹出心愿瓶的窗口（该功能没有关闭选项）<br/>
+                    + 增加直播区自动将银瓜子兑换为硬币的功能<br/>
+                    ※ 修复了主站视频下载链接获取失败的问题<br/>
+                    ※ 修复了主站视频播放器自动宽屏失效问题<br/>
+                    ※ 修复了直播区瓜子宝箱无法关闭弹出窗口的问题<br/>
+                    ※ 修复了直播区自动签到后的显示问题<br/>
+                    ※ 修复了直播区小电视宝箱目标和去污粉重叠的问题<br/>
+                    ※ 更新投喂表（非实时&手动更新）
                 </p>
             </div>
             <div class="highlight">
                 <h1>版本须知</h1>
                 <p>从0.8.16.13版本开始不再提供“区域限制解锁”和“自动抽奖”功能，具体请看<a href="https://github.com/zacyu/bilibili-helper/wiki/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E4%BA%86%E4%B8%80%E4%BA%9B%E5%8A%9F%E8%83%BD%EF%BC%9F">这里</a></p>
-                <p>从0.8.16.20版本开始不再提供“播放器切换”功能。如要使用HTML5播放器，请使用官方提供的HTML5播放器，启用连接请看<a href="http://www.bilibili.com/blackboard/help.html#p">这里</a></p>
+                <p>从0.8.16.20版本开始不再提供“播放器切换”功能。如要使用HTML5播放器，请使用官方提供的HTML5播放器，启用链接请前往<a href="http://www.bilibili.com/blackboard/help.html#p">这里</a></p>
             </div>
             <div class="intro">
                 <h1>助手简介</h1>
@@ -220,10 +234,11 @@
                 <p>※ 本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href="http://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a> 发布的开源项目 <a href="https://github.com/tiansh/us-danmaku" target="_blank">us-danmaku</a>。</p>
                 <p>※ 本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href="https://opensource.org/licenses/GPL-3.0" target="_blank">GPL 许可协议</a> 发布的开源项目 <a href="https://github.com/xmcp/pakku.js" target="_blank">pakku.js</a> 中的部分代码。</p>
                 <p>咕咕投喂宝暂时无法使用，所以更换成肉肉的。欢迎喂食 _(:3」∠)_</p>
+                <p style="color: red; font-weight: bold;">请关注咕咕和肉肉的微博，获得最新的消息与投喂回复</p>
                 <img class="alipay" src="./imgs/alipay.png">
             </div>
             <div class="feed-history">
-                <h1>投喂记录<i>以下仅为肉肉收到的投喂，可能包含生活中的非投喂信息</i></h1>
+                <h1>投喂记录<i>手动更新，以下仅为肉肉收到的投喂，可能包含生活中的非投喂信息</i></h1>
                 <div class="table">
                     <header>
                             <span>投喂日期</span>

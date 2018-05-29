@@ -131,7 +131,7 @@ li {
     left: 404px;
     border-radius: 2px;
     opacity: 1;
-    width: 400px;
+    width: 380px;
 }
 
 #main_form .icon,
@@ -179,13 +179,15 @@ input[type="color"] {
 .category p {
     font-size: 20px;
     text-align: left;
-    margin-left: 20px;
+    margin-left: 12px;
 }
 
 .category p span {
-    font-size: 10px;
-    margin: 5px 20px;
     float: right;
+    margin: 5px 10px;
+    line-height: 21px;
+    font-size: 10px;
+    color: #8c8c8b;
 }
 
 .button {
@@ -233,6 +235,7 @@ input[type="color"] {
 .btn,
 .support,
 .switch,
+.new-dynamic,
 .dynamic,
 .dlquality,
 .indexversion,
@@ -244,6 +247,7 @@ input[type="color"] {
 .giftpackage,
 .danmu,
 .chatDisplay,
+.silver2coin,
 .liveNotification,
 .watcher,
 .watchNotify,
@@ -265,7 +269,7 @@ input[type="color"] {
 
 #about {
     position: absolute;
-    margin-left: 852px;
+    margin-left: 832px;
     padding: 20px;
     min-width: 400px;
 }
@@ -296,18 +300,20 @@ input[type="color"] {
 }
 #about .info{
     position: relative;
+    text-align: left;
 }
 #about .info p{
     text-indent: 0;
 }
 
 #about .highlight p {
-    color: #B71C1C;
-    background-color: #FFECB3;
+    margin: 15px 5px;
+    padding: 1em 1em;
     border-radius: 5px;
-    text-indent: 0;
-    padding: 1em 2em;
+    background-color: #fff3d1;
     font-size: 14px;
+    text-indent: 0;
+    color: #ca4b4b;
 }
 
 #about .highlight p .title {
@@ -323,10 +329,7 @@ input[type="color"] {
 
 .alipay {
     width: 200px;
-    margin-left: 2em;
-    position: absolute;
-    right: 17px;
-    top: -70px;
+    margin: 0 16px;
 }
 
 .sweet-alert h2+p a {
@@ -340,7 +343,7 @@ input[type="color"] {
 }
 
 #up-list {
-    margin: 10px 25px;
+    margin: 10px 16px;
 }
 
 #up-list li {
@@ -352,7 +355,7 @@ input[type="color"] {
     margin-right: 10px;
     height: 27px;
     line-height: 27px;
-    width: 172px;
+    width: 171px;
     display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -397,11 +400,11 @@ input[type="color"] {
 }
 .feed-history .table {
     text-align: left;
-    margin: 0 10px;
+    margin: 0 5px;
 }
 .feed-history header span {
     display: inline-block;
-    width: 100px;
+    width: 98px;
     font-weight: bold;
 }
 .feed-history .body {

@@ -3,7 +3,8 @@ html body {
     background-color: #f5f5f5;
     margin: 0px;
     padding: 8px 0px;
-    width: 170px
+    width: 170px;
+    overflow: hidden;
 }
 
 button {
