@@ -1099,9 +1099,13 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
     if (details.tabId < 0) {
         return;
     }
-    if (!(details.tabId in biliTabs)) {
+    if (biliTabs[details.tabId] && biliTabs[details.tabId].length > 10) return;
+    if (!biliTabs[details.tabId]) {
         biliTabs[details.tabId] = '';
+    } else {
+        biliTabs[details.tabId] = details.url;
     }
+
     // Ignore Ad playurl
     if (biliTabs[details.tabId] && details.url.indexOf('cid=' + biliTabs[details.tabId]) < 0) {
         return;
