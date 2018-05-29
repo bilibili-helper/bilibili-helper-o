@@ -21,7 +21,8 @@ let notification = false,
     hasLogin = false,
     subName = '',
     crcEngine = null,
-    refererList = {};
+    refererList = {},
+    parsedDataList = {};
 
 const PLAY_URLS = [
     '*://bangumi.bilibili.com/player/web_api/playurl*',
@@ -1099,16 +1100,30 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
     if (details.tabId < 0) {
         return;
     }
-    if (biliTabs[details.tabId] && biliTabs[details.tabId].length > 10) return;
-    if (!biliTabs[details.tabId]) {
-        biliTabs[details.tabId] = '';
-    } else {
-        biliTabs[details.tabId] = details.url;
+    const regexp = /cid=([\d]+)/;
+    const res = regexp.exec(details.url);
+    let cid;
+    if (res && res[1]) {
+        const sameCid = _.filter(biliTabs, function(v, k) {
+            // eslint-disable-next-line
+            return v == res[1];
+        });
+        if (sameCid && sameCid.length > 0 && parsedDataList[res[1]]) {
+            chrome.tabs.sendMessage(details.tabId, {
+                command: 'playurl',
+                url: details.url,
+                data: parsedDataList[res[1]],
+            });
+            return;
+        }
     }
 
     // Ignore Ad playurl
     if (biliTabs[details.tabId] && details.url.indexOf('cid=' + biliTabs[details.tabId]) < 0) {
         return;
+    }
+    if (res && res[1]) {
+        cid = res[1];
     }
     getFileData(details.url, (data) => {
         let parsedData = {};
@@ -1151,6 +1166,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
         } else {
             parsedData = JSON.parse(data);
         }
+        parsedDataList[cid] = parsedData;
         chrome.tabs.sendMessage(details.tabId, {
             command: 'playurl',
             url: details.url,
