@@ -506,9 +506,9 @@ function setNotFavourite(id) {
     return false;
 }
 
-chrome.runtime.onConnect.addListener(function(port) {
-    Live.treasure.port = port;
-});
+// chrome.runtime.onConnect.addListener(function(port) {
+//     Live.treasure.port = port;
+// });
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.command) {
     case 'init':

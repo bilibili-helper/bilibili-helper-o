@@ -13,13 +13,15 @@
         "css-loader": "^0.28.11",
         "html-webpack-plugin": "^4.0.0-alpha",
         "load-grunt-tasks": "^3.5.2",
+        "mini-css-extract-plugin": "^0.4.0",
         "node-sass": "^4.9.0",
         "sass-loader": "^7.0.3",
         "style-loader": "^0.21.0",
         "webpack": "^4.10.2",
         "webpack-bundle-analyzer": "^2.13.1",
         "webpack-cli": "^3.0.3",
-        "webpack-dev-server": "^3.1.4"
+        "webpack-dev-server": "^3.1.4",
+        "zip-webpack-plugin": "^3.0.0"
     },
     "scripts": {
         "grunt": "grunt",
