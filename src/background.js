@@ -788,71 +788,71 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         return true;
     }
-    case 'getTVReward': {
-        let rewardStr = '',
-            lost = '很遗憾，此次您没有中奖';
-        let data = request.data;
-        if (data.rewardId === 1) {
-            rewardStr += '大号小电视' + data.rewardNum + '个';
-        } else if (data.rewardId === 2) {
-            rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
-        } else if (data.rewardId === 3) {
-            rewardStr += 'B坷垃' + data.rewardNum + '个';
-        } else if (data.rewardId === 4) {
-            rewardStr += '喵娘' + data.rewardNum + '个';
-        } else if (data.rewardId === 5) {
-            rewardStr += '便当' + data.rewardNum + '个';
-        } else if (data.rewardId === 6) {
-            rewardStr += '银瓜子' + data.rewardNum + '个';
-        } else if (data.rewardId === 7) {
-            rewardStr += '辣条' + data.rewardNum + '个';
-        } else {
-            rewardStr += lost;
-        }
-        if (data.rewardNum > 0) {
-            if (data.rewardId === 1 || data.isWin) {
-                chrome.notifications.create('getTV', {
-                    type: 'basic',
-                    iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                    title: '小电视抽奖结果',
-                    message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
-                    isClickable: false,
-                    buttons: [{
-                        title: chrome.i18n.getMessage('notificationGetTv'),
-                    }],
-                }, function(id) {
-                    setTimeout(function() {
-                        chrome.notifications.clear(id);
-                    }, 10000);
-                });
-            } else {
-                chrome.notifications.create('getTV', {
-                    type: 'basic',
-                    iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                    title: '小电视抽奖结果',
-                    isClickable: false,
-                    message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
-                }, function(id) {
-                    setTimeout(function() {
-                        chrome.notifications.clear(id);
-                    }, 10000);
-                });
-            }
-        } else {
-            chrome.notifications.create('getTV', {
-                type: 'basic',
-                iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
-                title: '直播间:' + data.roomId,
-                message: rewardStr,
-                isClickable: false,
-            }, function(id) {
-                setTimeout(function() {
-                    chrome.notifications.clear(id);
-                }, 10000);
-            });
-        }
-        return true;
-    }
+    // case 'getTVReward': {
+    //     let rewardStr = '',
+    //         lost = '很遗憾，此次您没有中奖';
+    //     let data = request.data;
+    //     if (data.rewardId === 1) {
+    //         rewardStr += '大号小电视' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 2) {
+    //         rewardStr += '蓝白胖次道具' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 3) {
+    //         rewardStr += 'B坷垃' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 4) {
+    //         rewardStr += '喵娘' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 5) {
+    //         rewardStr += '便当' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 6) {
+    //         rewardStr += '银瓜子' + data.rewardNum + '个';
+    //     } else if (data.rewardId === 7) {
+    //         rewardStr += '辣条' + data.rewardNum + '个';
+    //     } else {
+    //         rewardStr += lost;
+    //     }
+    //     if (data.rewardNum > 0) {
+    //         if (data.rewardId === 1 || data.isWin) {
+    //             chrome.notifications.create('getTV', {
+    //                 type: 'basic',
+    //                 iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+    //                 title: '小电视抽奖结果',
+    //                 message: '恭喜你抽到了小电视，请尽快前往填写收货地址，不填视为放弃',
+    //                 isClickable: false,
+    //                 buttons: [{
+    //                     title: chrome.i18n.getMessage('notificationGetTv'),
+    //                 }],
+    //             }, function(id) {
+    //                 setTimeout(function() {
+    //                     chrome.notifications.clear(id);
+    //                 }, 10000);
+    //             });
+    //         } else {
+    //             chrome.notifications.create('getTV', {
+    //                 type: 'basic',
+    //                 iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+    //                 title: '小电视抽奖结果',
+    //                 isClickable: false,
+    //                 message: '在直播间:' + data.roomId + ' 抽到' + rewardStr,
+    //             }, function(id) {
+    //                 setTimeout(function() {
+    //                     chrome.notifications.clear(id);
+    //                 }, 10000);
+    //             });
+    //         }
+    //     } else {
+    //         chrome.notifications.create('getTV', {
+    //             type: 'basic',
+    //             iconUrl: protocol + 'static.hdslb.com/live-static/live-room/images/gift-section/gift-25.png',
+    //             title: '直播间:' + data.roomId,
+    //             message: rewardStr,
+    //             isClickable: false,
+    //         }, function(id) {
+    //             setTimeout(function() {
+    //                 chrome.notifications.clear(id);
+    //             }, 10000);
+    //         });
+    //     }
+    //     return true;
+    // }
     case 'requestForDownload':
         chrome.downloads.download({
             saveAs: true,
@@ -1109,6 +1109,7 @@ chrome.webRequest.onResponseStarted.addListener(function(details) {
             return v == res[1];
         });
         if (sameCid && sameCid.length > 0 && parsedDataList[res[1]]) {
+            console.warn(parsedDataList, res[1]);
             chrome.tabs.sendMessage(details.tabId, {
                 command: 'playurl',
                 url: details.url,

@@ -1,9 +1,9 @@
 bilibili_helper.zip
 node_modules/
-dest/
 .vscode/
 *.pem
 *.crx
 .idea/
 .DS_Store
 package-lock.json
+build/

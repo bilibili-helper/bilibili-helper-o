@@ -1,0 +1,79 @@
+{
+  "version": "0.9.9",
+  "update_url": "https://clients2.google.com/service/update2/crx",
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "short_name": "__MSG_extShortName__",
+  "options_page": "options.html",
+  "default_locale": "zh_CN",
+  "description": "__MSG_extDescription__",
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "imgs/icon-19.png",
+      "38": "imgs/icon-38.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extShortName__"
+  },
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "js": [
+        "jquery-3.2.1.min.js",
+        "lodash.min.js",
+        "store.min.js",
+        "ocrad.min.js",
+        "bilibili_ASS_Danmaku_Downloader.min.js",
+        "filename-sanitize.min.js",
+        "bilibili_injected.min.js",
+        "bilibili_live.min.js",
+        "ColPick.min.js"
+      ],
+      "matches": [
+        "*://*.bilibili.com/*"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "256": "imgs/icon-256.png",
+    "128": "imgs/icon-128.png",
+    "16": "imgs/icon-16.png",
+    "32": "imgs/icon-32.png"
+  },
+  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDd/wqh8sN1lnVWVGyKqhGM0Zz0ZuY3Dq5hNK3qNBw1/+B/XGe+zzwe7aSyr0qikd8pkN5HpoDvEDdkFHcdhPwXWoQGKiNAnKtohuz/2+g5YzLYzQg2bRqKdYJebEoCoiHtoSNS/HRtUeg483ypAH26LLyD6p+ykwQNo9DvtBo0kwIDAQAB",
+  "permissions": [
+    "downloads",
+    "alarms",
+    "contextMenus",
+    "cookies",
+    "notifications",
+    "storage",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "http://*/",
+    "https://*/"
+  ],
+  "web_accessible_resources": [
+    "bilibili-helper.woff",
+    "options.min.css",
+    "popup.min.css",
+    "imgs/icon-32.png",
+    "imgs/loading.gif",
+    "imgs/jinkela.png",
+    "imgs/loading.gif",
+    "imgs/helper-neko.png",
+    "imgs/icon.png",
+    "options.html",
+    "imgs/menu-icon.png",
+    "live.min.css",
+    "live-content-script.min.js",
+    "bilibiliHelperAd.min.css",
+    "bilibiliHelperVideo.min.css"
+  ]
+}
