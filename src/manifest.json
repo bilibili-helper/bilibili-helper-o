@@ -56,8 +56,7 @@
     "tabs",
     "webRequest",
     "webRequestBlocking",
-    "http://*/",
-    "https://*/"
+    "*://*.bilibili.com/*"
   ],
   "web_accessible_resources": [
     "bilibili-helper.woff",
