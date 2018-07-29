@@ -12,11 +12,11 @@
     "description": "Extension: Description"
   },
   "goBili": {
-    "message": "一键前往bilibili.com",
+    "message": "前往 Bilibili.com",
     "description": "Popup Button: go_bili"
   },
   "goBiliLive": {
-    "message": "一键前往Bilibili Live",
+    "message": "前往 Bilibili Live",
     "description": "Popup Button: go_bili_live"
   },
   "adModeOff": {
@@ -40,7 +40,7 @@
     "description": "Popup Button: go_favorite"
   },
   "notLogged": {
-    "message": "(未登录)",
+    "message": "未登录",
     "description": "Popup Button: not_logged"
   },
   "nNewUpdate": {

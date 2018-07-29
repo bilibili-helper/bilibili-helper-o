@@ -5,9 +5,12 @@
  */
 
 const path = require('path');
+const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const webpackPath = path.resolve('webpack-src');
 const buildPath = path.resolve('build');
@@ -15,12 +18,16 @@ const webpackJSPath = path.resolve(webpackPath, 'js');
 const indexFilename = 'index.js';
 module.exports = {
     watch: true,
+    mode: 'development',
+    node: {
+        global: false,
+    },
+    devtool: false,
     watchOptions: {
         aggregateTimeout: 1000, // milliseconds
         poll: 1000,
         ignored: ['node_modules'],
     },
-    mode: 'development',
     entry: {
         'background': path.resolve(webpackJSPath, 'background', indexFilename),
         'live': path.resolve(webpackJSPath, 'live', indexFilename),
@@ -30,15 +37,28 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve('./build'),
+        path: buildPath,
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true // set to true if you want JS source maps
+            }),
+            new OptimizeCSSAssetsPlugin({}),
+        ],
     },
     resolve: {
         alias: {
             'Libs': path.resolve(webpackJSPath, 'libs'),
             'Utils': path.resolve(webpackJSPath, 'utils'),
+            'Components': path.resolve(webpackJSPath, 'components'),
             'Statics': path.resolve(webpackPath, 'statics'),
             'Styles': path.resolve(webpackPath, 'styles'),
         },
+        mainFiles: ['index.js'],
+        extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
     },
     module: {
         rules: [
@@ -50,23 +70,28 @@ module.exports = {
             },
             {
                 test: /\.(css|scss|sass)$/,
-                loader: 'style-loader!css-loader!sass-loader',
+                use: [
+                    {loader: MiniCssExtractPlugin.loader},
+                    {loader: 'css-loader'},
+                    {loader: 'sass-loader'},
+                ],
             },
         ],
     },
     plugins: [
-        new CleanWebpackPlugin(['./build'], {
+        new CleanWebpackPlugin([buildPath], {
             verbose: false,
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].[hash].css',
-            chunkFilename: '[id].[hash].css',
+            filename: path.join('styles', '[name].css'),
+            chunkFilename: path.join('styles', '[id].css'),
         }),
         new CopyWebpackPlugin([
             {from: 'webpack-src/*.html', to: '', flatten: true},
             {from: 'webpack-src/*.json', to: '', flatten: true},
             {from: 'webpack-src/_locales', to: '_locales'},
             {from: 'webpack-src/statics', to: 'statics'},
+            // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
         ]),
     ],
 };
