@@ -21,7 +21,6 @@ const ButtonWrapper = styled.div`
   ${props => props.isIcon ? 'margin: -12px' : ''};
   border-radius: ${props => props.isIcon ? '50%' : '2px'};
   overflow: hidden;
-  cursor: pointer;
 `;
 
 const ButtonView = styled.button`
@@ -32,6 +31,7 @@ const ButtonView = styled.button`
   font-weight: 500;
   background-color: transparent;
   color: ${color('paper-grey-600')};
+  cursor: pointer;
   border: none;
   outline: none;
   z-index: 1;
@@ -67,19 +67,23 @@ class ButtonClass extends React.Component {
     }
 
     render() {
-        const {children, className, theme, isIcon = false, ...rest} = this.props;
+        const {children, className, theme, isIcon = false, onClick, ...rest} = this.props;
         const {mouseDown, rippleRadius, x, y} = this.state;
         return (
             <ButtonWrapper
                 isIcon={isIcon}
-                innerRef={i => this.btn = i}
                 className={className}
-                onMouseDown={this.handleOnMouseDown}
-                onMouseUp={this.handleOnMouseUp}
-                onMouseLeave={this.handleOnMouseUp}
+                onClick={onClick}
             >
-                <ButtonView isIcon={isIcon} {...rest}>{children}</ButtonView>
-                <ThemeProvider theme={{...theme, rippleRadius}}>
+                <ButtonView
+                    innerRef={i => this.btn = i}
+                    onMouseDown={this.handleOnMouseDown}
+                    onMouseUp={this.handleOnMouseUp}
+                    onMouseLeave={this.handleOnMouseUp}
+                    isIcon={isIcon}
+                    {...rest}
+                >{children}</ButtonView>
+                <ThemeProvider theme={{...theme, radius: rippleRadius}}>
                     <Ripple active={mouseDown} x={x} y={y}/>
                 </ThemeProvider>
             </ButtonWrapper>

@@ -4,10 +4,16 @@
 @import "utils/index";
 @import "layouts/index";
 body {
-  background-color: #f1f1f1;
+  //background-color: #f1f1f1;
+  background-color: #f8f9fa;
 }
-.page-options {
-  max-width: 544px;
-  min-width: 350px;
-  margin: 56px auto 64px;
+
+#root {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  //background-color: #f8f9fa;
 }

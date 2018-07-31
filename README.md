@@ -11,6 +11,18 @@ An auxiliary extension for Bilibili (bilibili.com) which allows users to bypass 
 
 哔哩哔哩 (bilibili.com) 辅助工具，可以下载视频，查询弹幕发送人以及一些十分实用的直播区功能。
 
+## DOC
+
+重构中使用的技术栈
+
+1. react16
+2. webpack
+3. Styled-component
+
+样式参考自chrome设置页面
+
+使用Styled-component控制样式
+
 ## Website
 https://bilihelper.guguke.net
 

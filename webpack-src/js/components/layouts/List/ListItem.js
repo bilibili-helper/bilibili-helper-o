@@ -25,6 +25,7 @@ const ListItemView = styled.div.attrs({
   border-color: ${color('paper-grey-300')};
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   font-size: 13px;
+  cursor: ${({pointer}) => pointer ? 'pointer' : 'default'};
   &:first-of-type {
     border-top: none;
   }
@@ -34,10 +35,10 @@ const ListItemView = styled.div.attrs({
     flex: auto;
   }
 `;
-export const ListItem = ({children, twoLine = false}) => {
+export const ListItem = ({children, twoLine = false, ...rest}) => {
     return (
         <ThemeProvider theme={{twoLine}}>
-            <ListItemView>{children}</ListItemView>
+            <ListItemView {...rest}>{children}</ListItemView>
         </ThemeProvider>
     );
 };
@@ -62,7 +63,7 @@ const Start = styled.div.attrs({
 ListItem.Start = ({first, second, children}) => {
     return (
         <Start>
-            <TwoLineContainer first={first} second={second}/>
+            {(first || second) &&<TwoLineContainer first={first} second={second}/>}
             {children}
         </Start>
     );

@@ -5,8 +5,10 @@
  */
 
 import React from 'react';
-import styled from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles/theme';
+import {Ripple} from 'Components';
+import Color from 'color';
 
 const {color} = theme;
 
@@ -44,17 +46,53 @@ const Knob = styled.span`
   border-radius: 50%;
   z-index: 1;
   cursor: pointer;
+  .ripple-item {
+    //opacity: 0.125;
+  }
   .checked & {
     background-color: ${color('google-blue-600')};
     transform: translate3d(18px, 0, 0);
+    .ripple-item {
+      background-color: ${Color(color('paper-indigo-500')).alpha(0.5).rgb().toString()};
+    }
   }
 `;
 
-export const Radio = ({on, onClick}) => {
-    return (
-        <RadioView className={on ? 'checked' : ''}>
-            <Bar/>
-            <Knob onClick={onClick}/>
-        </RadioView>
-    );
+export class Radio extends React.Component {
+    constructor() {
+        super();
+        this.handleOnMouseDown = ::this.handleOnMouseDown;
+        this.handleOnMouseUp = ::this.handleOnMouseUp;
+        this.state = {
+            mouseDown: false,
+        };
+    }
+
+    handleOnMouseDown(e) {
+        this.setState({mouseDown: true, rippleRadius: 12 * Math.sqrt(2)});
+    }
+
+    handleOnMouseUp() {
+        this.setState({mouseDown: false});
+    }
+
+    render() {
+        const {on, onClick} = this.props;
+        const {mouseDown, rippleRadius} = this.state;
+        return (
+            <RadioView className={on ? 'checked' : ''} onClick={onClick}>
+                <Bar/>
+                <Knob
+                    innerRef={i => this.btn = i}
+                    onMouseDown={this.handleOnMouseDown}
+                    onMouseUp={this.handleOnMouseUp}
+                    onMouseLeave={this.handleOnMouseUp}
+                >
+                    <ThemeProvider theme={{radius: rippleRadius, speed: 0.75, size: 1.2}}>
+                        <Ripple active={mouseDown}/>
+                    </ThemeProvider>
+                </Knob>
+            </RadioView>
+        );
+    }
 };

@@ -8,7 +8,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {theme} from 'Styles/theme';
 
-const {color} = theme;
+const {color, headerHeight} = theme;
 
 const View = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const View = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  min-height: 56px;
+  min-height: ${headerHeight}px;
   background-color: ${color('google-blue-700')};
   color: white;
   z-index: 2;
