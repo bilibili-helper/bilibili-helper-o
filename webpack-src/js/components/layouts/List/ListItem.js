@@ -25,7 +25,7 @@ const ListItemView = styled.div.attrs({
   border-color: ${color('paper-grey-300')};
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   font-size: 13px;
-  cursor: ${({pointer}) => pointer ? 'pointer' : 'default'};
+  cursor: ${({onClick}) => onClick ? 'pointer' : 'default'};
   &:first-of-type {
     border-top: none;
   }

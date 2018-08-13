@@ -17,4 +17,8 @@ export const Body = styled.div.attrs({
   &.extend {
     margin-bottom: 0;
   }
+  &::-webkit-scrollbar {
+    //display: none;
+    visibility: hidden;
+  }
 `;

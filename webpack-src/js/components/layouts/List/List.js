@@ -14,16 +14,23 @@ const ListWrapper = styled.div.attrs({
     className: 'list-wrapper',
 })`
   //margin: 3px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 560px;
+  flex-shrink: 0;
+  min-width: 582px;
   min-height: 0;
-  transition: all 0.4s;
+  transition: all 0.5s;
   &.extend {
-    min-height: 100%;
+    //transition: transform 0.5s 0.01s;
+    //position: absolute;
+    //top: 0;
+    //bottom: 0;
+    //min-height: 100%;
     z-index: 1;
   }
   &.hidden {
+    //transition: all 0.3s;
     visibility: hidden;
     //margin: 0 3px;
     opacity: 0;
@@ -41,13 +48,21 @@ const ListHeader = styled.div.attrs({
   max-height: 18px;
   color: ${color('paper-grey-700')};
   overflow: hidden;
-  //transition: all 0.15s;
+  transition: all 0s;
+  opacity: 1;
   .extend & {
-    margin: 0;
-    max-height: 0;
-  }
-  .hidden {
+    opacity: 0;
     visibility: hidden;
+    margin: 0;
+    //margin: 0;
+    //max-height: 0;
+  }
+  .hidden & {
+    //margin: 0;
+    //max-height: 0;
+    //visibility: hidden;
+    //opacity: 0;
+    //dispaly: none;
   }
 `;
 
@@ -56,16 +71,26 @@ const BodyWrapper = styled.div.attrs({
 })`
   display: flex;
   flex-direction: column;
-  flex: 1;
   position: relative;
   top: 0;
-  border-radius: 4px;
-  background-color: white;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
-  overflow: hidden;
-  transition: top 0.3s;
+  //border-radius: 4px;
+  //background-color: white;
+  //box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  //overflow: hidden;
+  transition: top 0.5s;
   .extend & {
     border-radius: 0;
+    //position: absolute;
+    //bottom: 0px;
+    //top: 0;
+    //width: 100%;
+  }
+  .hidden & {
+    //transition: all 0s;
+    //margin: 0;
+    //max-height: 0;
+    //visibility: hidden;
+    //opacity: 0;
   }
 `;
 
@@ -75,9 +100,18 @@ const ListBody = styled.div.attrs({
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%;
+  max-height: 100%;
   opacity: 1;
+  transition: all 0.3s;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  overflow: hidden;
+  background-color: white;
   .extend & {
+    //transition: all 0s;
+    opacity: 0;
+    //max-height: 0;
+    visibility: hidden;
   }
 `;
 
@@ -91,8 +125,21 @@ const ExtendBody = styled.div.attrs({
   max-height: 0;
   transition: all 0.3s;
   .extend & {
-    //visibility: visible;
-    //opacity: 1;
+    visibility: visible;
+    opacity: 1;
+    overflow: auto;
+    width: 582px;
+    max-height: inherit;
+    //position: relative;
+    //bottom: 0px;
+    //top: 0;
+    transition: transform 0.3s;
+    //padding-bottom: ${headerHeight}px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+    &::-webkit-scrollbar {
+      display: none;
+      //visibility: hidden;
+    }
     //height: 100%;
     //box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
   }
@@ -111,10 +158,11 @@ export class List extends React.Component {
     componentWillReceiveProps(nextProps, nextContent) {
         const {extend} = nextProps;
         if (extend) {
-            this.listWrapper = this.listWrapper.getBoundingClientRect();
-            this.top = this.listWrapper.top - headerHeight;
-            console.log(this.top);
-        }else {
+            this.BodWrapperBounding = this.BodWrapper.getBoundingClientRect();
+            this.top = this.BodWrapperBounding.top - headerHeight - this.ListWrapper.parentNode.scrollTop;
+            console.log(this.top, this.BodWrapper.clientTop);
+            // this.ListWrapper.parentNode.scrollTop = 0;
+        } else {
             this.top = 0;
         }
     }
@@ -124,14 +172,18 @@ export class List extends React.Component {
         return (
             <ListWrapper
                 className={`list-wrapper ${extend ? 'extend' : ''} ${hidden ? 'hidden' : ''}`}
-                innerRef={i => this.listWrapper = i}
+                innerRef={i => this.ListWrapper = i}
             >
                 {title && <ListHeader>{title}</ListHeader>}
-                <BodyWrapper style={{top: -this.top}}>
+                <BodyWrapper
+                    innerRef={i => this.BodWrapper = i}
+                >
                     <ListBody>
                         {children}
                     </ListBody>
-                    <ExtendBody>
+                    <ExtendBody
+                        // style={{top: headerHeight + this.top, transform: `translateY(-${headerHeight + this.top}px)`}}
+                    >
                         {extendChildren}
                     </ExtendBody>
                 </BodyWrapper>
