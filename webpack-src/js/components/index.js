@@ -9,3 +9,4 @@ export {Button} from './Button';
 export {Ripple} from './Ripple';
 export {Icon} from './Icon';
 export {Radio} from './Radio';
+export {RadioButtonGroup, RadioButton} from './RadioButtonGroup';

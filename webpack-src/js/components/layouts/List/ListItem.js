@@ -4,9 +4,9 @@
  * Description: 列表项目
  */
 
+import _ from 'lodash';
 import React from 'react';
 import styled, {ThemeProvider} from 'styled-components';
-import {TwoLineContainer} from 'Components';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -17,31 +17,46 @@ const {color} = theme;
 const ListItemView = styled.div.attrs({
     className: 'list-item',
 })`
+  border-top: ${props => props.noBorder ? 'none' : '1px solid rgba(0, 0, 0, 0.06)'};
+  &:nth-of-type(1) {
+    border-top: none;
+  }
+`;
+
+const TitleView = styled.div.attrs({
+    className: 'title-view',
+})`
   min-height: ${props => props.theme.twoLine ? '65px' : '49px'};
   padding: 0 20px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   background-color: #fff;
-  border-color: ${color('paper-grey-300')};
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
   font-size: 13px;
   cursor: ${({onClick}) => onClick ? 'pointer' : 'default'};
-  &:first-of-type {
-    border-top: none;
-  }
-  .start {
-    display: flex;
-    flex-direction: column;
-    flex: auto;
+  .icon {
+    margin: 0 12px 0 -6px;
   }
 `;
-export const ListItem = ({children, twoLine = false, ...rest}) => {
-    return (
-        <ThemeProvider theme={{twoLine}}>
-            <ListItemView {...rest}>{children}</ListItemView>
-        </ThemeProvider>
-    );
-};
+
+const TwoLineContainerView = styled.div.attrs({
+    className: 'two-line-container',
+})`
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  h3 {
+    margin: 0;
+    height: 20px;
+    font-size: 13px;
+  }
+`;
+
+const Secondary = styled.div`
+  height:20px;
+  color: #757575;
+  font-weight: 400;
+`;
 
 const Start = styled.div.attrs({
     className: 'list-item-start',
@@ -53,6 +68,7 @@ const Start = styled.div.attrs({
   flex-direction: row;
   align-items: center;
   flex: auto;
+  margin: 15px 0;
   h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     height: 20px;
@@ -60,24 +76,7 @@ const Start = styled.div.attrs({
   }
 `;
 
-ListItem.Start = ({first, second, children}) => {
-    return (
-        <Start>
-            {(first || second) &&<TwoLineContainer first={first} second={second}/>}
-            {children}
-        </Start>
-    );
-};
-
-ListItem.Middle = styled.div.attrs({
-    className: 'list-item-middle',
-})`
-  -webkit-padding-start: 16px;
-  align-items: center;
-  flex: auto;
-`;
-
-ListItem.End = styled.div.attrs({
+const End = styled.div.attrs({
     className: 'list-item-end',
 })`
   display: flex;
@@ -87,11 +86,33 @@ ListItem.End = styled.div.attrs({
   }
 `;
 
+const SubList = styled.div.attrs({
+    className: props => props.hide ? 'sub-list hide' : 'sub-list',
+})`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: white;
+  transition: all 0.3s;
+  opacity: 1;
+  .list-item {
+    margin-left: 60px;
+    .list-item-start {
+      margin: 0;
+    }
+    &:last-of-type {
+      padding-bottom: 16px;
+    }
+  }
+`;
+
 /**
  * 分割线
  * 根据twoLine属性设定自适应高度
  */
-ListItem.Separator = styled.div.attrs({
+const Separator = styled.div.attrs({
     className: 'separator',
 })`
   height: calc(${props => props.theme.twoLine ? '65px' : '49px'} - 2 * 9px);
@@ -100,3 +121,56 @@ ListItem.Separator = styled.div.attrs({
   -webkit-margin-end:20px;
   -webkit-margin-start:20px;
 `;
+
+export class ListItem extends React.Component {
+    constructor() {
+        super()
+        this.state = {maxHeight: 0};
+    }
+    componentDidMount() {
+        if (this.subListRef) {
+            const sumHeight = _.sumBy(this.subListRef.querySelectorAll('.list-item'),
+                (e) => e.getBoundingClientRect().height);
+            this.setState({maxHeight: sumHeight});
+        }
+    }
+
+    render() {
+        const {
+            icon, // 显示在最左侧的ICON
+            children,
+            separator = false, // 右侧操作DOM是否要添加分割线
+            operation = null, // 右侧操作DOM，可能是按钮，单选按钮或者面板折叠按钮
+            twoLine = false, // 是否两行高度
+            first, // 标题，需要twoLine = true
+            second, // 副标题，需要twoLine = true
+            subList = {hide: false, children: null},
+            noBorder = false,
+            onClick = () => {},
+            ...rest,
+        } = this.props;
+        const {maxHeight} = this.state;
+        return (
+            <ThemeProvider theme={{twoLine}}>
+                <ListItemView noBorder={noBorder} {...rest}>
+                    <TitleView onClick={onClick}>
+                        {icon && icon}
+                        {twoLine && <TwoLineContainerView>
+                            {first && <h3>{first}</h3>}
+                            {second && <Secondary>{second}</Secondary>}
+                        </TwoLineContainerView>}
+                        {!twoLine && <Start>{children}</Start>}
+                        {separator && <Separator/>}
+                        {operation && <End>{operation}</End>}
+                    </TitleView>
+                    {subList.children && <ThemeProvider theme={subList.theme ? subList.theme : {twoLine}}>
+                        <SubList
+                            style={{maxHeight: subList.hide === true ? '0' : maxHeight}}
+                            innerRef={i => this.subListRef = i}
+                        >{subList.children}</SubList>
+                    </ThemeProvider>}
+                </ListItemView>
+            </ThemeProvider>
+        );
+    }
+}

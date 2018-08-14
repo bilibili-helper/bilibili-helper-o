@@ -7,4 +7,3 @@
 export * from './Body';
 export * from './List/index';
 export * from './Header';
-export * from './Page';

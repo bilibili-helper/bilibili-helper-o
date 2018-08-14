@@ -52,7 +52,7 @@ class RippleClass extends React.Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         const {active, x, y, theme} = nextProps;
-        const {radius, size = 1} = theme;
+        const {radius = 15, size = 1} = theme;
         let style = `width:${2 * radius * size}px;height:${2 * radius * size}px;margin: -${radius * size}px;`;
         if (x !== undefined && y !== undefined) style += `top:${y}px;left:${x}px;`;
         if (active) {

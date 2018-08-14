@@ -19,6 +19,6 @@ export const Body = styled.div.attrs({
   }
   &::-webkit-scrollbar {
     //display: none;
-    visibility: hidden;
+    //visibility: hidden;
   }
 `;

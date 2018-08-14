@@ -13,13 +13,11 @@ const {color, headerHeight} = theme;
 const ListWrapper = styled.div.attrs({
     className: 'list-wrapper',
 })`
-  //margin: 3px;
+  margin: 0 auto;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  min-width: 582px;
+  max-width: 650px;
   min-height: 0;
+  min-width: 580px;
   transition: all 0.5s;
   &.extend {
     //transition: transform 0.5s 0.01s;
@@ -107,14 +105,9 @@ const ListBody = styled.div.attrs({
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
   overflow: hidden;
   background-color: white;
-  .extend & {
-    //transition: all 0s;
-    opacity: 0;
-    //max-height: 0;
-    visibility: hidden;
-  }
 `;
 
+/*
 const ExtendBody = styled.div.attrs({
     className: 'list-extend',
 })`
@@ -144,6 +137,7 @@ const ExtendBody = styled.div.attrs({
     //box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
   }
 `;
+*/
 
 export class List extends React.Component {
     constructor() {
@@ -156,37 +150,25 @@ export class List extends React.Component {
     }
 
     componentWillReceiveProps(nextProps, nextContent) {
-        const {extend} = nextProps;
-        if (extend) {
-            this.BodWrapperBounding = this.BodWrapper.getBoundingClientRect();
-            this.top = this.BodWrapperBounding.top - headerHeight - this.ListWrapper.parentNode.scrollTop;
-            console.log(this.top, this.BodWrapper.clientTop);
-            // this.ListWrapper.parentNode.scrollTop = 0;
-        } else {
-            this.top = 0;
-        }
+        // const {extend} = nextProps;
+        // if (extend) {
+        //     this.BodWrapperBounding = this.BodWrapper.getBoundingClientRect();
+        //     this.top = this.BodWrapperBounding.top - headerHeight - this.ListWrapper.parentNode.scrollTop;
+        //     console.log(this.top, this.BodWrapper.clientTop);
+        //     // this.ListWrapper.parentNode.scrollTop = 0;
+        // } else {
+        //     this.top = 0;
+        // }
     }
 
     render() {
         const {children, extendChildren, title, extend, hidden} = this.props;
         return (
-            <ListWrapper
-                className={`list-wrapper ${extend ? 'extend' : ''} ${hidden ? 'hidden' : ''}`}
-                innerRef={i => this.ListWrapper = i}
-            >
+            <ListWrapper className={'list-wrapper'}>
                 {title && <ListHeader>{title}</ListHeader>}
-                <BodyWrapper
-                    innerRef={i => this.BodWrapper = i}
-                >
-                    <ListBody>
-                        {children}
-                    </ListBody>
-                    <ExtendBody
-                        // style={{top: headerHeight + this.top, transform: `translateY(-${headerHeight + this.top}px)`}}
-                    >
-                        {extendChildren}
-                    </ExtendBody>
-                </BodyWrapper>
+                <ListBody>
+                    {children}
+                </ListBody>
             </ListWrapper>
         );
 

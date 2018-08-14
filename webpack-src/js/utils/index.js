@@ -3,19 +3,47 @@
  * Create: 2018-06-12
  */
 /* global chrome */
+import _ from 'lodash';
 import defaultOptions from '../defaultOptions';
 import store from 'store';
 const bkg_page = chrome.extension.getBackgroundPage();
 
 /**
+ * 获取配置
  * @param key
  */
 export const getOption = (key) => {
-    if (store.get(key) === null) {
-        store.set(key, defaultOptions[key]);
+    if (defaultOptions[key]) {
+        return store.get(key);
     }
-    return store.get(key);
 };
+
+/**
+ * 设置配置
+ * @param key
+ * @param value
+ */
+export const setOption = (key, value) => {
+    if (defaultOptions[key]) {
+        store.set( key, value);
+    }
+}
+
+export const getOptions = () => {
+    const list = {};
+    _.map(defaultOptions, (entry, key) => {
+        let option = getOption(key);
+        console.log(option);
+        if (option === undefined) {
+            const {on, value} = defaultOptions[key];
+            option = {on, value};
+            setOption(key, {on, value});
+        }
+        list[key] = option;
+    });
+    return list;
+}
+
 
 /**
  * @param command
@@ -56,6 +84,7 @@ export const isLogin = () => {
             url: 'http://interface.bilibili.com/',
             name: 'DedeUserID',
         }, function(cookie) {
+            // expirationDate 是秒数
             if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
                 resolve(true);
             } else resolve(false);

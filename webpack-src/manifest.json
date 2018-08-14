@@ -50,8 +50,7 @@
         "webRequest",
         "webRequestBlocking",
         "http://*/",
-        "https://*/",
-        "chrome://*/"
+        "https://*/"
     ],
     "web_accessible_resources": [
         "statics/*",

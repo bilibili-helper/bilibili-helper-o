@@ -65,11 +65,12 @@ export class Radio extends React.Component {
         this.handleOnMouseUp = ::this.handleOnMouseUp;
         this.state = {
             mouseDown: false,
+            rippleRadius: 0,
         };
     }
 
     handleOnMouseDown(e) {
-        this.setState({mouseDown: true, rippleRadius: 12 * Math.sqrt(2)});
+        this.setState({mouseDown: true});
     }
 
     handleOnMouseUp() {
@@ -78,7 +79,7 @@ export class Radio extends React.Component {
 
     render() {
         const {on, onClick} = this.props;
-        const {mouseDown, rippleRadius} = this.state;
+        const {mouseDown} = this.state;
         return (
             <RadioView className={on ? 'checked' : ''} onClick={onClick}>
                 <Bar/>
@@ -88,7 +89,7 @@ export class Radio extends React.Component {
                     onMouseUp={this.handleOnMouseUp}
                     onMouseLeave={this.handleOnMouseUp}
                 >
-                    <ThemeProvider theme={{radius: rippleRadius, speed: 0.75, size: 1.2}}>
+                    <ThemeProvider theme={{radius: 17, speed: 0.75, size: 1.2}}>
                         <Ripple active={mouseDown}/>
                     </ThemeProvider>
                 </Knob>
