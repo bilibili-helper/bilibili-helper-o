@@ -5,11 +5,15 @@
  */
 
 import $ from 'jquery';
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {__, isLogin, createTab, version, setOption, getOptions} from 'Utils';
-import {Button, Body, List, ListItem, Header, Icon, Radio, RadioButtonGroup} from 'Components';
+import {
+    Button, Body, List, ListItem, Header, Icon,
+    Radio, RadioButtonGroup, CheckBoxGroup, UpdateList,
+} from 'Components';
 
 import 'Styles/scss/options.scss';
 
@@ -65,6 +69,7 @@ class PageOptions extends React.Component {
             videoPlayerWidenType,
             sign,
             treasure,
+            chatFilter,
         } = this.state;
         return <Fragment>
             <Header title="设置"/>
@@ -127,6 +132,24 @@ class PageOptions extends React.Component {
                         operation={<Radio
                             on={treasure.on}
                         />}>辅助领瓜子</ListItem>
+                    <ListItem
+                        onClick={() => this.handleSetOption('chatFilter')}
+                        /*twoLine
+                        first="聊天信息屏蔽设置"
+                        second={`已启用：${_.map(chatFilter.value, (value, key) => (
+                            value ? _.find(chatFilter.types, (e) => e.key === key).name : ''
+                        )).join(' ').trim() || '无'}`}*/
+                        // extend
+                        operation={<Radio on={chatFilter.on}/>}
+                        subList={{
+                            hide: !chatFilter.on,
+                            theme: {twoLine: false},
+                            children: <CheckBoxGroup
+                                data={chatFilter.types}
+                                value={chatFilter.value}
+                                onClick={(value) => this.handleSetOption('chatFilter', value)}
+                            />,
+                        }}>聊天信息屏蔽设置</ListItem>
                 </List>
                 <List title="关于助手">
                     <ListItem
@@ -137,6 +160,30 @@ class PageOptions extends React.Component {
                         separator
                         operation={<Button>检查更新</Button>}
                     />
+                    <UpdateList
+                        title='版本须知'
+                        data={[
+                            {title: '从0.8.16.13版本开始不再提供“区域限制解锁”和“自动抽奖”功能'},
+                            {title: '从0.8.16.20版本开始不再提供“播放器切换”功能'},
+                        ]}/>
+                    <UpdateList
+                        title='版本 0.9.9'
+                        data={[
+                            {type: 'serious', title: '重新修复了部分老内核版本浏览器在主站视频页面打开后不停刷请求的问题'},
+                        ]}/>
+                    <UpdateList
+                        title='版本 0.9.7 - 0.9.8'
+                        data={[
+                            {title: '增加主站视频播放器右侧自动切换到弹幕列表的功能（该功能没有关闭选项）'},
+                            {title: '增加自动关闭直播间弹出心愿瓶的窗口（该功能没有关闭选项）'},
+                            {title: '增加直播区自动将银瓜子兑换为硬币的功能'},
+                            {title: '修复了主站视频下载链接获取失败的问题'},
+                            {title: '修复了主站视频播放器自动宽屏失效问题'},
+                            {title: '修复了直播区瓜子宝箱无法关闭弹出窗口的问题'},
+                            {title: '修复了直播区自动签到后的显示问题'},
+                            {title: '修复了直播区小电视宝箱目标和去污粉重叠的问题'},
+                            {title: '更新投喂表（非实时&手动更新）'},
+                        ]}/>
                 </List>
             </OptionBody>
         </Fragment>;

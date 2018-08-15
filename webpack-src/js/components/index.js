@@ -10,3 +10,5 @@ export {Ripple} from './Ripple';
 export {Icon} from './Icon';
 export {Radio} from './Radio';
 export {RadioButtonGroup, RadioButton} from './RadioButtonGroup';
+export {CheckBoxGroup} from './CheckBoxGroup';
+export {UpdateList} from './UpdateList';

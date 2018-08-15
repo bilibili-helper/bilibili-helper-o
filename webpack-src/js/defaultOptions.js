@@ -3,6 +3,7 @@
  * Create: 2018-06-12
  * Description:
  */
+import {__} from 'Utils';
 
 export default {
     'newWatchList': { // 跳转到新版我的关注页面
@@ -42,16 +43,27 @@ export default {
     },
     'chatFilter': { // 直播区弹幕屏蔽
         on: true,
-        values: {
-            chatMsg: false, // 聊天内容
-            gift: false, // 礼物赠送信息
-            small: false, // 小型标志
-            enterMsg: false, // 进场信息
-            topicIcon: false, // 头衔成就
-            mediaIcon: false, // 粉丝勋章
-            userLevel: false, // 用户等级
-            giftNPC: false, // 悬浮NPC（2233娘）
-            announcement: false, // 系统公告
+        types: [
+            {key: 'chatMsg', name: '聊天内容'}, // 聊天内容
+            {key: 'gift', name: '礼物信息'}, // 礼物信息
+            {key: 'small', name: '小型标志'}, // 小型标志
+            {key: 'enterMsg', name: '进场信息'}, // 进场信息
+            {key: 'topicIcon', name: '头衔成就'}, // 头衔成就
+            {key: 'mediaIcon', name: '粉丝勋章'}, // 粉丝勋章
+            {key: 'userLevel', name: '用户等级'}, // 用户等级
+            {key: 'giftNPC', name: '2233娘'}, // 悬浮NPC（2233娘）
+            {key: 'announcement', name: '系统公告'}, // 系统公告
+        ],
+        value: {
+            chatMsg: false,
+            gift: false,
+            small: false,
+            enterMsg: false,
+            topicIcon: false,
+            mediaIcon: false,
+            userLevel: false,
+            giftNPC: false,
+            announcement: false,
         },
     },
 };

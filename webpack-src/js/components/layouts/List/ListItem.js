@@ -8,8 +8,9 @@ import _ from 'lodash';
 import React from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles';
+import {Icon, Button} from 'Components';
 
-const {color} = theme;
+// const {color} = theme;
 
 /**
  * props: twoLine
@@ -34,9 +35,9 @@ const TitleView = styled.div.attrs({
   background-color: #fff;
   font-size: 13px;
   cursor: ${({onClick}) => onClick ? 'pointer' : 'default'};
-  .icon {
-    margin: 0 12px 0 -6px;
-  }
+  //.icon {
+  //  margin: 0 12px 0 -6px;
+  //}
 `;
 
 const TwoLineContainerView = styled.div.attrs({
@@ -75,6 +76,17 @@ const Start = styled.div.attrs({
     font-size: 13px;
   }
 `;
+/*
+const Middle = styled.div.attrs({
+    className: 'list-item-middle',
+})`
+  display: flex;
+  align-items: center;
+  .separator + & {
+    //margin: -12px;
+  }
+`;
+*/
 
 const End = styled.div.attrs({
     className: 'list-item-end',
@@ -95,7 +107,7 @@ const SubList = styled.div.attrs({
   border-radius: 4px;
   overflow: hidden;
   background-color: white;
-  transition: all 0.3s;
+  transition: all 0.5s;
   opacity: 1;
   .list-item {
     margin-left: 60px;
@@ -123,33 +135,47 @@ const Separator = styled.div.attrs({
 `;
 
 export class ListItem extends React.Component {
-    constructor() {
-        super()
-        this.state = {maxHeight: 0};
+    constructor(props) {
+        super();
+        const {subList} = props;
+        this.state = {
+            maxHeight: 0,
+            hideSubList: subList && subList.hide !== undefined ? subList.hide : false,
+        };
     }
+
     componentDidMount() {
         if (this.subListRef) {
-            const sumHeight = _.sumBy(this.subListRef.querySelectorAll('.list-item'),
+            const sumHeight = _.sumBy(this.subListRef.querySelectorAll('.list-item, *'),
                 (e) => e.getBoundingClientRect().height);
             this.setState({maxHeight: sumHeight});
         }
     }
 
     render() {
+        let {
+            operation = null, // 右侧操作DOM，可能是按钮，单选按钮或者面板折叠按钮
+        } = this.props;
         const {
             icon, // 显示在最左侧的ICON
             children,
             separator = false, // 右侧操作DOM是否要添加分割线
-            operation = null, // 右侧操作DOM，可能是按钮，单选按钮或者面板折叠按钮
             twoLine = false, // 是否两行高度
             first, // 标题，需要twoLine = true
             second, // 副标题，需要twoLine = true
-            subList = {hide: false, children: null},
+            middle = null, // 中间内容
+            subList = null,
             noBorder = false,
-            onClick = () => {},
+            extend = false, // subList是否为可折叠，如果没有设定operation就会自动将operation设定为折叠按钮
+            onClick,
             ...rest,
         } = this.props;
-        const {maxHeight} = this.state;
+        const {maxHeight, hideSubList} = this.state;
+        if (!operation && subList && subList.children && extend) {
+            operation = <Button isIcon onClick={() => this.setState({hideSubList: !hideSubList})}>
+                <Icon type={hideSubList === true ? 'arrowDown' : 'arrowUp'}/>
+            </Button>;
+        }
         return (
             <ThemeProvider theme={{twoLine}}>
                 <ListItemView noBorder={noBorder} {...rest}>
@@ -159,13 +185,17 @@ export class ListItem extends React.Component {
                             {first && <h3>{first}</h3>}
                             {second && <Secondary>{second}</Secondary>}
                         </TwoLineContainerView>}
-                        {!twoLine && <Start>{children}</Start>}
+                        {!twoLine && <Start>{children}{middle}</Start>}
                         {separator && <Separator/>}
                         {operation && <End>{operation}</End>}
                     </TitleView>
-                    {subList.children && <ThemeProvider theme={subList.theme ? subList.theme : {twoLine}}>
+                    {/*{ 折叠子列表 }*/}
+                    {subList && subList.children && <ThemeProvider theme={subList.theme ? subList.theme : {twoLine}}>
                         <SubList
-                            style={{maxHeight: subList.hide === true ? '0' : maxHeight}}
+                            style={{
+                                maxHeight:
+                                    (!extend && subList.hide) || (extend && hideSubList === true) ? '0' : maxHeight || '',
+                            }}
                             innerRef={i => this.subListRef = i}
                         >{subList.children}</SubList>
                     </ThemeProvider>}

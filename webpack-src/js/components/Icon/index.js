@@ -11,6 +11,8 @@ import {getUrl} from 'Utils';
 const typeList = {
     cat128: getUrl('statics/imgs/icon-128.png'),
     arrowRight: getUrl('statics/imgs/arrow_right.svg'),
+    arrowDown: getUrl('statics/imgs/arrow_down.svg'),
+    arrowUp: getUrl('statics/imgs/arrow_up.svg'),
 };
 
 const IconView = styled.div.attrs({
@@ -22,6 +24,7 @@ const IconView = styled.div.attrs({
   background-position: center;
   background-repeat: no-repeat;
   background-size: ${props => props.isImage ? '100%' : '60%'};
+  margin: ${props => props.isImage ? '0 12px 0 -6px' : ''};
 `;
 
 export class Icon extends React.Component {

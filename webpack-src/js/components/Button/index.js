@@ -24,9 +24,12 @@ const ButtonWrapper = styled.div`
 `;
 
 const ButtonView = styled.button`
+  display: block;
+  width: 100%;
+  height: 100%;
   min-width: ${props => props.isIcon ? '36px' : '50px'};
   ${props => props.isIcon ? 'padding: 0' : ''};
-  min-height: 36px;
+  //min-height: 36px;
   font-size: 13px;
   font-weight: 500;
   background-color: transparent;

@@ -6,8 +6,12 @@
 import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import styled from 'styled-components';
 import {__, isLogin, createTab} from 'Utils';
 import {Button, Body} from 'Components';
+import {theme} from 'Styles';
+
+const {color} = theme;
 // import {Provider} from 'mobx-react';
 // import createBrowserHistory from 'history/createBrowserHistory';
 // import {RouterStore, syncHistoryWithStore} from 'mobx-react-router';
@@ -19,8 +23,49 @@ import {Button, Body} from 'Components';
 // const state = window.__INITIAL_STATE__;
 import 'Styles/scss/popup.scss';
 
+const PopupBody = styled(Body)`
+  padding: 8px 10px;
+  // background-color: ${color('google-grey-100')};
+`;
+
+const PopupButton = styled(Button)`
+  display: block;
+  width: 150px;
+  height: 30px;
+  border: 1px solid ${color('google-grey-100')};
+  border-radius: 0;
+  transition: all 0.3s;
+  margin-bottom: 6px;
+  &:last-of-type {
+    //border-bottom: none;
+    margin-bottom: 0;
+  }
+  button {
+    text-align: left;
+    text-indent: 6px;
+    font-size: 12px;
+    color: ${color('google-grey-700')};
+    //background-color: white;
+    background-color: ${color('paper-grey-50')};
+    transition: all 0.3s;
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+  .ripple-item {
+    //background-color: #00a9e8;
+  }
+  &:hover {
+    border-color: #009cd6;
+    button:not([disabled]) {
+      background-color: #00a9e8;
+      color: white;
+    }
+  }
+`;
+
 class PagePopup extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             hasLogin: false,
@@ -36,13 +81,15 @@ class PagePopup extends React.Component {
     render() {
         const {hasLogin, optionPageUrl} = this.state;
         return (
-            <Body>
-                <BiliButton onClick={() => createTab('https://www.bilibili.com/')}>{__('goBili')}</BiliButton>
-                <BiliButton onClick={() => createTab('https://live.bilibili.com/')}>{__('goBiliLive')}</BiliButton>
-                <BiliButton disabled={!hasLogin} title={!hasLogin ? __('notLogged') : ''}>{__('goDynamic')}</BiliButton>
-                <BiliButton disabled={!hasLogin} title={!hasLogin ? __('notLogged') : ''}>{__('goFavorite')}</BiliButton>
-                <BiliButton onClick={() => createTab(optionPageUrl)}>{__('goOption')}</BiliButton>
-            </Body>
+            <PopupBody>
+                <PopupButton onClick={() => createTab('https://www.bilibili.com/')}>{__('goBili')}</PopupButton>
+                <PopupButton onClick={() => createTab('https://live.bilibili.com/')}>{__('goBiliLive')}</PopupButton>
+                <PopupButton disabled={!hasLogin}
+                             title={!hasLogin ? __('notLogged') : ''}>{__('goDynamic')}</PopupButton>
+                <PopupButton disabled={!hasLogin}
+                             title={!hasLogin ? __('notLogged') : ''}>{__('goFavorite')}</PopupButton>
+                <PopupButton onClick={() => createTab(optionPageUrl)}>{__('goOption')}</PopupButton>
+            </PopupBody>
         );
     }
 }

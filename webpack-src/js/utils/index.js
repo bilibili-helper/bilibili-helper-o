@@ -6,6 +6,7 @@
 import _ from 'lodash';
 import defaultOptions from '../defaultOptions';
 import store from 'store';
+
 const bkg_page = chrome.extension.getBackgroundPage();
 
 /**
@@ -25,25 +26,26 @@ export const getOption = (key) => {
  */
 export const setOption = (key, value) => {
     if (defaultOptions[key]) {
-        store.set( key, value);
+        store.set(key, value);
     }
-}
+};
 
 export const getOptions = () => {
     const list = {};
     _.map(defaultOptions, (entry, key) => {
         let option = getOption(key);
-        console.log(option);
+        if (defaultOptions[key] && defaultOptions[key].types) {
+            option.types = defaultOptions[key].types;
+        }
         if (option === undefined) {
             const {on, value} = defaultOptions[key];
-            option = {on, value};
+            option = Object.assign(option, {on, value});
             setOption(key, {on, value});
         }
         list[key] = option;
     });
     return list;
-}
-
+};
 
 /**
  * @param command
@@ -83,14 +85,14 @@ export const isLogin = () => {
         bkg_page.chrome.cookies.get({
             url: 'http://interface.bilibili.com/',
             name: 'DedeUserID',
-        }, function(cookie) {
+        }, function (cookie) {
             // expirationDate 是秒数
             if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
                 resolve(true);
             } else resolve(false);
         });
-    })
-}
+    });
+};
 
 /**
  * 创建新tab页面
@@ -98,7 +100,7 @@ export const isLogin = () => {
  */
 export const createTab = (url) => {
     chrome.tabs.create({url});
-}
+};
 
 export const version = chrome.runtime.getManifest().version;
 

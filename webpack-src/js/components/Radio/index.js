@@ -15,7 +15,7 @@ const {color} = theme;
 const RadioView = styled.div`
   display: block;
   position: relative;
-  width: 34px;
+  width: 32px;
   height: 16px;
   outline: none;
   z-index: 0;
