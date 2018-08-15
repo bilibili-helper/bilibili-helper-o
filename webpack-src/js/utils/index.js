@@ -39,7 +39,7 @@ export const getOptions = () => {
         }
         if (option === undefined) {
             const {on, value} = defaultOptions[key];
-            option = Object.assign(option, {on, value});
+            option = {on, value};
             setOption(key, {on, value});
         }
         list[key] = option;
@@ -78,9 +78,10 @@ export const __ = (t, options) => chrome.i18n.getMessage(t, options);
 
 /**
  * 判断是否登录
- * @return {Promise}
+ * @return {Promise|boolean}
  */
 export const isLogin = () => {
+    if (!bkg_page) return new Promise((resolve) => resolve(false));
     return new Promise((resolve) => {
         bkg_page.chrome.cookies.get({
             url: 'http://interface.bilibili.com/',
@@ -102,6 +103,29 @@ export const createTab = (url) => {
     chrome.tabs.create({url});
 };
 
+/**
+ * 当前版本号
+ * @type {string}
+ */
 export const version = chrome.runtime.getManifest().version;
 
+/**
+ * 根据资源名获取扩展程序内部资源
+ * @param name
+ */
 export const getUrl = (name) => chrome.extension.getURL(name);
+
+/**
+ * 检查传入的版本号是否比当前版本号大
+ * @param checkVersion
+ * @return {boolean}
+ */
+export const hasNewVersion = (checkVersion) => {
+    const checkVersionStr = checkVersion.split('.').join('');
+    const currentVersionStr = version.split('.').join('');
+    if (checkVersionStr.length !== currentVersionStr.length) { // 版本号格式不同
+        console.error('版本号格式不同');
+        return false;
+    }
+    return Number(checkVersionStr) > Number(currentVersionStr);
+}

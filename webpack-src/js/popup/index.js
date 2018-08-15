@@ -49,7 +49,7 @@ const PopupButton = styled(Button)`
     background-color: ${color('paper-grey-50')};
     transition: all 0.3s;
     &[disabled] {
-      opacity: 0.5;
+      opacity: 0.3;
     }
   }
   .ripple-item {
@@ -69,8 +69,8 @@ class PagePopup extends React.Component {
         super();
         this.state = {
             hasLogin: false,
-            optionPageUrl: chrome.extension.getURL('options.html'),
         };
+        this.optionPageUrl = chrome.extension.getURL('options.html');
     }
 
     componentWillMount() {
@@ -79,16 +79,17 @@ class PagePopup extends React.Component {
     }
 
     render() {
-        const {hasLogin, optionPageUrl} = this.state;
+        const {hasLogin} = this.state;
         return (
             <PopupBody>
                 <PopupButton onClick={() => createTab('https://www.bilibili.com/')}>{__('goBili')}</PopupButton>
                 <PopupButton onClick={() => createTab('https://live.bilibili.com/')}>{__('goBiliLive')}</PopupButton>
-                <PopupButton disabled={!hasLogin}
-                             title={!hasLogin ? __('notLogged') : ''}>{__('goDynamic')}</PopupButton>
-                <PopupButton disabled={!hasLogin}
-                             title={!hasLogin ? __('notLogged') : ''}>{__('goFavorite')}</PopupButton>
-                <PopupButton onClick={() => createTab(optionPageUrl)}>{__('goOption')}</PopupButton>
+                {hasLogin && <React.Fragment>
+                    {/* 登录后显示“我的关注”和“我的收藏” */}
+                    <PopupButton>{__('goDynamic')}</PopupButton>
+                    <PopupButton>{__('goFavorite')}</PopupButton>
+                </React.Fragment>}
+                <PopupButton onClick={() => createTab(this.optionPageUrl)}>{__('goOption')}</PopupButton>
             </PopupBody>
         );
     }

@@ -6,6 +6,7 @@
 import {__} from 'Utils';
 
 export default {
+    'version': '',
     'newWatchList': { // 跳转到新版我的关注页面
         on: true,
     },

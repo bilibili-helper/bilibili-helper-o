@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {__, isLogin, createTab, version, setOption, getOptions} from 'Utils';
 import {
-    Button, Body, List, ListItem, Header, Icon,
+    Button, Body, List, ListItem, Header, Icon, Modal,
     Radio, RadioButtonGroup, CheckBoxGroup, UpdateList,
 } from 'Components';
 
@@ -34,7 +34,17 @@ const OptionBody = styled(Body).attrs({
 class PageOptions extends React.Component {
     constructor() {
         super();
-        this.state = Object.assign(getOptions());
+        /**
+         * ! important ! 将配置导入state
+         * 此处的getOption会返回当前配置和默认配置来合并的对象
+         */
+        this.state = Object.assign({}, getOptions(), {
+            modalTitle: null,
+            modalBody: null,
+            modalButtons: null,
+            modalOn: false,
+        });
+
         this.handleOnClick = ::this.handleOnClick;
         this.handleSetOption = ::this.handleSetOption;
     }
@@ -70,26 +80,35 @@ class PageOptions extends React.Component {
             sign,
             treasure,
             chatFilter,
+            // modal
+            modalOn,
+            modalTitle,
+            modalBody,
+            modalButtons,
         } = this.state;
         return <Fragment>
             <Header title="设置"/>
             <OptionBody>
                 <List title="主站">
                     <ListItem
+                        onClick={() => this.setState({
+                            modalOn: !modalOn,
+                            modalTitle: <h1>Modal 测试标题</h1>,
+                            modalBody: <div>Modal 测试 body</div>,
+                            modalButtons: <Button normal onClick={() => this.setState({modalOn: modalOn})}>关闭</Button>,
+                        })}
+                        operation={<Radio on={modalOn}/>}>Modal 测试</ListItem>
+                    <ListItem
                         onClick={() => this.handleSetOption('newWatchList')}
-                        operation={<Radio
-                            on={newWatchList.on}
-                        />}>新版关注页面跳转</ListItem>
+                        operation={<Radio on={newWatchList.on}/>}
+                    >新版关注页面跳转</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('dynamicCheck')}
-                        operation={<Radio
-                            on={dynamicCheck.on}
-                        />}>更新“我的关注”</ListItem>
+                        operation={<Radio on={dynamicCheck.on}/>}
+                    >更新“我的关注”</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('downloadType')}
-                        operation={<Radio
-                            on={downloadType.on}
-                        />}
+                        operation={<Radio on={downloadType.on}/>}
                         subList={{
                             hide: !downloadType.on,
                             theme: {twoLine: false},
@@ -104,9 +123,7 @@ class PageOptions extends React.Component {
                         }}>视频下载格式</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('videoPlayerWidenType')}
-                        operation={<Radio
-                            on={videoPlayerWidenType.on}
-                        />}
+                        operation={<Radio on={videoPlayerWidenType.on}/>}
                         subList={{
                             hide: !videoPlayerWidenType.on,
                             theme: {twoLine: false},
@@ -124,14 +141,12 @@ class PageOptions extends React.Component {
                 <List title="直播区">
                     <ListItem
                         onClick={() => this.handleSetOption('sign')}
-                        operation={<Radio
-                            on={sign.on}
-                        />}>自动签到</ListItem>
+                        operation={<Radio on={sign.on}/>}
+                    >自动签到</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('treasure')}
-                        operation={<Radio
-                            on={treasure.on}
-                        />}>辅助领瓜子</ListItem>
+                        operation={<Radio on={treasure.on}/>}
+                    >辅助领瓜子</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('chatFilter')}
                         /*twoLine
@@ -158,7 +173,7 @@ class PageOptions extends React.Component {
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（正式版）`}
                         separator
-                        operation={<Button>检查更新</Button>}
+                        operation={<Button normal>检查更新</Button>}
                     />
                     <UpdateList
                         title='版本须知'
@@ -186,6 +201,7 @@ class PageOptions extends React.Component {
                         ]}/>
                 </List>
             </OptionBody>
+            <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
         </Fragment>;
     }
 }

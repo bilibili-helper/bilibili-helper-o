@@ -12,7 +12,9 @@ import {theme} from 'Styles/theme';
 
 const {color} = theme;
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled.div.attrs({
+    className: 'button-wrapper',
+})`
   display: inline-block;
   justify-content: center;
   align-items: center;
@@ -23,13 +25,15 @@ const ButtonWrapper = styled.div`
   overflow: hidden;
 `;
 
-const ButtonView = styled.button`
+const ButtonView = styled.button.attrs({
+    className: 'button-view',
+})`
   display: block;
   width: 100%;
   height: 100%;
   min-width: ${props => props.isIcon ? '36px' : '50px'};
   ${props => props.isIcon ? 'padding: 0' : ''};
-  //min-height: 36px;
+  ${props => props.normal ? 'min-height: 36px' : ''};
   font-size: 13px;
   font-weight: 500;
   background-color: transparent;

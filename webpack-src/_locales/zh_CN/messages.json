@@ -63,40 +63,40 @@
     "message": "选项页",
     "description": "Option Page: Title"
   },
-  "noticeficationTitle": {
+  "notificationTitle": {
     "message": "哔哩哔哩助手提醒",
-    "description": "Noticefication: Title"
+    "description": "Notification: Title"
   },
-  "noticeficationExtensionUpdate": {
+  "notificationExtensionUpdate": {
     "message": "哔哩哔哩助手已自动更新到 v%v!",
-    "description": "Noticefication: Extension Update"
+    "description": "Notification: Extension Update"
   },
-  "noticeficationNewFeatures": {
+  "notificationNewFeatures": {
     "message": "查看更新内容",
-    "description": "Noticefication: New Features"
+    "description": "Notification: New Features"
   },
   "followingUpdateMessage": {
     "message": "您的哔哩哔哩关注更新了(%n 个新动态)!\n%uploader 刚刚发布了「%title」!",
-    "description": "Noticefication: Following Update Message"
+    "description": "Notification: Following Update Message"
   },
   "notificationWatch": {
     "message": "观看",
-    "description": "Noticefication: Watch"
+    "description": "Notification: Watch"
   },
   "notificationShowAll": {
     "message": "显示全部",
-    "description": "Noticefication: Show All"
+    "description": "Notification: Show All"
   },
   "notificationLiveOn": {
     "message": "开播啦",
-    "description": "Noticefication: Live On"
+    "description": "Notification: Live On"
   },
   "notificationGetTv": {
     "message": "前往参加",
-    "description": "Noticefication: Get TV"
+    "description": "Notification: Get TV"
   },
   "notificationWatchLater": {
     "message": "稍后观看",
-    "description": "Noticefication: Watch Later"
+    "description": "Notification: Watch Later"
   }
 }
