@@ -19,7 +19,7 @@ const View = styled.div`
   min-height: ${headerHeight}px;
   background-color: ${color('google-blue-700')};
   color: white;
-  z-index: 2;
+  z-index: 1000;
 `;
 
 const Start = styled.div`

@@ -13,3 +13,4 @@ export {RadioButtonGroup, RadioButton} from './RadioButtonGroup';
 export {CheckBoxGroup} from './CheckBoxGroup';
 export {UpdateList} from './UpdateList';
 export {Modal} from './Modal';
+export {SubPage} from './SubPage';

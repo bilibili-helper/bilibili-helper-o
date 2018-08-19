@@ -172,7 +172,7 @@ export class ListItem extends React.Component {
         } = this.props;
         const {maxHeight, hideSubList} = this.state;
         if (!operation && subList && subList.children && extend) {
-            operation = <Button isIcon onClick={() => this.setState({hideSubList: !hideSubList})}>
+            operation = <Button icon onClick={() => this.setState({hideSubList: !hideSubList})}>
                 <Icon type={hideSubList === true ? 'arrowDown' : 'arrowUp'}/>
             </Button>;
         }
@@ -190,7 +190,7 @@ export class ListItem extends React.Component {
                         {operation && <End>{operation}</End>}
                     </TitleView>
                     {/*{ 折叠子列表 }*/}
-                    {subList && subList.children && <ThemeProvider theme={subList.theme ? subList.theme : {twoLine}}>
+                    {subList && subList.children && <ThemeProvider theme={{twoLine, ...subList.theme}}>
                         <SubList
                             style={{
                                 maxHeight:

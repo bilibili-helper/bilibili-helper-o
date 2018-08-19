@@ -6,7 +6,7 @@
 
 import $ from 'jquery';
 import React from 'react';
-import styled, {withTheme, ThemeProvider} from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 import {Ripple} from 'Components/Ripple';
 import {theme} from 'Styles/theme';
 
@@ -19,9 +19,9 @@ const ButtonWrapper = styled.div.attrs({
   justify-content: center;
   align-items: center;
   position: relative;
-  ${props => props.isIcon ? 'height: 36px' : ''};
-  ${props => props.isIcon ? 'margin: -12px' : ''};
-  border-radius: ${props => props.isIcon ? '50%' : '2px'};
+  ${props => props.theme.icon ? 'height: 36px' : ''};
+  ${props => props.theme.icon ? 'margin-right: -12px' : ''};
+  border-radius: ${props => props.theme.icon ? '50%' : '2px'};
   overflow: hidden;
 `;
 
@@ -31,9 +31,9 @@ const ButtonView = styled.button.attrs({
   display: block;
   width: 100%;
   height: 100%;
-  min-width: ${props => props.isIcon ? '36px' : '50px'};
-  ${props => props.isIcon ? 'padding: 0' : ''};
-  ${props => props.normal ? 'min-height: 36px' : ''};
+  min-width: ${props => props.theme.icon ? '36px' : '50px'};
+  ${props => props.theme.icon ? 'padding: 0' : ''};
+  ${props => props.theme.normal ? 'min-height: 36px' : ''};
   font-size: 13px;
   font-weight: 500;
   background-color: transparent;
@@ -44,7 +44,7 @@ const ButtonView = styled.button.attrs({
   z-index: 1;
 `;
 
-class ButtonClass extends React.Component {
+export class Button extends React.Component {
     constructor() {
         super();
         this.handleOnMouseDown = ::this.handleOnMouseDown;
@@ -58,14 +58,14 @@ class ButtonClass extends React.Component {
     }
 
     handleOnMouseDown(e) {
-        const {isIcon} = this.props;
+        const {icon} = this.props;
         const width = this.btn.clientWidth;
         const height = this.btn.clientHeight;
         const bounding = this.btn.getBoundingClientRect();
-        const x = isIcon ? width / 2 : e.clientX - bounding.left;
-        const y = isIcon ? height / 2 : e.clientY - bounding.top;
-        const deltaX = isIcon ? width / 2 : Math.abs(width / 2 - x) + width / 2;
-        const deltaY = isIcon ? height / 2 : Math.abs(height / 2 - y) + height / 2;
+        const x = icon ? width / 2 : e.clientX - bounding.left;
+        const y = icon ? height / 2 : e.clientY - bounding.top;
+        const deltaX = icon ? width / 2 : Math.abs(width / 2 - x) + width / 2;
+        const deltaY = icon ? height / 2 : Math.abs(height / 2 - y) + height / 2;
         this.setState({mouseDown: true, rippleRadius: Math.sqrt(deltaX * deltaX + deltaY * deltaY), x, y});
     }
 
@@ -74,28 +74,24 @@ class ButtonClass extends React.Component {
     }
 
     render() {
-        const {children, className, theme, isIcon = false, onClick, ...rest} = this.props;
+        const {children, className, theme, icon = false, normal, onClick, ...rest} = this.props;
         const {mouseDown, rippleRadius, x, y} = this.state;
         return (
-            <ButtonWrapper
-                isIcon={isIcon}
-                className={className}
-                onClick={onClick}
-            >
-                <ButtonView
-                    innerRef={i => this.btn = i}
-                    onMouseDown={this.handleOnMouseDown}
-                    onMouseUp={this.handleOnMouseUp}
-                    onMouseLeave={this.handleOnMouseUp}
-                    isIcon={isIcon}
-                    {...rest}
-                >{children}</ButtonView>
-                <ThemeProvider theme={{...theme, radius: rippleRadius}}>
+            <ThemeProvider theme={{...theme, radius: rippleRadius, icon, normal}}>
+                <ButtonWrapper
+                    className={className}
+                    onClick={onClick}
+                >
+                    <ButtonView
+                        innerRef={i => this.btn = i}
+                        onMouseDown={this.handleOnMouseDown}
+                        onMouseUp={this.handleOnMouseUp}
+                        onMouseLeave={this.handleOnMouseUp}
+                        {...rest}
+                    >{children}</ButtonView>
                     <Ripple active={mouseDown} x={x} y={y}/>
-                </ThemeProvider>
-            </ButtonWrapper>
+                </ButtonWrapper>
+            </ThemeProvider>
         );
     }
 }
-
-export const Button = withTheme(ButtonClass);

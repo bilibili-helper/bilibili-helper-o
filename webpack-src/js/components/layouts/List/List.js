@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import styled from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles/theme';
 
 const {color, headerHeight} = theme;
@@ -13,25 +13,18 @@ const {color, headerHeight} = theme;
 const ListWrapper = styled.div.attrs({
     className: 'list-wrapper',
 })`
+  flex-shrink: 0;
   margin: 0 auto;
   position: relative;
+  width: 100%;
   max-width: 600px;
   min-height: 0;
   min-width: 500px;
-  transition: all 0.5s;
-  &.extend {
-    //transition: transform 0.5s 0.01s;
-    //position: absolute;
-    //top: 0;
-    //bottom: 0;
-    //min-height: 100%;
-    z-index: 1;
-  }
-  &.hidden {
-    //transition: all 0.3s;
-    visibility: hidden;
-    //margin: 0 3px;
-    opacity: 0;
+  transition: min-height 0.3s;
+  visibility: visible;
+  opacity: 1;
+  &:last-of-type {
+    margin-bottom: ${headerHeight}px;
   }
 `;
 
@@ -46,49 +39,24 @@ const ListHeader = styled.div.attrs({
   max-height: 18px;
   color: ${color('paper-grey-700')};
   overflow: hidden;
-  transition: all 0s;
+  transition: all 0.2s;
   opacity: 1;
-  .extend & {
-    opacity: 0;
-    visibility: hidden;
-    margin: 0;
-    //margin: 0;
-    //max-height: 0;
-  }
-  .hidden & {
-    //margin: 0;
-    //max-height: 0;
-    //visibility: hidden;
-    //opacity: 0;
-    //dispaly: none;
-  }
 `;
 
 const BodyWrapper = styled.div.attrs({
     className: 'list-body-wrapper',
 })`
-  display: flex;
-  flex-direction: column;
   position: relative;
   top: 0;
-  //border-radius: 4px;
-  //background-color: white;
-  //box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
-  //overflow: hidden;
   transition: top 0.5s;
-  .extend & {
+  .extended & {
     border-radius: 0;
-    //position: absolute;
-    //bottom: 0px;
-    //top: 0;
-    //width: 100%;
-  }
-  .hidden & {
-    //transition: all 0s;
-    //margin: 0;
-    //max-height: 0;
-    //visibility: hidden;
-    //opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
   }
 `;
 
@@ -105,39 +73,10 @@ const ListBody = styled.div.attrs({
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
   overflow: hidden;
   background-color: white;
-`;
-
-/*
-const ExtendBody = styled.div.attrs({
-    className: 'list-extend',
-})`
-  visibility: hidden;
-  border-radius: 0;
-  background-color: white;
-  opacity: 0;
-  max-height: 0;
-  transition: all 0.3s;
-  .extend & {
-    visibility: visible;
-    opacity: 1;
-    overflow: auto;
-    width: 582px;
-    max-height: inherit;
-    //position: relative;
-    //bottom: 0px;
-    //top: 0;
-    transition: transform 0.3s;
-    //padding-bottom: ${headerHeight}px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
-    &::-webkit-scrollbar {
-      display: none;
-      //visibility: hidden;
-    }
-    //height: 100%;
-    //box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  .extended & {
+    display: none;
   }
 `;
-*/
 
 export class List extends React.Component {
     constructor() {
@@ -145,31 +84,15 @@ export class List extends React.Component {
         this.top = 0;
     }
 
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps, nextContent) {
-        // const {extend} = nextProps;
-        // if (extend) {
-        //     this.BodWrapperBounding = this.BodWrapper.getBoundingClientRect();
-        //     this.top = this.BodWrapperBounding.top - headerHeight - this.ListWrapper.parentNode.scrollTop;
-        //     console.log(this.top, this.BodWrapper.clientTop);
-        //     // this.ListWrapper.parentNode.scrollTop = 0;
-        // } else {
-        //     this.top = 0;
-        // }
-    }
-
     render() {
-        const {children, extendChildren, title, extend, hidden} = this.props;
+        const {children, title, theme, hidden} = this.props;
         return (
-            <ListWrapper className={'list-wrapper'}>
-                {title && <ListHeader>{title}</ListHeader>}
-                <ListBody>
-                    {children}
-                </ListBody>
-            </ListWrapper>
+            <ThemeProvider theme={{...theme}}>
+                <ListWrapper innerRef={i => this.ListWrapper = i} hidden={hidden}>
+                    {title && <ListHeader>{title}</ListHeader>}
+                    <ListBody>{children}</ListBody>
+                </ListWrapper>
+            </ThemeProvider>
         );
 
     }

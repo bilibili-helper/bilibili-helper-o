@@ -12,18 +12,17 @@ import styled from 'styled-components';
 import {__, isLogin, createTab, version, setOption, getOptions} from 'Utils';
 import {
     Button, Body, List, ListItem, Header, Icon, Modal,
-    Radio, RadioButtonGroup, CheckBoxGroup, UpdateList,
+    Radio, RadioButtonGroup, CheckBoxGroup, UpdateList, SubPage,
 } from 'Components';
 
 import 'Styles/scss/options.scss';
 
-const {Fragment} = React;
 const OptionBody = styled(Body).attrs({
     className: 'option-body',
 })`
   position: absolute;
-  margin: 0 auto 0;
-  padding: 0 3px 56px;
+  //margin: 0 auto 0;
+  //padding: 0 3px 56px;
   top: 56px;
   right: 0;
   bottom: 0;
@@ -43,10 +42,13 @@ class PageOptions extends React.Component {
             modalBody: null,
             modalButtons: null,
             modalOn: false,
+            subPageOn: false,
+            parent: null,
         });
 
         this.handleOnClick = ::this.handleOnClick;
         this.handleSetOption = ::this.handleSetOption;
+        this.handleSetSubPage = ::this.handleSetSubPage;
     }
 
     componentWillMount() {
@@ -58,6 +60,11 @@ class PageOptions extends React.Component {
         this.setState({active: active === type ? '' : type});
     }
 
+    /**
+     * 设置配置
+     * @param key 配置名
+     * @param value 配置的值
+     */
     handleSetOption(key, value) {
         if (this.state[key]) {
             const optionObject = this.state[key];
@@ -69,6 +76,15 @@ class PageOptions extends React.Component {
             setOption(key, optionObject);
             this.setState({key: optionObject});
         }
+    }
+
+    handleSetSubPage(parent) {
+        const {subPageOn, parent: currentParent} = this.state;
+        const newState = {};
+        if (subPageOn !== undefined) newState.subPageOn = !subPageOn;
+        if (currentParent !== parent) newState.parent = parent.ListWrapper.querySelector('.list-body');
+        else newState.parent = null;
+        this.setState(newState);
     }
 
     render() {
@@ -85,19 +101,42 @@ class PageOptions extends React.Component {
             modalTitle,
             modalBody,
             modalButtons,
+            // sub page
+            subPageOn,
+            parent,
         } = this.state;
-        return <Fragment>
+        return <React.Fragment>
             <Header title="设置"/>
             <OptionBody>
-                <List title="主站">
+                <SubPage
+                    title="Sub Page Title"
+                    on={subPageOn}
+                    parent={parent}
+                    onClose={() => {
+                        this.handleSetSubPage(this.mainList);
+                    }}
+                >
+                    <div style={{height: 2000}}></div>
+                </SubPage>
+                <List
+                    title="主站"
+                    ref={i => this.mainList = i}
+                >
+                    <ListItem
+                        operation={
+                            <Button icon onClick={() => this.handleSetSubPage(this.mainList)}><Icon
+                                type="arrowRight"/></Button>
+                        }
+                    >Sub Page 测试</ListItem>
                     <ListItem
                         onClick={() => this.setState({
                             modalOn: !modalOn,
-                            modalTitle: <h1>Modal 测试标题</h1>,
+                            modalTitle: 'Modal 测试标题',
                             modalBody: <div>Modal 测试 body</div>,
                             modalButtons: <Button normal onClick={() => this.setState({modalOn: modalOn})}>关闭</Button>,
                         })}
-                        operation={<Radio on={modalOn}/>}>Modal 测试</ListItem>
+                        operation={<Radio on={modalOn}/>}
+                    >Modal 测试</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('newWatchList')}
                         operation={<Radio on={newWatchList.on}/>}
@@ -120,7 +159,8 @@ class PageOptions extends React.Component {
                                 ]}
                                 onClick={(value) => this.handleSetOption('downloadType', value)}
                             />,
-                        }}>视频下载格式</ListItem>
+                        }}
+                    >视频下载格式</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('videoPlayerWidenType')}
                         operation={<Radio on={videoPlayerWidenType.on}/>}
@@ -136,9 +176,12 @@ class PageOptions extends React.Component {
                                 ]}
                                 onClick={(value) => this.handleSetOption('videoPlayerWidenType', value)}
                             />,
-                        }}>主站播放器宽屏类型</ListItem>
+                        }}
+                    >播放器宽屏</ListItem>
                 </List>
-                <List title="直播区">
+                <List
+                    title="直播区"
+                >
                     <ListItem
                         onClick={() => this.handleSetOption('sign')}
                         operation={<Radio on={sign.on}/>}
@@ -164,11 +207,14 @@ class PageOptions extends React.Component {
                                 value={chatFilter.value}
                                 onClick={(value) => this.handleSetOption('chatFilter', value)}
                             />,
-                        }}>聊天信息屏蔽设置</ListItem>
+                        }}
+                    >聊天信息屏蔽设置</ListItem>
                 </List>
-                <List title="关于助手">
+                <List
+                    title="关于助手"
+                >
                     <ListItem
-                        icon={<Icon type="cat128" isImage/>}
+                        icon={<Icon type="cat128" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（正式版）`}
@@ -202,7 +248,7 @@ class PageOptions extends React.Component {
                 </List>
             </OptionBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
-        </Fragment>;
+        </React.Fragment>;
     }
 }
 

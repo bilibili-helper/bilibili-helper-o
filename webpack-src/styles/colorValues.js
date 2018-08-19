@@ -22,6 +22,7 @@ export const colorValues = {
     'google-yellow-300': '#f7cb4d',
     'google-yellow-500': '#f4b400',
     'google-yellow-700': '#f09300',
+    'google-grey-50': '#f8f9fa',
     'google-grey-100': '#f5f5f5',
     'google-grey-300': '#e0e0e0',
     'google-grey-400': '#bdc1c6',

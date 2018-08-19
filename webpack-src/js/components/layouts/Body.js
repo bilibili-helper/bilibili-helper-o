@@ -10,9 +10,9 @@ import styled from 'styled-components';
 export const Body = styled.div.attrs({
     className: props => props.extend ? 'extend' : '',
 })`
-  //display: flex;
+  display: flex;
+  flex-direction: column;
   padding: 0;
-  //flex-direction: column;
   transition: all 0.3s;
   &.extend {
     margin-bottom: 0;
