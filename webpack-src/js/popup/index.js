@@ -1,14 +1,14 @@
 /**
  * Author: Ruo
  * Create: 2018-06-12
- * Description:
+ * Description: 扩展菜单脚本
  */
 import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {__, isLogin, createTab} from 'Utils';
-import {Button, Body} from 'Components';
+import {__, isLogin, createTab, getURL, version} from 'Utils';
+import {Button, Body, Icon} from 'Components';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -21,23 +21,39 @@ const {color} = theme;
 // const routingStore = new RouterStore();
 // const history = syncHistoryWithStore(browserHistory, routingStore);
 // const state = window.__INITIAL_STATE__;
-import 'Styles/scss/popup.scss';
+// import 'Styles/scss/popup.scss';
 
 const PopupBody = styled(Body)`
-  padding: 8px 10px;
-  // background-color: ${color('google-grey-100')};
+  padding: 8px 44px 8px 10px;
+`;
+
+const LOGO = styled.div`
+  display: flex;
+  align-items: center;
+  transform: rotateZ(90deg);
+  position: absolute;
+  right: -36px;
+  top: 48px;
+  font-size: 12px;
+  color: ${color('google-grey-300')};
+  .button-wrapper {
+    left: 40px;
+  }
+  .icon {
+    color: ${color('google-grey-300')};
+    cursor: pointer;
+  } 
 `;
 
 const PopupButton = styled(Button)`
   display: block;
   width: 150px;
-  height: 30px;
+  height: 36px;
   border: 1px solid ${color('google-grey-100')};
   border-radius: 0;
-  transition: all 0.3s;
+  transition: border 0.3s;
   margin-bottom: 6px;
   &:last-of-type {
-    //border-bottom: none;
     margin-bottom: 0;
   }
   button {
@@ -45,15 +61,11 @@ const PopupButton = styled(Button)`
     text-indent: 6px;
     font-size: 12px;
     color: ${color('google-grey-700')};
-    //background-color: white;
     background-color: ${color('paper-grey-50')};
     transition: all 0.3s;
     &[disabled] {
       opacity: 0.3;
     }
-  }
-  .ripple-item {
-    //background-color: #00a9e8;
   }
   &:hover {
     border-color: #009cd6;
@@ -70,26 +82,29 @@ class PagePopup extends React.Component {
         this.state = {
             hasLogin: false,
         };
-        this.optionPageUrl = chrome.extension.getURL('options.html');
     }
 
     componentWillMount() {
-        const that = this;
-        isLogin().then(res => that.setState({hasLogin: res}));
+        isLogin().then(res => this.setState({hasLogin: res}));
+        this.logoText = <div>{version}<br/>BILIBILI HELPER</div>
     }
 
     render() {
         const {hasLogin} = this.state;
         return (
             <PopupBody>
-                <PopupButton onClick={() => createTab('https://www.bilibili.com/')}>{__('goBili')}</PopupButton>
-                <PopupButton onClick={() => createTab('https://live.bilibili.com/')}>{__('goBiliLive')}</PopupButton>
-                {hasLogin && <React.Fragment>
-                    {/* 登录后显示“我的关注”和“我的收藏” */}
-                    <PopupButton>{__('goDynamic')}</PopupButton>
-                    <PopupButton>{__('goFavorite')}</PopupButton>
+                <LOGO>
+                    {this.logoText}
+                    <Button icon>
+                        <Icon type="options" onClick={() => createTab(getURL('option'))}/>
+                    </Button>
+                </LOGO>
+                <PopupButton onClick={() => createTab(getURL('video'))}>{__('goBili')}</PopupButton>
+                <PopupButton onClick={() => createTab(getURL('live'))}>{__('goBiliLive')}</PopupButton>
+                {hasLogin && <React.Fragment> {/* 登录后显示“我的关注”和“我的收藏” */}
+                    <PopupButton onClick={() => createTab(getURL('dynamic'))}>{__('goDynamic')}</PopupButton>
+                    <PopupButton onClick={() => createTab(getURL('favourite'))}>{__('goFavourite')}</PopupButton>
                 </React.Fragment>}
-                <PopupButton onClick={() => createTab(this.optionPageUrl)}>{__('goOption')}</PopupButton>
             </PopupBody>
         );
     }

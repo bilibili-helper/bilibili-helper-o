@@ -1,10 +1,11 @@
 /**
  * Author: Ruo
  * Create: 2018-06-12
- * Description:
+ * Description: 扩展守护脚本
  */
-import defaultOptions from '../defaultOptions';
-import {createTab, hasNewVersion} from 'Utils';
+import $ from 'jquery';
+import {createTab, hasNewVersion, getOption} from 'Utils';
+import {dynamicCheck} from 'Modules';
 /**
  * ------------------------------------------------------------------------------------------
  * 初始化
@@ -16,6 +17,7 @@ import {createTab, hasNewVersion} from 'Utils';
  * 权限获取
  * ------------------------------------------------------------------------------------------
  */
+
 // 推送窗口弹出权限
 chrome.notifications.getPermissionLevel((level) => {
     switch (level) {
@@ -34,7 +36,7 @@ chrome.notifications.getPermissionLevel((level) => {
  * ------------------------------------------------------------------------------------------
  */
 // 安装完成后事件
-chrome.runtime.onInstalled.addListener(function (details) { // 安装完成事件
+chrome.runtime.onInstalled.addListener(function (details) {
     const {reason, previousVersion} = details;
     switch (reason) {
         case 'install': { // 安装成功后默认打开设置页面
@@ -42,7 +44,7 @@ chrome.runtime.onInstalled.addListener(function (details) { // 安装完成事�
             break;
         }
         case 'update': {
-            if (!hasNewVersion(previousVersion)) { // 有新版本待更新
+            if (!hasNewVersion(previousVersion)) { // 更新了版本
                 chrome.notifications.create('bilibili-helper-update', {
                     type: 'basic',
                     iconUrl: 'statics/imgs/icon-256.png',
@@ -101,12 +103,9 @@ chrome.notifications.onButtonClicked.addListener(function (notificationId, index
 
 /*
  * 卸载成功后自动跳到助手官网页面
- **/
+ */
 if (typeof (chrome.runtime.setUninstallURL) === 'function') {
     chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
 
-/**
- * 我的关注 视频自动提送 功能
- */
-
+dynamicCheck();

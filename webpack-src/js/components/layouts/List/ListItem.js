@@ -18,9 +18,10 @@ import {Icon, Button} from 'Components';
 const ListItemView = styled.div.attrs({
     className: 'list-item',
 })`
-  border-top: ${props => props.noBorder ? 'none' : '1px solid rgba(0, 0, 0, 0.06)'};
+  margin-bottom: 6px;
+  //border-top: ${props => props.noBorder ? 'none' : '1px solid #f8f9fa'};
   &:nth-of-type(1) {
-    border-top: none;
+    //border-top: none;
   }
 `;
 
@@ -128,7 +129,7 @@ const Separator = styled.div.attrs({
     className: 'separator',
 })`
   height: calc(${props => props.theme.twoLine ? '65px' : '49px'} - 2 * 9px);
-  -webkit-border-start: 1px solid rgba(0, 0, 0, 0.06);
+  -webkit-border-start: 1px solid rgba(0, 0, 0, 0.02);
   flex-shrink: 0;
   -webkit-margin-end:20px;
   -webkit-margin-start:20px;

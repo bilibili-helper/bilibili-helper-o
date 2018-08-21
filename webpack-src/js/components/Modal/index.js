@@ -21,6 +21,7 @@ const Wrapper = styled.div.attrs({
   visibility: hidden;
   opacity: 0;
   transition: all 0.2s, z-index 0.2s 0.1s;
+  user-select: none;
   &.on {
     z-index: 1000;
     visibility: visible;
@@ -44,6 +45,7 @@ const Container = styled.div.attrs({
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.24);
   transition: transform 0.12s;
   transfrom: scale(1);
+  user-select: text;
 `;
 
 const Title = styled.div.attrs({

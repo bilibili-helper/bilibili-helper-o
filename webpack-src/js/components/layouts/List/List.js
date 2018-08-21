@@ -31,7 +31,7 @@ const ListWrapper = styled.div.attrs({
 const ListHeader = styled.div.attrs({
     className: 'list-header',
 })`
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   font-size: 13px;
   margin-top: 21px;
   font-weight: 500;
@@ -69,10 +69,12 @@ const ListBody = styled.div.attrs({
   max-height: 100%;
   opacity: 1;
   transition: all 0.3s;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  //border-radius: 4px;
+  //box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  //background-color: whitesmoke;
   overflow: hidden;
-  background-color: white;
+  //padding-left: 40px;
+  //background-color: white;
   .extended & {
     display: none;
   }

@@ -12,9 +12,12 @@ const ContainerEnterKeyFrame = keyframes`
   0% {
     top: ${({theme}) => theme.top ? theme.top + 'px' : ''};
     height: ${({theme}) => theme.height ? theme.height + 'px': ''};
+    overflow: hidden;
   }
   99.99% {
     top: 0;
+    height: ${({theme}) => theme.height ? theme.height + 'px': ''};
+    overflow: hidden;
   }
   100% {
     top: 0;
@@ -22,6 +25,7 @@ const ContainerEnterKeyFrame = keyframes`
     height: max-content;
     min-height: 100%;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+    overflow: unset;
   }
 `;
 const ContainerLeaveKeyFrame = keyframes`
@@ -84,7 +88,7 @@ const Container = styled.div.attrs({
     opacity: 1;
     visibility: visible;
     border-radius: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.2s;
     animation-name: ${ContainerEnterKeyFrame};
     animation-delay: 0.05s;
     animation-duration: 0.2s;
@@ -113,7 +117,7 @@ const Header = styled.div.attrs({
     className: 'sub-page-header',
 })`
   display: flex;
-  padding: 16px;
+  padding: 16px 6px;
   flex-grow: 0;
   flex-shrink: 0;
 `;
@@ -128,6 +132,9 @@ const Body = styled.div.attrs({
     className: 'sub-page-body',
 })`
   flex-grow: 1;
+  & .list-body {
+    box-shadow: none;
+  }
 `;
 
 export class SubPage extends React.Component {

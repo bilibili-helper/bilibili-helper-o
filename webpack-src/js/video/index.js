@@ -1,7 +1,7 @@
 /**
  * Author: Ruo
  * Create: 2018-06-12
- * Description:
+ * Description: 主站加载脚本
  */
 
 export default {};

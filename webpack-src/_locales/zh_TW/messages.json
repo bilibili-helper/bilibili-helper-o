@@ -35,9 +35,9 @@
     "message": "我的關注",
     "description": "Popup Button: go_dynamic"
   },
-  "goFavorite": {
+  "goFavourite": {
     "message": "我的收藏",
-    "description": "Popup Button: go_favorite"
+    "description": "Popup Button: go_favourite"
   },
   "notLogged": {
     "message": "(未登入)",

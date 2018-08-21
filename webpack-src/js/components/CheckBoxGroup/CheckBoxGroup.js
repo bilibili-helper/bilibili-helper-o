@@ -20,7 +20,6 @@ export const CheckBoxGroup = ({data, value, onClick}) => {
                 key={key}
                 children={<CheckBoxTitle>{name}</CheckBoxTitle>}
                 onClick={() => {
-                    console.log(value, key, value[key]);
                     value[key] = !value[key];
                     onClick(value);
                 }}

@@ -21,7 +21,7 @@ const ButtonWrapper = styled.div.attrs({
   position: relative;
   ${props => props.theme.icon ? 'height: 36px' : ''};
   ${props => props.theme.icon ? 'margin-right: -12px' : ''};
-  border-radius: ${props => props.theme.icon ? '50%' : '2px'};
+  border-radius: ${props => props.theme.icon ? '50%' : '0'};
   overflow: hidden;
 `;
 

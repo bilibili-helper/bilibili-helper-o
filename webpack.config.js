@@ -54,6 +54,7 @@ module.exports = {
             'Libs': path.resolve(webpackJSPath, 'libs'),
             'Utils': path.resolve(webpackJSPath, 'utils'),
             'Components': path.resolve(webpackJSPath, 'components'),
+            'Modules': path.resolve(webpackJSPath, 'modules'),
             'Statics': path.resolve(webpackPath, 'statics'),
             'Styles': path.resolve(webpackPath, 'styles'),
         },

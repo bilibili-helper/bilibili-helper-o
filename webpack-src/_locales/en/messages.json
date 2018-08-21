@@ -35,9 +35,9 @@
     "message": "Followings",
     "description": "Popup Button: go_dynamic"
   },
-  "goFavorite": {
-    "message": "Favorites",
-    "description": "Popup Button: go_favorite"
+  "goFavourite": {
+    "message": "Favourites",
+    "description": "Popup Button: go_favourite"
   },
   "notLogged": {
     "message": " (Please Login)",

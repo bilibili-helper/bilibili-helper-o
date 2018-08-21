@@ -4,3 +4,4 @@
  * Description: 功能点打包入口
  */
 
+export {dynamicCheck} from './dynamicCheck';
