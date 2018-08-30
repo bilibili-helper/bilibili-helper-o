@@ -7,7 +7,7 @@
 import $ from 'jquery';
 import React from 'react';
 import styled, {ThemeProvider} from 'styled-components';
-import {Ripple} from 'Components/Ripple';
+import {Ripple} from 'Components';
 import {theme} from 'Styles/theme';
 
 const {color} = theme;

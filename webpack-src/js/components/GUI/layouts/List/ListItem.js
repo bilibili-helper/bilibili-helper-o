@@ -18,10 +18,11 @@ import {Icon, Button} from 'Components';
 const ListItemView = styled.div.attrs({
     className: 'list-item',
 })`
-  margin-bottom: 6px;
-  //border-top: ${props => props.noBorder ? 'none' : '1px solid #f8f9fa'};
+  margin-top: 3px;
+  border-top: ${props => props.noBorder ? 'none' : '1px solid #f8f9fa'};
   &:nth-of-type(1) {
-    //border-top: none;
+    border-top: none;
+    margin-top: 0;
   }
 `;
 
@@ -109,6 +110,7 @@ const SubList = styled.div.attrs({
   overflow: hidden;
   background-color: white;
   transition: all 0.5s;
+  max-height: 0;
   opacity: 1;
   .list-item {
     margin-left: 60px;
@@ -166,7 +168,7 @@ export class ListItem extends React.Component {
             second, // 副标题，需要twoLine = true
             middle = null, // 中间内容
             subList = null,
-            noBorder = false,
+            noBorder = true,
             extend = false, // subList是否为可折叠，如果没有设定operation就会自动将operation设定为折叠按钮
             onClick,
             ...rest,

@@ -4,13 +4,14 @@
  * Description:
  */
 
-export * from './layouts/index';
-export {Button} from './Button';
-export {Ripple} from './Ripple';
-export {Icon} from './Icon';
-export {Radio} from './Radio';
-export {RadioButtonGroup, RadioButton} from './RadioButtonGroup';
-export {CheckBoxGroup} from './CheckBoxGroup';
-export {UpdateList} from './UpdateList';
-export {Modal} from './Modal';
-export {SubPage} from './SubPage';
+export * from './GUI/layouts/index';
+export {IconButton} from './GUI/IconButton';
+export {Button} from './Basic/Button';
+export {Ripple} from './Basic/Ripple';
+export {Icon} from './Basic/Icon';
+export {Radio} from './Basic/Radio';
+export {RadioButtonGroup, RadioButton} from './GUI/RadioButtonGroup';
+export {CheckBoxGroup} from './GUI/CheckBoxGroup';
+export {UpdateList} from './GUI/UpdateList';
+export {Modal} from './GUI/Modal';
+export {SubPage} from './GUI/SubPage';

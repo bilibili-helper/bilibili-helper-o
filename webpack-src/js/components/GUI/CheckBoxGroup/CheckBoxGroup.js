@@ -18,6 +18,7 @@ export const CheckBoxGroup = ({data, value, onClick}) => {
             const {key, name} = entry;
             return <ListItem
                 key={key}
+                noBorder={false}
                 children={<CheckBoxTitle>{name}</CheckBoxTitle>}
                 onClick={() => {
                     value[key] = !value[key];

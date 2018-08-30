@@ -14,7 +14,7 @@ export const RadioButtonGroup = ({data, value, onClick}) => {
             {_.map(data, (entry, index) => {
                 const {title, value: v} = entry;
                 return <ListItem
-                    noBorder
+                    noBorder={false}
                     key={index}
                     children={<RadioButton title={title} on={v === value}/>}
                     onClick={() => onClick(v)}

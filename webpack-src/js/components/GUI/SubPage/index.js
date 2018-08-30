@@ -14,15 +14,10 @@ const ContainerEnterKeyFrame = keyframes`
     height: ${({theme}) => theme.height ? theme.height + 'px': ''};
     overflow: hidden;
   }
-  99.99% {
-    top: 0;
-    height: ${({theme}) => theme.height ? theme.height + 'px': ''};
-    overflow: hidden;
-  }
   100% {
     top: 0;
     margin: 0 auto;
-    height: max-content;
+    //height: max-content;
     min-height: 100%;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
     overflow: unset;
@@ -81,7 +76,7 @@ const Container = styled.div.attrs({
   width: ${({theme}) => theme.width ? theme.width + 'px' : ''};
   min-height: ${({theme}) => theme.height ? theme.height + 'px': ''};
   margin: 0;
-  opacity: 0;
+  opacity: 1;
   background-color: #fff;
   pointer-events: auto;
   &.will-enter {
@@ -91,14 +86,17 @@ const Container = styled.div.attrs({
     transition: opacity 0.2s;
     animation-name: ${ContainerEnterKeyFrame};
     animation-delay: 0.05s;
-    animation-duration: 0.2s;
+    animation-duration: 0.3s;
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
+    & > * {
+      opacity: 1;
+      transition: opacity 0.05s 0.16s;
+    }
   }
   &.will-leave {
-    transition: all 0s 0.4s,border-radius 0.3s,opacity 0.15s 0.15s cubic-bezier(0.34, 0.72, 0.34, 0.72);
+    transition: all 0s 0.4s, border-radius 0.3s, opacity 0.2s 0.19s;
     opacity: 0;
-    //background-color: transparent;
     visibility: hidden;
     border-radius: 4px;
     animation-name: ${ContainerLeaveKeyFrame};
@@ -108,7 +106,7 @@ const Container = styled.div.attrs({
     animation-timing-function: ease-in-out;
     & > * {
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.05s 0.16s;
     }
   }
 `;
@@ -131,7 +129,13 @@ const Title = styled.h5.attrs({
 const Body = styled.div.attrs({
     className: 'sub-page-body',
 })`
-  flex-grow: 1;
+  //flex-grow: 1;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s;
+  .on & {
+    max-height: 100%;
+  }
   & .list-body {
     box-shadow: none;
   }
