@@ -38,6 +38,7 @@ let defaultOptions = {
     'macplayer': 'off',
     'autooffset': 'on',
     'silver2coin': 'off',
+    'danmaku': 'off',
 };
 let cidCache = {};
 if (localStorage.getItem('cidCache') !== null) {

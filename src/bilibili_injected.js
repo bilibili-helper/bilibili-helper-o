@@ -199,6 +199,18 @@
 
     removeAd();
 
+    function closeDanmakuAtStart() {
+        chrome.runtime.sendMessage({
+            command: 'getDanmaku',
+        }, function(response) {
+            if (response.value === 'on') {
+                biliHelper.closeDanmaku = true;
+            }
+        });
+    }
+
+    closeDanmakuAtStart();
+
     function initStyle() {
         inject_css('bilibiliHelperVideo', 'bilibiliHelperVideo.min.css');
     }
@@ -239,14 +251,14 @@
                     childList: true,
                     attributes: true,
                     subtree: true,
-                    attributeFilter: ['src']
+                    attributeFilter: ['src'],
                 });
             } else if ($('#bilibiliPlayer').length > 0) {
                 observer.observe($('#bilibiliPlayer')[0], {
                     childList: true,
                     attributes: true,
                     subtree: true,
-                    attributeFilter: ['src']
+                    attributeFilter: ['src'],
                 });
             }
         }
@@ -255,7 +267,7 @@
     function setOffset() {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
-            $(document).scrollTop($('.player-wrapper, .player-box').offset().top);
+            $(document).scrollTop($('.player-wrap, .player-box').offset().top);
         }
     }
 
@@ -443,7 +455,7 @@
                         childList: true,
                         attributes: true,
                         subtree: true,
-                        attributeFilter: ['src']
+                        attributeFilter: ['src'],
                     });
                 }
                 $(document).ready(biliHelperFunc);
@@ -528,7 +540,7 @@
                 childList: true,
                 attributes: true,
                 subtree: true,
-                attributeFilter: ['src']
+                attributeFilter: ['src'],
             });
         }
     } else if (biliHelper.site === 1 || biliHelper.site === 3) {
@@ -572,7 +584,7 @@
                     childList: true,
                     attributes: true,
                     subtree: true,
-                    attributeFilter: ['src']
+                    attributeFilter: ['src'],
                 });
             }
             if ($('title')[0]) {
@@ -580,7 +592,7 @@
                     childList: true,
                     attributes: true,
                     subtree: true,
-                    attributeFilter: ['src']
+                    attributeFilter: ['src'],
                 });
             }
             document.addEventListener('loadstart', (e) => {
@@ -613,6 +625,21 @@
             if (biliHelper.autooffset === 'on') {
                 setOffset();
             }
+
+            if (biliHelper.closeDanmaku) {
+                let danmaku_switch = $('.bilibili-player-video-danmaku-switch input[type=checkbox]')[0];
+                // when button is available, click it
+                if (danmaku_switch && danmaku_switch.checked) {
+                    danmaku_switch.click();
+                } else {
+                    // or the page is old style, try click it
+                    let old_switch = $('.bilibili-player-video-btn-danmaku')[0];
+                    if (old_switch && !old_switch.classList.contains('video-state-danmaku-off')) {
+                        old_switch.click();
+                    }
+                }
+            }
+
             if (typeof videoInfo.code !== 'undefined' && videoInfo.code !== -404) {
                 if (biliHelper.page !== 1) {
                     chrome.runtime.sendMessage({

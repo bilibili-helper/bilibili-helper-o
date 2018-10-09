@@ -83,6 +83,7 @@ $(document).ready(function() {
     $('#ad_opacity_opt').hide();
     // $("div[option=\"" + bkg_page.getOption("replace") + "\"].replace").addClass("on");
     // $("div[option=\"" + bkg_page.getOption("html5") + "\"].html5").addClass("on");
+    $('div[option="' + bkg_page.getOption('danmaku') + '"].danmaku').addClass('on');
     $('div[option="' + bkg_page.getOption('contextmenu') + '"].contextmenu').addClass('on');
     $('div[option="' + bkg_page.getOption('new-dynamic') + '"].new-dynamic').addClass('on');
     $('div[option="' + bkg_page.getOption('dynamic') + '"].dynamic').addClass('on');
@@ -205,6 +206,14 @@ $(document).ready(function() {
     //     $(this).addClass('on');
     //     bkg_page.setOption("html5", $(this).attr("option"));
     // });
+    $('.danmaku').click(function() {
+        if ($(this).hasClass('on')) {
+            return false;
+        }
+        $('.danmaku').removeClass('on');
+        $(this).addClass('on');
+        bkg_page.setOption('danmaku', $(this).attr('option'));
+    });
     $('.contextmenu').click(function() {
         if ($(this).hasClass('on')) {
             return false;
