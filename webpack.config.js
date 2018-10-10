@@ -16,6 +16,7 @@ const webpackPath = path.resolve('webpack-src');
 const buildPath = path.resolve('build');
 const webpackJSPath = path.resolve(webpackPath, 'js');
 const indexFilename = 'index.js';
+
 module.exports = {
     watch: true,
     mode: 'development',
@@ -29,11 +30,11 @@ module.exports = {
         ignored: ['node_modules'],
     },
     entry: {
-        'background': path.resolve(webpackJSPath, 'background', indexFilename),
-        'live': path.resolve(webpackJSPath, 'live', indexFilename),
-        'options': path.resolve(webpackJSPath, 'options', indexFilename),
-        'popup': path.resolve(webpackJSPath, 'popup', indexFilename),
-        'video': path.resolve(webpackJSPath, 'video', indexFilename),
+        'background': path.resolve(webpackJSPath, 'pages', 'background', indexFilename),
+        'live': path.resolve(webpackJSPath, 'pages', 'live', indexFilename),
+        'options': path.resolve(webpackJSPath, 'pages', 'options', indexFilename),
+        'popup': path.resolve(webpackJSPath, 'pages', 'popup', indexFilename),
+        'video': path.resolve(webpackJSPath, 'pages', 'video', indexFilename),
     },
     output: {
         filename: '[name].js',
@@ -65,9 +66,7 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                loaders: [
-                    'babel-loader',
-                ],
+                loaders: ['babel-loader'],
             },
             {
                 test: /\.(css|scss|sass)$/,
@@ -88,7 +87,7 @@ module.exports = {
             chunkFilename: path.join('styles', '[id].css'),
         }),
         new CopyWebpackPlugin([
-            {from: 'webpack-src/*.html', to: '', flatten: true},
+            {from: 'webpack-src/html/*.html', to: '', flatten: true},
             {from: 'webpack-src/*.json', to: '', flatten: true},
             {from: 'webpack-src/_locales', to: '_locales'},
             {from: 'webpack-src/statics', to: 'statics'},

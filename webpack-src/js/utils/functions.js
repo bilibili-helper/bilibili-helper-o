@@ -8,14 +8,22 @@ import _ from 'lodash';
 import store from 'store';
 import {defaultOptions} from './const';
 
-const bkg_page = chrome.extension.getBackgroundPage();
+const BKG_PAGE = (chrome.extension && chrome.extension.getBackgroundPage && chrome.extension.getBackgroundPage()) || null;
 /**
  * 获取配置
  * @param key
  */
 export const getOption = (key) => {
     if (defaultOptions[key]) {
-        return store.get(key);
+        let option = store.get(key);
+        if (option && defaultOptions[key] && defaultOptions[key].types) {
+            option.types = defaultOptions[key].types;
+        } else if (option === undefined) {
+            const {on, value, notify} = defaultOptions[key];
+            option = {on, value, notify};
+            setOption(key, {on, value, notify});
+        }
+        return option;
     }
 };
 
@@ -25,27 +33,10 @@ export const getOption = (key) => {
  * @param value
  */
 export const setOption = (key, value) => {
-    if (defaultOptions[key]) {
-        store.set(key, value);
-    }
+    if (defaultOptions[key]) store.set(key, value);
 };
 
-export const getOptions = () => {
-    const list = {};
-    _.map(defaultOptions, (entry, key) => {
-        let option = getOption(key);
-        if (defaultOptions[key] && defaultOptions[key].types) {
-            option.types = defaultOptions[key].types;
-        }
-        if (option === undefined) {
-            const {on, value} = defaultOptions[key];
-            option = {on, value};
-            setOption(key, {on, value});
-        }
-        list[key] = option;
-    });
-    return list;
-};
+export const getOptions = () => _.reduce(defaultOptions, (result, value, key) => (result[key] = getOption(key), result), {});
 
 /**
  * @param command
@@ -65,7 +56,7 @@ export const sendMessage = (command, key, callback) => {
  * @param callback
  */
 export const getCookie = (url, name, callback) => {
-    chrome.cookies.get({url, name}, function (cookie) {
+    chrome.cookies.get({url, name}, function(cookie) {
         if (callback instanceof Function) callback(cookie);
         else console.error(`"SendMessage" (url: ${url} name: ${name}): invalid callback function.`);
     });
@@ -81,12 +72,12 @@ export const __ = (t, options) => chrome.i18n.getMessage(t, options);
  * @return {Promise|boolean}
  */
 export const isLogin = () => {
-    if (!bkg_page) return new Promise((resolve) => resolve(false));
+    if (!BKG_PAGE) return new Promise((resolve) => resolve(false));
     return new Promise((resolve) => {
-        bkg_page.chrome.cookies.get({
+        BKG_PAGE.chrome.cookies.get({
             url: 'http://interface.bilibili.com/',
             name: 'DedeUserID',
-        }, function (cookie) {
+        }, function(cookie) {
             // expirationDate 是秒数
             if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
                 resolve(true);
@@ -113,7 +104,7 @@ export const version = chrome.runtime.getManifest().version;
  * 根据资源名获取扩展程序内部资源
  * @param name
  */
-export const getUrl = (name) => chrome.extension.getURL(name);
+export const getURL = (name) => chrome.extension.getURL(name);
 
 /**
  * 检查传入的版本号是否比当前版本号大
@@ -128,4 +119,4 @@ export const hasNewVersion = (checkVersion) => {
         return false;
     }
     return Number(checkVersionStr) > Number(currentVersionStr);
-}
+};

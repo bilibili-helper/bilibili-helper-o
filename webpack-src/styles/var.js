@@ -22,7 +22,7 @@ export const rem = (size, baseFontSize = 16) => `${size / baseFontSize}rem`;
  * @param myFontName
  */
 export const fontFamily = (myFontName = '') => css`
-    font-family: ${_.isEmpty(myFontName) ? null : `'${myFontName}',`} "Microsoft YaHei", system, -apple-system, ".SFNSDisplay-Regular", HelveticaNeue, LucidaGrande, "PingFang SC", "Hiragino Sans GB", "sans-serif";
+    font-family: ${_.isEmpty(myFontName) ? null : `'${myFontName}',`} Cereal, "PingFang SC", "Microsoft YaHei", system, -apple-system, ".SFNSDisplay-Regular", HelveticaNeue, LucidaGrande, "Hiragino Sans GB", "sans-serif";
 `;
 /**
  * fontSize

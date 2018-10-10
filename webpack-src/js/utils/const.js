@@ -5,19 +5,23 @@
  */
 import {getOption} from 'Utils';
 
-
 /**
  * 获取url
  * @param url_name
  * @return string
  */
-export const getURL = (url_name) => {
-    switch(url_name) {
-        case 'video': return 'https://www.bilibili.com/';
-        case 'live': return 'https://live.bilibili.com/';
-        case 'option': return chrome.extension.getURL('options.html');
-        case 'dynamic': return getOption('newWatchPage') ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
-        case 'favourite': return 'https://space.bilibili.com/';
+export const getLink = (url_name) => {
+    switch (url_name) {
+        case 'video':
+            return 'https://www.bilibili.com/';
+        case 'live':
+            return 'https://live.bilibili.com/';
+        case 'option':
+            return chrome.extension.getURL('options.html');
+        case 'dynamic':
+            return getOption('newWatchPage') ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
+        case 'favourite':
+            return 'https://space.bilibili.com/';
     }
 };
 
@@ -28,6 +32,7 @@ export const defaultOptions = {
     },
     'dynamicCheck': { // 关注动态检查
         on: true,
+        notify: true,
     },
     'downloadType': { // 视频下载格式优先级设定
         on: true,
@@ -82,5 +87,26 @@ export const defaultOptions = {
             giftNPC: false,
             announcement: false,
         },
+    },
+};
+
+export const PERMISSION_TYPE = {
+    'login': [Symbol('login')],
+    'notifications': [Symbol('notifications')],
+};
+
+/**
+ * @param check 检查标记，指示该权限有没有被检查过
+ */
+export const PERMISSION_STATUS = {
+    login: {
+        value: false,
+        check: false,
+        errorMsg: 'you have not log in',
+    },
+    notifications: {
+        value: false,
+        check: false,
+        errorMsg: 'no permission for notifications',
     },
 };

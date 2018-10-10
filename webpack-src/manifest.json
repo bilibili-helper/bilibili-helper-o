@@ -21,13 +21,15 @@
     },
     "content_scripts": [
         {
-            "all_frames": true,
-            "js": [
-                "video.js",
-                "live.js"
+            "all_frames": false,
+            "js": ["video.js"],
+            "css": [
+                "styles/video.css"
             ],
             "matches": [
-                "*://*.bilibili.com/*"
+                "*://*.bilibili.com/bangumi/play/ss*",
+                "*://*.bilibili.com/bangumi/play/ep*",
+                "*://*.bilibili.com/video/av*"
             ],
             "run_at": "document_end"
         }
@@ -55,6 +57,7 @@
     "web_accessible_resources": [
         "statics/*",
         "bilibili-helper.woff",
-        "options.html"
+        "options.html",
+        "at.alicdn.com/t/font_862696_227xf8jklcw.css"
     ]
 }
