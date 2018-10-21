@@ -4,8 +4,10 @@
  * Description:
  */
 import _ from 'lodash';
+import store from 'store';
 import {
     getOption,
+    setOption,
     isLogin,
     PERMISSION_STATUS,
     PERMISSION_TYPE,
@@ -18,17 +20,14 @@ const {login, notifications} = PERMISSION_TYPE;
  * 规范启用一个特性/功能需要涉及到的一系列方法
  */
 export class Feature {
-    static defaultOptions = {};
 
-    static features = {};
-
-    get options() {
-        return Feature.defaultOptions[this.name];
-    }
-
-    set options(options) {
-        Feature.defaultOptions[this.name] = options;
-    }
+    //get options() {
+    //    return getOption(this.name);
+    //}
+    //
+    //set options(options) {
+    //    setOption(this.name, options);
+    //}
 
     /**
      * @param name {string} 配置的名称
@@ -39,18 +38,20 @@ export class Feature {
      */
     constructor({name, kind, GUI = null, optionDOM = null, permissions = {}, options = {}}) {
         this.name = name;
+        this.storeName = `bilibili-helper-${this.name}`;
         this.kind = kind;
         this.GUI = GUI; // 功能/特性的UI
         this.optionDOM = optionDOM; // 设置页面的UI
         this.permissions = permissions;
         this.options = options;
-        this.init(() => this.install(this));
+        this.init();
     }
 
     /**
      * 初始化 - 位于装载过程之前
      * 1.检查(启动)配置
      * 2.鉴权
+     * 3.配置初始化
      * @return {Boolean|String} true 表示初始化成功 返回字符串表示初始化失败说明
      */
     init = async (callback = () => {}) => {
@@ -59,17 +60,33 @@ export class Feature {
             console.warn(`Feature ${_.upperFirst(this.name)} OFF`);
             return on;
         } else if (on === true) {
-            await this.checkPermission().then(({pass, msg}) => pass ? callback(true) : console.error(msg));
+            await this.checkPermission().then(({pass, msg}) => {
+                if (pass) this.initOption(callback(true));
+                else console.error(msg);
+            });
         } else { // 没有启动配置
             console.error(`No options names ${_.upperFirst(this.name)}`);
             return false;
         }
     };
 
-    // 获取状态
-    getOption = () => {
-        return;
+    // 初始化配置
+    initOption = async (callback = () => {}) => {
+        const options = store.get(this.storeName) || {};
+        this.options = Object.assign(this.options, options);
+        store.set(this.storeName, this.options);
+        callback();
     };
+
+    // 获取配置
+    getOption = () => {
+        return store.get(this.storeName) || {};
+    };
+
+    // 设置配置
+    setOption = (options) => {
+        store.set(this.storeName, options);
+    }
 
     // 启动 - 装载过程之后
     launch = async () => {
@@ -85,15 +102,14 @@ export class Feature {
     // 鉴权
     checkPermission = async () => {
         if (!this.permissions) return true; // 没有设置需要检查的权限，则无条件通过
-        const permissions = this.permissions; // 需要检查的权限列表
         let [pass, msg] = [true, '']; // 通过状态
-        await _.map(permissions, async (permission, permissionType) => {
+        await _.map(this.permissions, async (permission, permissionName) => {
             if (!permission) { // 未知权限类型
-                [pass, msg] = [false, `Undefined permission: ${permissionType}`];
+                [pass, msg] = [false, `Undefined permission: ${permissionName}`];
             } else if (permission.check && !permission.value) {// 已经检查过 且 没有检查通过 直接返回之前的检查结果
                 [pass, msg] = [permission.value, permission.errorMsg];
             } else { // 权限没有检查过
-                switch (permissionType) {
+                switch (permissionName) {
                     case 'login': {
                         await isLogin().then((login) => {
                             pass = login ? true : false;
@@ -124,7 +140,6 @@ export class Feature {
      * 不同功能有不同的装载要求和时机
      */
     install = (feature) => {
-        Feature.features[feature.name] = feature;
-        feature.launch();
-    }
+        //feature.launch();
+    };
 }

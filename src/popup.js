@@ -1,15 +1,14 @@
-let BKG_PAGE = chrome.extension.getBackgroundPage();
-// console.warn(bkg_page);
+import {backgroundPage} from 'Utils';
 
 function getDynamic() {
-    BKG_PAGE.chrome.cookies.get({
+    backgroundPage.chrome.cookies.get({
         url: 'http://interface.bilibili.com/',
         name: 'DedeUserID',
     }, function(cookie) {
         if (cookie === null) {
             $('#go_dynamic').html(chrome.i18n.getMessage('goDynamic') + chrome.i18n.getMessage('notLogged'));
-        } else if (BKG_PAGE.getOption('updates') > 0) {
-            $('#go_dynamic').html(chrome.i18n.getMessage('goDynamic') + '<span class="red">' + chrome.i18n.getMessage('nNewUpdate').replace('%n', BKG_PAGE.getOption('updates')) + '</span>');
+        } else if (backgroundPage.getOption('updates') > 0) {
+            $('#go_dynamic').html(chrome.i18n.getMessage('goDynamic') + '<span class="red">' + chrome.i18n.getMessage('nNewUpdate').replace('%n', backgroundPage.getOption('updates')) + '</span>');
         } else {
             $('#go_dynamic').html(chrome.i18n.getMessage('goDynamic'));
         }
@@ -49,10 +48,10 @@ $(document).ready(function() {
         return false;
     });
     $('#go_dynamic').click(function() {
-        BKG_PAGE.chrome.browserAction.setBadgeText({
+        backgroundPage.chrome.browserAction.setBadgeText({
             text: '',
         });
-        BKG_PAGE.setOption('updates', 0);
+        backgroundPage.setOption('updates', 0);
         chrome.tabs.create({
             url: dynamic_url,
         });

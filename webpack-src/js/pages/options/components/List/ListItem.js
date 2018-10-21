@@ -22,7 +22,7 @@ const ListItemView = styled.div.attrs({
     className: 'list-item',
 })`
   //margin-top: 3px;
-  border-top: ${props => props.noBorder ? 'none' : '1px solid rgba(0, 0, 0, 0.02)'};
+  border-top: ${props => props.noBorder ? 'none' : '1px solid #f6f7f8'};
   &:nth-of-type(1) {
     border-top: none;
     margin-top: 0;
@@ -196,12 +196,12 @@ export class ListItem extends React.Component {
                         {separator && <Separator/>}
                         {operation && <End>{operation}</End>}
                     </TitleView>
-                    {/*{ 折叠子列表 }*/}
+                    {/* 折叠子列表 */}
                     {subList && subList.children && <ThemeProvider theme={{twoLine, ...subList.theme}}>
                         <SubList
                             style={{
-                                maxHeight:
-                                    (!extend && subList.hide) || (extend && hideSubList === true) ? '0' : maxHeight || '',
+                                maxHeight: (!extend && subList.hide) || (extend && hideSubList === true) ? '0' : maxHeight || '',
+                                transitionDuration: `${Math.min(Math.sqrt(subList.children.length) / 10 + 0.5, 1.2)}s`,
                             }}
                             innerRef={i => this.subListRef = i}
                         >{subList.children}</SubList>

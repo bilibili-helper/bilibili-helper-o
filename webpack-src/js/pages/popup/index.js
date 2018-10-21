@@ -8,8 +8,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {__, isLogin, createTab, getLink, version} from 'Utils';
-import {Button, Icon} from 'Components';
-import {Body} from './components';
+import {Button} from 'Components';
+import {Body, DynamicBox} from './components';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -23,28 +23,22 @@ const {color} = theme;
 // const history = syncHistoryWithStore(browserHistory, routingStore);
 // const state = window.__INITIAL_STATE__;
 // import 'Styles/scss/popup.scss';
-
+const Main = styled.div`
+  display: flex;
+`;
 const PopupBody = styled(Body)`
-  padding: 8px 44px 8px 10px;
-  min-height: 164px;
+  position: relative;
+  padding: 8px 10px 20px;
 `;
 
-const LOGO = styled.div`
+const Title = styled.div`
   display: flex;
-  align-items: center;
-  transform: rotateZ(90deg);
-  position: absolute;
-  right: -36px;
-  top: 48px;
+  justify-content: space-between;
+  width: 152px;
   font-size: 12px;
+  position: absolute;
+  bottom: 3px;
   color: ${color('google-grey-300')};
-  .button-wrapper {
-    left: 40px;
-  }
-  .icon {
-    color: ${color('google-grey-300')};
-    cursor: pointer;
-  } 
 `;
 
 const PopupButton = styled(Button)`
@@ -55,6 +49,7 @@ const PopupButton = styled(Button)`
   border-radius: 0;
   transition: border 0.3s;
   margin-bottom: 6px;
+  position: relative;
   &:last-of-type {
     margin-bottom: 0;
   }
@@ -79,33 +74,36 @@ const PopupButton = styled(Button)`
 `;
 
 class PagePopup extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             hasLogin: false,
         };
+
+        this.feedList = {};
     }
 
     componentWillMount() {
         isLogin().then(res => this.setState({hasLogin: res}));
-        this.logoText = <div>{version}<br/>BILIBILI HELPER</div>
+        chrome.browserAction.setBadgeText({text: ''});
     }
 
     render() {
         const {hasLogin} = this.state;
         return (
-            <PopupBody>
-                <LOGO>
-                    {this.logoText}
-                    <Button icon={'options'}  onClick={() => createTab(getLink('option'))}/>
-                </LOGO>
-                <PopupButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</PopupButton>
-                <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>
-                {hasLogin && <React.Fragment> {/* 登录后显示“我的关注”和“我的收藏” */}
-                    <PopupButton onClick={() => createTab(getLink('dynamic'))}>{__('goDynamic')}</PopupButton>
-                    <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
-                </React.Fragment>}
-            </PopupBody>
+            <Main>
+                <DynamicBox/>
+                <PopupBody>
+                    <PopupButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</PopupButton>
+                    <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>
+                    {hasLogin && <React.Fragment> {/* 登录后显示“我的关注”和“我的收藏” */}
+                        <PopupButton onClick={() => createTab(getLink('dynamic'))}>{__('goDynamic')}</PopupButton>
+                        <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
+                    </React.Fragment>}
+                    <PopupButton onClick={() => createTab(getLink('option'))}>{__('goOption')}</PopupButton>
+                    <Title><span>Bilibili Helper</span><span>{version}</span></Title>
+                </PopupBody>
+            </Main>
         );
     }
 }

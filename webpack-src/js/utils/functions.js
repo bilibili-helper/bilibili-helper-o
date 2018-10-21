@@ -8,7 +8,8 @@ import _ from 'lodash';
 import store from 'store';
 import {defaultOptions} from './const';
 
-const BKG_PAGE = (chrome.extension && chrome.extension.getBackgroundPage && chrome.extension.getBackgroundPage()) || null;
+export const BACKGROUND_PAGE = chrome.extension && chrome.extension.getBackgroundPage && chrome.extension.getBackgroundPage() || null;
+
 /**
  * 获取配置
  * @param key
@@ -29,13 +30,18 @@ export const getOption = (key) => {
 
 /**
  * 设置配置
- * @param key
- * @param value
+ * @param key {String}
+ * @param value {any}
+ * @return {void}
  */
 export const setOption = (key, value) => {
     if (defaultOptions[key]) store.set(key, value);
 };
 
+/**
+ * 获取所有配置
+ * @return {Object}
+ */
 export const getOptions = () => _.reduce(defaultOptions, (result, value, key) => (result[key] = getOption(key), result), {});
 
 /**
@@ -72,9 +78,8 @@ export const __ = (t, options) => chrome.i18n.getMessage(t, options);
  * @return {Promise|boolean}
  */
 export const isLogin = () => {
-    if (!BKG_PAGE) return new Promise((resolve) => resolve(false));
     return new Promise((resolve) => {
-        BKG_PAGE.chrome.cookies.get({
+        chrome.cookies.get({
             url: 'http://interface.bilibili.com/',
             name: 'DedeUserID',
         }, function(cookie) {
@@ -119,4 +124,16 @@ export const hasNewVersion = (checkVersion) => {
         return false;
     }
     return Number(checkVersionStr) > Number(currentVersionStr);
+};
+
+export const checkNotificationPermission = () => {
+    const permission = store.get('bilibili-helper-permission') || {};
+    let notificationPermission;
+    chrome.notifications.getPermissionLevel((level) => {
+        if (level === 'granted') notificationPermission = true; // 获取到了权限
+        else if (level === 'denied') notificationPermission = false;
+        permission['notification'] = notificationPermission;
+        store.set('permission', permission);
+    });
+    return notificationPermission;
 };

@@ -5,3 +5,4 @@
  */
 export {Feature} from './feature';
 export {DynamicCheck} from './dynamicCheck';
+export {Video} from './video';

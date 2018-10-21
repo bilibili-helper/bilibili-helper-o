@@ -25,7 +25,7 @@ const ListWrapper = styled.div.attrs({
   visibility: visible;
   opacity: 1;
   &:last-of-type {
-    margin-bottom: ${headerHeight}px;
+    margin-bottom: 56px;
   }
 `;
 
@@ -70,7 +70,7 @@ const ListBody = styled.div.attrs({
   max-height: 100%;
   opacity: 1;
   transition: all 0.3s;
-  //border-radius: 4px;
+  border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
   //background-color: whitesmoke;
   overflow: hidden;

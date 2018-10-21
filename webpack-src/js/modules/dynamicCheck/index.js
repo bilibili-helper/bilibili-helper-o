@@ -4,31 +4,27 @@
  * Description: 我的关注 视频自动提送 功能
  */
 import $ from 'jquery';
+import _ from 'lodash';
 import {Feature} from '../feature';
-import {PERMISSION_TYPE} from 'Utils';
+import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
 
-class DynamicCheck extends Feature {
+export class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
-            kind: 'main',
+            kind: 'notify',
             GUI: null,
             optionDOM: null,
-            permissions: { // q权限
-                login,
-                notifications,
-            },
+            permissions: {login, notifications},
             options: {
                 on: true,
-                notify: {
-                    title: '视频动态推送通知',
-                    type: 'basic',
-                    iconUrl: '',
-                },
+                notify: true,
             },
         });
+        this.feedList = [];
+        this.lastTime = Date.now();
     }
 
     launch = () => {
@@ -36,47 +32,59 @@ class DynamicCheck extends Feature {
             switch (alarm.name) {
                 case 'dynamicCheck':
                     this.checkUnread();
+                    break;
             }
         });
         chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
+        chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
+            if (this.feedList[notificationId] && index === 0) {
+                chrome.notifications.clear(notificationId);
+                chrome.tabs.create({url: this.feedList[notificationId]});
+            }
+        });
         this.checkUnread();
     };
 
-    lastTime = new Date().getTime();
-
     // 检查未读推送
     checkUnread = () => {
-        $.get('https://api.bilibili.com/x/feed/unread/count?type=0', {}, (unreadRes) => {
+        return $.get('https://api.bilibili.com/x/feed/unread/count?type=0', {}, (unreadRes) => {
             if (unreadRes.code === 0 && unreadRes.data.all > 0) {
                 chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge
-                this.getFeed();
+                this.getFeed().then(() => this.options.notify && this.sendNotification());
+            } else void this.getFeed();
+        });
+    };
+
+    // 获取并存储推送数据 - 不缓存到本地
+    getFeed = async () => {
+        return $.get('https://api.bilibili.com/x/feed/pull?ps=1&type=0', {}, (feedRes) => {
+            const {code, data} = feedRes;
+            if (code === 0 && data.feeds instanceof Array) { // 返回数据正确
+                console.info('DynamicCheck-feeds', data.feeds);
+                this.lastTime = Date.now();
+                this.feedList = data.feeds;
+            } else { // 请求出问题了！
+                console.error(feedRes);
+                chrome.browserAction.setBadgeText({text: 'error'});
             }
         });
     };
 
-    // 获取推送
-    getFeed = () => {
-        $.get('https://api.bilibili.com/x/feed/pull?ps=1&type=0', {}, (feedRes) => {
-            if (feedRes.code === 0 && feedRes.data.feeds instanceof Array) { // 返回数据正确
-                const feed = feedRes.data.feeds[0];
-                if (feed && feed.ctime !== this.lastTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
-                    this.lastTime = feed.ctime;
-                    const {id, addition} = feed;
-                    chrome.notifications.create('bh-' + id, {
-                        type: 'basic',
-                        iconUrl: this.options.notify.iconUrl,
-                        title: chrome.i18n.getMessage('noticeficationTitle'),
-                        message: addition.title,
-                        isClickable: false,
-                        buttons: [{title: chrome.i18n.getMessage('notificationWatch')}],
-                    }, function() {});
-                    // TODO Notification
-                } else return; // 为什么检测过了呢Σ(oﾟдﾟoﾉ)
-            } else { // 请求出问题了！
-                console.error(feedRes);
-            }
+    // 弹出推送通知窗口
+    sendNotification = () => {
+        _.map(this.feedList, (feed) => {
+            const {id: aid, addition, ctime} = feed;
+            if (feed && ctime !== this.lastTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
+                chrome.notifications.create('bilibili-helper-aid' + aid, {
+                    type: 'basic',
+                    iconUrl: getURL('/statics/imgs/cat.svg'),
+                    title: __('notificationTitle'),
+                    message: addition.title,
+                    buttons: [{title: __('notificationWatch')}],
+                }, (notificationId) => {
+                    this.feedList[notificationId] = addition.link;
+                });
+            } else return; // 为什么检测过了呢Σ(oﾟдﾟoﾉ)
         });
     };
 };
-
-export {DynamicCheck};

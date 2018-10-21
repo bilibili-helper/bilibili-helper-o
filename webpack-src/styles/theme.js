@@ -22,7 +22,7 @@ export const theme =  {
     /* 布局相关尺寸 */
     logoHeight: 50,                                // num, logo高度
     bodyMinWidth,                                  // num, 网页最小宽度
-    headerHeight: 56,                              // num, 导航栏高度
+    headerHeight: 0,                              // num, 导航栏高度
     sidebarWidth,                                  // num, 侧边栏宽度
     mainWidth: bodyMinWidth - sidebarWidth,        // num, 正文宽度
 

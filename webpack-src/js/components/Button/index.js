@@ -13,7 +13,7 @@ import {
     Icon,
     Ripple,
 } from 'Components';
-import { theme } from 'Styles/theme';
+import {theme} from 'Styles/theme';
 
 const {color} = theme;
 
@@ -24,8 +24,8 @@ const iconStyle = css`
 `;
 
 const ButtonWrapper = styled.div.attrs({
-                                           className: 'button-wrapper',
-                                       })`
+    className: 'button-wrapper',
+})`
   display: inline-block;
   justify-content: center;
   align-items: center;
@@ -35,8 +35,8 @@ const ButtonWrapper = styled.div.attrs({
 `;
 
 const ButtonView = styled.button.attrs({
-                                           className: 'button-view',
-                                       })`
+    className: 'button-view',
+})`
   display: block;
   width: 100%;
   height: 100%;

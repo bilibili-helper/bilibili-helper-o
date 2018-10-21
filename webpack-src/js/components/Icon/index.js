@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import {getURL} from 'Utils';
 
 const iconList = {
-    //cat128: getURL('statics/imgs/icon-128.png'),
+    cat128: getURL('statics/imgs/icon-128.png'),
     catSvg: getURL('statics/imgs/cat.svg'),
     arrowRight: getURL('statics/imgs/arrow_right.svg'),
     arrowDown: getURL('statics/imgs/arrow_down.svg'),

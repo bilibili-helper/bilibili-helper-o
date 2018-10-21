@@ -6,7 +6,6 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import {Feature} from 'Modules';
 
 const Content = styled.div.attrs({
     className: 'bilibili-helper-content',
@@ -28,8 +27,6 @@ const Content = styled.div.attrs({
   z-index: 1000;
   cursor: auto;
 `;
-
-console.log(Feature.defaultOptions);
 
 export class ToolContent extends React.Component {
     render() {

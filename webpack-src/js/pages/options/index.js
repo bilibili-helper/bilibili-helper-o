@@ -34,6 +34,7 @@ import {
     CheckBoxGroup,
     UpdateList,
 } from './components';
+import {theme} from 'Styles';
 
 import 'Styles/scss/options.scss';
 
@@ -41,7 +42,7 @@ const {notifications} = PERMISSION_TYPE;
 
 const OptionBody = styled(Body).attrs({className: 'option-body'})`
   position: absolute;
-  top: 0;
+  top: ${theme.headerHeight}px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -274,14 +275,14 @@ class PageOptions extends React.Component {
                     />
                     <UpdateList
                         title='版本须知'
-                        hide={false}
+                        //hide={false}
                         data={[
                             {title: '从0.8.16.13版本开始不再提供“区域限制解锁”和“自动抽奖”功能'},
                             {title: '从0.8.16.20版本开始不再提供“播放器切换”功能'},
                         ]}/>
                     <UpdateList
                         title='版本 0.9.9'
-                        hide={false}
+                        //hide={false}
                         data={[
                             {type: 'serious', title: '重新修复了部分老内核版本浏览器在主站视频页面打开后不停刷请求的问题'},
                         ]}/>

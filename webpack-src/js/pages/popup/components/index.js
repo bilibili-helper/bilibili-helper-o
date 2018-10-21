@@ -5,3 +5,4 @@
  */
 
 export * from './Body';
+export * from './DynamicBox'
