@@ -14,19 +14,19 @@ const CheckBoxTitle = styled.div`
   margin-left: -20px;
 `;
 
-export const CheckBoxGroup = ({data, value, onClick}) => {
+export const CheckBoxGroup = ({data, onClick}) => {
     return <React.Fragment>
         {_.map(data, (entry, i) => {
-            const {key, name} = entry;
+            const {key, title, value} = entry;
             return <ListItem
                 key={key}
                 noBorder={false}
-                children={<CheckBoxTitle>{name}</CheckBoxTitle>}
+                children={<CheckBoxTitle>{title}</CheckBoxTitle>}
                 onClick={() => {
-                    value[key] = !value[key];
-                    onClick(value);
+                    //value[key] = !value[key];
+                    onClick(key, !value);
                 }}
-                operation={<Radio on={value[key]}/>}
+                operation={<Radio on={value}/>}
             />;
         })}
     </React.Fragment>;

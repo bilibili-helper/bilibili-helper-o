@@ -114,8 +114,8 @@ DynamicCheck.launch();
 Video.launch();
 
 const options = {
-    DynamicCheck: {kind: DynamicCheck.kind, [DynamicCheck.name]: DynamicCheck.options},
-    Video: {kind: Video.kind, [Video.name]: Video.options},
+    DynamicCheck: {kind: DynamicCheck.kind, info: {...DynamicCheck.options, name: DynamicCheck.name}},
+    Video: {kind: Video.kind, info: {...Video.options, name: Video.name}},
 };
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

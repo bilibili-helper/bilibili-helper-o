@@ -111,14 +111,16 @@ class PageOptions extends React.Component {
     }
 
     componentWillMount() {
+        const {options} = this.state;
+        const o = Object.assign({}, options);
         chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(options, (option, featureName) => {
                 const {kind, ...rest} = option;
                 //console.log(featureName, kind, rest, this.state.options[kind]);
-                this.state.options[kind].optionMap.push(rest);
+                o[kind].optionMap.push({...rest.info});
             });
-            this.setState({options});
+            this.setState({options: o});
         });
     }
 
@@ -132,16 +134,27 @@ class PageOptions extends React.Component {
      * @param key 配置名
      * @param value 配置的值
      */
-    handleSetOption = (key, value) => {
-        if (this.state[key]) {
-            const optionObject = {...this.state[key]};
-            if (value === undefined) {
+    handleSetOption = ({kind, feature, optionName, value}) => {
+        const {options} = this.state;
+        const index = _.findIndex(options[kind].optionMap, {name: feature});
+        if (!!~index) { // find it (*≧∪≦)
+            const optionObject = {...options[kind].optionMap[index]}; // one feature in this kind of list
+            console.log(optionName, value);
+            if (!optionName && !value) {
                 optionObject.on = !optionObject.on;
-            } else {
-                optionObject.value = value;
+            } else if (optionName && value !== undefined) {
+                if (optionObject.optionType === 'checkbox') {
+                    const optionIndex = _.findIndex(optionObject.options, {key: optionName});
+                    console.log(value);
+                    optionObject.options[optionIndex].value = value;
+                } else if (optionObject.optionType === 'radio') {
+                    optionObject.value = value;
+                }
             }
-            setOption(key, optionObject);
-            this.setState({[key]: optionObject});
+            options[kind].optionMap[index] = optionObject;
+            console.log(options[kind]);
+            //setOption(key, optionObject);
+            this.setState({options});
         }
     };
 
@@ -157,15 +170,45 @@ class PageOptions extends React.Component {
         this.setState(newState);
     };
 
-    createOptionDOM = (options) => {
-        _.map(options, (list, kind) => <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
-            {_.map(list.optionMap, (option) => (
-                <ListItem
-                    onClick={() => this.handleSetOption('newWatchPage')}
-                    operation={<Radio on={newWatchPage.on}/>}
-                >新版关注页面跳转</ListItem>
-            ))}
-        </List>);
+    createOptionDOM = () => {
+        return _.map(this.state.options, (list, kind) => {
+            return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
+                {_.map(list.optionMap, (info) => {
+                    const {name: feature, options, optionType, on, title} = info;
+                    //console.log(info);
+                    let SubListChildren;
+                    switch (optionType) {
+                        case 'checkbox':
+                            SubListChildren = <CheckBoxGroup
+                                data={options}
+                                onClick={(optionName, value) => this.handleSetOption({
+                                    kind, feature, optionName, value,
+                                })}
+                            />;
+                            break;
+                        case 'radio':
+                            SubListChildren = <RadioButtonGroup
+                                value={info.value}
+                                data={info.options}
+                                onClick={(optionName, value) => this.handleSetOption({
+                                    kind, feature, optionName, value,
+                                })}
+                            />;
+                            break;
+                    }
+                    return <ListItem
+                        key={feature}
+                        onClick={() => this.handleSetOption({kind, feature})}
+                        operation={<Radio on={on}/>}
+                        subList={options ? {
+                            hide: !on,
+                            theme: {twoLine: false},
+                            children: SubListChildren,
+                        } : {}}
+                    >{title}</ListItem>;
+                })}
+            </List>;
+        });
     };
 
     render() {
@@ -214,6 +257,7 @@ class PageOptions extends React.Component {
                         handleSetOption={this.handleSetOption}
                     />}
                 </SubPage>
+                {this.createOptionDOM()}
                 <List title="主站" ref={i => this.mainList = i}>
                     <ListItem
                         children="Sub Page 测试"

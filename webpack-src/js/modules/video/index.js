@@ -16,6 +16,7 @@ export class Video extends Feature {
             permissions: {},
             options: {
                 on: true,
+                title: '视频相关',
                 optionType: 'checkbox',
                 options: [
                     {title: '视频下载', key: 'download', value: true},

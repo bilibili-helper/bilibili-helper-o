@@ -14,13 +14,13 @@ export class NewWatchPage extends Feature {
     constructor() {
         super({
             name: 'newWatchPage',
-            title: '关注页面跳转',
             kind: 'other',
             GUI: null,
             permission: {},
             options: {
                 on: true,
                 optionType: 'radio',
+                title: '关注页面跳转',
                 options: [
                     {key: 'new', title: '新页面'},
                     {key: 'old', title: '旧页面'},
