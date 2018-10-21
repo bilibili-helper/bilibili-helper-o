@@ -104,7 +104,7 @@ class PageOptions extends React.Component {
             options: {
                 video: {
                     title: '主站',
-                    optionMap: [],
+                    optionMap: {},
                 },
             },
         });
@@ -115,11 +115,7 @@ class PageOptions extends React.Component {
         const o = Object.assign({}, options);
         chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
             // 以kind字段来将设置分类到不同list
-            _.forEach(options, (option, featureName) => {
-                const {kind, ...rest} = option;
-                //console.log(featureName, kind, rest, this.state.options[kind]);
-                o[kind].optionMap.push({...rest.info});
-            });
+            _.forEach(options, (option, featureName) => o[option.kind].optionMap[featureName] = option.info);
             this.setState({options: o});
         });
     }
@@ -136,25 +132,26 @@ class PageOptions extends React.Component {
      */
     handleSetOption = ({kind, feature, optionName, value}) => {
         const {options} = this.state;
-        const index = _.findIndex(options[kind].optionMap, {name: feature});
-        if (!!~index) { // find it (*≧∪≦)
-            const optionObject = {...options[kind].optionMap[index]}; // one feature in this kind of list
-            console.log(optionName, value);
-            if (!optionName && !value) {
+        if (!!options[kind].optionMap[feature]) { // find it (*≧∪≦)
+            const optionObject = {...options[kind].optionMap[feature]}; // one feature in this kind of list
+            if (!optionName && !value) { // 一级开关
                 optionObject.on = !optionObject.on;
-            } else if (optionName && value !== undefined) {
-                if (optionObject.optionType === 'checkbox') {
+            } else if (optionName && value !== undefined) { // 二级开关
+                if (optionObject.optionType === 'checkbox') { // 多选组的值存于选项数组中 (￣.￣)
                     const optionIndex = _.findIndex(optionObject.options, {key: optionName});
-                    console.log(value);
                     optionObject.options[optionIndex].value = value;
-                } else if (optionObject.optionType === 'radio') {
+                } else if (optionObject.optionType === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
                     optionObject.value = value;
                 }
             }
-            options[kind].optionMap[index] = optionObject;
-            console.log(options[kind]);
+            options[kind].optionMap[feature] = optionObject;
+            chrome.runtime.sendMessage({
+                commend: 'setOption',
+                feature, options: optionObject,
+            }, () => {
+                this.setState({options});
+            });
             //setOption(key, optionObject);
-            this.setState({options});
         }
     };
 
@@ -173,28 +170,29 @@ class PageOptions extends React.Component {
     createOptionDOM = () => {
         return _.map(this.state.options, (list, kind) => {
             return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
-                {_.map(list.optionMap, (info) => {
-                    const {name: feature, options, optionType, on, title} = info;
-                    //console.log(info);
+                {_.map(list.optionMap, (info, feature) => {
+                    const {options = null, optionType, on, title} = info;
                     let SubListChildren;
-                    switch (optionType) {
-                        case 'checkbox':
-                            SubListChildren = <CheckBoxGroup
-                                data={options}
-                                onClick={(optionName, value) => this.handleSetOption({
-                                    kind, feature, optionName, value,
-                                })}
-                            />;
-                            break;
-                        case 'radio':
-                            SubListChildren = <RadioButtonGroup
-                                value={info.value}
-                                data={info.options}
-                                onClick={(optionName, value) => this.handleSetOption({
-                                    kind, feature, optionName, value,
-                                })}
-                            />;
-                            break;
+                    if (options) {
+                        switch (optionType) {
+                            case 'checkbox':
+                                SubListChildren = <CheckBoxGroup
+                                    data={options}
+                                    onClick={(optionName, value) => this.handleSetOption({
+                                        kind, feature, optionName, value,
+                                    })}
+                                />;
+                                break;
+                            case 'radio':
+                                SubListChildren = <RadioButtonGroup
+                                    value={info.value}
+                                    data={info.options}
+                                    onClick={(optionName, value) => this.handleSetOption({
+                                        kind, feature, optionName, value,
+                                    })}
+                                />;
+                                break;
+                        }
                     }
                     return <ListItem
                         key={feature}

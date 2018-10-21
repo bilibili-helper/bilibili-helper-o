@@ -19,8 +19,7 @@ export class DynamicCheck extends Feature {
             permissions: {login, notifications},
             options: {
                 on: true,
-                title: '视频动态推送',
-                notify: true,
+                title: '动态推送',
                 optionType: 'checkbox',
                 options: [
                     {title: '推送通知', key: 'notification', value: true},

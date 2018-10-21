@@ -108,16 +108,17 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
     chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
 
-const DynamicCheck = new FeatureDynamicCheck();
 const Video = new FeatureVideo();
-DynamicCheck.launch();
+const DynamicCheck = new FeatureDynamicCheck();
 Video.launch();
-
-const options = {
-    DynamicCheck: {kind: DynamicCheck.kind, info: {...DynamicCheck.options, name: DynamicCheck.name}},
-    Video: {kind: Video.kind, info: {...Video.options, name: Video.name}},
-};
+DynamicCheck.launch();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.commend === 'getOptions') sendResponse(options);
+    if (message.commend === 'getOptions') {
+        const options = {
+            [Video.name]: {kind: Video.kind, info: Video.options},
+            [DynamicCheck.name]: {kind: DynamicCheck.kind, info: DynamicCheck.options},
+        };
+        sendResponse(options);
+    }
 });

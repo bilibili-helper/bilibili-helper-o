@@ -21,14 +21,6 @@ const {login, notifications} = PERMISSION_TYPE;
  */
 export class Feature {
 
-    //get options() {
-    //    return getOption(this.name);
-    //}
-    //
-    //set options(options) {
-    //    setOption(this.name, options);
-    //}
-
     /**
      * @param name {string} 配置的名称
      * @param kind {string} 配置的列表划分，在渲染设置页面时根据该值在相对应的列表中自动渲染，如：主站，直播，其他等
@@ -60,10 +52,9 @@ export class Feature {
             console.warn(`Feature ${_.upperFirst(this.name)} OFF`);
             return on;
         } else if (on === true) {
-            await this.checkPermission().then(({pass, msg}) => {
-                if (pass) this.initOption(callback(true));
-                else console.error(msg);
-            });
+            const {pass, msg} = await this.checkPermission();
+            if (pass) await this.initOption(callback(true));
+            else console.error(msg);
         } else { // 没有启动配置
             console.error(`No options names ${_.upperFirst(this.name)}`);
             return false;
@@ -75,7 +66,13 @@ export class Feature {
         const options = store.get(this.storeName) || {};
         this.options = Object.assign(this.options, options);
         store.set(this.storeName, this.options);
-        callback();
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.commend === 'setOption' && message.feature === this.name) {
+                this.setOption(message.options);
+                sendResponse(true);
+            }
+        });
+        await callback();
     };
 
     // 获取配置
