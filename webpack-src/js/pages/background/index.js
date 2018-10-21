@@ -5,7 +5,7 @@
  */
 import 'babel-polyfill';
 import {createTab, hasNewVersion, getOption, checkNotificationPermission} from 'Utils';
-import {DynamicCheck, Video} from 'Modules';
+import {DynamicCheck as FeatureDynamicCheck, Video as FeatureVideo} from 'Modules';
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -108,23 +108,16 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
     chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
 
-const features = {
-    DynamicCheck: new DynamicCheck(),
-    Video: new Video(),
-};
-features.DynamicCheck.launch();
-features.Video.launch();
+const DynamicCheck = new FeatureDynamicCheck();
+const Video = new FeatureVideo();
+DynamicCheck.launch();
+Video.launch();
 
-// 消息监听事件
-chrome.runtime.onMessage.addListener(function({commend}, sender, sendResponse) {
-    if (!commend) return false;
-    console.info('onMessage', `commend: ${commend}`);
-    switch (commend) {
-        case 'getDynamicList': {
-            sendResponse(features.DynamicCheck.feedList);
-            return true;
-        }
-        default:
-            return true;
-    }
+const options = {
+    DynamicCheck: {kind: DynamicCheck.kind, [DynamicCheck.name]: DynamicCheck.options},
+    Video: {kind: Video.kind, [Video.name]: Video.options},
+};
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.commend === 'getOptions') sendResponse(options);
 });

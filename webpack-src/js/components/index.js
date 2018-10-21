@@ -10,3 +10,4 @@ export { Ripple } from './Ripple';
 export { Icon } from './Icon';
 export { Radio } from './Radio';
 export { Modal } from './Modal';
+export * from './optionPageComponents';

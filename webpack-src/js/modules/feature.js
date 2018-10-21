@@ -86,7 +86,7 @@ export class Feature {
     // 设置配置
     setOption = (options) => {
         store.set(this.storeName, options);
-    }
+    };
 
     // 启动 - 装载过程之后
     launch = async () => {

@@ -83,27 +83,24 @@ export class DynamicBox extends React.Component {
     componentWillMount() {
         chrome.runtime.sendMessage({
             commend: 'getDynamicList',
-        }, (feedList) => {
-            console.log(feedList);
-            this.setState({feedList});
-        });
+        }, (feedList) => this.setState({feedList}));
     }
 
     render() {
         const {feedList} = this.state;
-        return <FeedsContainer>
-            {_.map(feedList, (feed, index) => {
-                const {addition} = feed;
-                return (
-                    <FeedBox key={index} onClick={() => createTab(addition.link)}>
-                        <FeedImg style={{
-                            backgroundImage: `url(${addition.pic})`,
-                        }}/>
-                        <FeedTitle>{addition.title}</FeedTitle>
-                        <FeedInfo><span>{addition.author}</span><span>{addition.duration}</span></FeedInfo>
-                    </FeedBox>
-                );
-            })}
-        </FeedsContainer>;
+        return (
+            feedList && feedList.length > 0 ? <FeedsContainer>
+                {_.map(feedList, (feed, index) => {
+                    const {link, pic, title, author, duration} = feed.addition;
+                    return (
+                        <FeedBox key={index} onClick={() => createTab(link)}>
+                            <FeedImg style={{backgroundImage: `url(${pic})`}}/>
+                            <FeedTitle>{title}</FeedTitle>
+                            <FeedInfo><span>{author}</span><span>{duration}</span></FeedInfo>
+                        </FeedBox>
+                    );
+                })}
+            </FeedsContainer> : <div/>
+        );
     }
 }

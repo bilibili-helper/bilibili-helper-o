@@ -11,17 +11,20 @@ export class Video extends Feature {
     constructor() {
         super({
             name: 'video',
-            kind: 'main',
+            kind: 'video',
             GUI: null,
-            optionDOM: null,
             permissions: {},
             options: {
                 on: true,
-                download: true,
-                danmu: true,
+                optionType: 'checkbox',
+                options: [
+                    {title: '视频下载', key: 'download', value: true},
+                    {title: '弹幕查询', key: 'danmu', value: true},
+                ],
             },
         });
     }
+
     launch = () => {
         const requestFilter = {
             urls: [
@@ -36,5 +39,5 @@ export class Video extends Feature {
         chrome.webRequest.onCompleted.addListener((details) => {
             console.log('onCompleted', details);
         }, requestFilter, ['responseHeaders']);
-    }
+    };
 }

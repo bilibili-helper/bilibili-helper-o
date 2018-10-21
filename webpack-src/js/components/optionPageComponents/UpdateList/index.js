@@ -33,15 +33,12 @@ export class UpdateList extends React.Component {
             second={`包含 ${data.length} 条内容`}
             subList={{
                 hide: hide,
-                children: _.map(data, (entry, i) => {
-                    const {type = 'normal', title} = entry;
-                    return <ListItem
-                        key={i}
-                        noBorder={false}
-                        children={<UpdateListItem className={type}>{title}</UpdateListItem>}
-                        {...rest}
-                    />;
-                }),
+                children: _.map(data, (title, i) => <ListItem
+                    key={i}
+                    noBorder={false}
+                    children={<UpdateListItem>{title}</UpdateListItem>}
+                    {...rest}
+                />),
             }}
         />;
     }

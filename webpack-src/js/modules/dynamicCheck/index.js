@@ -5,7 +5,7 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
-import {Feature} from '../feature';
+import {Feature} from 'Modules';
 import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
@@ -14,13 +14,16 @@ export class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
-            kind: 'notify',
+            kind: 'video',
             GUI: null,
-            optionDOM: null,
             permissions: {login, notifications},
             options: {
                 on: true,
                 notify: true,
+                optionType: 'checkbox',
+                options: [
+                    {title: '推送通知', key: 'notification', value: true},
+                ],
             },
         });
         this.feedList = [];
@@ -42,6 +45,9 @@ export class DynamicCheck extends Feature {
                 chrome.tabs.create({url: this.feedList[notificationId]});
             }
         });
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.commend === 'getDynamicList') sendResponse(this.feedList);
+        });
         this.checkUnread();
     };
 
@@ -49,20 +55,20 @@ export class DynamicCheck extends Feature {
     checkUnread = () => {
         return $.get('https://api.bilibili.com/x/feed/unread/count?type=0', {}, (unreadRes) => {
             if (unreadRes.code === 0 && unreadRes.data.all > 0) {
-                chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge
+                chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                 this.getFeed().then(() => this.options.notify && this.sendNotification());
             } else void this.getFeed();
         });
     };
 
-    // 获取并存储推送数据 - 不缓存到本地
+    // 获取并存储推送数据 - 不缓存到本地(￣.￣)
     getFeed = async () => {
         return $.get('https://api.bilibili.com/x/feed/pull?ps=1&type=0', {}, (feedRes) => {
             const {code, data} = feedRes;
-            if (code === 0 && data.feeds instanceof Array) { // 返回数据正确
-                console.info('DynamicCheck-feeds', data.feeds);
+            if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
                 this.lastTime = Date.now();
-                this.feedList = data.feeds;
+                const list = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
+                this.feedList = list.concat(this.feedList).slice(0, 9);
             } else { // 请求出问题了！
                 console.error(feedRes);
                 chrome.browserAction.setBadgeText({text: 'error'});

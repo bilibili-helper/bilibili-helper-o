@@ -33,12 +33,12 @@ import {
     RadioButtonGroup,
     CheckBoxGroup,
     UpdateList,
-} from './components';
+} from 'Components/optionPageComponents';
 import {theme} from 'Styles';
-
 import 'Styles/scss/options.scss';
+import updateData from 'Statics/json/update.json';
 
-const {notifications} = PERMISSION_TYPE;
+//const {notifications} = PERMISSION_TYPE;
 
 const OptionBody = styled(Body).attrs({className: 'option-body'})`
   position: absolute;
@@ -84,8 +84,8 @@ const FilterSubPageBody = ({title, filterName, filter, handleSetOption}) => {
 };
 
 class PageOptions extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         /**
          * ! important ! 将配置导入state
          * 此处的getOption会返回当前配置和默认配置来合并的对象
@@ -100,24 +100,39 @@ class PageOptions extends React.Component {
             subPageOn: false,
             subPageTitle: null,
             subPageBody: null,
-        });
 
-        this.handleOnClick = ::this.handleOnClick;
-        this.handleSetOption = ::this.handleSetOption;
-        this.handleSetSubPage = ::this.handleSetSubPage;
+            options: {
+                video: {
+                    title: '主站',
+                    optionMap: [],
+                },
+            },
+        });
     }
 
-    handleOnClick(type) {
+    componentWillMount() {
+        chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
+            // 以kind字段来将设置分类到不同list
+            _.forEach(options, (option, featureName) => {
+                const {kind, ...rest} = option;
+                //console.log(featureName, kind, rest, this.state.options[kind]);
+                this.state.options[kind].optionMap.push(rest);
+            });
+            this.setState({options});
+        });
+    }
+
+    handleOnClick = (type) => {
         const {active} = this.state;
         this.setState({active: active === type ? '' : type});
-    }
+    };
 
     /**
      * 设置配置
      * @param key 配置名
      * @param value 配置的值
      */
-    handleSetOption(key, value) {
+    handleSetOption = (key, value) => {
         if (this.state[key]) {
             const optionObject = {...this.state[key]};
             if (value === undefined) {
@@ -128,9 +143,9 @@ class PageOptions extends React.Component {
             setOption(key, optionObject);
             this.setState({[key]: optionObject});
         }
-    }
+    };
 
-    handleSetSubPage({title = null, parent = null, body = null}) {
+    handleSetSubPage = ({title = null, parent = null, body = null}) => {
         const {subPageOn, parent: currentParent} = this.state;
         const newState = {
             subPageOn: !subPageOn,
@@ -140,7 +155,18 @@ class PageOptions extends React.Component {
         };
 
         this.setState(newState);
-    }
+    };
+
+    createOptionDOM = (options) => {
+        _.map(options, (list, kind) => <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
+            {_.map(list.optionMap, (option) => (
+                <ListItem
+                    onClick={() => this.handleSetOption('newWatchPage')}
+                    operation={<Radio on={newWatchPage.on}/>}
+                >新版关注页面跳转</ListItem>
+            ))}
+        </List>);
+    };
 
     render() {
         const {
@@ -211,7 +237,7 @@ class PageOptions extends React.Component {
                     <ListItem
                         onClick={() => this.handleSetOption('dynamicCheck')}
                         operation={<Radio on={dynamicCheck.on}/>}
-                    >视频动态</ListItem>
+                    >视频动态推送</ListItem>
                     <ListItem
                         onClick={() => this.handleSetOption('downloadType')}
                         operation={<Radio on={downloadType.on}/>}
@@ -273,32 +299,7 @@ class PageOptions extends React.Component {
                         separator
                         operation={<Button normal>检查更新</Button>}
                     />
-                    <UpdateList
-                        title='版本须知'
-                        //hide={false}
-                        data={[
-                            {title: '从0.8.16.13版本开始不再提供“区域限制解锁”和“自动抽奖”功能'},
-                            {title: '从0.8.16.20版本开始不再提供“播放器切换”功能'},
-                        ]}/>
-                    <UpdateList
-                        title='版本 0.9.9'
-                        //hide={false}
-                        data={[
-                            {type: 'serious', title: '重新修复了部分老内核版本浏览器在主站视频页面打开后不停刷请求的问题'},
-                        ]}/>
-                    <UpdateList
-                        title='版本 0.9.7 - 0.9.8'
-                        data={[
-                            {title: '增加主站视频播放器右侧自动切换到弹幕列表的功能（该功能没有关闭选项）'},
-                            {title: '增加自动关闭直播间弹出心愿瓶的窗口（该功能没有关闭选项）'},
-                            {title: '增加直播区自动将银瓜子兑换为硬币的功能'},
-                            {title: '修复了主站视频下载链接获取失败的问题'},
-                            {title: '修复了主站视频播放器自动宽屏失效问题'},
-                            {title: '修复了直播区瓜子宝箱无法关闭弹出窗口的问题'},
-                            {title: '修复了直播区自动签到后的显示问题'},
-                            {title: '修复了直播区小电视宝箱目标和去污粉重叠的问题'},
-                            {title: '更新投喂表（非实时&手动更新）'},
-                        ]}/>
+                    {_.map(updateData, (data, i) => <UpdateList key={i} title={`版本 ${data.title}`} data={data.list}/>)}
                 </List>
             </OptionBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
