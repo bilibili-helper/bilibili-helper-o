@@ -68,6 +68,8 @@ export class Feature {
         store.set(this.storeName, this.options);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'setOption' && message.feature === this.name) {
+                // 同步设置 background 里 memory 和 localStorage 中的设置
+                this.options = message.options;
                 this.setOption(message.options);
                 sendResponse(true);
             }

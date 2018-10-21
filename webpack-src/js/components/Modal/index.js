@@ -40,7 +40,7 @@ const Container = styled.div.attrs({
   max-width: 560px;
   min-width: 300px;
   user-select: initial;
-  //border-radius: 8px;
+  border-radius: 4px;
   background-color: #fff;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.24);
   transition: transform 0.12s;

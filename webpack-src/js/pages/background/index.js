@@ -5,7 +5,11 @@
  */
 import 'babel-polyfill';
 import {createTab, hasNewVersion, getOption, checkNotificationPermission} from 'Utils';
-import {DynamicCheck as FeatureDynamicCheck, Video as FeatureVideo} from 'Modules';
+import {
+    DynamicCheck as FeatureDynamicCheck,
+    Video as FeatureVideo,
+    NewWatchPage as FeatureNewWatchPage,
+} from 'Modules';
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -110,14 +114,17 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
 
 const Video = new FeatureVideo();
 const DynamicCheck = new FeatureDynamicCheck();
+const NewWatchPage = new FeatureNewWatchPage();
 Video.launch();
 DynamicCheck.launch();
+NewWatchPage.launch();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.commend === 'getOptions') {
         const options = {
             [Video.name]: {kind: Video.kind, info: Video.options},
             [DynamicCheck.name]: {kind: DynamicCheck.kind, info: DynamicCheck.options},
+            [NewWatchPage.name]: {kind: NewWatchPage.kind, info: NewWatchPage.options},
         };
         sendResponse(options);
     }

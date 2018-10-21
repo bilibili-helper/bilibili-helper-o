@@ -27,7 +27,7 @@ export class DynamicCheck extends Feature {
             },
         });
         this.feedList = [];
-        this.lastTime = Date.now();
+        this.lastCheckTime = Date.now();
     }
 
     launch = () => {
@@ -66,7 +66,7 @@ export class DynamicCheck extends Feature {
         return $.get('https://api.bilibili.com/x/feed/pull?ps=1&type=0', {}, (feedRes) => {
             const {code, data} = feedRes;
             if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
-                this.lastTime = Date.now();
+                this.lastCheckTime = Date.now();
                 const list = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
                 this.feedList = list.concat(this.feedList).slice(0, 9);
             } else { // 请求出问题了！
@@ -80,7 +80,7 @@ export class DynamicCheck extends Feature {
     sendNotification = () => {
         _.map(this.feedList, (feed) => {
             const {id: aid, addition, ctime} = feed;
-            if (feed && ctime !== this.lastTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
+            if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
                 chrome.notifications.create('bilibili-helper-aid' + aid, {
                     type: 'basic',
                     iconUrl: getURL('/statics/imgs/cat.svg'),

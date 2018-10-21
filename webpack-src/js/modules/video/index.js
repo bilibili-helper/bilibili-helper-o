@@ -12,15 +12,14 @@ export class Video extends Feature {
         super({
             name: 'video',
             kind: 'video',
-            GUI: null,
             permissions: {},
             options: {
                 on: true,
                 title: '视频相关',
                 optionType: 'checkbox',
                 options: [
-                    {title: '视频下载', key: 'download', value: true},
-                    {title: '弹幕查询', key: 'danmu', value: true},
+                    {key: 'download', title: '视频下载', value: true},
+                    {key: 'danmu', title: '弹幕查询', value: true},
                 ],
             },
         });

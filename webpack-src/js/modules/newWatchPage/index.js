@@ -4,18 +4,14 @@
  * Description:
  */
 
-import {Radio} from 'Components/Radio';
 import _ from 'lodash';
 import {Feature} from 'Modules';
-import React from 'react';
-import {Radio, ListItem, RadioButtonGroup} from 'Components';
 
 export class NewWatchPage extends Feature {
     constructor() {
         super({
             name: 'newWatchPage',
             kind: 'other',
-            GUI: null,
             permission: {},
             options: {
                 on: true,
@@ -28,23 +24,6 @@ export class NewWatchPage extends Feature {
                 value: 'new', // default
             },
         });
-        this.state = {
-            on: this.options.on,
-            value: this.options.value,
-        };
-        this.optionDOM = <ListItem
-            onClick={() => this.setOption(this.state)}
-            operation={<Radio on={this.state.on}/>}
-            subList={{
-                hide: !this.state.on,
-                theme: {twoLine: false},
-                children: <RadioButtonGroup
-                    value={this.state.value}
-                    data={this.options.options}
-                    onClick={(value) => this.handleSetOption(this.name, value)}
-                />,
-            }}
-        >{this.title}</ListItem>;
     }
 
     launch = () => {

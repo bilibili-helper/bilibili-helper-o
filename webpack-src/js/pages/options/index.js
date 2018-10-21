@@ -106,6 +106,10 @@ class PageOptions extends React.Component {
                     title: '主站',
                     optionMap: {},
                 },
+                other: {
+                    title: '其他',
+                    optionMap: {},
+                },
             },
         });
     }
@@ -136,21 +140,19 @@ class PageOptions extends React.Component {
             const optionObject = {...options[kind].optionMap[feature]}; // one feature in this kind of list
             if (!optionName && !value) { // 一级开关
                 optionObject.on = !optionObject.on;
-            } else if (optionName && value !== undefined) { // 二级开关
-                if (optionObject.optionType === 'checkbox') { // 多选组的值存于选项数组中 (￣.￣)
+            } else if (optionName && optionObject.optionType) { // 二级开关
+                if (optionObject.optionType === 'checkbox' && value !== undefined) { // 多选组的值存于选项数组中 (￣.￣)
                     const optionIndex = _.findIndex(optionObject.options, {key: optionName});
                     optionObject.options[optionIndex].value = value;
                 } else if (optionObject.optionType === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
-                    optionObject.value = value;
+                    optionObject.value = optionName;
                 }
             }
             options[kind].optionMap[feature] = optionObject;
             chrome.runtime.sendMessage({
                 commend: 'setOption',
                 feature, options: optionObject,
-            }, () => {
-                this.setState({options});
-            });
+            }, () => this.setState({options}));
             //setOption(key, optionObject);
         }
     };
@@ -187,8 +189,8 @@ class PageOptions extends React.Component {
                                 SubListChildren = <RadioButtonGroup
                                     value={info.value}
                                     data={info.options}
-                                    onClick={(optionName, value) => this.handleSetOption({
-                                        kind, feature, optionName, value,
+                                    onClick={(optionName) => this.handleSetOption({
+                                        kind, feature, optionName,
                                     })}
                                 />;
                                 break;
@@ -272,14 +274,7 @@ class PageOptions extends React.Component {
                         })}
                         operation={<Radio on={modalOn}/>}
                     >Modal 测试</ListItem>
-                    <ListItem
-                        onClick={() => this.handleSetOption('newWatchPage')}
-                        operation={<Radio on={newWatchPage.on}/>}
-                    >新版关注页面跳转</ListItem>
-                    <ListItem
-                        onClick={() => this.handleSetOption('dynamicCheck')}
-                        operation={<Radio on={dynamicCheck.on}/>}
-                    >视频动态推送</ListItem>
+{/*
                     <ListItem
                         onClick={() => this.handleSetOption('downloadType')}
                         operation={<Radio on={downloadType.on}/>}
@@ -296,6 +291,7 @@ class PageOptions extends React.Component {
                             />,
                         }}
                     >视频下载</ListItem>
+
                     <ListItem
                         onClick={() => this.handleSetOption('videoPlayerWidenType')}
                         operation={<Radio on={videoPlayerWidenType.on}/>}
@@ -313,6 +309,7 @@ class PageOptions extends React.Component {
                             />,
                         }}
                     >播放器宽屏</ListItem>
+*/}
                 </List>
                 <List title="直播" ref={i => this.liveList = i}>
                     <ListItem

@@ -11,13 +11,13 @@ import {RadioButton} from './RadioButton';
 export const RadioButtonGroup = ({data, value, onClick}) => {
     if (data instanceof Array) {
         return <React.Fragment>
-            {_.map(data, (entry, index) => {
-                const {title, value: v} = entry;
+            {_.map(data, (entry, i) => {
+                const {key, title} = entry;
                 return <ListItem
+                    key={i}
                     noBorder={false}
-                    key={index}
-                    children={<RadioButton title={title} on={v === value}/>}
-                    onClick={() => onClick(v)}
+                    children={<RadioButton title={title} on={key === value}/>}
+                    onClick={() => onClick(key)}
                 />;
             })}
         </React.Fragment>;
