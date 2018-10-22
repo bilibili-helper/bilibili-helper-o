@@ -92,7 +92,7 @@ class PagePopup extends React.Component {
         const {hasLogin} = this.state;
         return (
             <Main>
-                <DynamicBox/>
+                {/*<DynamicBox/>*/}
                 <PopupBody>
                     <PopupButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</PopupButton>
                     <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>

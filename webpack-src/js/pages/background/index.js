@@ -4,7 +4,7 @@
  * Description: 扩展守护脚本
  */
 import 'babel-polyfill';
-import {createTab, hasNewVersion, getOption, checkNotificationPermission, version} from 'Utils';
+import {createTab, hasNewVersion, getOption, version} from 'Utils';
 import {
     DynamicCheck as FeatureDynamicCheck,
     Video as FeatureVideo,
@@ -18,7 +18,7 @@ import {
  */
 
 // 推送窗口弹出权限
-void checkNotificationPermission();
+//checkNotificationPermission();
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -102,14 +102,17 @@ const Video = new FeatureVideo();
 const DynamicCheck = new FeatureDynamicCheck();
 const NewWatchPage = new FeatureNewWatchPage();
 
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.commend === 'getOptions') {
         const options = {
-            [Video.name]: {kind: Video.kind, info: Video.options},
-            [DynamicCheck.name]: {kind: DynamicCheck.kind, info: DynamicCheck.options},
-            [NewWatchPage.name]: {kind: NewWatchPage.kind, info: NewWatchPage.options},
+            ...Video.optionArguments,
+            ...DynamicCheck.optionArguments,
+            ...NewWatchPage.optionArguments,
         };
         sendResponse(options);
+    } else if (message.commend === 'getVideoFeatures') {
+        sendResponse({
+            ...Video.GUIArguments,
+        });
     }
 });

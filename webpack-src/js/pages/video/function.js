@@ -8,12 +8,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {ToolBtn} from './components';
 
-export const InstallDOM = () => {
+export const InstallDOM = (callback = () => {}) => {
     const container = (() => {
         let content = null;
-        if ($('#bangumi_detail .bangumi-info .info-right .info-title .func-module').length) {
-            content = $('#bangumi_detail .bangumi-info .info-right .info-title .func-module');
-        } else if ($('#arc_toolbar_report .ops').length) content = $('#arc_toolbar_report .ops');
+        if ($('#bangumi_detail .func-module').length) content = $('#bangumi_detail .func-module');
+        else if ($('#arc_toolbar_report .ops').length) content = $('#arc_toolbar_report .ops');
         else if ($('#arc_toolbar_report').length) content = $('#arc_toolbar_report');
         return content;
     })();
@@ -31,6 +30,7 @@ export const InstallDOM = () => {
             observer.disconnect();
             container.append(helperDOM);
             ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0]);
+            typeof callback === 'function' && callback(helperDOM.find('.bilibili-helper-content'));
         }, 1000);
     });
 
@@ -39,8 +39,5 @@ export const InstallDOM = () => {
         attributes: true,
         attributeOldValue: true,
         subtree: true,
-        attributeFilter: ['title'],
     });
-
-    return helperDOM;
 };

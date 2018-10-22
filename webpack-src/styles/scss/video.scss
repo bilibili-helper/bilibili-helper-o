@@ -42,12 +42,17 @@
 		}
 	}
 	.func-module {
+		display: flex;
+		& > * {
+			order: 1;
+		}
 		.bilibili-helper {
+			order: 0;
 			display: inline-block;
-			width: 86px;
+			width: auto;
 			height: 28px;
-			margin: 0 0 0 20px;
-			padding: 0 15px;
+			margin: 0 20px 0 0;
+			padding: 0;
 			line-height: 28px;
 			text-align: center;
 			font-size: 14px;
@@ -67,7 +72,7 @@
 			}
 			.bilibili-helper-content {
 				top: 40px;
-				right: 0;
+				right: 200px;
 			}
 		}
 	}

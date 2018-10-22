@@ -22,10 +22,7 @@ export const CheckBoxGroup = ({data, onClick}) => {
                 key={key}
                 noBorder={false}
                 children={<CheckBoxTitle>{title}</CheckBoxTitle>}
-                onClick={() => {
-                    //value[key] = !value[key];
-                    onClick(key, !value);
-                }}
+                onClick={() => onClick(key, !value)}
                 operation={<Radio on={value}/>}
             />;
         })}

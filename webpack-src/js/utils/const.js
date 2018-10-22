@@ -5,26 +5,6 @@
  */
 import {getOption} from 'Utils';
 
-/**
- * 获取url
- * @param url_name
- * @return string
- */
-export const getLink = (url_name) => {
-    switch (url_name) {
-        case 'video':
-            return 'https://www.bilibili.com/';
-        case 'live':
-            return 'https://live.bilibili.com/';
-        case 'option':
-            return chrome.extension.getURL('options.html');
-        case 'dynamic':
-            return getOption('newWatchPage') ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
-        case 'favourite':
-            return 'https://space.bilibili.com/';
-    }
-};
-
 // 默认功能呢配置
 export const defaultOptions = {
     'newWatchPage': { // 跳转到新版我的关注页面

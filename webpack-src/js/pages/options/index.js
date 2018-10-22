@@ -118,15 +118,10 @@ class PageOptions extends React.Component {
     componentWillMount() {
         chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
             // 以kind字段来将设置分类到不同list
-            _.forEach(options, (option, featureName) => this.options[option.kind].optionMap[featureName] = option.info);
+            _.forEach(options, (option, featureName) => this.options[option.kind].optionMap[featureName] = option.options);
             this.setState(this.options);
         });
     }
-
-    handleOnClick = (type) => {
-        const {active} = this.state;
-        this.setState({active: active === type ? '' : type});
-    };
 
     /**
      * 设置配置

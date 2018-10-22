@@ -26,7 +26,6 @@ export class DynamicCheck extends Feature {
                 ],
             },
         });
-        this.addListener();
     }
 
     launch = () => {

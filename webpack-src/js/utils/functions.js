@@ -15,17 +15,9 @@ export const BACKGROUND_PAGE = chrome.extension && chrome.extension.getBackgroun
  * @param key
  */
 export const getOption = (key) => {
-    if (defaultOptions[key]) {
-        let option = store.get(key);
-        if (option && defaultOptions[key] && defaultOptions[key].types) {
-            option.types = defaultOptions[key].types;
-        } else if (option === undefined) {
-            const {on, value, notify} = defaultOptions[key];
-            option = {on, value, notify};
-            setOption(key, {on, value, notify});
-        }
-        return option;
-    }
+    const storeName = 'bilibili-helper-' + key;
+    let option = store.get(storeName);
+    return option;
 };
 
 /**
@@ -136,4 +128,25 @@ export const checkNotificationPermission = () => {
         store.set('permission', permission);
     });
     return notificationPermission;
+};
+
+/**
+ * 获取url
+ * @param url_name
+ * @return string
+ */
+export const getLink = (url_name) => {
+    switch (url_name) {
+        case 'video':
+            return 'https://www.bilibili.com/';
+        case 'live':
+            return 'https://live.bilibili.com/';
+        case 'option':
+            return chrome.extension.getURL('options.html');
+        case 'dynamic':
+            const type = getOption('newWatchPage').value;
+            return  type === 'new' ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
+        case 'favourite':
+            return 'https://space.bilibili.com/';
+    }
 };

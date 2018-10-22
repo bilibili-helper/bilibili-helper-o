@@ -13,6 +13,11 @@ import {b} from 'Utils';
 const BtnIcon = styled(Icon)`
   vertical-align: sub;
 `;
+const HelperBtn = styled.span`
+  display: block;
+  width: 90px;
+  padding: 0 15px;
+`;
 
 export class ToolBtn extends React.Component {
     state = {
@@ -28,11 +33,11 @@ export class ToolBtn extends React.Component {
         return (
             <React.Fragment>
                 <link href="//at.alicdn.com/t/font_862696_227xf8jklcw.css" type="text/css" rel="stylesheet"/>
-                <span onClick={this.handleClick}>
+                <HelperBtn onClick={this.handleClick}>
                     <BtnIcon iconfont="icon-cat" size={24} image/>
                     <span>哔哩哔哩助手</span>
-                </span>
-                {this.state.show && <ToolContent/>}
+                </HelperBtn>
+                <ToolContent show={this.state.show}/>
             </React.Fragment>
         );
     }

@@ -40,6 +40,15 @@ export class Feature {
         this.init();
     }
 
+    // 用于配置页面的输出
+    get optionArguments() {
+        return {[this.name]: {kind: this.kind, options: this.options}};
+    }
+
+    get GUIArguments() {
+        return {[this.name]: {GUI: this.GUI, options: this.options}};
+    }
+
     /**
      * 初始化 - 位于装载过程之前
      * 1.检查(启动)配置
@@ -56,8 +65,10 @@ export class Feature {
             const {pass, msg} = await this.checkPermission();
             if (pass) {
                 await this.initOption();
+                await this.addListener();
+                this.initialed = true;
                 await this.launch();
-                callback(true)
+                callback(true);
             } else console.error(msg);
         } else { // 没有启动配置
             console.error(`No options names ${_.upperFirst(this.name)}`);
@@ -78,7 +89,6 @@ export class Feature {
                 sendResponse(true);
             }
         });
-        this.initialed = true;
         await callback();
     };
 
@@ -107,7 +117,13 @@ export class Feature {
     pause = () => {
         //console.error(`Feature ${_.upperFirst(this.name)}'s pause Function is empty!`);
         return;
-    }
+    };
+
+    // 添加监听器
+    addListener = async () => {
+        console.info(`Feature ${_.upperFirst(this.name)}'s has no listener!`);
+        return;
+    };
 
     // 渲染特性/功能UI
     render = () => {

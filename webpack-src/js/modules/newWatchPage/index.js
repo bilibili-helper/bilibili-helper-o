@@ -12,6 +12,7 @@ export class NewWatchPage extends Feature {
         super({
             name: 'newWatchPage',
             kind: 'other',
+            GUI: null,
             permission: {},
             options: {
                 on: true,

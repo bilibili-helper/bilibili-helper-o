@@ -13,7 +13,7 @@ const Content = styled.div.attrs({
   position: absolute;
   right: -160px;
   top: 35px;
-  display: flex;
+  display: ${({show}) => show ? 'flex' : 'none'};
   justify-content: space-between;
   padding: 20px;
   width: 422px;
@@ -31,9 +31,7 @@ const Content = styled.div.attrs({
 export class ToolContent extends React.Component {
     render() {
         return (
-            <Content>
-                content
-            </Content>
+            <Content show={this.props.show}/>
         )
     }
 
