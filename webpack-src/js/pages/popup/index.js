@@ -54,10 +54,9 @@ const PopupButton = styled(Button)`
     margin-bottom: 0;
   }
   button {
-    text-align: left;
     text-indent: 6px;
-    font-size: 12px;
-    color: ${color('google-grey-700')};
+    font-size: 11px;
+    color: ${color('google-grey-600')};
     background-color: ${color('paper-grey-50')};
     transition: all 0.3s;
     &[disabled] {
