@@ -36,6 +36,7 @@ export class Feature {
         this.optionDOM = optionDOM; // 设置页面的UI
         this.permissions = permissions;
         this.options = options;
+        this.initialed = false;
         this.init();
     }
 
@@ -53,8 +54,11 @@ export class Feature {
             return on;
         } else if (on === true) {
             const {pass, msg} = await this.checkPermission();
-            if (pass) await this.initOption(callback(true));
-            else console.error(msg);
+            if (pass) {
+                await this.initOption();
+                await this.launch();
+                callback(true)
+            } else console.error(msg);
         } else { // 没有启动配置
             console.error(`No options names ${_.upperFirst(this.name)}`);
             return false;
@@ -70,10 +74,11 @@ export class Feature {
             if (message.commend === 'setOption' && message.feature === this.name) {
                 // 同步设置 background 里 memory 和 localStorage 中的设置
                 this.options = message.options;
-                this.setOption(message.options);
+                void this.setOption(message.options);
                 sendResponse(true);
             }
         });
+        this.initialed = true;
         await callback();
     };
 
@@ -83,8 +88,13 @@ export class Feature {
     };
 
     // 设置配置
-    setOption = (options) => {
+    setOption = async (options) => {
         store.set(this.storeName, options);
+        if (options.on === true) {
+            if (!this.initialed) await this.init();
+            else await this.launch();
+        }
+        else this.pause();
     };
 
     // 启动 - 装载过程之后
@@ -92,6 +102,12 @@ export class Feature {
         console.error(`Feature ${_.upperFirst(this.name)}'s launch Function is empty!`);
         return;
     };
+
+    // 暂停 - 启动后关闭功能时调用
+    pause = () => {
+        //console.error(`Feature ${_.upperFirst(this.name)}'s pause Function is empty!`);
+        return;
+    }
 
     // 渲染特性/功能UI
     render = () => {

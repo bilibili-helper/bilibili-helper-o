@@ -4,7 +4,7 @@
  * Description: 扩展守护脚本
  */
 import 'babel-polyfill';
-import {createTab, hasNewVersion, getOption, checkNotificationPermission} from 'Utils';
+import {createTab, hasNewVersion, getOption, checkNotificationPermission, version} from 'Utils';
 import {
     DynamicCheck as FeatureDynamicCheck,
     Video as FeatureVideo,
@@ -35,34 +35,20 @@ chrome.runtime.onInstalled.addListener(function(details) {
             type: 'basic',
             iconUrl: 'statics/imgs/icon-256.png',
             title: chrome.i18n.getMessage('notificationTitle'),
-            message: chrome.i18n.getMessage('notificationExtensionUpdate')
-                           .replace('%v', chrome.runtime.getManifest().version),
+            message: chrome.i18n.getMessage('notificationExtensionUpdate').replace('%v', version),
         });
     }
 });
 /*
-//
-//chrome.runtime.onMessage.hasListener(function(request, sender, sendResponse) {
-//    console.log(request, sender, sendResponse);
-//    sendResponse({a: 1});
-//    console.log(chrome.runtime.onMessage.hasListeners());
-//    return false;
-//});
-
 // 时钟时间
 //chrome.alarms.onAlarm.addListener(function (alarm) {
-//
-//});
-
-// 推送框按钮点击事件
-//chrome.notifications.onButtonClicked.addListener(function (notificationId, index) {
 //
 //});
 
 // 请求发送前触发的事件
 // chrome.webRequest.onBeforeRequest.addListener(function(details) {
 //
-// });*/
+// });
 
 const requestFilter = {
     urls: [
@@ -74,7 +60,7 @@ const requestFilter = {
     ],
     //types: ['main_frame'],
 };
-/*
+
 //
 //chrome.webRequest.onBeforeRequest.addListener((details) => {
 //    console.log('onBeforeRequest', details);
@@ -115,9 +101,7 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
 const Video = new FeatureVideo();
 const DynamicCheck = new FeatureDynamicCheck();
 const NewWatchPage = new FeatureNewWatchPage();
-Video.launch();
-DynamicCheck.launch();
-NewWatchPage.launch();
+
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.commend === 'getOptions') {

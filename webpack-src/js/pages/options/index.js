@@ -86,6 +86,17 @@ const FilterSubPageBody = ({title, filterName, filter, handleSetOption}) => {
 class PageOptions extends React.Component {
     constructor(props) {
         super(props);
+
+        this.options = {
+            video: {
+                title: '主站',
+                optionMap: {},
+            },
+            other: {
+                title: '其他',
+                optionMap: {},
+            },
+        };
         /**
          * ! important ! 将配置导入state
          * 此处的getOption会返回当前配置和默认配置来合并的对象
@@ -100,27 +111,15 @@ class PageOptions extends React.Component {
             subPageOn: false,
             subPageTitle: null,
             subPageBody: null,
-
-            options: {
-                video: {
-                    title: '主站',
-                    optionMap: {},
-                },
-                other: {
-                    title: '其他',
-                    optionMap: {},
-                },
-            },
+            ...this.options,
         });
     }
 
     componentWillMount() {
-        const {options} = this.state;
-        const o = Object.assign({}, options);
         chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
             // 以kind字段来将设置分类到不同list
-            _.forEach(options, (option, featureName) => o[option.kind].optionMap[featureName] = option.info);
-            this.setState({options: o});
+            _.forEach(options, (option, featureName) => this.options[option.kind].optionMap[featureName] = option.info);
+            this.setState(this.options);
         });
     }
 
@@ -135,9 +134,9 @@ class PageOptions extends React.Component {
      * @param value 配置的值
      */
     handleSetOption = ({kind, feature, optionName, value}) => {
-        const {options} = this.state;
-        if (!!options[kind].optionMap[feature]) { // find it (*≧∪≦)
-            const optionObject = {...options[kind].optionMap[feature]}; // one feature in this kind of list
+        const thisKindOfFeatures = this.state[kind];
+        if (!!thisKindOfFeatures.optionMap[feature]) { // find it (*≧∪≦)
+            const optionObject = thisKindOfFeatures.optionMap[feature]; // one feature in this kind of list
             if (!optionName && !value) { // 一级开关
                 optionObject.on = !optionObject.on;
             } else if (optionName && optionObject.optionType) { // 二级开关
@@ -148,11 +147,11 @@ class PageOptions extends React.Component {
                     optionObject.value = optionName;
                 }
             }
-            options[kind].optionMap[feature] = optionObject;
+            thisKindOfFeatures.optionMap[feature] = optionObject;
             chrome.runtime.sendMessage({
                 commend: 'setOption',
                 feature, options: optionObject,
-            }, () => this.setState({options}));
+            }, () => this.setState({[kind]: thisKindOfFeatures}));
             //setOption(key, optionObject);
         }
     };
@@ -170,7 +169,8 @@ class PageOptions extends React.Component {
     };
 
     createOptionDOM = () => {
-        return _.map(this.state.options, (list, kind) => {
+        return _.map(this.options, (e, kind) => {
+            const list = this.state[kind];
             return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
                 {_.map(list.optionMap, (info, feature) => {
                     const {options = null, optionType, on, title} = info;
@@ -214,10 +214,6 @@ class PageOptions extends React.Component {
     render() {
         const {
             // feature options
-            newWatchPage,
-            dynamicCheck,
-            downloadType,
-            videoPlayerWidenType,
             sign,
             treasure,
             chatFilter,
@@ -274,7 +270,7 @@ class PageOptions extends React.Component {
                         })}
                         operation={<Radio on={modalOn}/>}
                     >Modal 测试</ListItem>
-{/*
+                    {/*
                     <ListItem
                         onClick={() => this.handleSetOption('downloadType')}
                         operation={<Radio on={downloadType.on}/>}
@@ -311,23 +307,23 @@ class PageOptions extends React.Component {
                     >播放器宽屏</ListItem>
 */}
                 </List>
-                <List title="直播" ref={i => this.liveList = i}>
+                {/*<List title="直播" ref={i => this.liveList = i}>*/}
+                    {/*<ListItem*/}
+                        {/*onClick={() => this.handleSetOption('sign')}*/}
+                        {/*operation={<Radio on={sign.on}/>}*/}
+                    {/*>自动签到</ListItem>*/}
+                    {/*<ListItem*/}
+                        {/*onClick={() => this.handleSetOption('treasure')}*/}
+                        {/*operation={<Radio on={treasure.on}/>}*/}
+                    {/*>辅助领瓜子</ListItem>*/}
+                    {/*<ListItem*/}
+                        {/*onClick={() => this.handleSetSubPage({title: '高级屏蔽设置', parent: this.liveList})}*/}
+                        {/*operation={<Button icon="arrowRight"/>}*/}
+                    {/*>聊天信息屏蔽设置</ListItem>*/}
+                {/*</List>*/}
+                <List title="关于" ref={i => this.aboutList = i}>
                     <ListItem
-                        onClick={() => this.handleSetOption('sign')}
-                        operation={<Radio on={sign.on}/>}
-                    >自动签到</ListItem>
-                    <ListItem
-                        onClick={() => this.handleSetOption('treasure')}
-                        operation={<Radio on={treasure.on}/>}
-                    >辅助领瓜子</ListItem>
-                    <ListItem
-                        onClick={() => this.handleSetSubPage({title: '高级屏蔽设置', parent: this.liveList})}
-                        operation={<Button icon="arrowRight"/>}
-                    >聊天信息屏蔽设置</ListItem>
-                </List>
-                <List title="其他" ref={i => this.otherList = i}>
-                    <ListItem
-                        onClick={() => this.handleSetSubPage({title: '通知设置', parent: this.otherList})}
+                        onClick={() => this.handleSetSubPage({title: '通知设置', parent: this.aboutList})}
                         operation={<Button icon="arrowRight"/>}
                     >通知屏蔽设置</ListItem>
                     <ListItem

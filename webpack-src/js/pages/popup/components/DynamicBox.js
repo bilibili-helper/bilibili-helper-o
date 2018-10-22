@@ -20,11 +20,11 @@ const FeedBox = styled.div.attrs({className: 'feed-box'})`
   cursor: pointer;
   &:hover {
     .feed-img {
-      filter: grayscale(0.3) brightness(0.6);
+      filter: grayscale(0) brightness(0.8);
       background-size: 100% auto;
     }
     .feed-info {
-      opacity: 1;
+      opacity: 0;
     }
   }
   &:last-of-type {
@@ -41,6 +41,7 @@ const FeedImg = styled.div.attrs({className: 'feed-img'})`
   background-size: 130% auto;
   background-position: center;
   filter: grayscale(0.5) brightness(0.4);
+  box-shadow: inset 0px 0px 50px -10px #333;
   transition: all 0.5s;
 `;
 
@@ -69,7 +70,7 @@ const FeedInfo = styled.div.attrs({className: 'feed-info'})`
   transform: scale(0.8) translateX(-20px);
   transition: all 0.3s;
   color: #fff;
-  opacity: 0;
+  opacity: 1;
 `;
 
 export class DynamicBox extends React.Component {

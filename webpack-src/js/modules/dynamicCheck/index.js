@@ -1,7 +1,7 @@
 /**
  * Author: Ruo
  * Create: 2018-08-20
- * Description: 我的关注 视频自动提送 功能
+ * Description: 我的关注 视频自动推送 功能
  */
 import $ from 'jquery';
 import _ from 'lodash';
@@ -26,11 +26,23 @@ export class DynamicCheck extends Feature {
                 ],
             },
         });
-        this.feedList = [];
-        this.lastCheckTime = Date.now();
+        this.addListener();
     }
 
     launch = () => {
+        this.feedList = [];
+        this.lastCheckTime = Date.now();
+        chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
+        this.checkUnread();
+    };
+
+    pause = () => {
+        this.feedList = [];
+        this.lastCheckTime = Date.now();
+        chrome.alarms.clear('dynamicCheck');
+    }
+
+    addListener = () => {
         chrome.alarms.onAlarm.addListener((alarm) => {
             switch (alarm.name) {
                 case 'dynamicCheck':
@@ -38,7 +50,6 @@ export class DynamicCheck extends Feature {
                     break;
             }
         });
-        chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
         chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
             if (this.feedList[notificationId] && index === 0) {
                 chrome.notifications.clear(notificationId);
@@ -48,8 +59,7 @@ export class DynamicCheck extends Feature {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getDynamicList') sendResponse(this.feedList);
         });
-        this.checkUnread();
-    };
+    }
 
     // 检查未读推送
     checkUnread = () => {
