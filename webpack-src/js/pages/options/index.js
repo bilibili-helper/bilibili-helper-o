@@ -112,6 +112,7 @@ class PageOptions extends React.Component {
             subPageTitle: null,
             subPageBody: null,
             ...this.options,
+            debug: false,
         });
     }
 
@@ -120,6 +121,17 @@ class PageOptions extends React.Component {
             // 以kind字段来将设置分类到不同list
             _.forEach(options, (option, featureName) => this.options[option.kind].optionMap[featureName] = option.options);
             this.setState(this.options);
+        });
+
+        // 监听配置更新
+        chrome.runtime.onMessage.addListener(((message, sender, sendResponse) => {
+            if (message.commend === 'debugMode' && message.value !== undefined) {
+                this.setState({debug: message.value});
+            }
+        }));
+        // 获取调试模式
+        chrome.runtime.sendMessage({commend: 'getOption', feature: 'Debug'}, (options) => {
+            this.setState({debug: options.on});
         });
     }
 
@@ -222,6 +234,7 @@ class PageOptions extends React.Component {
             subPageTitle,
             subPageBody,
             parent,
+            debug,
         } = this.state;
         return <React.Fragment>
             {/*<Header title="设置"/>*/}
@@ -249,6 +262,7 @@ class PageOptions extends React.Component {
                     />}
                 </SubPage>
                 {this.createOptionDOM()}
+{/*
                 <List title="主站" ref={i => this.mainList = i}>
                     <ListItem
                         children="Sub Page 测试"
@@ -265,7 +279,7 @@ class PageOptions extends React.Component {
                         })}
                         operation={<Radio on={modalOn}/>}
                     >Modal 测试</ListItem>
-                    {/*
+
                     <ListItem
                         onClick={() => this.handleSetOption('downloadType')}
                         operation={<Radio on={downloadType.on}/>}
@@ -300,8 +314,8 @@ class PageOptions extends React.Component {
                             />,
                         }}
                     >播放器宽屏</ListItem>
-*/}
                 </List>
+*/}
                 {/*<List title="直播" ref={i => this.liveList = i}>*/}
                 {/*<ListItem*/}
                 {/*onClick={() => this.handleSetOption('sign')}*/}
@@ -325,7 +339,7 @@ class PageOptions extends React.Component {
                         //icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
-                        second={`版本 ${version}（正式版）`}
+                        second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
                         separator
                         operation={<Button normal>检查更新</Button>}
                     />

@@ -8,43 +8,42 @@ import _ from 'lodash';
 import React from 'react';
 import {DanmuGUI} from './danmu';
 
-/**
- * 必须写在外面，写在GUI内部会来不及监听
- * @type {{}}
- */
-let videoInfo = {};
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.commend === 'videoInfo') {
-        videoInfo = message.videoInfo;
-        console.log(videoInfo);
-    }
-});
-
 export class VideoGUI extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             options: {},
+            cid: undefined,
         };
+        this.addListener();
     }
 
     componentWillMount() {
         chrome.runtime.sendMessage({
             commend: 'getOption',
             feature: 'Video',
-        }, (options) => {
-            this.setState({...options});
+        }, (options) => this.setState({...options}));
+
+        chrome.runtime.sendMessage({commend: 'getVideoCid'}, (cid) => {
+            this.setState({cid});
+        });
+
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+           if(message.commend === 'newCid' && message.cid !== undefined) {
+               this.setState({cid: message.cid});
+           }
         });
     }
 
-    addListener = () => {};
+    addListener = () => {
+    };
 
     render() {
-        const {options} = this.state;
+        const {options, cid} = this.state;
         //console.log(this.state, options, _.find(options, {key: 'danmu'}));
         return (
             <React.Fragment>
-                <DanmuGUI options={_.find(options, {key: 'danmu'}) || {}} cid={videoInfo.cid}/>
+                <DanmuGUI options={_.find(options, {key: 'danmu'}) || {}} cid={cid}/>
             </React.Fragment>
         );
     }

@@ -16,14 +16,19 @@ const BtnIcon = styled(Icon)`
 
 const HelperBtn = styled.span`
   display: block;
-  width: 90px;
   padding: 0 15px;
-  border: 1px solid #e5e9ef;
   border-radius: 4px;
   transition: all 0.3s;
+  width: 120px;
+  .func-module & {
+    width: 90px;
+    border: 1px solid #e5e9ef;
+    &:hover {
+      border-color: rgb(0, 161, 214);
+    }
+  }
   &:hover, &.show {
     color: rgb(0, 161, 214);
-    border-color: rgb(0, 161, 214);
   }
 `;
 

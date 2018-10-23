@@ -82,7 +82,7 @@ const DanmuListLine = styled.div`
     overflow: hidden;
   }
   & .author {
-    flex-shrink: 1;
+    flex-shrink: 0;
     width: 100px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -115,16 +115,25 @@ export class DanmuGUI extends React.Component {
         this.addListener();
     }
 
+    componentDidUpdate(prevProps) {
+        /**
+         * 如下地址格式的视频页面加载完需要主动加载弹幕列表
+         * https://www.bilibili.com/video/av7895666
+         * 除此之外都被动加载
+         */
+        if (prevProps.cid !== this.props.cid && this.props.cid && _.isEmpty(this.orderedJSON)) {
+            this.getDANMUList(this.props.cid);
+        }
+    }
+
     addListener = () => {
-        const {cid} = this.props;
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'historyDanmu') {
+            if (message.commend === 'loadHistoryDanmu') {
                 if (message.date) {
-                    this.getDANMUList(cid, message.date);
+                    this.getDANMUList(this.props.cid, message.date);
                 } else console.error(`Error history danmu date: ${message.date}`);
-            } else if (message.commend === 'currentDanmu') {
-                console.log('currentDanmu', cid);
-                this.getDANMUList(cid);
+            } else if (message.commend === 'loadCurrentDanmu') {
+                this.getDANMUList(this.props.cid);
             }
         });
     };
@@ -196,16 +205,12 @@ export class DanmuGUI extends React.Component {
 
     // 将弹幕数据以时间顺序排序
     sortJSONByTime = (originJSON) => {
-        const orderedJSON = {};
-        Object.keys(originJSON).sort().forEach((key) => {
-            orderedJSON[key] = originJSON[key];
-        });
-        return orderedJSON;
+        return _.sortBy(originJSON, 'time');
     };
 
     // 将xml文档转化为json
     danmuDocument2JSON = (document) => {
-        const list = {};
+        const list = [];
         _.forEach(document.getElementsByTagName('d'), (d) => {
             const [
                 time, danmuMode, fontSize, color, unixTime,
@@ -213,7 +218,7 @@ export class DanmuGUI extends React.Component {
                 authorHash, rowId,
             ] = d.getAttribute('p').split(',');
             const danmu = d.innerHTML;
-            list[parseTime(time * 1000)] = {danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu};
+            list.push({danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu, time: parseTime(time * 1000)});
         });
         return {
             cid: Number(document.getElementsByTagName('chatid')[0].innerHTML),
@@ -232,7 +237,7 @@ export class DanmuGUI extends React.Component {
             const {count, list} = this.orderedJSON;
             this.setState({danmuJSON: {cid, count, list}});
         } else {
-            const list = {};
+            const list = [];
             let count = 0;
             _.forEach(this.orderedJSON.list, (data, time) => {
                 const index = data.danmu.indexOf(value);
@@ -240,7 +245,7 @@ export class DanmuGUI extends React.Component {
                     count++;
                     const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
                     // 这里一定要复制一份，不然会修改原数据
-                    list[time] = {...data, danmu};
+                    list.push({...data, danmu});
                 }
             });
             this.setState({danmuJSON: {cid, count, list}});
@@ -252,7 +257,7 @@ export class DanmuGUI extends React.Component {
         let extracted = /^b(\d+)$/.exec(authorHash);
         let uids = [];
         if (extracted && extracted[1]) {
-            uids = extracted[1];
+            uids = [extracted[1]];
         } else {
             uids = crcEngine.crack(authorHash);
         }
@@ -261,7 +266,6 @@ export class DanmuGUI extends React.Component {
             authorHashMap[authorHash] = _.compact(res)[0];
             this.setState({authorHashMap});
         });
-        //console.log(authorHash, uids);
     };
 
     handleAuthorClick = (uid) => {
@@ -269,13 +273,13 @@ export class DanmuGUI extends React.Component {
         if (!queryUserMode) {
             const authorHash = _.findKey(this.state.authorHashMap, (id) => id === uid);
             const {cid, list} = this.orderedJSON;
-            const queryList = {};
+            const queryList = [];
             let count = 0;
-            _.forEach(list, (data, time) => {
+            _.forEach(list, (data) => {
                 if (data.authorHash === authorHash) {
                     count++;
                     // 这里一定要复制一份，不然会修改原数据
-                    queryList[time] = {...data};
+                    queryList.push({...data});
                 }
             });
             this.queryUserModeTemplateMap = {...this.state.danmuJSON};
@@ -298,15 +302,15 @@ export class DanmuGUI extends React.Component {
         const {on = false} = options;
         return on ? (
             <DanmuWrapper>
-                <Title>弹幕发送者查询{danmuJSON.count && <span className="count">{danmuJSON.count} 条</span>}</Title>
+                <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
                 <DanmuList>
-                    {loaded && !loading && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, time) => {
-                        const {danmu, authorHash} = danmuData;
+                    {loaded && !loading && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
+                        const {danmu, authorHash, time} = danmuData;
                         const uid = authorHashMap[authorHash];
                         const authorName = this.userMap[uid] ? this.userMap[uid].name : '';
                         return (
                             <DanmuListLine
-                                key={time}
+                                key={index}
                                 title={`[${time}] ${danmu} ${authorName ? `by:${authorName}` : ''}`}
                                 onClick={() => uid ? this.handleAuthorClick(uid) : this.handleDanmuLineClick(authorHash)}
                                 hasQueried={authorName}

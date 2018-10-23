@@ -77,6 +77,7 @@ class PagePopup extends React.Component {
         super(props);
         this.state = {
             hasLogin: false,
+            debug: false,
         };
 
         this.feedList = {};
@@ -85,10 +86,20 @@ class PagePopup extends React.Component {
     componentWillMount() {
         isLogin().then(res => this.setState({hasLogin: res}));
         chrome.browserAction.setBadgeText({text: ''});
+        // 监听配置更新
+        chrome.runtime.onMessage.addListener(((message, sender, sendResponse) => {
+            if (message.commend === 'debugMode' && message.value !== undefined) {
+                this.setState({debug: message.value});
+            }
+        }));
+        // 获取调试模式
+        chrome.runtime.sendMessage({commend: 'getOption', feature: 'Debug'}, (options) => {
+            this.setState({debug: options.on});
+        });
     }
 
     render() {
-        const {hasLogin} = this.state;
+        const {hasLogin, debug} = this.state;
         return (
             <Main>
                 <DynamicBox/>
@@ -101,7 +112,7 @@ class PagePopup extends React.Component {
                         <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
                     </React.Fragment>}
                     <PopupButton onClick={() => createTab(getLink('option'))}>{__('goOption')}</PopupButton>
-                    <Title><span>Bilibili Helper</span><span>{version}</span></Title>
+                    <Title><span>Bilibili Helper</span><span>{debug ? 'Beta.' : ''}{version}</span></Title>
                 </PopupBody>
             </Main>
         );

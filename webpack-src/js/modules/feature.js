@@ -103,8 +103,13 @@ export class Feature {
         if (options.on === true) {
             if (!this.initialed) await this.init();
             else await this.launch();
-        }
-        else this.pause();
+        } else this.pause();
+        this.afterSetOption(options);
+    };
+
+    // 设置之后运行的钩子函数
+    afterSetOption = () => {
+
     };
 
     // 启动 - 装载过程之后
