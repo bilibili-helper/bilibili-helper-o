@@ -145,8 +145,19 @@ export const getLink = (url_name) => {
             return chrome.extension.getURL('options.html');
         case 'dynamic':
             const type = getOption('newWatchPage').value;
-            return  type === 'new' ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
+            return type === 'new' ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
         case 'favourite':
             return 'https://space.bilibili.com/';
     }
+};
+
+/**
+ * 将毫秒数转化为XX:XX格式的字符串
+ * @param time
+ * @return {string}
+ */
+export const parseTime = (time) => {
+    const minute = parseInt(time / 60000);
+    const second = parseInt((time / 1000) % 60);
+    return String(minute).padStart(2, '0') + ':' + String(second).padStart(2, '0');
 };

@@ -11,7 +11,7 @@ import {createTab} from 'Utils';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
   padding: 8px 0 8px 10px;
-  max-height: 395px;
+  max-height: 225px;
   overflow: auto;
 `;
 const FeedBox = styled.div.attrs({className: 'feed-box'})`
@@ -24,7 +24,7 @@ const FeedBox = styled.div.attrs({className: 'feed-box'})`
       background-size: 100% auto;
     }
     .feed-info {
-      opacity: 0;
+      //opacity: 0;
     }
   }
   &:last-of-type {

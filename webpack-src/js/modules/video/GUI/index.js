@@ -4,18 +4,28 @@
  * Description:
  */
 
+import _ from 'lodash';
 import React from 'react';
-import styled from 'styled-components';
+import {DanmuGUI} from './danmu';
 
-const VideoWrapper = styled.div.attrs({className: 'bilibili-helper-video-wrapper'})``;
-
-const Title = styled.div.attrs({className: 'bilibili-helper-video-gui-title'})`
-  font-size: 12px;
-`;
+/**
+ * 必须写在外面，写在GUI内部会来不及监听
+ * @type {{}}
+ */
+let videoInfo = {};
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.commend === 'videoInfo') {
+        videoInfo = message.videoInfo;
+        console.log(videoInfo);
+    }
+});
 
 export class VideoGUI extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            options: {},
+        };
     }
 
     componentWillMount() {
@@ -23,14 +33,18 @@ export class VideoGUI extends React.Component {
             commend: 'getOption',
             feature: 'Video',
         }, (options) => {
-            console.log(options);
+            this.setState({...options});
         });
     }
 
+    addListener = () => {};
+
     render() {
+        const {options} = this.state;
+        //console.log(this.state, options, _.find(options, {key: 'danmu'}));
         return (
             <React.Fragment>
-                <Title>弹幕发送者查询</Title>
+                <DanmuGUI options={_.find(options, {key: 'danmu'}) || {}} cid={videoInfo.cid}/>
             </React.Fragment>
         );
     }

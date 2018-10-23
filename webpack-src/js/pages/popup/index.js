@@ -91,11 +91,12 @@ class PagePopup extends React.Component {
         const {hasLogin} = this.state;
         return (
             <Main>
-                {/*<DynamicBox/>*/}
+                <DynamicBox/>
                 <PopupBody>
                     <PopupButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</PopupButton>
                     <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>
-                    {hasLogin && <React.Fragment> {/* 登录后显示“我的关注”和“我的收藏” */}
+                    {/* 登录后显示“我的关注”和“我的收藏” */}
+                    {hasLogin && <React.Fragment>
                         <PopupButton onClick={() => createTab(getLink('dynamic'))}>{__('goDynamic')}</PopupButton>
                         <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
                     </React.Fragment>}

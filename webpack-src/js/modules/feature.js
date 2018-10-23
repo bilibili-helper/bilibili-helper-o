@@ -29,7 +29,7 @@ export class Feature {
      * @param options {object} 特性的额外配置选项，如过滤列表的配置信息
      */
     constructor({name, kind, GUI = null, optionDOM = null, permissions = {}, options = {}}) {
-        this.name = name;
+        this.name = _.upperFirst(name);
         this.storeName = `bilibili-helper-${this.name}`;
         this.kind = kind;
         this.GUI = GUI; // 功能/特性的UI
@@ -59,7 +59,7 @@ export class Feature {
     init = async (callback = () => {}) => {
         const {on = false} = this.options;
         if (on === false) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
-            console.warn(`Feature ${_.upperFirst(this.name)} OFF`);
+            console.warn(`Feature ${this.name} OFF`);
             return on;
         } else if (on === true) {
             const {pass, msg} = await this.checkPermission();

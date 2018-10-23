@@ -3,10 +3,326 @@
  * Create: 2018/10/22
  * Description:
  */
+import _ from 'lodash';
+import $ from 'jquery';
+import React from 'react';
+import styled from 'styled-components';
+import {parseTime} from 'Utils';
+import {theme} from 'Styles';
+import {Crc32Engine} from 'Libs/crc32';
 
-export const loadGUI = (container = null) => {
-    if (!container) {
-        console.error('')
-        return;
+const {color} = theme;
+const crcEngine = new Crc32Engine();
+
+const DanmuWrapper = styled.div.attrs({className: 'bilibili-helper-danmu-wrapper'})``;
+
+const Title = styled.div.attrs({className: 'bilibili-helper-video-gui-title'})`
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  .count {
+    margin-left: 10px;
+    color: ${color('google-grey-500')};
+  }
+`;
+
+const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
+  max-height: 150px;
+  padding: 1px;
+  border: 1px solid #eee;
+  border-radius: 4px 4px 0 0;
+  font-size: 12px;
+  overflow: auto;
+  & .no-data {
+    
+  }
+`;
+
+const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
+  display: block;
+  width: 100%;
+  padding: 4px 6px;
+  box-sizing: border-box;
+  border: 1px solid #eee;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  font-size: 12px;
+`;
+
+const DanmuListLine = styled.div`
+  display: flex;
+  margin-bottom: 1px;
+  padding: 0 8px 1px;
+  line-height: 18px;
+  border-radius: 2px;
+  background-color: ${({hasQueried}) => hasQueried ? '#d6e8f5' : 'white'};
+  cursor: pointer;
+  &:hover {
+    color: #fff;
+    background-color: #00a1d6;
+    .target-words {
+      color: #fff;
+    }
+  }
+  & .time {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 35px;
+    padding-right: 7px;
+  }
+  & .danmu {
+    flex-grow: 1;
+    margin: 0 7px 0 3px;
+    padding: 0 7px;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  & .author {
+    flex-shrink: 1;
+    width: 100px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  & .target-words {
+    font-weight: bold;
+    color: #00a1d6;
+  }
+`;
+
+export class DanmuGUI extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loaded: false,
+            loading: false,
+            danmuJSON: {},
+            filterText: '',
+            /**
+             * 需要一个字段用于通知react重新渲染组件
+             * 这里选择使用较为简单的authorHashMap
+             */
+            authorHashMap: {}, // authorHash -> uid
+            queryUserMode: null, // 用户UID查询模式
+        };
+        this.orderedJSON = {}; // 经过弹幕发送时间排序的数据
+        this.userMap = {}; // uid -> data
+        this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
+        this.addListener();
+    }
+
+    addListener = () => {
+        const {cid} = this.props;
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.commend === 'historyDanmu') {
+                if (message.date) {
+                    this.getDANMUList(cid, message.date);
+                } else console.error(`Error history danmu date: ${message.date}`);
+            } else if (message.commend === 'currentDanmu') {
+                console.log('currentDanmu', cid);
+                this.getDANMUList(cid);
+            }
+        });
+    };
+
+    // 获取弹幕xml数据源
+    getDANMUList = (cid, date) => {
+        const url = 'https://api.bilibili.com/x/v1/dm/list.so';
+        const historyUrl = 'https://api.bilibili.com/x/v2/dm/history';
+        !!cid && !this.state.loading && $.ajax({
+            method: 'get',
+            url: date ? historyUrl : url,
+            data: {
+                platform: 'bilibiliHelper',
+                type: 1,
+                oid: cid,
+                date,
+            },
+            contentType: 'text/xml',
+            beforeSend: () => {
+                this.setState({loading: true});
+            },
+            success: (danmuDocument) => {
+                const danmuJSON = this.danmuDocument2JSON(danmuDocument);
+                danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
+                this.orderedJSON = {...danmuJSON};
+                this.setState({
+                    danmuJSON: danmuJSON,
+                    loaded: true,
+                    loading: false,
+                });
+            },
+            error: (res) => {
+                console.error(res);
+                this.setState({loading: false});
+            },
+        });
+    };
+
+    // 通过uid获取用户信息
+    getUserInfoByUid = (uid) => {
+        return new Promise((resolve) => {
+            if (this.userMap[uid]) resolve(this.userMap[uid]);
+            else uid && $.ajax({
+                method: 'get',
+                url: 'https://api.bilibili.com/x/web-interface/card',
+                data: {mid: uid},
+                success: ({code, data}) => {
+                    if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
+                        this.userMap[uid] = {...data.card};
+                        resolve(uid);
+                    } else resolve(false);
+                },
+                error: (res) => console.log(res),
+            });
+        });
+    };
+
+    // 检查机器人用户
+    isRobotUser = (userData = {}) => {
+        const {archive_count, article_count, follower, card} = userData;
+        const {level_info, official_verify, name} = card;
+        const {current_level, current_exp} = level_info; // 当前用户等级
+        //const {type} = official_verify; // 正式用户!?(･_･;?
+        if (archive_count === 0 && article_count === 0 && follower === 0 && current_level === 0 && current_exp === 0
+            && name === '') {
+            return true;
+        } else return false;
+    };
+
+    // 将弹幕数据以时间顺序排序
+    sortJSONByTime = (originJSON) => {
+        const orderedJSON = {};
+        Object.keys(originJSON).sort().forEach((key) => {
+            orderedJSON[key] = originJSON[key];
+        });
+        return orderedJSON;
+    };
+
+    // 将xml文档转化为json
+    danmuDocument2JSON = (document) => {
+        const list = {};
+        _.forEach(document.getElementsByTagName('d'), (d) => {
+            const [
+                time, danmuMode, fontSize, color, unixTime,
+                unknow,
+                authorHash, rowId,
+            ] = d.getAttribute('p').split(',');
+            const danmu = d.innerHTML;
+            list[parseTime(time * 1000)] = {danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu};
+        });
+        return {
+            cid: Number(document.getElementsByTagName('chatid')[0].innerHTML),
+            count: Number(document.getElementsByTagName('maxlimit')[0].innerHTML),
+            list,
+        };
+        this.setState({loaded: true});
+    };
+
+    // 搜索框编辑事件
+    handleInputChange = (e) => {
+        const value = e.target.value;
+        const {danmuJSON} = this.state;
+        const {cid} = danmuJSON;
+        if (!e.target.value) {
+            const {count, list} = this.orderedJSON;
+            this.setState({danmuJSON: {cid, count, list}});
+        } else {
+            const list = {};
+            let count = 0;
+            _.forEach(this.orderedJSON.list, (data, time) => {
+                const index = data.danmu.indexOf(value);
+                if (!!~index) {
+                    count++;
+                    const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
+                    // 这里一定要复制一份，不然会修改原数据
+                    list[time] = {...data, danmu};
+                }
+            });
+            this.setState({danmuJSON: {cid, count, list}});
+        }
+    };
+
+    // 当用户点击弹幕列表行时触发
+    handleDanmuLineClick = (authorHash) => {
+        let extracted = /^b(\d+)$/.exec(authorHash);
+        let uids = [];
+        if (extracted && extracted[1]) {
+            uids = extracted[1];
+        } else {
+            uids = crcEngine.crack(authorHash);
+        }
+        Promise.all(uids.map((uid) => this.getUserInfoByUid(uid))).then((res) => {
+            const {authorHashMap} = this.state;
+            authorHashMap[authorHash] = _.compact(res)[0];
+            this.setState({authorHashMap});
+        });
+        //console.log(authorHash, uids);
+    };
+
+    handleAuthorClick = (uid) => {
+        const {queryUserMode} = this.state;
+        if (!queryUserMode) {
+            const authorHash = _.findKey(this.state.authorHashMap, (id) => id === uid);
+            const {cid, list} = this.orderedJSON;
+            const queryList = {};
+            let count = 0;
+            _.forEach(list, (data, time) => {
+                if (data.authorHash === authorHash) {
+                    count++;
+                    // 这里一定要复制一份，不然会修改原数据
+                    queryList[time] = {...data};
+                }
+            });
+            this.queryUserModeTemplateMap = {...this.state.danmuJSON};
+            this.setState({
+                queryUserMode: true,
+                danmuJSON: {cid, count, list: queryList},
+            });
+        } else {
+            this.setState({
+                queryUserMode: false,
+                danmuJSON: this.queryUserModeTemplateMap,
+            });
+        }
+
+    };
+
+    render() {
+        const {options} = this.props;
+        const {loading, loaded, danmuJSON, authorHashMap} = this.state;
+        const {on = false} = options;
+        return on ? (
+            <DanmuWrapper>
+                <Title>弹幕发送者查询{danmuJSON.count && <span className="count">{danmuJSON.count} 条</span>}</Title>
+                <DanmuList>
+                    {loaded && !loading && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, time) => {
+                        const {danmu, authorHash} = danmuData;
+                        const uid = authorHashMap[authorHash];
+                        const authorName = this.userMap[uid] ? this.userMap[uid].name : '';
+                        return (
+                            <DanmuListLine
+                                key={time}
+                                title={`[${time}] ${danmu} ${authorName ? `by:${authorName}` : ''}`}
+                                onClick={() => uid ? this.handleAuthorClick(uid) : this.handleDanmuLineClick(authorHash)}
+                                hasQueried={authorName}
+                            >
+                                <span className="time">{time}</span>
+                                <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
+                                <span
+                                    className="author"
+                                    data-usercard-mid={uid}
+                                >{authorName}</span>
+                            </DanmuListLine>
+                        );
+                    }) : <DanmuListLine>无数据</DanmuListLine>}
+                </DanmuList>
+                <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
+            </DanmuWrapper>
+        ) : null;
     }
 }

@@ -3,7 +3,7 @@
 
 const CRC32_POLY = 0xEDB88320;
 
-class Crc32Engine {
+export class Crc32Engine {
     static initCrc32Table(table) {
         for (let i = 0; i < 256; i++) {
             let currCrc = i;

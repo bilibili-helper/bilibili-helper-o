@@ -38,7 +38,9 @@
 #bangumi_detail .info-title {
 	& > a {
 		h2 {
-			width: 300px !important;
+			width: auto !important;
+			max-width: 300px !important;
+			min-width: 170px !important;
 		}
 	}
 	.func-module {
@@ -57,8 +59,6 @@
 			text-align: center;
 			font-size: 14px;
 			color: #6d757a;
-			border: 1px solid #e5e9ef;
-			border-radius: 4px;
 			&:hover {
 				color: #00a1d6;
 				border-color: #00a1d6;

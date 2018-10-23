@@ -26,13 +26,16 @@ const Content = styled.div.attrs({
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.14);
   z-index: 1000;
   cursor: auto;
+  & > * {
+    width: 100%;
+    text-align: initial;
+  }
 `;
 
 export class ToolContent extends React.Component {
     render() {
         return (
             <Content show={this.props.show}/>
-        )
+        );
     }
-
 }

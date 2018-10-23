@@ -31,7 +31,7 @@ export const InstallDOM = (callback = () => {}) => {
             container.append(helperDOM);
             ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0]);
             typeof callback === 'function' && callback(helperDOM.find('.bilibili-helper-content'));
-        }, 1000);
+        }, 500);
     });
 
     observer.observe(container[0], {

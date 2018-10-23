@@ -125,30 +125,34 @@ class PageOptions extends React.Component {
 
     /**
      * 设置配置
-     * @param key 配置名
-     * @param value 配置的值
      */
-    handleSetOption = ({kind, feature, optionName, value}) => {
+    handleSetOption = ({kind = '', feature, optionName, on}) => {
         const thisKindOfFeatures = this.state[kind];
         if (!!thisKindOfFeatures.optionMap[feature]) { // find it (*≧∪≦)
             const optionObject = thisKindOfFeatures.optionMap[feature]; // one feature in this kind of list
-            if (!optionName && !value) { // 一级开关
+            if (!optionName && !on) { // 一级开关
                 optionObject.on = !optionObject.on;
             } else if (optionName && optionObject.optionType) { // 二级开关
-                if (optionObject.optionType === 'checkbox' && value !== undefined) { // 多选组的值存于选项数组中 (￣.￣)
+                if (optionObject.optionType === 'checkbox' && on !== undefined) { // 多选组的值存于选项数组中 (￣.￣)
                     const optionIndex = _.findIndex(optionObject.options, {key: optionName});
-                    optionObject.options[optionIndex].value = value;
+                    optionObject.options[optionIndex].on = on;
                 } else if (optionObject.optionType === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
                     optionObject.value = optionName;
+                } else {
+                    console.error(`Undefined optionType: ${optionObject.optionType} (⊙ˍ⊙)!`);
+                    return;
                 }
+            } else {
+                console.error(`Error Option object Σ(oﾟдﾟoﾉ)!`);
+                return;
             }
             thisKindOfFeatures.optionMap[feature] = optionObject;
+            console.log(thisKindOfFeatures);
             chrome.runtime.sendMessage({
                 commend: 'setOption',
                 feature, options: optionObject,
             }, () => this.setState({[kind]: thisKindOfFeatures}));
-            //setOption(key, optionObject);
-        }
+        } else console.error(`Not find kind[${kind}]'s option (*ﾟДﾟ*)!`);
     };
 
     handleSetSubPage = ({title = null, parent = null, body = null}) => {
@@ -168,42 +172,38 @@ class PageOptions extends React.Component {
             const list = this.state[kind];
             return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
                 {_.map(list.optionMap, (info, feature) => {
-                    const {options = null, optionType, on, title} = info;
-                    let SubListChildren;
-                    if (options) {
-                        switch (optionType) {
-                            case 'checkbox':
-                                SubListChildren = <CheckBoxGroup
-                                    data={options}
-                                    onClick={(optionName, value) => this.handleSetOption({
-                                        kind, feature, optionName, value,
-                                    })}
-                                />;
-                                break;
-                            case 'radio':
-                                SubListChildren = <RadioButtonGroup
-                                    value={info.value}
-                                    data={info.options}
-                                    onClick={(optionName) => this.handleSetOption({
-                                        kind, feature, optionName,
-                                    })}
-                                />;
-                                break;
-                        }
-                    }
+                    let SubListChildren = this.createSubListComponent({kind, feature, info});
                     return <ListItem
                         key={feature}
                         onClick={() => this.handleSetOption({kind, feature})}
-                        operation={<Radio on={on}/>}
-                        subList={options ? {
-                            hide: !on,
-                            theme: {twoLine: false},
-                            children: SubListChildren,
-                        } : {}}
-                    >{title}</ListItem>;
+                        operation={<Radio on={info.on}/>}
+                        subList={SubListChildren ? {hide: !info.on, children: SubListChildren} : {}}
+                    >{info.title}</ListItem>;
                 })}
             </List>;
         });
+    };
+
+    createSubListComponent = ({kind = '', feature = '', info = {}}) => {
+        let SubListChildren = null;
+        if (!!info.options && !!info.optionType) {
+            switch (info.optionType) {
+                case 'checkbox':
+                    SubListChildren = <CheckBoxGroup
+                        data={info.options}
+                        onClick={(optionName, on) => this.handleSetOption({kind, feature, optionName, on})}
+                    />;
+                    break;
+                case 'radio':
+                    SubListChildren = <RadioButtonGroup
+                        value={info.value}
+                        data={info.options}
+                        onClick={(optionName) => this.handleSetOption({kind, feature, optionName})}
+                    />;
+                    break;
+            }
+        }
+        return SubListChildren;
     };
 
     render() {
@@ -303,18 +303,18 @@ class PageOptions extends React.Component {
 */}
                 </List>
                 {/*<List title="直播" ref={i => this.liveList = i}>*/}
-                    {/*<ListItem*/}
-                        {/*onClick={() => this.handleSetOption('sign')}*/}
-                        {/*operation={<Radio on={sign.on}/>}*/}
-                    {/*>自动签到</ListItem>*/}
-                    {/*<ListItem*/}
-                        {/*onClick={() => this.handleSetOption('treasure')}*/}
-                        {/*operation={<Radio on={treasure.on}/>}*/}
-                    {/*>辅助领瓜子</ListItem>*/}
-                    {/*<ListItem*/}
-                        {/*onClick={() => this.handleSetSubPage({title: '高级屏蔽设置', parent: this.liveList})}*/}
-                        {/*operation={<Button icon="arrowRight"/>}*/}
-                    {/*>聊天信息屏蔽设置</ListItem>*/}
+                {/*<ListItem*/}
+                {/*onClick={() => this.handleSetOption('sign')}*/}
+                {/*operation={<Radio on={sign.on}/>}*/}
+                {/*>自动签到</ListItem>*/}
+                {/*<ListItem*/}
+                {/*onClick={() => this.handleSetOption('treasure')}*/}
+                {/*operation={<Radio on={treasure.on}/>}*/}
+                {/*>辅助领瓜子</ListItem>*/}
+                {/*<ListItem*/}
+                {/*onClick={() => this.handleSetSubPage({title: '高级屏蔽设置', parent: this.liveList})}*/}
+                {/*operation={<Button icon="arrowRight"/>}*/}
+                {/*>聊天信息屏蔽设置</ListItem>*/}
                 {/*</List>*/}
                 <List title="关于" ref={i => this.aboutList = i}>
                     <ListItem
