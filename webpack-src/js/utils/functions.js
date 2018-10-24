@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * Author: Ruo
  * Create: 2018-08-19
@@ -160,4 +162,45 @@ export const parseTime = (time) => {
     const minute = parseInt(time / 60000);
     const second = parseInt((time / 1000) % 60);
     return String(minute).padStart(2, '0') + ':' + String(second).padStart(2, '0');
+};
+
+/**
+ * 获取页面中的目标元素
+ * 会在指定目标不再变化后返回
+ * @param target {array[string]} 需要查找的dom的class或id等字符串.!注意! 如果需要同时筛选父元素和子元素，子元素要写在父元素前面
+ * @param callback {function}
+ * @param t {number} 检测间隔
+ */
+export const getTargetDOM = (target, callback = () => {}, t = 500) => {
+    const container = (() => {
+        const get = (name) => $(name).length > 0 ? $(name) : false;
+        if (typeof target === 'string') {
+            return get(target);
+        } else if (target instanceof Array) {
+            const t = _.compact(target.map((name) => get(name)));
+            if (t.length >= 1) return _.compact(target.map((name) => get(name)))[0];
+            else console.error(`No target of name: ${target}!`);
+        }
+    })();
+    if (container) {
+        /**
+         * 插入助手DOM
+         * 在B站原有脚本没有执行完时插入会导致结构莫名被破坏，原因还未查明
+         * 故使用observer检测当目标容器的父容器所有加在变化都发生后再执行插入操作
+         */
+        let timer;
+        new MutationObserver(function(mutationList, observer) {
+            if (!!timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                observer.disconnect();
+                typeof callback === 'function' && callback(container);
+            }, t);
+        }).observe(container[0], {
+            childList: true,
+            attributes: true,
+            attributeOldValue: true,
+            subtree: true,
+        });
+    } else console.error('No target!');
+
 };

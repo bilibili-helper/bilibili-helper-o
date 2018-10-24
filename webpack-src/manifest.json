@@ -32,6 +32,12 @@
                 "*://*.bilibili.com/video/av*"
             ],
             "run_at": "document_end"
+        }, {
+            "all_frames": false,
+            "js": ["live.js"],
+            "css": ["styles/live.css"],
+            "matches": ["*://live.bilibili.com/*"],
+            "run_at": "document_end"
         }
     ],
     "icons": {

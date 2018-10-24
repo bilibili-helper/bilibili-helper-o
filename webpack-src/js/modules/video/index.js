@@ -31,6 +31,29 @@ export class Video extends Feature {
     addListener = () => {
         const requestFilter = {
             urls: [
+                /**
+                 * 新页面首次必定加载
+                 */
+                //'*://api.bilibili.com/x/web-interface/view?aid=*', // aid 获取视频数据，非清晰度和下载地址
+                //'*://api.bilibili.com/x/player/playurl*', // aid cid qn otype=json 视频源地址，清晰度
+
+                /**
+                 * 老页面必定加载
+                 */
+                //'*://api.bilibili.com/x/web-interface/archive/related?aid=*', // aid 相关视频推荐
+                //'*://bangumi.bilibili.com/player/web_api/v2/playurl*', // cid 视频源地址，清晰度
+
+                //'*://api.bilibili.com/x/player/playurl*', // 视频源地址，清晰度
+                /**
+                 * 这是一个讨巧的地址用于获取请求页面的cid
+                 * 凡是诸如'https://www.bilibili.com/video/av7895666'这样的视频地址都通过该地址获取cid
+                 */
+                //'*://data.bilibili.com/v/flashplay/h5_player_op*',
+                //'*://api.bilibili.com/x/player/pagelist?aid=*',
+                /**
+                 * 以上
+                 */
+
                 //'*://*.bilibili.com/bangumi/play/ss*',
                 //'*://*.bilibili.com/bangumi/play/ep*',
                 //'*://*.bilibili.com/video/av*',

@@ -92,6 +92,10 @@ class PageOptions extends React.Component {
                 title: '主站',
                 optionMap: {},
             },
+            live: {
+                title: '直播',
+                optionMap: {},
+            },
             other: {
                 title: '其他',
                 optionMap: {},

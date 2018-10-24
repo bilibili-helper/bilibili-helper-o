@@ -31,12 +31,14 @@ export class FeatureManager {
             if (message.commend === 'getOptions') {
                 sendResponse(_.merge(this.features, (feature) => feature.optionArguments));
             } else if (message.commend === 'getOption' && typeof message.feature === 'string') {
-                sendResponse(this.features[message.feature].options);
+                const featureName = _.upperFirst(message.feature);
+                if (this.features[featureName]) sendResponse(this.features[featureName].options);
+                else console.error(`Invalid feature name: ${featureName}`);
             } else if (message.commend === 'getVideoFeatures') { // TODO 相关钩子列表获取
                 sendResponse({
                     ...this.features.Video.GUIArguments,
                 });
             }
         });
-    }
+    };
 }
