@@ -19,15 +19,14 @@ export class Video extends Feature {
                 title: '视频相关',
                 optionType: 'checkbox',
                 options: [
-                    {key: 'download', title: '视频下载', on: true},
+                    //{key: 'download', title: '视频下载', on: true},
                     {key: 'danmu', title: '弹幕查询', on: true},
+                    {key: 'danmuDownload', title: '弹幕下载', on: true},
                 ],
             },
         });
         this.videoMap = {};
     }
-
-    launch = () => {};
 
     addListener = () => {
         const requestFilter = {
@@ -56,7 +55,7 @@ export class Video extends Feature {
             const {pathname, query} = url;
             //console.log('onCompleted', pathname);
             if (pathname === '/player/web_api/v2/playurl' || pathname === 'x/player/playurl' || pathname === '/v/flashplay/h5_player_op') { // 视频源地址，清晰度
-                if (!this.videoMap[tabId] || this.videoMap[tabId] !== query.cid) { // 缓存视频信息
+                if (!this.videoMap[tabId] || this.videoMap[tabId] !== query.cid) { // 缓存视频cid
                     this.videoMap[tabId] = query.cid;
                     chrome.tabs.sendMessage(tabId, {commend: 'newCid', cid: this.videoMap[tabId]}); // 发送视频讯息
                 }
@@ -84,9 +83,9 @@ export class Video extends Feature {
             }
         });
         // 当页面被激活后再发送相关请求
-        chrome.tabs.onActivated.addListener((tabId, selectInfo) => {
-            if (this.videoMap[tabId]) {}
-        });
+        //chrome.tabs.onActivated.addListener((tabId, selectInfo) => {
+        //    if (this.videoMap[tabId]) {}
+        //});
 
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getVideoCid') {

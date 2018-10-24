@@ -146,15 +146,13 @@ export class DanmuGUI extends React.Component {
             method: 'get',
             url: date ? historyUrl : url,
             data: {
-                platform: 'bilibiliHelper',
+                platform: 'bilibiliHelper', // 必须添加，用于区分助手发出的请求，避免被监听
                 type: 1,
                 oid: cid,
                 date,
             },
             contentType: 'text/xml',
-            beforeSend: () => {
-                this.setState({loading: true});
-            },
+            beforeSend: () => this.setState({loading: true}),
             success: (danmuDocument) => {
                 const danmuJSON = this.danmuDocument2JSON(danmuDocument);
                 danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
@@ -222,7 +220,8 @@ export class DanmuGUI extends React.Component {
         });
         return {
             cid: Number(document.getElementsByTagName('chatid')[0].innerHTML),
-            count: Number(document.getElementsByTagName('maxlimit')[0].innerHTML),
+            maxLimit: Number(document.getElementsByTagName('maxlimit')[0].innerHTML),
+            count: list.length,
             list,
         };
         this.setState({loaded: true});
@@ -238,21 +237,19 @@ export class DanmuGUI extends React.Component {
             this.setState({danmuJSON: {cid, count, list}});
         } else {
             const list = [];
-            let count = 0;
             _.forEach(this.orderedJSON.list, (data, time) => {
                 const index = data.danmu.indexOf(value);
                 if (!!~index) {
-                    count++;
-                    const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
                     // 这里一定要复制一份，不然会修改原数据
+                    const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
                     list.push({...data, danmu});
                 }
             });
-            this.setState({danmuJSON: {cid, count, list}});
+            this.setState({danmuJSON: {cid, count: list.length, list}});
         }
     };
 
-    // 当用户点击弹幕列表行时触发
+    // 当点击没有查询过用户名的弹幕列表行时触发
     handleDanmuLineClick = (authorHash) => {
         let extracted = /^b(\d+)$/.exec(authorHash);
         let uids = [];
@@ -268,16 +265,15 @@ export class DanmuGUI extends React.Component {
         });
     };
 
+    // 当点击查询过用户名的弹幕行时
     handleAuthorClick = (uid) => {
         const {queryUserMode} = this.state;
         if (!queryUserMode) {
             const authorHash = _.findKey(this.state.authorHashMap, (id) => id === uid);
             const {cid, list} = this.orderedJSON;
             const queryList = [];
-            let count = 0;
             _.forEach(list, (data) => {
                 if (data.authorHash === authorHash) {
-                    count++;
                     // 这里一定要复制一份，不然会修改原数据
                     queryList.push({...data});
                 }
@@ -285,7 +281,7 @@ export class DanmuGUI extends React.Component {
             this.queryUserModeTemplateMap = {...this.state.danmuJSON};
             this.setState({
                 queryUserMode: true,
-                danmuJSON: {cid, count, list: queryList},
+                danmuJSON: {cid, count: queryList.length, list: queryList},
             });
         } else {
             this.setState({
@@ -297,14 +293,14 @@ export class DanmuGUI extends React.Component {
     };
 
     render() {
-        const {options} = this.props;
-        const {loading, loaded, danmuJSON, authorHashMap} = this.state;
+        const {options = {}} = this.props;
+        const {loaded, danmuJSON, authorHashMap} = this.state;
         const {on = false} = options;
         return on ? (
             <DanmuWrapper>
                 <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
                 <DanmuList>
-                    {loaded && !loading && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
+                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
                         const {danmu, authorHash, time} = danmuData;
                         const uid = authorHashMap[authorHash];
                         const authorName = this.userMap[uid] ? this.userMap[uid].name : '';

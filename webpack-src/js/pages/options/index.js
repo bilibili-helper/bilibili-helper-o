@@ -187,9 +187,12 @@ class PageOptions extends React.Component {
                     let SubListChildren = this.createSubListComponent({kind, feature, info});
                     return <ListItem
                         key={feature}
-                        onClick={() => this.handleSetOption({kind, feature})}
-                        operation={<Radio on={info.on}/>}
-                        subList={SubListChildren ? {hide: !info.on, children: SubListChildren} : {}}
+                        onClick={info.on !== undefined ? () => this.handleSetOption({kind, feature}) : null}
+                        operation={info.on !== undefined ? <Radio on={info.on}/> : null}
+                        subList={SubListChildren ? {
+                            hide: info.on === undefined ? false : !info.on,
+                            children: SubListChildren,
+                        } : null}
                     >{info.title}</ListItem>;
                 })}
             </List>;
@@ -262,7 +265,7 @@ class PageOptions extends React.Component {
                     />}
                 </SubPage>
                 {this.createOptionDOM()}
-{/*
+                {/*
                 <List title="主站" ref={i => this.mainList = i}>
                     <ListItem
                         children="Sub Page 测试"

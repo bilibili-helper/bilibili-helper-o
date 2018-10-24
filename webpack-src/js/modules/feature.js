@@ -114,7 +114,7 @@ export class Feature {
 
     // 启动 - 装载过程之后
     launch = async () => {
-        console.error(`Feature ${_.upperFirst(this.name)}'s launch Function is empty!`);
+        console.warn(`Feature ${_.upperFirst(this.name)}'s launch Function is empty!`);
         return;
     };
 

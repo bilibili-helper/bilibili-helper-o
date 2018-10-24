@@ -15,7 +15,7 @@ export class NewWatchPage extends Feature {
             GUI: null,
             permission: {},
             options: {
-                on: true,
+                //on: true,
                 optionType: 'radio',
                 title: '关注页面跳转',
                 options: [

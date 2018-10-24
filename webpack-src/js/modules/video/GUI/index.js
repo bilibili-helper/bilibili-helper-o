@@ -43,7 +43,7 @@ export class VideoGUI extends React.Component {
         //console.log(this.state, options, _.find(options, {key: 'danmu'}));
         return (
             <React.Fragment>
-                <DanmuGUI options={_.find(options, {key: 'danmu'}) || {}} cid={cid}/>
+                <DanmuGUI options={_.find(options, {key: 'danmu'})} cid={cid}/>
             </React.Fragment>
         );
     }
