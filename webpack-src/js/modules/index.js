@@ -12,3 +12,4 @@ export {DynamicCheck} from './dynamicCheck';
 export {Video} from './video';
 export {NewWatchPage} from './newWatchPage';
 export {DoSign} from './doSign';
+export {Treasure} from './treature';

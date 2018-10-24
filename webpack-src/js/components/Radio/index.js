@@ -19,6 +19,8 @@ const RadioView = styled.div`
   height: 16px;
   outline: none;
   z-index: 0;
+  cursor: ${({theme = {}}) => theme.toggle !== false ? 'pointer' : 'not-allowed'};
+  filter: grayscale(${({theme = {}}) => theme.toggle !== false ? 0 : 1});
 `;
 const Bar = styled.span`
   width: 28px;
@@ -45,7 +47,6 @@ const Knob = styled.span`
   transition: transform linear 80ms, background-color linear 80ms;
   border-radius: 50%;
   z-index: 1;
-  cursor: pointer;
   .ripple-item {
     //opacity: 0.125;
   }
@@ -78,16 +79,16 @@ export class Radio extends React.Component {
     }
 
     render() {
-        const {on, onClick} = this.props;
+        const {on, onClick, disable} = this.props;
         const {mouseDown} = this.state;
         return (
             <RadioView className={on ? 'checked' : ''} onClick={onClick}>
                 <Bar/>
                 <Knob
                     innerRef={i => this.btn = i}
-                    onMouseDown={this.handleOnMouseDown}
-                    onMouseUp={this.handleOnMouseUp}
-                    onMouseLeave={this.handleOnMouseUp}
+                    onMouseDown={!disable ? this.handleOnMouseDown : null}
+                    onMouseUp={!disable ? this.handleOnMouseUp : null}
+                    onMouseLeave={!disable ? this.handleOnMouseUp : null}
                 >
                     <ThemeProvider theme={{radius: 17, speed: 0.75, size: 1.2}}>
                         <Ripple active={mouseDown}/>

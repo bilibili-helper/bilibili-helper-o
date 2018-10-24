@@ -47,7 +47,8 @@ const ButtonView = styled.button.attrs({
   font-weight: 500;
   background-color: transparent;
   color: ${color('paper-grey-600')};
-  cursor: pointer;
+  cursor: ${({theme = {}}) => !theme.disable ? 'pointer' : 'not-allowed'};
+  filter: grayscale(${({theme = {}}) => !theme.disable ? 0 : 1});
   border: none;
   outline: none;
   z-index: 1;
@@ -83,19 +84,19 @@ export class Button extends React.Component {
     }
 
     render() {
-        const {children, className, theme, icon, normal, onClick, ...rest} = this.props;
+        const {children, className, theme, icon, normal, onClick, disable, ...rest} = this.props;
         const {mouseDown, rippleRadius, x, y} = this.state;
         return (
-            <ThemeProvider theme={{...theme, radius: rippleRadius, icon, normal}}>
+            <ThemeProvider theme={{...theme, radius: rippleRadius, icon, normal, disable}}>
                 <ButtonWrapper
                     className={className}
                     onClick={onClick}
                 >
                     <ButtonView
                         innerRef={i => this.btn = i}
-                        onMouseDown={this.handleOnMouseDown}
-                        onMouseUp={this.handleOnMouseUp}
-                        onMouseLeave={this.handleOnMouseUp}
+                        onMouseDown={!disable ? this.handleOnMouseDown : null}
+                        onMouseUp={!disable ? this.handleOnMouseUp : null}
+                        onMouseLeave={!disable ? this.handleOnMouseUp : null}
                         {...rest}
                     >
                         {icon && <Icon icon={icon}/>}

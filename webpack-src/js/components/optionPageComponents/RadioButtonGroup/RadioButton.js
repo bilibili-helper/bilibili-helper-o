@@ -19,7 +19,9 @@ const RadioButtonWrapper = styled.div.attrs({
   align-items: center;
   margin-left: -16px;
   width: 100%;
-  cursor: pointer;
+  cursor: ${({theme = {}}) => !theme.disable ? 'pointer' : 'not-allowed'};
+  filter: grayscale(${({theme = {}}) => !theme.disable ? 0 : 1});
+  opacity: ${({theme = {}}) => !theme.disable ? 1 : 0.5};
 `;
 
 const RadioDisc = styled.div.attrs({
@@ -81,22 +83,24 @@ export class RadioButton extends React.Component {
     }
 
     render() {
-        const {on, title, onClick} = this.props;
+        const {on, title, onClick, disable = false} = this.props;
         const {mouseDown} = this.state;
         return (
-            <RadioButtonWrapper onClick={onClick}>
-                <RadioDisc
-                    className={on ? 'checked' : ''}
-                    onMouseDown={this.handleOnMouseDown}
-                    onMouseUp={this.handleOnMouseUp}
-                    onMouseLeave={this.handleOnMouseUp}
-                >
-                    <ThemeProvider theme={{speed: 0.5, size: 1.2}}>
-                        <Ripple active={mouseDown}/>
-                    </ThemeProvider>
-                </RadioDisc>
-                <RadioTitle>{title}</RadioTitle>
-            </RadioButtonWrapper>
+            <ThemeProvider theme={{disable}}>
+                <RadioButtonWrapper onClick={onClick}>
+                    <RadioDisc
+                        className={on ? 'checked' : ''}
+                        onMouseDown={!disable ? this.handleOnMouseDown : null}
+                        onMouseUp={!disable ? this.handleOnMouseUp : null}
+                        onMouseLeave={!disable ? this.handleOnMouseUp : null}
+                    >
+                        <ThemeProvider theme={{speed: 0.5, size: 1.2}}>
+                            <Ripple active={mouseDown}/>
+                        </ThemeProvider>
+                    </RadioDisc>
+                    <RadioTitle>{title}</RadioTitle>
+                </RadioButtonWrapper>
+            </ThemeProvider>
         );
     }
 }

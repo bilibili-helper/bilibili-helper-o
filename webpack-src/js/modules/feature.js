@@ -45,10 +45,6 @@ export class Feature {
         return {[this.name]: {kind: this.kind, options: this.options}};
     }
 
-    get GUIArguments() {
-        return {[this.name]: {GUI: this.GUI, options: this.options}};
-    }
-
     /**
      * 初始化 - 位于装载过程之前
      * 1.检查(启动)配置
@@ -57,7 +53,7 @@ export class Feature {
      * @return {Boolean|String} true 表示初始化成功 返回字符串表示初始化失败说明
      */
     init = async (callback = () => {}) => {
-        const {on = false} = this.options;
+        const {on} = this.options;
         if (on === false) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
             console.warn(`Feature ${this.name} OFF`);
             return on;
@@ -99,6 +95,7 @@ export class Feature {
 
     // 设置配置
     setOption = async (options) => {
+        if (this.options.toggle === false) return;
         store.set(this.storeName, options);
         if (options.on === true) {
             if (!this.initialed) await this.init();
@@ -126,7 +123,7 @@ export class Feature {
 
     // 添加监听器
     addListener = async () => {
-        console.info(`Feature ${_.upperFirst(this.name)}'s has no listener!`);
+        console.warn(`Feature ${_.upperFirst(this.name)}'s addListener Function is empty!`);
         return;
     };
 

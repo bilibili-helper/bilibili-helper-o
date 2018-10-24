@@ -55,6 +55,7 @@
         "notifications",
         "storage",
         "tabs",
+        "debugger",
         "webRequest",
         "webRequestBlocking",
         "http://*/",

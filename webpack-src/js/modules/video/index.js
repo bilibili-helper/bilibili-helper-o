@@ -13,7 +13,6 @@ export class Video extends Feature {
             name: 'video',
             kind: 'video',
             permissions: {},
-            GUI: 'VideoGUI',
             options: {
                 on: true,
                 title: '视频相关',
@@ -21,7 +20,7 @@ export class Video extends Feature {
                 options: [
                     //{key: 'download', title: '视频下载', on: true},
                     {key: 'danmu', title: '弹幕查询', on: true},
-                    {key: 'danmuDownload', title: '弹幕下载', on: true},
+                    {key: 'danmuDownload', title: '弹幕下载', on: false, toggle: false},
                 ],
             },
         });

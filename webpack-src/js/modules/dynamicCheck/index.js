@@ -14,8 +14,7 @@ export class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
-            kind: 'video',
-            GUI: null,
+            kind: 'other',
             permissions: {login, notifications},
             options: {
                 on: true,

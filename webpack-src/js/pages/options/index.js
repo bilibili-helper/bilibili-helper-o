@@ -189,10 +189,14 @@ class PageOptions extends React.Component {
             return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
                 {_.map(list.optionMap, (info, feature) => {
                     let SubListChildren = this.createSubListComponent({kind, feature, info});
+                    const toggle = info.toggle === undefined ? true : info.toggle;
                     return <ListItem
                         key={feature}
-                        onClick={info.on !== undefined ? () => this.handleSetOption({kind, feature}) : null}
-                        operation={info.on !== undefined ? <Radio on={info.on}/> : null}
+                        toggle={toggle}
+                        onClick={info.on !== undefined && toggle !== false ? () => this.handleSetOption({
+                            kind, feature,
+                        }) : null}
+                        operation={info.on !== undefined ? <Radio disable={!toggle} on={info.on}/> : null}
                         subList={SubListChildren ? {
                             hide: info.on === undefined ? false : !info.on,
                             children: SubListChildren,
@@ -338,17 +342,17 @@ class PageOptions extends React.Component {
                 {/*>聊天信息屏蔽设置</ListItem>*/}
                 {/*</List>*/}
                 <List title="关于" ref={i => this.aboutList = i}>
-                    <ListItem
+                    {/*<ListItem
                         onClick={() => this.handleSetSubPage({title: '通知设置', parent: this.aboutList})}
                         operation={<Button icon="arrowRight"/>}
-                    >通知屏蔽设置</ListItem>
+                    >通知屏蔽设置</ListItem>*/}
                     <ListItem
                         //icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
                         separator
-                        operation={<Button normal>检查更新</Button>}
+                        operation={<Button disable normal>检查更新</Button>}
                     />
                     {_.map(updateData, (data, i) => <UpdateList key={i} title={`版本 ${data.title}`} data={data.list}/>)}
                 </List>

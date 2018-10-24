@@ -22,6 +22,7 @@ const ListItemView = styled.div.attrs({
     className: 'list-item',
 })`
   //margin-top: 3px;
+  background-color: #fff;
   border-top: ${props => props.noBorder ? 'none' : '1px solid #f6f7f8'};
   &:nth-of-type(1) {
     border-top: none;
@@ -37,9 +38,9 @@ const TitleView = styled.div.attrs({
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #fff;
   font-size: 13px;
   cursor: ${({onClick}) => onClick ? 'pointer' : 'default'};
+  opacity: ${({theme = {toggle: true}}) => theme.toggle ? 1 : 0.5};
   //.icon {
   //  margin: 0 12px 0 -6px;
   //}
@@ -174,6 +175,7 @@ export class ListItem extends React.Component {
             noBorder = false,
             extend = false, // subList是否为可折叠，如果没有设定operation就会自动将operation设定为折叠按钮
             onClick,
+            toggle = true, // 是否可以切换，即operation是否可点击
             ...rest,
         } = this.props;
         const {maxHeight, hideSubList} = this.state;
@@ -184,7 +186,7 @@ export class ListItem extends React.Component {
             />;
         }
         return (
-            <ThemeProvider theme={{twoLine}}>
+            <ThemeProvider theme={{twoLine, toggle}}>
                 <ListItemView noBorder={noBorder} {...rest}>
                     <TitleView onClick={onClick}>
                         {icon && icon}

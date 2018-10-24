@@ -1,12 +1,12 @@
-import $ from 'jquery';
-
 /**
  * Author: Ruo
  * Create: 2018-08-19
  * Description: 常用方法
  */
 /* global chrome */
+import $ from 'jquery';
 import _ from 'lodash';
+import * as allGUI from 'Modules/index_GUI';
 import store from 'store';
 import {defaultOptions} from './const';
 
@@ -165,24 +165,29 @@ export const parseTime = (time) => {
 };
 
 /**
+ * 页面初始化
  * 获取页面中的目标元素
  * 会在指定目标不再变化后返回
- * @param target {array[string]} 需要查找的dom的class或id等字符串.!注意! 如果需要同时筛选父元素和子元素，子元素要写在父元素前面
- * @param callback {function}
- * @param t {number} 检测间隔
+ * @param container {string|array[string]} 容器对象的查询字符串，如果有多个选项，使用数组按优先级从高到低排列
+ * @param kind {string}
+ * @param interval {number} 检测间隔
  */
-export const getTargetDOM = (target, callback = () => {}, t = 500) => {
-    const container = (() => {
+export const pageInitial = ({container, kind, interval = 500}) => {
+    if (kind === undefined) {
+        console.error('No kind: Page initialization failed!');
+        return false;
+    }
+    const targetContainer = (() => {
         const get = (name) => $(name).length > 0 ? $(name) : false;
-        if (typeof target === 'string') {
-            return get(target);
-        } else if (target instanceof Array) {
-            const t = _.compact(target.map((name) => get(name)));
-            if (t.length >= 1) return _.compact(target.map((name) => get(name)))[0];
-            else console.error(`No target of name: ${target}!`);
+        if (typeof container === 'string') {
+            return get(container);
+        } else if (container instanceof Array) {
+            const t = _.compact(container.map((name) => get(name)));
+            if (t.length >= 1) return _.compact(container.map((name) => get(name)))[0];
+            else console.error(`No target of name: ${container}!`);
         }
     })();
-    if (container) {
+    if (targetContainer) {
         /**
          * 插入助手DOM
          * 在B站原有脚本没有执行完时插入会导致结构莫名被破坏，原因还未查明
@@ -193,14 +198,30 @@ export const getTargetDOM = (target, callback = () => {}, t = 500) => {
             if (!!timer) clearTimeout(timer);
             timer = setTimeout(() => {
                 observer.disconnect();
-                typeof callback === 'function' && callback(container);
-            }, t);
-        }).observe(container[0], {
+                chrome.runtime.sendMessage({
+                    commend: 'getOptions',
+                    kind,
+                }, (featureOptions) => {
+                    /**
+                     * 获取相关的模块及其option配置
+                     * 根据option配置加载相应GUI
+                     */
+                    _.map(featureOptions, (option) => {
+                        const {kind, options, name} = option;
+                        if (allGUI[name]) { // 检查是否有设置GUI
+                            const {launch = null, GUI} = allGUI[name];
+                            if (typeof launch === 'function') launch({
+                                ...options, kind, container: targetContainer, GUI,
+                            });
+                        }
+                    });
+                });
+            }, interval);
+        }).observe(targetContainer[0], {
             childList: true,
             attributes: true,
             attributeOldValue: true,
             subtree: true,
         });
-    } else console.error('No target!');
-
+    } else console.error('No container!');
 };

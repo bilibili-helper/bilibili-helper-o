@@ -12,12 +12,12 @@ export const RadioButtonGroup = ({data, value, onClick}) => {
     if (data instanceof Array) {
         return <React.Fragment>
             {_.map(data, (entry, i) => {
-                const {key, title} = entry;
+                const {key, title, disable} = entry;
                 return <ListItem
                     key={i}
                     noBorder={false}
-                    children={<RadioButton title={title} on={key === value}/>}
-                    onClick={() => onClick(key)}
+                    children={<RadioButton disable={disable} title={title} on={key === value}/>}
+                    onClick={!disable ? () => onClick(key) : null}
                 />;
             })}
         </React.Fragment>;

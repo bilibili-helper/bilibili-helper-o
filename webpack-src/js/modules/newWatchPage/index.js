@@ -12,10 +12,10 @@ export class NewWatchPage extends Feature {
         super({
             name: 'newWatchPage',
             kind: 'other',
-            GUI: null,
             permission: {},
             options: {
-                //on: true,
+                on: true,
+                toggle: false,
                 optionType: 'radio',
                 title: '关注页面跳转',
                 options: [

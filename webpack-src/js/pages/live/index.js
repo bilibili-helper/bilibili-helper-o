@@ -4,12 +4,16 @@
  * Description: 直播区功能脚本
  */
 import $ from 'jquery';
-import {getTargetDOM} from 'Utils';
+import _ from 'lodash';
+import * as allGUI from 'Modules/index_GUI';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {pageInitial} from 'Utils';
 import {inLiveRoom} from './function';
 import 'Styles/scss/live.scss';
 
-inLiveRoom() && getTargetDOM('.live-room-app', (container) => {
-    chrome.runtime.sendMessage({commend: 'getOption', feature: 'doSign'}, ({on}) => {
-        on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
-    });
-}, 200);
+inLiveRoom() && pageInitial({
+    container: '.live-room-app',
+    kind: 'live',
+    interval: 200,
+});

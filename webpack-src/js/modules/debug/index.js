@@ -15,6 +15,7 @@ export class Debug extends Feature {
             permission: {},
             options: {
                 on: true,
+                toggle: false,
                 title: '调试模式',
             },
         });

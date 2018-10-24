@@ -19,4 +19,8 @@ export class DoSign extends Feature {
             },
         });
     }
+
+    getSignInfo = () => {
+
+    }
 }

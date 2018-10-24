@@ -28,15 +28,13 @@ const Title = styled.div.attrs({className: 'bilibili-helper-video-gui-title'})`
 `;
 
 const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
-  max-height: 150px;
+  height: 150px;
   padding: 1px;
   border: 1px solid #eee;
   border-radius: 4px 4px 0 0;
   font-size: 12px;
   overflow: auto;
-  & .no-data {
-    
-  }
+  & .no-data {}
 `;
 
 const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
