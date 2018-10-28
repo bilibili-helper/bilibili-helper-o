@@ -25,6 +25,7 @@ const {color} = theme;
 // import 'Styles/scss/popup.scss';
 const Main = styled.div`
   display: flex;
+  background-color: rgb(250,250,250);
 `;
 const PopupBody = styled(Body)`
   position: relative;
@@ -57,7 +58,7 @@ const PopupButton = styled(Button)`
     text-indent: 6px;
     font-size: 11px;
     color: ${color('google-grey-600')};
-    background-color: ${color('paper-grey-50')};
+    background-color: #fff;
     transition: all 0.3s;
     &[disabled] {
       opacity: 0.3;
@@ -78,9 +79,8 @@ class PagePopup extends React.Component {
         this.state = {
             hasLogin: false,
             debug: false,
+            newWatchPageLink: '',
         };
-
-        this.feedList = {};
     }
 
     componentWillMount() {
@@ -93,13 +93,24 @@ class PagePopup extends React.Component {
             }
         }));
         // 获取调试模式
-        chrome.runtime.sendMessage({commend: 'getOption', feature: 'Debug'}, (options) => {
+        chrome.runtime.sendMessage({
+            commend: 'getOption',
+            feature: 'Debug',
+        }, (options) => {
             this.setState({debug: options.on});
+        });
+        chrome.runtime.sendMessage({
+            commend: 'getOption',
+            feature: 'NewWatchPage',
+        }, (option) => {
+            const type = option.value;
+            const link = type === 'new' ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
+            this.setState({newWatchPageLink: link});
         });
     }
 
     render() {
-        const {hasLogin, debug} = this.state;
+        const {hasLogin, debug, newWatchPageLink} = this.state;
         return (
             <Main>
                 <DynamicBox/>
@@ -108,10 +119,11 @@ class PagePopup extends React.Component {
                     <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>
                     {/* 登录后显示“我的关注”和“我的收藏” */}
                     {hasLogin && <React.Fragment>
-                        <PopupButton onClick={() => createTab(getLink('dynamic'))}>{__('goDynamic')}</PopupButton>
+                        <PopupButton onClick={() => createTab(newWatchPageLink)}>{__('goDynamic')}</PopupButton>
                         <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
                     </React.Fragment>}
-                    <PopupButton onClick={() => createTab(getLink('option'))}>{__('goOption')}</PopupButton>
+                    <PopupButton
+                        onClick={() => createTab(getLink('option'))}>{__('goOption')}</PopupButton>
                     <Title><span>Bilibili Helper</span><span>{debug ? 'Beta.' : ''}{version}</span></Title>
                 </PopupBody>
             </Main>

@@ -4,18 +4,16 @@
  * Description:
  */
 
+import {define} from 'Utils';
 import {Feature} from 'Modules';
 
-export class Debug extends Feature {
+export const Debug = define([], class Debug extends Feature {
     constructor() {
         super({
             name: 'debug',
             kind: 'other',
-            GUI: null,
-            permission: {},
             options: {
                 on: true,
-                toggle: false,
                 title: '调试模式',
             },
         });
@@ -24,5 +22,4 @@ export class Debug extends Feature {
     afterSetOption = async (options) => {
         chrome.runtime.sendMessage({commend: 'debugMode', value: options.on});
     };
-
-}
+});

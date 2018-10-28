@@ -1,12 +1,14 @@
+import $ from 'jquery';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/24
  * Description:
  */
-
+import {define} from 'Utils';
 import {Feature} from 'Modules';
 
-export class DoSign extends Feature {
+export const Dosign = define(['googleAnalytics'], class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',
@@ -20,7 +22,7 @@ export class DoSign extends Feature {
         });
     }
 
-    getSignInfo = () => {
-
-    }
-}
+    launch = () => {
+        this.options.on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
+    };
+});

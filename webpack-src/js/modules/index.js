@@ -7,9 +7,10 @@
 export {Feature} from './feature';
 
 // 然后再加载子类
-export {Debug} from './debug';
-export {DynamicCheck} from './dynamicCheck';
-export {Video} from './video';
-export {NewWatchPage} from './newWatchPage';
-export {DoSign} from './doSign';
-export {Treasure} from './treature';
+export * from './dynamicCheck';
+export * from './video';
+export * from './newWatchPage';
+export * from './doSign';
+export * from './treature';
+export * from './googleAnalytics';
+export * from './debug';

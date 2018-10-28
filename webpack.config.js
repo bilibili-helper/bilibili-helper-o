@@ -91,6 +91,7 @@ module.exports = {
             {from: 'webpack-src/*.json', to: '', flatten: true},
             {from: 'webpack-src/_locales', to: '_locales'},
             {from: 'webpack-src/statics', to: 'statics'},
+            {from: 'webpack-src/js/libs', to: 'libs'},
             // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
         ]),
     ],

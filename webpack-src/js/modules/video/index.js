@@ -4,10 +4,11 @@
  * Description:
  */
 
-import {Feature} from 'Modules/feature';
 import URL from 'url-parse';
+import {define} from 'Utils';
+import {Feature} from 'Modules/feature';
 
-export class Video extends Feature {
+export const Video = define(['googleAnalytics'], class Video extends Feature {
     constructor() {
         super({
             name: 'video',
@@ -121,4 +122,4 @@ export class Video extends Feature {
         //
         //}, requestFilter, ['responseHeaders']);
     };
-}
+});

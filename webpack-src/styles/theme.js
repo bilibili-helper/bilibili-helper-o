@@ -13,7 +13,7 @@ import {
 
 const bodyMinWidth = 1000;
 const sidebarWidth = 204;
-export const baseFontSize = 16;
+export const baseFontSize = 12;
 
 export const theme =  {
     /* 颜色相关 */

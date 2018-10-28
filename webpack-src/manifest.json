@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1",
+    "version": "1.0.3",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "name": "__MSG_extName__",
@@ -34,7 +34,10 @@
             "run_at": "document_end"
         }, {
             "all_frames": false,
-            "js": ["live.js"],
+            "js": [
+                "live.js",
+                "libs/ocrad.min.js"
+            ],
             "css": ["styles/live.css"],
             "matches": ["*://live.bilibili.com/*"],
             "run_at": "document_end"
@@ -55,7 +58,6 @@
         "notifications",
         "storage",
         "tabs",
-        "debugger",
         "webRequest",
         "webRequestBlocking",
         "http://*/",
@@ -65,7 +67,9 @@
         "statics/*",
         "bilibili-helper.woff",
         "options.html",
-        "at.alicdn.com/t/font_862696_227xf8jklcw.css"
+        "at.alicdn.com/t/font_862696_227xf8jklcw.css",
+        "libs/*"
     ],
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js https://www.google-analytics.com/analytics_debug.js; object-src 'self';",
     "incognito": "not_allowed"
 }

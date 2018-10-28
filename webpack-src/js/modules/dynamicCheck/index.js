@@ -5,12 +5,13 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
+import {define} from 'Utils';
 import {Feature} from 'Modules';
 import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
 
-export class DynamicCheck extends Feature {
+export const DynamicCheck = define(['googleAnalytics'], class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
@@ -38,7 +39,7 @@ export class DynamicCheck extends Feature {
         this.feedList = [];
         this.lastCheckTime = Date.now();
         chrome.alarms.clear('dynamicCheck');
-    }
+    };
 
     addListener = () => {
         chrome.alarms.onAlarm.addListener((alarm) => {
@@ -48,7 +49,7 @@ export class DynamicCheck extends Feature {
                     break;
             }
         });
-        chrome.notifications.onButtonClicked.addListener(function(notificationId, index) {
+        chrome.notifications.onButtonClicked.addListener((notificationId, index) => {
             if (this.feedList[notificationId] && index === 0) {
                 chrome.notifications.clear(notificationId);
                 chrome.tabs.create({url: this.feedList[notificationId]});
@@ -57,15 +58,15 @@ export class DynamicCheck extends Feature {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getDynamicList') sendResponse(this.feedList);
         });
-    }
+    };
 
     // 检查未读推送
     checkUnread = () => {
         return $.get('https://api.bilibili.com/x/feed/unread/count?type=0', {}, (unreadRes) => {
             if (unreadRes.code === 0 && unreadRes.data.all > 0) {
                 chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                this.getFeed().then(() => this.options.notify && this.sendNotification());
-            } else void this.getFeed();
+                this.getFeed().then(this.sendNotification);
+            }
         });
     };
 
@@ -86,7 +87,8 @@ export class DynamicCheck extends Feature {
 
     // 弹出推送通知窗口
     sendNotification = () => {
-        _.map(this.feedList, (feed) => {
+        const notificationState = _.find(this.options.options, {key: 'notification'});
+        notificationState && notificationState.on && _.map(this.feedList, (feed) => {
             const {id: aid, addition, ctime} = feed;
             if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
                 chrome.notifications.create('bilibili-helper-aid' + aid, {
@@ -101,4 +103,4 @@ export class DynamicCheck extends Feature {
             } else return; // 为什么检测过了呢Σ(oﾟдﾟoﾉ)
         });
     };
-};
+});

@@ -28,21 +28,18 @@ export class Feature {
      * @param optionDOM {ReactDOM}
      * @param options {object} 特性的额外配置选项，如过滤列表的配置信息
      */
-    constructor({name, kind, GUI = null, optionDOM = null, permissions = {}, options = {}}) {
+    constructor({name, kind, GUI = null, optionDOM = null, permissions = {}, options = {}, require = []}) {
         this.name = _.upperFirst(name);
         this.storeName = `bilibili-helper-${this.name}`;
         this.kind = kind;
         this.GUI = GUI; // 功能/特性的UI
         this.optionDOM = optionDOM; // 设置页面的UI
         this.permissions = permissions;
-        this.options = options;
+        this.options = {...options, kind, name};
         this.initialed = false;
-        this.init();
-    }
-
-    // 用于配置页面的输出
-    get optionArguments() {
-        return {[this.name]: {kind: this.kind, options: this.options}};
+        this.launching = false;
+        this.require = require;
+        //this.init();
     }
 
     /**
@@ -50,68 +47,79 @@ export class Feature {
      * 1.检查(启动)配置
      * 2.鉴权
      * 3.配置初始化
-     * @return {Boolean|String} true 表示初始化成功 返回字符串表示初始化失败说明
+     * @return {Promise} true 表示初始化成功 返回字符串表示初始化失败说明
      */
-    init = async (callback = () => {}) => {
-        const {on} = this.options;
-        if (on === false) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
-            console.warn(`Feature ${this.name} OFF`);
-            return on;
-        } else if (on === true) {
-            const {pass, msg} = await this.checkPermission();
-            if (pass) {
-                await this.initOption();
-                await this.addListener();
-                this.initialed = true;
-                await this.launch();
-                callback(true);
-            } else console.error(msg);
-        } else { // 没有启动配置
-            console.error(`No options names ${_.upperFirst(this.name)}`);
-            return false;
-        }
+    init = () => {
+        return new Promise((resolve) => {
+            const {on} = this.options;
+            if (on === false) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
+                console.warn(`Feature ${this.name} OFF`);
+                return on;
+            } else if (on === true) {
+                resolve(this.checkPermission().then(({pass, msg}) => {
+                    if (pass) {
+                        this.initOption().then(this.addListener);
+                        this.initialed = true;
+                        console.log(`Feature load complete: ${this.name}`);
+                        return this;
+                        //chrome.extension.getBackgroundPage().FeatureManager.dealWidthWaitQueue();
+                    } else console.error(msg);
+                }));
+            } else { // 没有启动配置
+                console.error(`No options names ${_.upperFirst(this.name)}`);
+                resolve(false);
+            }
+        });
     };
 
     // 初始化配置
-    initOption = async (callback = () => {}) => {
-        const options = store.get(this.storeName) || {};
-        this.options = Object.assign(this.options, options);
-        store.set(this.storeName, this.options);
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'setOption' && message.feature === this.name) {
-                // 同步设置 background 里 memory 和 localStorage 中的设置
-                this.options = message.options;
-                void this.setOption(message.options);
-                sendResponse(true);
-            }
+    initOption = () => {
+        return new Promise((resolve) => {
+            const options = store.get(this.storeName) || {}; // 缓存配置
+            this.options = Object.assign({}, this.options, options);
+            store.set(this.storeName, this.options);
+            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+                console.log(...message);
+                if (message.commend === 'setOption' && message.feature === this.name) {
+                    // 同步设置 background 里 memory 和 localStorage 中的设置
+                    this.setOption(message.options);
+                    sendResponse(true);
+                } else if (message.commend === 'getOption' && message.feature === _.upperFirst(this.name)) {
+                    sendResponse(this.options);
+                }
+            });
         });
-        await callback();
     };
 
     // 获取配置
-    getOption = () => {
-        return store.get(this.storeName) || {};
+    getOption = (featureName) => {
+        if (featureName === this.name || !featureName) return store.get(this.storeName) || {};
+        else {
+            const name = _.upperFirst(featureName);
+            return chrome.extension.getBackgroundPage().FeatureManager.features[name].getOption();
+        }
     };
 
     // 设置配置
     setOption = async (options) => {
         if (this.options.toggle === false) return;
+        if (this.initialed === false || options.on !== this.options.on) { // 没有初始化过 或者 总启动状态发生变化时
+            if (options.on === true) {
+                if (!this.initialed) await this.init();
+                else await this.launch();
+            } else this.pause();
+        }
+        this.options = options;
         store.set(this.storeName, options);
-        if (options.on === true) {
-            if (!this.initialed) await this.init();
-            else await this.launch();
-        } else this.pause();
-        this.afterSetOption(options);
+        await this.afterSetOption(options);
     };
 
     // 设置之后运行的钩子函数
-    afterSetOption = () => {
-
-    };
+    afterSetOption = async () => {};
 
     // 启动 - 装载过程之后
-    launch = async () => {
-        console.warn(`Feature ${_.upperFirst(this.name)}'s launch Function is empty!`);
+    launch = () => {
+        //console.warn(`Feature ${_.upperFirst(this.name)}'s launch Function is empty!`);
         return;
     };
 
@@ -123,7 +131,7 @@ export class Feature {
 
     // 添加监听器
     addListener = async () => {
-        console.warn(`Feature ${_.upperFirst(this.name)}'s addListener Function is empty!`);
+        //console.warn(`Feature ${_.upperFirst(this.name)}'s addListener Function is empty!`);
         return;
     };
 
@@ -133,39 +141,41 @@ export class Feature {
     };
 
     // 鉴权
-    checkPermission = async () => {
-        if (!this.permissions) return true; // 没有设置需要检查的权限，则无条件通过
-        let [pass, msg] = [true, '']; // 通过状态
-        await _.map(this.permissions, async (permission, permissionName) => {
-            if (!permission) { // 未知权限类型
-                [pass, msg] = [false, `Undefined permission: ${permissionName}`];
-            } else if (permission.check && !permission.value) {// 已经检查过 且 没有检查通过 直接返回之前的检查结果
-                [pass, msg] = [permission.value, permission.errorMsg];
-            } else { // 权限没有检查过
-                switch (permissionName) {
-                    case 'login': {
-                        await isLogin().then((login) => {
-                            pass = login ? true : false;
-                            msg = permission.errorMsg;
-                        });
-                        break;
-                    }
-                    case 'notifications': {
-                        await chrome.notifications.getPermissionLevel((level) => {
-                            pass = level === 'granted' ? true : false;
-                            msg = permission.errorMsg;
-                        });
-                        break;
+    checkPermission = () => {
+        return new Promise(resolve => {
+            if (!this.permissions) return true; // 没有设置需要检查的权限，则无条件通过
+            let [pass, msg] = [true, '']; // 通过状态
+            _.map(this.permissions, async (permission, permissionName) => {
+                if (!permission) { // 未知权限类型
+                    [pass, msg] = [false, `Undefined permission: ${permissionName}`];
+                } else if (permission.check && !permission.value) {// 已经检查过 且 没有检查通过 直接返回之前的检查结果
+                    [pass, msg] = [permission.value, permission.errorMsg];
+                } else { // 权限没有检查过
+                    switch (permissionName) {
+                        case 'login': {
+                            await isLogin().then((login) => {
+                                pass = login ? true : false;
+                                msg = permission.errorMsg;
+                            });
+                            break;
+                        }
+                        case 'notifications': {
+                            await chrome.notifications.getPermissionLevel((level) => {
+                                pass = level === 'granted' ? true : false;
+                                msg = permission.errorMsg;
+                            });
+                            break;
+                        }
                     }
                 }
-            }
-            if (!pass) return false; // 权限检查没过
-            else {
-                permission.check = true;
-                permission.value = true;
-            }
+                if (!pass) return false; // 权限检查没过
+                else {
+                    permission.check = true;
+                    permission.value = true;
+                }
+            });
+            resolve({pass, msg});
         });
-        return {pass, msg};
     };
 
     /**

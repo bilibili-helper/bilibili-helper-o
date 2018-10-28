@@ -5,9 +5,10 @@
  */
 
 import _ from 'lodash';
+import {define} from 'Utils';
 import {Feature} from 'Modules';
 
-export class NewWatchPage extends Feature {
+export const NewWatchPage = define(['googleAnalytics'], class NewWatchPage extends Feature {
     constructor() {
         super({
             name: 'newWatchPage',
@@ -30,4 +31,4 @@ export class NewWatchPage extends Feature {
     launch = () => {
 
     };
-}
+});

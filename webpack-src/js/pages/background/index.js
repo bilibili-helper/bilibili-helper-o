@@ -9,15 +9,6 @@ import {FeatureManager} from 'Modules/FeatureManager';
 
 /**
  * ------------------------------------------------------------------------------------------
- * 权限获取
- * ------------------------------------------------------------------------------------------
- */
-
-// 推送窗口弹出权限
-//checkNotificationPermission();
-
-/**
- * ------------------------------------------------------------------------------------------
  * 事件绑定
  * ------------------------------------------------------------------------------------------
  */
@@ -35,51 +26,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
         });
     }
 });
-/*
-// 时钟时间
-//chrome.alarms.onAlarm.addListener(function (alarm) {
-//
-//});
-
-// 请求发送前触发的事件
-// chrome.webRequest.onBeforeRequest.addListener(function(details) {
-//
-// });
-
-const requestFilter = {
-    urls: [
-        //'*://*.bilibili.com/bangumi/play/ss*',
-        //'*://*.bilibili.com/bangumi/play/ep*',
-        //'*://*.bilibili.com/video/av*',
-        //'*://api.bilibili.com/*',
-        '*://api.bilibili.com/x/web-interface/view?aid=*',
-    ],
-    //types: ['main_frame'],
-};
-
-//
-//chrome.webRequest.onBeforeRequest.addListener((details) => {
-//    console.log('onBeforeRequest', details);
-//}, requestFilter, ['requestBody', 'blocking']);
-//
-//// sendHeaders前触发的事件
-//chrome.webRequest.onBeforeSendHeaders.addListener((details) => {
-//    console.log('onBeforeSendHeaders', details);
-//}, requestFilter, ['requestHeaders', 'blocking']);
-//
-//chrome.webRequest.onSendHeaders.addListener((details) => {
-//    console.log('onSendHeaders', details);
-//}, requestFilter, ['requestHeaders']);
-//// 接收到HTTP响应头时触发的事件
-//chrome.webRequest.onHeadersReceived.addListener((details) => {
-//    console.log('onHeadersReceived', details);
-//}, requestFilter, ['responseHeaders', 'blocking']);
-//// 请求开始相应时触发的事件
-//chrome.webRequest.onResponseStarted.addListener((details) => {
-//    console.log('onResponseStarted', details);
-//}, requestFilter, ['responseHeaders']);
-//
-*/
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -94,4 +40,16 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') {
     chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + chrome.runtime.getManifest().version);
 }
 
-new FeatureManager(); // 创建统一模块管理对象
+window.FeatureManager = new FeatureManager(); // 创建统一模块管理对象
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.commend === 'bilibili-helper-ga') {
+        ga('send', {
+            hitType: 'event',
+            eventCategory: version,
+            eventAction: 'init',
+            eventLabel: 'test',
+            nonInteraction: true,
+        });
+    }
+})

@@ -145,9 +145,6 @@ export const getLink = (url_name) => {
             return 'https://live.bilibili.com/';
         case 'option':
             return chrome.extension.getURL('options.html');
-        case 'dynamic':
-            const type = getOption('newWatchPage').value;
-            return type === 'new' ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
         case 'favourite':
             return 'https://space.bilibili.com/';
     }
@@ -207,11 +204,11 @@ export const pageInitial = ({container, kind, interval = 500}) => {
                      * 根据option配置加载相应GUI
                      */
                     _.map(featureOptions, (option) => {
-                        const {kind, options, name} = option;
+                        const {options, name} = option;
                         if (allGUI[name]) { // 检查是否有设置GUI
                             const {launch = null, GUI} = allGUI[name];
                             if (typeof launch === 'function') launch({
-                                ...options, kind, container: targetContainer, GUI,
+                                ...options, container: targetContainer, GUI,
                             });
                         }
                     });
@@ -224,4 +221,8 @@ export const pageInitial = ({container, kind, interval = 500}) => {
             subtree: true,
         });
     } else console.error('No container!');
+};
+
+export const define = (require, featureClass) => {
+    return {require, featureClass};
 };

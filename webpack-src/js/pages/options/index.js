@@ -123,7 +123,12 @@ class PageOptions extends React.Component {
     componentWillMount() {
         chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
             // 以kind字段来将设置分类到不同list
-            _.forEach(options, (option, featureName) => this.options[option.kind].optionMap[featureName] = option.options);
+            console.log(options);
+            _.forEach(options, (option, featureName) => {
+                console.log(option, featureName);
+                const {kind} = option;
+                this.options[kind].optionMap[featureName] = option.options;
+            });
             this.setState(this.options);
         });
 
@@ -232,8 +237,6 @@ class PageOptions extends React.Component {
     render() {
         const {
             // feature options
-            sign,
-            treasure,
             chatFilter,
             // modal state
             modalOn,
