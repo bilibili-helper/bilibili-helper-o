@@ -35,7 +35,7 @@ export class FeatureManager {
             if (this.checkRequire(require)) { // 依赖检查通过
                 this.features[featureName] = new FeatureClass();
                 this.features[featureName].init().then(f => {
-                    f.launch();
+                    f.options.on && f.launch();
                     resolve(true);
                 });
             } else {
