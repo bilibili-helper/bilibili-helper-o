@@ -22,8 +22,8 @@ export const GoogleAnalytics = define(['Debug'], class GoogleAnalytics extends F
 
     launch = () => {
         const debug = this.getOption('debug').on;
-        const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
-        (function() {
+        if (this.options.on) {
+            const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
             window['GoogleAnalyticsObject'] = 'ga';
             window.ga = window.ga || function() {
                 (window.ga.q = window.ga.q || []).push(arguments);
@@ -34,15 +34,15 @@ export const GoogleAnalytics = define(['Debug'], class GoogleAnalytics extends F
             scriptTag.async = 1;
             scriptTag.src = script;
             m.parentNode.insertBefore(scriptTag, m);
-        })(null, null, null, null, 'ga');
 
-        ga('create', 'UA-39765420-2', 'auto');
-        ga('set', 'checkProtocolTask');
-        ga('set', 'sendHitTask');
-        //ga('send', 'event', 'test', 'submit', {
-        //    hitCallback: function() {
-        //        console.log(1);
-        //    },
-        //});
+            ga('create', 'UA-39765420-2', 'auto');
+            ga('set', 'checkProtocolTask');
+            ga('set', 'sendHitTask');
+            //ga('send', 'event', 'test', 'submit', {
+            //    hitCallback: function() {
+            //        console.log(1);
+            //    },
+            //});
+        }
     };
 });

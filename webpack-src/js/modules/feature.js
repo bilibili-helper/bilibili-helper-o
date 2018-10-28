@@ -58,7 +58,8 @@ export class Feature {
             } else if (on === true) {
                 resolve(this.checkPermission().then(({pass, msg}) => {
                     if (pass) {
-                        this.initOption().then(this.addListener);
+                        this.initOption();
+                        this.addListener();
                         this.initialed = true;
                         console.log(`Feature load complete: ${this.name}`);
                         return this;
@@ -74,20 +75,18 @@ export class Feature {
 
     // 初始化配置
     initOption = () => {
-        return new Promise((resolve) => {
-            const options = store.get(this.storeName) || {}; // 缓存配置
-            this.options = Object.assign({}, this.options, options);
-            store.set(this.storeName, this.options);
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                console.log(...message);
-                if (message.commend === 'setOption' && message.feature === this.name) {
-                    // 同步设置 background 里 memory 和 localStorage 中的设置
-                    this.setOption(message.options);
-                    sendResponse(true);
-                } else if (message.commend === 'getOption' && message.feature === _.upperFirst(this.name)) {
-                    sendResponse(this.options);
-                }
-            });
+        const options = store.get(this.storeName) || {}; // 缓存配置
+        this.options = Object.assign({}, this.options, options);
+        store.set(this.storeName, this.options);
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            console.log(...message);
+            if (message.commend === 'setOption' && message.feature === this.name) {
+                // 同步设置 background 里 memory 和 localStorage 中的设置
+                this.setOption(message.options);
+                sendResponse(true);
+            } else if (message.commend === 'getOption' && message.feature === _.upperFirst(this.name)) {
+                sendResponse(this.options);
+            }
         });
     };
 
@@ -101,21 +100,21 @@ export class Feature {
     };
 
     // 设置配置
-    setOption = async (options) => {
+    setOption = (options) => {
         if (this.options.toggle === false) return;
         if (this.initialed === false || options.on !== this.options.on) { // 没有初始化过 或者 总启动状态发生变化时
             if (options.on === true) {
-                if (!this.initialed) await this.init();
-                else await this.launch();
+                if (!this.initialed) this.init();
+                else this.launch();
             } else this.pause();
         }
         this.options = options;
         store.set(this.storeName, options);
-        await this.afterSetOption(options);
+        this.afterSetOption(options);
     };
 
     // 设置之后运行的钩子函数
-    afterSetOption = async () => {};
+    afterSetOption = () => {};
 
     // 启动 - 装载过程之后
     launch = () => {
@@ -130,7 +129,7 @@ export class Feature {
     };
 
     // 添加监听器
-    addListener = async () => {
+    addListener = () => {
         //console.warn(`Feature ${_.upperFirst(this.name)}'s addListener Function is empty!`);
         return;
     };
