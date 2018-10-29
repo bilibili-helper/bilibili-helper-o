@@ -8,7 +8,7 @@ import URL from 'url-parse';
 import {define} from 'Utils';
 import {Feature} from 'Modules/feature';
 
-export const Video = define(['googleAnalytics'], class Video extends Feature {
+export const Video = define(['debug'], class Video extends Feature {
     constructor() {
         super({
             name: 'video',

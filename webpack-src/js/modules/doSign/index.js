@@ -8,7 +8,7 @@ import $ from 'jquery';
 import {define} from 'Utils';
 import {Feature} from 'Modules';
 
-export const Dosign = define(['googleAnalytics'], class DoSign extends Feature {
+export const Dosign = define(['debug'], class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',

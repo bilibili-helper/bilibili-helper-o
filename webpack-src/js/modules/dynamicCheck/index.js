@@ -11,11 +11,11 @@ import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
 
-export const DynamicCheck = define(['googleAnalytics'], class DynamicCheck extends Feature {
+export const DynamicCheck = define(['debug'], class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
-            kind: 'other',
+            kind: 'menu',
             permissions: {login, notifications},
             options: {
                 on: true,

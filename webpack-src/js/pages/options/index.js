@@ -33,10 +33,11 @@ import {
     RadioButtonGroup,
     CheckBoxGroup,
     UpdateList,
+    Helper,
 } from 'Components/optionPageComponents';
 import {theme} from 'Styles';
-import 'Styles/scss/options.scss';
 import updateData from 'Statics/json/update.json';
+import 'Styles/scss/options.scss';
 
 //const {notifications} = PERMISSION_TYPE;
 
@@ -90,6 +91,10 @@ class PageOptions extends React.Component {
         this.options = {
             video: {
                 title: '主站',
+                optionMap: {},
+            },
+            menu: {
+                title: '菜单栏',
                 optionMap: {},
             },
             live: {
@@ -188,10 +193,11 @@ class PageOptions extends React.Component {
     createOptionDOM = () => {
         return _.map(this.options, (e, kind) => {
             const list = this.state[kind];
-            return <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
+            return !_.isEmpty(list.optionMap) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
                 {_.map(list.optionMap, (info, feature) => {
                     let SubListChildren = this.createSubListComponent({kind, feature, info});
                     const toggle = info.toggle === undefined ? true : info.toggle;
+                    const twoLine = info.description !== undefined;
                     return <ListItem
                         key={feature}
                         toggle={toggle}
@@ -203,9 +209,13 @@ class PageOptions extends React.Component {
                             hide: info.on === undefined ? false : !info.on,
                             children: SubListChildren,
                         } : null}
-                    >{info.title}</ListItem>;
+                        twoLine={twoLine}
+                        first={twoLine ? info.title : ''}
+                        second={twoLine ? info.description : ''}
+                        children={twoLine ? null : info.title}
+                    />;
                 })}
-            </List>;
+            </List> : null;
         });
     };
 
@@ -347,14 +357,14 @@ class PageOptions extends React.Component {
                         operation={<Button icon="arrowRight"/>}
                     >通知屏蔽设置</ListItem>*/}
                     <ListItem
-                        //icon={<Icon icon="catSvg" image/>}
+                        icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
                         separator
                         operation={<Button disable normal>检查更新</Button>}
                     />
-                    {_.map(updateData, (data, i) => <UpdateList key={i} title={`版本 ${data.title}`} data={data.list}/>)}
+                    {_.map(updateData, (data, i) => <UpdateList key={i} title={data.title} data={data.list}/>)}
                 </List>
             </OptionBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>

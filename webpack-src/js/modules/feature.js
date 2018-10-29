@@ -52,16 +52,14 @@ export class Feature {
     init = () => {
         return new Promise((resolve) => {
             const {on} = this.options;
-            if (on === false) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
-                console.warn(`Feature ${this.name} OFF`);
-                return on;
-            } else if (on === true) {
+            if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
+                if (on === false) console.warn(`Feature ${this.name} OFF`);
                 resolve(this.checkPermission().then(({pass, msg}) => {
                     if (pass) {
                         this.initOption();
                         this.addListener();
                         this.initialed = true;
-                        console.log(`Feature load complete: ${this.name}`);
+                        console.log(`Feature init complete: ${this.name}`);
                         return this;
                         //chrome.extension.getBackgroundPage().FeatureManager.dealWidthWaitQueue();
                     } else console.error(msg);

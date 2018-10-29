@@ -1,12 +1,14 @@
 {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "name": "__MSG_extName__",
     "short_name": "__MSG_extShortName__",
-    "options_page": "options.html",
     "default_locale": "zh_CN",
     "description": "__MSG_extDescription__",
+    "options_ui": {
+        "page": "options.html"
+    },
     "background": {
         "page": "background.html",
         "persistent": true
@@ -67,7 +69,7 @@
         "statics/*",
         "bilibili-helper.woff",
         "options.html",
-        "at.alicdn.com/t/font_862696_227xf8jklcw.css",
+        "at.alicdn.com/t/*",
         "libs/*"
     ],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js https://www.google-analytics.com/analytics_debug.js; object-src 'self';",

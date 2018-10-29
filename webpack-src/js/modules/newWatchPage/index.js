@@ -8,11 +8,11 @@ import _ from 'lodash';
 import {define} from 'Utils';
 import {Feature} from 'Modules';
 
-export const NewWatchPage = define(['googleAnalytics'], class NewWatchPage extends Feature {
+export const NewWatchPage = define(['debug'], class NewWatchPage extends Feature {
     constructor() {
         super({
             name: 'newWatchPage',
-            kind: 'other',
+            kind: 'menu',
             permission: {},
             options: {
                 on: true,
