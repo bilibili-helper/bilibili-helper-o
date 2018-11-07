@@ -3,7 +3,7 @@
  * Create: 2018-06-12
  * Description: 扩展菜单脚本
  */
-import $ from 'jquery';
+/*import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -27,6 +27,7 @@ const Main = styled.div`
   display: flex;
   background-color: rgb(250,250,250);
 `;
+
 const PopupBody = styled(Body)`
   position: relative;
   padding: 8px 10px 20px;
@@ -117,7 +118,7 @@ class PagePopup extends React.Component {
                 <PopupBody>
                     <PopupButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</PopupButton>
                     <PopupButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</PopupButton>
-                    {/* 登录后显示“我的关注”和“我的收藏” */}
+                    {/!* 登录后显示“我的关注”和“我的收藏” *!/}
                     {hasLogin && <React.Fragment>
                         <PopupButton onClick={() => createTab(newWatchPageLink)}>{__('goDynamic')}</PopupButton>
                         <PopupButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</PopupButton>
@@ -136,4 +137,8 @@ $(document).ready(() => {
         <PagePopup/>,
         document.getElementById('root'),
     );
-});
+});*/
+
+import {UIManager} from 'Libs/UIManager';
+
+const manager = new UIManager({kind: 'popup'});

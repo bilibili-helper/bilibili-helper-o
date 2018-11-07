@@ -5,13 +5,13 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
-import {define} from 'Utils';
+import {defineModule} from 'Utils';
 import {Feature} from 'Modules';
 import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
 
-export const DynamicCheck = define(['debug'], class DynamicCheck extends Feature {
+export const DynamicCheck = defineModule(['debug'], class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
@@ -30,6 +30,7 @@ export const DynamicCheck = define(['debug'], class DynamicCheck extends Feature
 
     launch = () => {
         this.feedList = [];
+        this.newFeedList = [];
         this.lastCheckTime = Date.now();
         chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
         this.checkUnread();
@@ -76,8 +77,8 @@ export const DynamicCheck = define(['debug'], class DynamicCheck extends Feature
             const {code, data} = feedRes;
             if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
                 this.lastCheckTime = Date.now();
-                const list = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
-                this.feedList = list.concat(this.feedList).slice(0, 9);
+                this.newFeedList = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
+                this.feedList = this.newFeedList.concat(this.feedList).slice(0, 9);
             } else { // 请求出问题了！
                 console.error(feedRes);
                 chrome.browserAction.setBadgeText({text: 'error'});
@@ -88,7 +89,7 @@ export const DynamicCheck = define(['debug'], class DynamicCheck extends Feature
     // 弹出推送通知窗口
     sendNotification = () => {
         const notificationState = _.find(this.options.options, {key: 'notification'});
-        notificationState && notificationState.on && _.map(this.feedList, (feed) => {
+        notificationState && notificationState.on && _.map(this.newFeedList, (feed) => {
             const {id: aid, addition, ctime} = feed;
             if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
                 chrome.notifications.create('bilibili-helper-aid' + aid, {

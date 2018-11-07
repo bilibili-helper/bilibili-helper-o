@@ -6,16 +6,15 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import {getURL} from 'Utils';
 
 const iconList = {
-    cat128: getURL('statics/imgs/icon-128.png'),
-    catSvg: getURL('statics/imgs/cat.svg'),
-    arrowRight: getURL('statics/imgs/arrow_right.svg'),
-    arrowDown: getURL('statics/imgs/arrow_down.svg'),
-    arrowUp: getURL('statics/imgs/arrow_up.svg'),
-    arrowLeft: getURL('statics/imgs/arrow_left.svg'),
-    options: getURL('statics/imgs/options.svg'),
+    cat128: chrome.extension.getURL('statics/imgs/icon-128.png'),
+    catSvg: chrome.extension.getURL('statics/imgs/cat.svg'),
+    arrowRight: chrome.extension.getURL('statics/imgs/arrow_right.svg'),
+    arrowDown: chrome.extension.getURL('statics/imgs/arrow_down.svg'),
+    arrowUp: chrome.extension.getURL('statics/imgs/arrow_up.svg'),
+    arrowLeft: chrome.extension.getURL('statics/imgs/arrow_left.svg'),
+    options: chrome.extension.getURL('statics/imgs/options.svg'),
 };
 
 const IconView = styled.div.attrs({

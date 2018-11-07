@@ -4,8 +4,8 @@
  * Description: 扩展守护脚本
  */
 import 'babel-polyfill';
-import {createTab, hasNewVersion, getOption, version} from 'Utils';
-import {FeatureManager} from 'Modules/FeatureManager';
+import {createTab, hasNewVersion, version, __} from 'Utils';
+import {FeatureManager} from 'Libs/FeatureManager';
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -21,8 +21,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
         chrome.notifications.create('bilibili-helper-update', {
             type: 'basic',
             iconUrl: 'statics/imgs/icon-256.png',
-            title: chrome.i18n.getMessage('notificationTitle'),
-            message: chrome.i18n.getMessage('notificationExtensionUpdate').replace('%v', version),
+            title: __('notificationTitle'),
+            message: __('notificationExtensionUpdate').replace('%v', version),
         });
     }
 });

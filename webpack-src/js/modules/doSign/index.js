@@ -1,14 +1,14 @@
-import $ from 'jquery';
 
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/24
  * Description:
  */
-import {define} from 'Utils';
+import $ from 'jquery';
+import {defineModule} from 'Utils';
 import {Feature} from 'Modules';
 
-export const Dosign = define(['debug'], class DoSign extends Feature {
+export const Dosign = defineModule(['debug'], class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',

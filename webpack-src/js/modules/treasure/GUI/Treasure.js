@@ -7,7 +7,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import {treasureCloseImg, treasureOpenImg} from 'Modules/treature/GUI/imgUrls';
+import {treasureCloseImg, treasureOpenImg} from '. /imgUrls';
 import {__, getURL} from 'Utils';
 
 const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
@@ -226,6 +226,8 @@ export class Treasure extends React.Component {
                     this.counter.text('领取中');
                     console.log(res.data.img);
                     this.imgDOM.setAttribute('src', res.data.img);
+                } else if (res.code === -500) {
+                    setTimeout(this.getCaptcha, 2000);
                 }
             },
             error: (res) => {

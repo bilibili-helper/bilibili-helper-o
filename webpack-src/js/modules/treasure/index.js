@@ -4,14 +4,14 @@
  * Description:
  */
 
-import {define} from 'Utils';
+import {defineModule} from 'Utils';
 import {Feature} from 'Modules';
-import {treasureOpenImg} from 'Modules/treature/GUI/imgUrls';
+import {treasureOpenImg} from './GUI/imgUrls';
 import {__, PERMISSION_TYPE} from 'Utils';
 
 const {login, notification} = PERMISSION_TYPE;
 
-export const Treasure = define(['debug'], class Treasure extends Feature {
+export const Treasure = defineModule(['debug'], class Treasure extends Feature {
     constructor() {
         super({
             name: 'treasure',

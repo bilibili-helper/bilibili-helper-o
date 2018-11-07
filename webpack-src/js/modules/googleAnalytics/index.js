@@ -4,10 +4,10 @@
  * Description:
  */
 
-import {define} from 'Utils';
+import {defineModule} from 'Utils';
 import {Feature} from 'Modules/feature';
 
-export const GoogleAnalytics = define(['Debug'], class GoogleAnalytics extends Feature {
+export const GoogleAnalytics = defineModule(['Debug'], class GoogleAnalytics extends Feature {
     constructor() {
         super({
             name: 'googleAnalytics',

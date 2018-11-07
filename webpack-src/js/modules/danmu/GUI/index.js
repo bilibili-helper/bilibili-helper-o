@@ -8,24 +8,18 @@ import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ToolBtn} from './components';
 import {DanmuGUI} from './danmu';
 
-export const Video = {
+export const Danmu = {
     launch: (options) => {
         const {on, container, GUI} = options;
         if (on && GUI) {
-            const helperDOM = $('<span class="bilibili-helper" title="哔哩哔哩助手"/>');
-            container.append(helperDOM);
-            ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
-                const container = $('<div/>').addClass(`bilibili-helper-${name}-wrapper`);
-                const helperContentDOM = helperDOM.find('.bilibili-helper-content');
-                helperContentDOM.append(container);
-                ReactDOM.render(<GUI/>, container[0]);
-            });
+            const content = container.find('.bilibili-helper-content');
+            console.log(container, content);
+            //ReactDOM.render(<GUI/>, content[0]);
         }
     },
-    GUI: class VideoGUI extends React.Component {
+    GUI: class DanmuGUI extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
@@ -38,20 +32,16 @@ export const Video = {
         componentWillMount() {
             chrome.runtime.sendMessage({
                 commend: 'getOption',
-                feature: 'Video',
+                feature: 'Danmu',
             }, (options) => this.setState({...options}));
-
-            chrome.runtime.sendMessage({commend: 'getVideoCid'}, (cid) => {
-                this.setState({cid});
-            });
         }
 
         addListener = () => {
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                if (message.commend === 'newCid' && message.cid !== undefined) {
-                    this.setState({cid: message.cid});
-                }
-            });
+            //chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            //    if (message.commend === 'newCid' && message.cid !== undefined) {
+            //        this.setState({cid: message.cid});
+            //    }
+            //});
         };
 
         render() {

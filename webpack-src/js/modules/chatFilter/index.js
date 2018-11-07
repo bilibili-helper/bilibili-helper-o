@@ -4,10 +4,10 @@
  * Description:
  */
 
-import {define} from 'Utils';
+import {defineModule} from 'Utils';
 import {Feature} from 'Modules';
 
-export const ChatFilter =  define([], class ChatFilter extends Feature {
+export const ChatFilter =  defineModule([], class ChatFilter extends Feature {
     constructor() {
         super({
             name: 'chatFilter',

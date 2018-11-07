@@ -4,9 +4,10 @@
  * Description:
  */
 
+
 import React from 'react';
 import styled from 'styled-components';
-import {ToolContent} from './index';
+import {ToolContent} from './ToolContent';
 
 const HelperBtn = styled.span`
   display: block;
@@ -35,6 +36,9 @@ export class ToolBtn extends React.Component {
         e.preventDefault();
         this.setState({show: !this.state.show});
     };
+    componentDidMount() {
+
+    }
 
     render() {
         const {show} = this.state;

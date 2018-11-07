@@ -28,17 +28,20 @@ export class Feature {
      * @param optionDOM {ReactDOM}
      * @param options {object} 特性的额外配置选项，如过滤列表的配置信息
      */
-    constructor({name, kind, GUI = null, optionDOM = null, permissions = {}, options = {}, require = []}) {
+    constructor({
+        name, kind, GUI = null, optionDOM = null, permissions = {},
+        options = {}, dependencies = [],
+    }) {
         this.name = _.upperFirst(name);
         this.storeName = `bilibili-helper-${this.name}`;
         this.kind = kind;
-        this.GUI = GUI; // 功能/特性的UI
-        this.optionDOM = optionDOM; // 设置页面的UI
+        //this.GUI = GUI; // 功能/特性的UI
+        //this.optionDOM = optionDOM; // 设置页面的UI
         this.permissions = permissions;
         this.options = {...options, kind, name};
         this.initialed = false;
         this.launching = false;
-        this.require = require;
+        this.dependencies = dependencies;
         //this.init();
     }
 

@@ -4,11 +4,9 @@
  * Description:
  */
 
-import _ from 'lodash';
-import {define} from 'Utils';
-import {Feature} from 'Modules';
+import {Feature} from 'Libs/feature';
 
-export const NewWatchPage = define(['debug'], class NewWatchPage extends Feature {
+export class NewWatchPage extends Feature {
     constructor() {
         super({
             name: 'newWatchPage',
@@ -25,10 +23,9 @@ export const NewWatchPage = define(['debug'], class NewWatchPage extends Feature
                 ],
                 value: 'new', // default
             },
+            dependencies: ['menu'],
         });
     }
 
-    launch = () => {
-
-    };
-});
+    launch = () => {};
+};

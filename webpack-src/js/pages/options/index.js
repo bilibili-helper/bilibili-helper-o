@@ -33,8 +33,7 @@ import {
     RadioButtonGroup,
     CheckBoxGroup,
     UpdateList,
-    Helper,
-} from 'Components/optionPageComponents';
+} from 'Components';
 import {theme} from 'Styles';
 import updateData from 'Statics/json/update.json';
 import 'Styles/scss/options.scss';
@@ -110,7 +109,7 @@ class PageOptions extends React.Component {
          * ! important ! 将配置导入state
          * 此处的getOption会返回当前配置和默认配置来合并的对象
          */
-        this.state = Object.assign({}, getOptions(), {
+        this.state = {
             modalTitle: null,
             modalBody: null,
             modalButtons: null,
@@ -122,11 +121,11 @@ class PageOptions extends React.Component {
             subPageBody: null,
             ...this.options,
             debug: false,
-        });
+        };
     }
 
     componentWillMount() {
-        chrome.runtime.sendMessage({commend: 'getOptions'}, (options) => {
+        chrome.runtime.sendMessage({commend: 'getOptions', checkHide: true}, (options) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(options, (option, featureName) => {
                 const {kind} = option;
@@ -357,7 +356,7 @@ class PageOptions extends React.Component {
                         operation={<Button icon="arrowRight"/>}
                     >通知屏蔽设置</ListItem>*/}
                     <ListItem
-                        icon={<Icon icon="catSvg" image/>}
+                        //icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
