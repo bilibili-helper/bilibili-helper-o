@@ -43,7 +43,6 @@ export class UI {
                 console.warn(`Not find container ${containerSelectors}`);
                 resolve(false);
             }
-            console.log(container);
             let timer;
             let timeout = false;
             timer = setTimeout(() => {

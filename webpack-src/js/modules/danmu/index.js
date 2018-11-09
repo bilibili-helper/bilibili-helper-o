@@ -34,13 +34,15 @@ export class Danmu extends Feature {
             urls: [
                 '*://api.bilibili.com/x/v2/dm/history?type=*', // 历史弹幕
                 '*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
+
+                //'*://api.bilibili.com/x/player.so*', // 新页面特有，用于标记新页面，加载时特殊处理
             ],
         };
         chrome.webRequest.onCompleted.addListener((details) => {
             const {tabId} = details;
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
-            console.log(tabId, 'onCompleted', pathname, query);
+            //console.log(tabId, 'onCompleted', pathname, query);
             // 收到前端页面请求
             const store = this.createTabStore(tabId);
             const {state, queue, data} = store;
@@ -80,6 +82,8 @@ export class Danmu extends Feature {
                     // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
                     if (queue.length > 0) this.dealWithTabStoreTask(tabId, store);
                 } else console.warn(`Tab store is already in state:`, state);
+            } else if (message.commend === 'danmuTabUnload' && !!this.tabStores[sender.tab.id]) {
+                delete this.tabStores[sender.tab.id];
             }
         });
     };
@@ -101,7 +105,7 @@ export class Danmu extends Feature {
             const queue = []; // 任务队列
             const data = {tabId}; // 数据对象 存储如cid之类的数据
             this.tabStores[tabId] = {state, iterator, generator, queue, data};
-            console.log(`Created tab[${tabId}] store!`, this.tabStores[tabId]);
+            //console.log(`Created tab[${tabId}] store!`, this.tabStores[tabId]);
             return this.tabStores[tabId];
         }
     };
@@ -112,8 +116,7 @@ export class Danmu extends Feature {
             if (!taskData) return Promise.resolve();
             return new Promise((resolve, reject) => {
                 chrome.tabs.sendMessage(tabId, taskData, (res) => {
-                    console.log(taskData, res);
-                    res ? resolve() : reject();
+                    res ? resolve() : reject(`No result from ${tabId} by data:`, {res}, {taskData});
                 });
             });
         };

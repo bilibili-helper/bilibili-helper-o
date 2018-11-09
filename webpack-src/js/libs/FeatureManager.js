@@ -109,8 +109,9 @@ export class FeatureManager {
                 const settings = {};
                 _.each(features, (feature) => {
                     const setting = feature.getSetting();
-                    settings[_.upperFirst(setting.name)] = setting;
-                })
+                    // 过滤掉已关闭feature
+                    if (setting.on) settings[_.upperFirst(setting.name)] = setting;
+                });
                 sendResponse(settings);
             }
         });

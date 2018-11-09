@@ -112,6 +112,7 @@ export class Danmu extends React.Component {
         this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
         this.addListener();
     }
+
     componentDidMount() {
         chrome.runtime.sendMessage({commend: 'danmuDOMInitialized'});
     }
@@ -128,16 +129,16 @@ export class Danmu extends React.Component {
     //}
 
     addListener = () => {
+        $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
+            chrome.runtime.sendMessage({commend: 'danmuTabUnload'});
+        });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            console.log(message);
-            if (message.commend === 'loadHistoryDanmu') {
+            if (message.commend === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                 if (message.date) {
-                    console.log('history');
                     this.getDANMUList(message.cid, message.date);
                     sendResponse(true);
                 } else console.error(`Error history danmu date: ${message.date}`);
-            } else if (message.commend === 'loadCurrentDanmu') {
-                console.log('today');
+            } else if (message.commend === 'loadCurrentDanmu') { // 被通知载入当日弹幕
                 this.getDANMUList(message.cid);
                 sendResponse(true);
             }
