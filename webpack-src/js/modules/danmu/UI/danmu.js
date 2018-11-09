@@ -14,7 +14,9 @@ import {Crc32Engine} from 'Libs/crc32';
 const {color} = theme;
 const crcEngine = new Crc32Engine();
 
-const DanmuWrapper = styled.div.attrs({className: 'bilibili-helper-danmu-wrapper'})``;
+const DanmuWrapper = styled.div.attrs({className: 'bilibili-helper-danmu-wrapper'})`
+  position: relative;
+`;
 
 const Title = styled.div.attrs({className: 'bilibili-helper-video-gui-title'})`
   margin-bottom: 6px;
@@ -66,7 +68,7 @@ const DanmuListLine = styled.div`
   & .time {
     flex-grow: 0;
     flex-shrink: 0;
-    width: 35px;
+    width: 30px;
     padding-right: 7px;
   }
   & .danmu {
@@ -92,12 +94,31 @@ const DanmuListLine = styled.div`
   }
 `;
 
+const LoadingMask = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 23px;
+  right: 1px;
+  bottom: 1px;
+  left: 1px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: rgba(255, 255, 255, 0.8);
+  cursor: no-drop;
+  user-select: none;
+`;
+
 export class Danmu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loaded: false,
             loading: false,
+            loadingText: null,
             danmuJSON: {},
             filterText: '',
             /**
@@ -149,50 +170,72 @@ export class Danmu extends React.Component {
     getDANMUList = (cid, date) => {
         const url = 'https://api.bilibili.com/x/v1/dm/list.so';
         const historyUrl = 'https://api.bilibili.com/x/v2/dm/history';
-        !!cid && !this.state.loading && $.ajax({
-            method: 'get',
-            url: date ? historyUrl : url,
-            data: {
-                platform: 'bilibiliHelper', // 必须添加，用于区分助手发出的请求，避免被监听
-                type: 1,
-                oid: cid,
-                date,
-            },
-            contentType: 'text/xml',
-            beforeSend: () => this.setState({loading: true}),
-            success: (danmuDocument) => {
-                const danmuJSON = this.danmuDocument2JSON(danmuDocument);
-                danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
-                this.orderedJSON = {...danmuJSON};
+        if (!!cid && !this.state.loading) {
+            const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
                 this.setState({
-                    danmuJSON: danmuJSON,
-                    loaded: true,
-                    loading: false,
+                    loading: true,
+                    loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
                 });
-            },
-            error: (res) => {
-                console.error(res);
-                this.setState({loading: false});
-            },
-        });
+            }, 800);
+            $.ajax({
+                method: 'get',
+                url: date ? historyUrl : url,
+                data: {
+                    platform: 'bilibiliHelper', // 必须添加，用于区分助手发出的请求，避免被监听
+                    type: 1,
+                    oid: cid,
+                    date,
+                },
+                contentType: 'text/xml',
+                success: (danmuDocument) => {
+                    clearTimeout(timer);
+                    const danmuJSON = this.danmuDocument2JSON(danmuDocument);
+                    danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
+                    this.orderedJSON = {...danmuJSON};
+                    this.setState({
+                        danmuJSON: danmuJSON,
+                        loaded: true,
+                        loading: false,
+                    });
+                },
+                error: (res) => {
+                    console.error(res);
+                    this.setState({loading: false});
+                },
+            });
+        }
     };
 
     // 通过uid获取用户信息
     getUserInfoByUid = (uid) => {
         return new Promise((resolve) => {
             if (this.userMap[uid]) resolve(this.userMap[uid]);
-            else uid && $.ajax({
-                method: 'get',
-                url: 'https://api.bilibili.com/x/web-interface/card',
-                data: {mid: uid},
-                success: ({code, data}) => {
-                    if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
-                        this.userMap[uid] = {...data.card};
-                        resolve(uid);
-                    } else resolve(false);
-                },
-                error: (res) => console.log(res),
-            });
+            else {
+                const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
+                    this.setState({
+                        loading: true,
+                        loadingText: '努力查询中~(๑•̀ㅂ•́)و',
+                    });
+                }, 300);
+                uid && $.ajax({
+                    method: 'get',
+                    url: 'https://api.bilibili.com/x/web-interface/card',
+                    data: {mid: uid},
+                    //beforeSend: ,
+                    success: ({code, data}) => {
+                        clearTimeout(timer);
+                        if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
+                            this.userMap[uid] = {...data.card};
+                            this.setState({loading: false});
+                            resolve(uid);
+                        } else resolve(false);
+                    },
+                    error: (res) => {
+                        console.log(res);
+                        this.setState({loading: false});
+                    },
+                });
+            }
         });
     };
 
@@ -301,7 +344,7 @@ export class Danmu extends React.Component {
 
     render() {
         const {on} = this.props.settings;
-        const {loaded, danmuJSON, authorHashMap} = this.state;
+        const {loaded, danmuJSON, authorHashMap, loading, loadingText} = this.state;
         return on ? (
             <DanmuWrapper>
                 <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
@@ -325,6 +368,7 @@ export class Danmu extends React.Component {
                     }) : <DanmuListLine>无数据</DanmuListLine>}
                 </DanmuList>
                 <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
+                {loading && <LoadingMask>{loadingText}</LoadingMask>}
             </DanmuWrapper>
         ) : null;
     }
