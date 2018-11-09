@@ -221,7 +221,7 @@ export class Treasure extends React.Component {
             method: 'get',
             url: 'https://api.live.bilibili.com/lottery/v1/SilverBox/getCaptcha',
             data: {
-                t: Date.now(),
+                ts: Date.now(),
             },
             success: (res) => {
                 if (this.retryTime) this.retryTime = 0;
