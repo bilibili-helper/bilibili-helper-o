@@ -15,8 +15,6 @@ import {
     isLogin,
     createTab,
     version,
-    setOption,
-    getOptions,
 } from 'Utils';
 import {
     Button,
@@ -36,18 +34,17 @@ import {
 } from 'Components';
 import {theme} from 'Styles';
 import updateData from 'Statics/json/update.json';
-import 'Styles/scss/options.scss';
+import 'Styles/scss/config.scss';
 
 //const {notifications} = PERMISSION_TYPE;
 
-const OptionBody = styled(Body).attrs({className: 'option-body'})`
+const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   position: absolute;
   top: ${theme.headerHeight}px;
   right: 0;
   bottom: 0;
   left: 0;
   overflow: auto;
-  
 `;
 
 const Cat = styled.div`
@@ -65,17 +62,17 @@ const Cat = styled.div`
   pointer-events: none;
 `;
 
-const FilterSubPageBody = ({title, filterName, filter, handleSetOption}) => {
+const SubPageBody = ({title, filterName, filter, handleSetSetting}) => {
     return (
         <List>
             <ListItem
-                onClick={() => handleSetOption(filterName)}
+                onClick={() => handleSetSetting(filterName)}
                 operation={<Radio on={filter.on}/>}
                 subList={{
                     children: <CheckBoxGroup
                         data={filter.types}
                         value={filter.value}
-                        onClick={(value) => handleSetOption(filterName, value)}
+                        onClick={(value) => handleSetSetting(filterName, value)}
                     />,
                 }}
             >{title}</ListItem>
@@ -83,156 +80,155 @@ const FilterSubPageBody = ({title, filterName, filter, handleSetOption}) => {
     );
 };
 
-class PageOptions extends React.Component {
+class PageConfig extends React.Component {
     constructor(props) {
         super(props);
 
-        this.options = {
+        this.settings = {
             video: {
                 title: '主站',
-                optionMap: {},
-            },
-            menu: {
-                title: '菜单栏',
-                optionMap: {},
+                map: {},
             },
             live: {
                 title: '直播',
-                optionMap: {},
+                map: {},
+            },
+            popup: {
+                title: '菜单栏',
+                map: {},
             },
             other: {
                 title: '其他',
-                optionMap: {},
+                map: {},
             },
         };
-        /**
-         * ! important ! 将配置导入state
-         * 此处的getOption会返回当前配置和默认配置来合并的对象
-         */
         this.state = {
             modalTitle: null,
             modalBody: null,
             modalButtons: null,
             modalOn: false,
             // sub page state
-            parent: null,
-            subPageOn: false,
             subPageTitle: null,
-            subPageBody: null,
-            ...this.options,
+            subPageParent: null,
+            subPageOn: false,
+            subPageSettings: null,
+            ...this.settings,
             debug: false,
         };
     }
 
     componentWillMount() {
-        chrome.runtime.sendMessage({commend: 'getOptions', checkHide: true}, (options) => {
+        chrome.runtime.sendMessage({commend: 'getSettings', checkHide: true}, (settings) => {
             // 以kind字段来将设置分类到不同list
-            _.forEach(options, (option, featureName) => {
-                const {kind} = option;
-                this.options[kind].optionMap[featureName] = option.options;
+            _.forEach(settings, (setting) => {
+                const {kind, name} = setting;
+                this.settings[kind].map[_.upperFirst(name)] = setting;
             });
-            this.setState(this.options);
+            this.setState(this.settings);
         });
 
         // 监听配置更新
-        chrome.runtime.onMessage.addListener(((message, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener(((message) => {
             if (message.commend === 'debugMode' && message.value !== undefined) {
                 this.setState({debug: message.value});
             }
         }));
         // 获取调试模式
-        chrome.runtime.sendMessage({commend: 'getOption', feature: 'Debug'}, (options) => {
-            this.setState({debug: options.on});
+        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'Debug'}, (setting) => {
+            this.setState({debug: setting.on});
         });
     }
 
     /**
      * 设置配置
      */
-    handleSetOption = ({kind = '', feature, optionName, on}) => {
+    handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
+        const name = _.upperFirst(featureName);
         const thisKindOfFeatures = this.state[kind];
-        if (!!thisKindOfFeatures.optionMap[feature]) { // find it (*≧∪≦)
-            const optionObject = thisKindOfFeatures.optionMap[feature]; // one feature in this kind of list
-            if (!optionName && !on) { // 一级开关
-                optionObject.on = !optionObject.on;
-            } else if (optionName && optionObject.optionType) { // 二级开关
-                if (optionObject.optionType === 'checkbox' && on !== undefined) { // 多选组的值存于选项数组中 (￣.￣)
-                    const optionIndex = _.findIndex(optionObject.options, {key: optionName});
-                    optionObject.options[optionIndex].on = on;
-                } else if (optionObject.optionType === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
-                    optionObject.value = optionName;
+        if (!!thisKindOfFeatures.map[name]) { // find it (*≧∪≦)
+            const settingObject = thisKindOfFeatures.map[name]; // one feature in this kind of list
+            if (!settingName && !on) { // 一级开关
+                settingObject.on = !settingObject.on;
+            } else if (settingName && settingObject.type && !subPage) { // 二级开关
+                if (settingObject.type === 'checkbox' && on !== undefined) { // 多选组的值存于选项数组中 (￣.￣)
+                    const index = _.findIndex(settingObject.options, {key: settingName});
+                    settingObject.options[index].on = on;
+                } else if (settingObject.type === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
+                    settingObject.value = settingName;
                 } else {
-                    console.error(`Undefined optionType: ${optionObject.optionType} (⊙ˍ⊙)!`);
+                    console.error(`Undefined type: ${settingObject.type} (⊙ˍ⊙)!`);
                     return;
                 }
+            } else if (settingName && settingObject.subPage && subPage) { // 二级页面
+                const index = _.findIndex(settingObject.subPage.options, {key: settingName});
+                settingObject.subPage.options[index].on = on;
             } else {
-                console.error(`Error Option object Σ(oﾟдﾟoﾉ)!`);
+                console.error(`Error Setting Object Σ(oﾟдﾟoﾉ)!`);
                 return;
             }
-            thisKindOfFeatures.optionMap[feature] = optionObject;
             chrome.runtime.sendMessage({
-                commend: 'setOption',
-                feature, options: optionObject,
-            }, () => this.setState({[kind]: thisKindOfFeatures}));
-        } else console.error(`Not find kind[${kind}]'s option (*ﾟДﾟ*)!`);
+                commend: 'setSetting',
+                feature: name,
+                settings: settingObject,
+            }, (res) => {
+                if (res) {
+                    thisKindOfFeatures.map[name] = settingObject;
+                    this.setState({[kind]: thisKindOfFeatures});
+                }
+            });
+        } else console.error(`Not find kind[${kind}]'s setting (*ﾟДﾟ*)!`);
     };
 
-    handleSetSubPage = ({title = null, parent = null, body = null}) => {
-        const {subPageOn, parent: currentParent} = this.state;
-        const newState = {
-            subPageOn: !subPageOn,
-            subPageTitle: title,
-            subPageBody: body,
-            parent: currentParent !== parent && parent ? parent.ListWrapper.querySelector('.list-body') : null,
-        };
-
-        this.setState(newState);
-    };
-
-    createOptionDOM = () => {
-        return _.map(this.options, (e, kind) => {
+    createSettingDOM = () => {
+        return _.map(this.settings, (e, kind) => {
             const list = this.state[kind];
-            return !_.isEmpty(list.optionMap) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
-                {_.map(list.optionMap, (info, feature) => {
-                    let SubListChildren = this.createSubListComponent({kind, feature, info});
-                    const toggle = info.toggle === undefined ? true : info.toggle;
-                    const twoLine = info.description !== undefined;
+            return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
+                {_.map(list.map, (settings, featureName) => {
+                    const {on, description, title, subPage, toggle} = settings;
+                    const SubListChildren = this.createSubListComponent({kind, featureName, settings});
+                    const toggleMode = toggle === undefined || subPage ? true : toggle;
+                    const twoLine = description !== undefined;
+                    const mainClickCallback = !subPage ? () => this.handleSetSetting({kind, featureName}) : null;
+                    const operation = !!subPage
+                                      ? <Button icon="arrowRight"
+                                                onClick={() => this.handleSetSubPage(this[`${kind}Ref`], settings)}
+                                      />
+                                      : <Radio disable={!toggleMode} on={on}/>;
                     return <ListItem
-                        key={feature}
-                        toggle={toggle}
-                        onClick={info.on !== undefined && toggle !== false ? () => this.handleSetOption({
-                            kind, feature,
-                        }) : null}
-                        operation={info.on !== undefined ? <Radio disable={!toggle} on={info.on}/> : null}
+                        key={featureName}
+                        toggle={toggleMode}
+                        onClick={on !== undefined && toggleMode !== false ? mainClickCallback : null}
+                        operation={on !== undefined ? operation : null}
                         subList={SubListChildren ? {
-                            hide: info.on === undefined ? false : !info.on,
+                            hide: on === undefined ? false : !on,
                             children: SubListChildren,
                         } : null}
                         twoLine={twoLine}
-                        first={twoLine ? info.title : ''}
-                        second={twoLine ? info.description : ''}
-                        children={twoLine ? null : info.title}
+                        first={twoLine ? title : ''}
+                        second={twoLine ? description : ''}
+                        children={twoLine ? null : title}
                     />;
                 })}
             </List> : null;
         });
     };
 
-    createSubListComponent = ({kind = '', feature = '', info = {}}) => {
+    createSubListComponent = ({kind = '', featureName = '', settings = {}}) => {
         let SubListChildren = null;
-        if (!!info.options && !!info.optionType) {
-            switch (info.optionType) {
+        const {options, type, value} = settings;
+        if (!!options && !!type) {
+            switch (settings.type) {
                 case 'checkbox':
                     SubListChildren = <CheckBoxGroup
-                        data={info.options}
-                        onClick={(optionName, on) => this.handleSetOption({kind, feature, optionName, on})}
+                        data={options}
+                        onClick={(settingName, on) => this.handleSetSetting({kind, featureName, settingName, on})}
                     />;
                     break;
                 case 'radio':
                     SubListChildren = <RadioButtonGroup
-                        value={info.value}
-                        data={info.options}
-                        onClick={(optionName) => this.handleSetOption({kind, feature, optionName})}
+                        value={value}
+                        data={options}
+                        onClick={(settingName) => this.handleSetSetting({kind, featureName, settingName})}
                     />;
                     break;
             }
@@ -240,10 +236,39 @@ class PageOptions extends React.Component {
         return SubListChildren;
     };
 
+    handleSetSubPage = (parent = null, settings = null) => {
+        const {subPageOn, parent: currentParent} = this.state;
+        const newState = {
+            subPageOn: !subPageOn,
+            subPageTitle: settings ? settings.title : null,
+            subPageParent: (currentParent !== parent && parent && parent.ListWrapper) ? parent.ListWrapper.querySelector('.list-body') : null,
+            subPageSettings: settings,
+        };
+
+        this.setState(newState);
+    };
+
+    createSubPage = () => {
+        const {subPageSettings} = this.state;
+        const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
+        const {options, title} = subPage;
+        return <ListItem
+            toggle={toggle}
+            onClick={() => this.handleSetSetting({kind, featureName})}
+            operation={<Radio on={on}/>}
+            subList={{
+                children: <CheckBoxGroup
+                    data={options}
+                    onClick={(settingName, on) => this.handleSetSetting({
+                        kind, featureName, settingName, on, subPage: true,
+                    })}
+                />,
+            }}
+        >{title}</ListItem>;
+    };
+
     render() {
         const {
-            // feature options
-            chatFilter,
             // modal state
             modalOn,
             modalTitle,
@@ -252,36 +277,36 @@ class PageOptions extends React.Component {
             // sub page state
             subPageOn,
             subPageTitle,
-            subPageBody,
-            parent,
+            subPageParent,
             debug,
         } = this.state;
         return <React.Fragment>
             {/*<Header title="设置"/>*/}
-            <OptionBody>
+            <ConfigBody>
                 <Cat/>
                 <SubPage
-                    title={subPageTitle}
                     on={subPageOn}
-                    parent={parent}
-                    onClose={() => {
-                        this.handleSetSubPage(parent);
-                    }}
+                    title={subPageTitle}
+                    parent={subPageParent}
+                    onClose={() => this.handleSetSubPage(subPageParent)}
                 >
-                    {subPageTitle === '高级屏蔽设置' && <FilterSubPageBody
+                    <List>
+                        {subPageOn && this.createSubPage()}
+                    </List>
+                    {/*{subPageTitle === '高级屏蔽设置' && <SubPageBody
                         title="打开屏蔽功能"
                         filter={chatFilter}
                         filterName="chatFilter"
-                        handleSetOption={this.handleSetOption}
+                        handleSetSetting={this.handleSetSetting}
                     />}
-                    {subPageTitle === '通知栏设置' && <FilterSubPageBody
+                    {subPageTitle === '通知栏设置' && <SubPageBody
                         title="打开通知栏控制"
                         filter={chatFilter}
                         filterName="chatFilter"
-                        handleSetOption={this.handleSetOption}
-                    />}
+                        handleSetSetting={this.handleSetSetting}
+                    />}*/}
                 </SubPage>
-                {this.createOptionDOM()}
+                {this.createSettingDOM()}
                 {/*
                 <List title="主站" ref={i => this.mainList = i}>
                     <ListItem
@@ -365,7 +390,7 @@ class PageOptions extends React.Component {
                     />
                     {_.map(updateData, (data, i) => <UpdateList key={i} title={data.title} data={data.list}/>)}
                 </List>
-            </OptionBody>
+            </ConfigBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
         </React.Fragment>;
     }
@@ -373,7 +398,7 @@ class PageOptions extends React.Component {
 
 $(document).ready(() => {
     ReactDOM.render(
-        <PageOptions/>,
+        <PageConfig/>,
         document.getElementById('root'),
     );
 });

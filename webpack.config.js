@@ -19,17 +19,6 @@ const buildPath = path.resolve('build');
 const webpackJSPath = path.resolve(webpackPath, 'js');
 const indexFilename = 'index.js';
 
-const moduleRegExp = /modules\/(.+)\/index.js/;
-const modulesEntry = _.mapKeys(glob.sync(path.resolve(webpackJSPath, 'modules', '*', 'UI', indexFilename)), (dirPath, key) => {
-    const res = moduleRegExp.exec(dirPath);
-    return res ? `/modules/UIs/${res[1]}` : console.error(`Wrong in path ${dirPath}`);
-});
-//.reduce((x, y) => {
-//    console.log(x, y);
-//    Object.assign(x, {[y]: y}), {};
-//});
-//console.log(modulesEntry);
-
 module.exports = {
     watch: true,
     mode: 'development',
@@ -45,14 +34,12 @@ module.exports = {
     entry: {
         'background': path.resolve(webpackJSPath, 'pages', 'background', indexFilename),
         'live': path.resolve(webpackJSPath, 'pages', 'live', indexFilename),
-        'options': path.resolve(webpackJSPath, 'pages', 'options', indexFilename),
+        'config': path.resolve(webpackJSPath, 'pages', 'config', indexFilename),
         'popup': path.resolve(webpackJSPath, 'pages', 'popup', indexFilename),
         'video': path.resolve(webpackJSPath, 'pages', 'video', indexFilename),
-        //...modulesEntry,
     },
     output: {
         filename: '[name].js',
-        chunkFilename: '[name].chunk.js',
         path: buildPath,
     },
     optimization: {

@@ -139,6 +139,8 @@ const Title = styled.h5.attrs({
     className: 'sub-page-title',
 })`
   margin: auto 0 auto 24px;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const Body = styled.div.attrs({

@@ -4,27 +4,29 @@
  * Description:
  */
 
-import {defineModule} from 'Utils';
-import {Feature} from 'Modules';
-import {treasureOpenImg} from './GUI/imgUrls';
+
+import {Feature} from 'Libs/feature';
+import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
 import {__, PERMISSION_TYPE} from 'Utils';
 
 const {login, notification} = PERMISSION_TYPE;
-
-export const Treasure = defineModule(['debug'], class Treasure extends Feature {
+export {TreasureUI} from './UI/index';
+export class Treasure extends Feature {
     constructor() {
         super({
             name: 'treasure',
             kind: 'live',
             permission: {login, notification},
-            options: {
+            dependencies: ['debug'],
+            settings: {
                 on: true,
-                title: '自动领瓜子',
-                optionType: 'checkbox',
-                options: [
-                    {title: '推送通知', key: 'notification', on: true},
-                ],
                 toggle: true,
+                hasUI: true,
+                title: '自动领瓜子',
+                type: 'checkbox',
+                options: [
+                    {key: 'notification', title: '推送通知', on: true},
+                ],
             },
         });
     }
@@ -42,4 +44,4 @@ export const Treasure = defineModule(['debug'], class Treasure extends Feature {
             }
         });
     };
-});
+}

@@ -92,7 +92,7 @@ const DanmuListLine = styled.div`
   }
 `;
 
-export class DanmuGUI extends React.Component {
+export class Danmu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -112,26 +112,34 @@ export class DanmuGUI extends React.Component {
         this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
         this.addListener();
     }
-
-    componentDidUpdate(prevProps) {
-        /**
-         * 如下地址格式的视频页面加载完需要主动加载弹幕列表
-         * https://www.bilibili.com/video/av7895666
-         * 除此之外都被动加载
-         */
-        if (prevProps.cid !== this.props.cid && this.props.cid && _.isEmpty(this.orderedJSON)) {
-            this.getDANMUList(this.props.cid);
-        }
+    componentDidMount() {
+        chrome.runtime.sendMessage({commend: 'danmuDOMInitialized'});
     }
+
+    //componentDidUpdate(prevProps) {
+    //    /**
+    //     * 如下地址格式的视频页面加载完需要主动加载弹幕列表
+    //     * https://www.bilibili.com/video/av7895666
+    //     * 除此之外都被动加载
+    //     */
+    //    if (prevProps.cid !== this.props.cid && this.props.cid && _.isEmpty(this.orderedJSON)) {
+    //        this.getDANMUList(this.props.cid);
+    //    }
+    //}
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            console.log(message);
             if (message.commend === 'loadHistoryDanmu') {
                 if (message.date) {
-                    this.getDANMUList(this.props.cid, message.date);
+                    console.log('history');
+                    this.getDANMUList(message.cid, message.date);
+                    sendResponse(true);
                 } else console.error(`Error history danmu date: ${message.date}`);
             } else if (message.commend === 'loadCurrentDanmu') {
-                this.getDANMUList(this.props.cid);
+                console.log('today');
+                this.getDANMUList(message.cid);
+                sendResponse(true);
             }
         });
     };
@@ -291,9 +299,8 @@ export class DanmuGUI extends React.Component {
     };
 
     render() {
-        const {options = {}} = this.props;
+        const {on} = this.props.settings;
         const {loaded, danmuJSON, authorHashMap} = this.state;
-        const {on = false} = options;
         return on ? (
             <DanmuWrapper>
                 <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
@@ -311,10 +318,7 @@ export class DanmuGUI extends React.Component {
                             >
                                 <span className="time">{time}</span>
                                 <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
-                                <span
-                                    className="author"
-                                    data-usercard-mid={uid}
-                                >{authorName}</span>
+                                <span className="author" data-usercard-mid={uid}>{authorName}</span>
                             </DanmuListLine>
                         );
                     }) : <DanmuListLine>无数据</DanmuListLine>}

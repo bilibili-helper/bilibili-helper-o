@@ -14,7 +14,7 @@ export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
   background-color: rgb(250,250,250);
 `;
 
-export default class PopupUI extends UI {
+export class PopupUI extends UI {
     constructor() {
         super({
             name: 'popup',

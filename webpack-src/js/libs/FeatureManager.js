@@ -5,16 +5,16 @@
  */
 
 import _ from 'lodash';
-import * as Features from 'Modules/index';
+import {Features} from 'Modules/index';
 
 export class FeatureManager {
     constructor() {
         this.features = {};
         this.waitQueue = [];
-        this.UIOptions = {};
+        this.UISettings = {};
         this.addListener();
         this.instantiateFeatures().then(this.loadFeatures);
-        this.retryMax = _.keys(Features).length + 10;
+        this.retryMax = _.keys(Features).length;
         this.retryTime = 0;
     }
 
@@ -46,7 +46,7 @@ export class FeatureManager {
     // 单个模块载入
     loadFeature = async (featureName) => {
         return this.features[featureName].init().then(f => {
-            f.options.on && f.launch();
+            f.settings.on && f.launch();
             return true;
         });
     };
@@ -91,23 +91,27 @@ export class FeatureManager {
              * feature: 如果指定feature则优先返回指定名称的Feature的配置
              * kind: 如果指定kind则返回指定kind那一类Feature的配置
              * checkHide: 如果设置checkHide为true，则忽略那些配置有checkHide的Feature
+             * hasUI: 只获取有该setting配置的Feature
              * 如果没有给任何其他参数，则返回所有Feature的配置列表
              */
-            if (message.commend === 'getOptions') {
+            if (message.commend === 'getSettings') {
                 let features;
                 if (message.feature) {
-                    features = _.filter(this.features, feature => message.feature === feature.options.name);
+                    features = _.filter(this.features, feature => message.feature === feature.settings.name);
                 } else if (message.kind) {
                     features = _.filter(this.features, feature => {
-                        const {kind, hide} = feature.options;
+                        const {kind, hide, hasUI} = feature.settings;
                         const sameKind = kind === message.kind;
-                        return message.checkHide ? !hide && sameKind : sameKind;
+                        const hideRes = message.checkHide && hide ? !hide && sameKind : sameKind;
+                        return message.hasUI ? hasUI && hideRes : hideRes;
                     });
-                } else features = message.checkHide ? _.filter(this.features, feature => !feature.options.hide) : this.features;
-                sendResponse(_.merge(features, (feature) => {
-                    const options = feature.getOption();
-                    return {[options.name]: options};
-                }));
+                } else features = message.checkHide ? _.filter(this.features, feature => !feature.settings.hide) : this.features;
+                const settings = {};
+                _.each(features, (feature) => {
+                    const setting = feature.getSetting();
+                    settings[_.upperFirst(setting.name)] = setting;
+                })
+                sendResponse(settings);
             }
         });
     };

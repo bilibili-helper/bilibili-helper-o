@@ -5,23 +5,23 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
-import {defineModule} from 'Utils';
-import {Feature} from 'Modules';
+import {Feature} from 'Libs/feature';
 import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
 
-export const DynamicCheck = defineModule(['debug'], class DynamicCheck extends Feature {
+export class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
-            kind: 'menu',
+            kind: 'popup',
             permissions: {login, notifications},
-            options: {
-                on: true,
-                title: '动态推送',
-                optionType: 'checkbox',
-                options: [
+            dependencies: ['debug'],
+            settings: { // 指该feature的配置
+                on: true, // 指feature是否执行launch function
+                title: '动态推送', // 在option页面中配置项目的显示名称
+                type: 'checkbox', // 指该feature配置子选项的类型，此处为复选框
+                options: [ // 子选项
                     {title: '推送通知', key: 'notification', on: true},
                 ],
             },
@@ -88,7 +88,7 @@ export const DynamicCheck = defineModule(['debug'], class DynamicCheck extends F
 
     // 弹出推送通知窗口
     sendNotification = () => {
-        const notificationState = _.find(this.options.options, {key: 'notification'});
+        const notificationState = _.find(this.settings.options, {key: 'notification'});
         notificationState && notificationState.on && _.map(this.newFeedList, (feed) => {
             const {id: aid, addition, ctime} = feed;
             if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
@@ -104,4 +104,4 @@ export const DynamicCheck = defineModule(['debug'], class DynamicCheck extends F
             } else return; // 为什么检测过了呢Σ(oﾟдﾟoﾉ)
         });
     };
-});
+};

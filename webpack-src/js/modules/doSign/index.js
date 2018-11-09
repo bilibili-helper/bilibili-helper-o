@@ -5,17 +5,15 @@
  * Description:
  */
 import $ from 'jquery';
-import {defineModule} from 'Utils';
-import {Feature} from 'Modules';
+import {Feature} from 'Libs/feature';
 
-export const Dosign = defineModule(['debug'], class DoSign extends Feature {
+export const Dosign = class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',
             kind: 'live',
-            GUI: null,
-            permission: {},
-            options: {
+            dependencies: ['debug'],
+            settings: {
                 on: true,
                 title: '自动签到',
             },
@@ -25,4 +23,4 @@ export const Dosign = defineModule(['debug'], class DoSign extends Feature {
     launch = () => {
         this.options.on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
     };
-});
+};

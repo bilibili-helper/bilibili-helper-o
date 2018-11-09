@@ -7,8 +7,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import {treasureCloseImg, treasureOpenImg} from '. /imgUrls';
-import {__, getURL} from 'Utils';
+import {treasureCloseImg, treasureOpenImg} from './imgUrls';
 
 const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
   width: 48px;
@@ -67,7 +66,6 @@ const Progress = styled.div`
 export class Treasure extends React.Component {
     constructor(props) {
         super(props);
-        this.options = this.props.options;
         this.state = {
             open: false, // 宝箱倒计时结束可以打开的状态
             max_times: NaN, // 可领取最大轮次，每轮有3波
@@ -99,6 +97,12 @@ export class Treasure extends React.Component {
     }
 
     componentDidMount() {
+        chrome.runtime.sendMessage({
+            commend: 'getSetting',
+            feature: 'treasure',
+        }, (settings) => {
+            this.settings = settings;
+        });
         this.counter = $(this.counterDOM);
         this.imgDOM.crossOrigin = 'Anonymous';
         this.getCurrentTask();
@@ -116,7 +120,6 @@ export class Treasure extends React.Component {
      */
     handleOnLoadImg = () => {
         const context = this.canvasDOM.getContext('2d');
-        console.log(context);
         context.clearRect(0, 0, 120, 40);
         context.drawImage(this.imgDOM, 0, 0);
         const grayScaleMap = this.getGrayScaleMap(context);
@@ -167,12 +170,12 @@ export class Treasure extends React.Component {
      */
     setCounter = (minutes) => {
         const {counterComplete} = this.state;
-        if (counterComplete) {
+        if (counterComplete && minutes) {
             this.setState({counterComplete: false});
             const endTime = Date.now() + minutes * 60 * 1000;
             const intervalNum = setInterval(() => {
                 const seconds = Number.parseInt((endTime - Date.now()) / 1000);
-                if (seconds === 0) {
+                if (seconds <= 0) {
                     clearInterval(intervalNum);
                     this.setState({counterComplete: true}, () => this.getCaptcha());
                 }
@@ -224,10 +227,12 @@ export class Treasure extends React.Component {
                 if (this.retryTime) this.retryTime = 0;
                 if (res.code === 0) {
                     this.counter.text('领取中');
-                    console.log(res.data.img);
                     this.imgDOM.setAttribute('src', res.data.img);
-                } else if (res.code === -500) {
-                    setTimeout(this.getCaptcha, 2000);
+                } else if (res.code === -500) { // 稍后登录？还不知道为什么会有这个错误
+                    if (this.retryTime < this.maxRetryTime) {
+                        ++this.retryTime;
+                        setTimeout(this.getCaptcha, 2000);
+                    }
                 }
             },
             error: (res) => {
@@ -254,17 +259,20 @@ export class Treasure extends React.Component {
             data: {time_start, time_end, captcha},
             success: (res) => {
                 if (this.retryTime) this.retryTime = 0;
-                if (res.code === 0) {
-                    if (!res.data.isEnd) { // 没有全部领完
-                        this.sendNotification();
-                        this.getCurrentTask();
-                        this.counter.text('领取成功');
-                    } else this.counter.text('已领完');
-                } else if (res.code === -902) { // 验证码错误
-                    setTimeout(this.getCaptcha, 500);
-                } else if (res.code === -901) { // 验证码过期
-                    setTimeout(this.getCaptcha, 500);
-                } else {
+                switch(res.code) {
+                    case 0:
+                        if (!res.data.isEnd) { // 没有全部领完
+                            this.sendNotification();
+                            this.getCurrentTask();
+                            this.counter.text('领取成功');
+                        } else this.counter.text('已领完');
+                        break;
+                    case -902: // 验证码错误
+                    case -901: // 验证码过期
+                    case -500: // 稍后登录？还不知道为什么会有这个错误
+                        setTimeout(this.getCaptcha, 500);
+                        break;
+                    default:
                     // TODO 其他情况
                 }
             },
@@ -280,7 +288,7 @@ export class Treasure extends React.Component {
 
     // 弹出推送通知窗口
     sendNotification = () => {
-        const notificationState = _.find(this.options.options, {key: 'notification'});
+        const notificationState = _.find(this.settings.options, {key: 'notification'});
         if (notificationState && notificationState.on) {
             const {silver, time_start} = this.state;
             chrome.runtime.sendMessage({

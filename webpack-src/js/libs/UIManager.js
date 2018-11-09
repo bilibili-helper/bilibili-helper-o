@@ -4,14 +4,15 @@
  * Description:
  */
 import _ from 'lodash';
+import {UIs} from 'Modules';
 
 export class UIManager {
     /**
      * @param kind {string} 指该ui管理器加载那个页面（由kind字段指定）的Feature的UI
      */
-    constructor({kind}) {
+    constructor(kind) {
         this.kind = kind;
-        this.options = {};
+        this.settings = {};
         this.init();
         this.UIMap = {};
         this.waitQueue = [];
@@ -28,31 +29,23 @@ export class UIManager {
      */
     getUIList = () => {
         return new Promise(resolve => {
-            chrome.runtime.sendMessage({commend: 'getOptions', kind: this.kind}, (options) => {
-                this.retryMax = _.keys(options).length + 10;
-                this.options = options;
-                resolve(options);
+            chrome.runtime.sendMessage({commend: 'getSettings', kind: this.kind, hasUI: true}, (settings) => {
+                this.retryMax = _.keys(settings).length;
+                this.settings = settings;
+                resolve(settings);
             });
         });
     };
 
     instantiateUIs = () => {
-        return Promise.all(_.map(this.options, (option) => new Promise(resolveUI => {
-            const name = _.lowerFirst(option.name);
-            //let pass = true;
-            //console.log(option.dependencies);
-            //_.each(option.dependencies.uis, (dependency) => {
-            //    if (!_.find(this.options, (o) => o.name === dependency)) { // 检查依赖列表项目是否都在列表中
-            //        resolve(pass = false)
-            //    }
-            //});
-            //if (!pass) resolve(false); // 如果有依赖项缺失，则停止实例化
-            import(/* webpackChunkName: "[request]" */ `Modules/${name}/UI`).then(({default: UIClass}) => {
-                if (UIClass) {
-                    this.UIMap[option.name] = new UIClass();
-                    resolveUI();
-                } else throw(`Wrong UI class ${option.name}`);
-            });
+        return Promise.all(_.map(this.settings, (option) => new Promise(resolveUI => {
+            const name = _.upperFirst(option.name);
+            const UIClass = UIs[`${name}UI`];
+            //console.log(UIs, name, UIClass);
+            if (UIClass) {
+                this.UIMap[name] = new UIClass();
+            } else throw(`Wrong UI class ${option.name}`);
+            resolveUI();
         })));
     };
 
@@ -62,15 +55,14 @@ export class UIManager {
         });
     };
 
-    loadUI = (UI) => {
+    loadUI = (UI, name) => {
         return new Promise(resolve => {
             let {pass, dependDOM} = this.checkDependencies(UI.dependencies);
-            console.log(pass, dependDOM);
             if (pass) {
-                console.log(`loading ${UI.name}`);
-                UI.load(dependDOM).then((outputDOM = null) => {
+                UI.load(dependDOM, this.settings[name]).then((outputDOM = null) => {
                     UI.loaded = true;
                     UI.outputDOM = outputDOM;
+                    console.log(`UI loaded: ${UI.name}`);
                     resolve(true);
                 });
             } else {
@@ -83,7 +75,7 @@ export class UIManager {
     dealWithWaitQueue = () => {
         if (this.retryTime > this.retryMax) return;
         ++this.retryTime;
-        const originQueue = [...this.waitQueue];
+        const originQueue = _.mapKeys(this.waitQueue, (setting) => _.upperFirst(setting.name));
         this.waitQueue = [];
 
         Promise.all(_.map(originQueue, this.loadUI)).then(() => {
@@ -104,19 +96,5 @@ export class UIManager {
             } else dependDOM.push(UI.outputDOM);
         });
         return {pass, dependDOM};
-    };
-
-    /**
-     * 设置锚，用于将UI插入到指定锚中的热定位置
-     */
-    setAnchor = () => {
-        console.error(`Empty Function "setAnchor" in UI ${this.name}`);
-    };
-
-    /**
-     * 获取本UI的锚，供其他模块使用
-     */
-    getAnchor = () => {
-        console.error(`Empty Function "getAnchor" in UI ${this.name}`);
     };
 }

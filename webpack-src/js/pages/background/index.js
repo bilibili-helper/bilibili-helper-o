@@ -16,11 +16,11 @@ import {FeatureManager} from 'Libs/FeatureManager';
 chrome.runtime.onInstalled.addListener(function(details) {
     const {reason, previousVersion} = details;
     if (reason === 'install') { // 安装成功后默认打开设置页面
-        createTab(chrome.extension.getURL('options.html?mod=install'));
+        createTab(chrome.extension.getURL('config.html?mod=install'));
     } else if (reason === 'update' && !hasNewVersion(previousVersion)) {
         chrome.notifications.create('bilibili-helper-update', {
             type: 'basic',
-            iconUrl: 'statics/imgs/icon-256.png',
+            iconUrl: '../statics/imgs/icon-256.png',
             title: __('notificationTitle'),
             message: __('notificationExtensionUpdate').replace('%v', version),
         });

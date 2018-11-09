@@ -4,16 +4,15 @@
  * Description:
  */
 
-import {defineModule} from 'Utils';
-import {Feature} from 'Modules';
+import {Feature} from 'Libs/feature';
 
-export const ChatFilter =  defineModule([], class ChatFilter extends Feature {
+export const ChatFilter =  class ChatFilter extends Feature {
     constructor() {
         super({
             name: 'chatFilter',
             kind: 'live',
-            permission: {},
-            options: {
+            dependencies: ['debug'],
+            settings: {
                 on: true,
                 title: '聊天内容过滤',
                 options: [],
@@ -21,4 +20,4 @@ export const ChatFilter =  defineModule([], class ChatFilter extends Feature {
             },
         });
     }
-});
+};

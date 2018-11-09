@@ -188,7 +188,7 @@ export class ListItem extends React.Component {
         return (
             <ThemeProvider theme={{twoLine, toggle}}>
                 <ListItemView noBorder={noBorder} {...rest}>
-                    <TitleView onClick={onClick}>
+                    <TitleView onClick={toggle ? onClick : null}>
                         {icon && icon}
                         {twoLine && <TwoLineContainerView>
                             {first && <h3>{first}</h3>}

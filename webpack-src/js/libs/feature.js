@@ -24,21 +24,16 @@ export class Feature {
     /**
      * @param name {string} 配置的名称
      * @param kind {string} 配置的列表划分，在渲染设置页面时根据该值在相对应的列表中自动渲染，如：主站，直播，其他等
-     * @param GUI {ReactDOM}
-     * @param optionDOM {ReactDOM}
-     * @param options {object} 特性的额外配置选项，如过滤列表的配置信息
+     * @param permissions {Object}
+     * @param settings {object} 特性的额外配置选项，如过滤列表的配置信息
+     * @param dependencies {array}
      */
-    constructor({
-        name, kind, GUI = null, optionDOM = null, permissions = {},
-        options = {}, dependencies = [],
-    }) {
+    constructor({name, kind, permissions = {}, settings = {}, dependencies = []}) {
         this.name = _.upperFirst(name);
         this.storeName = `bilibili-helper-${this.name}`;
         this.kind = kind;
-        //this.GUI = GUI; // 功能/特性的UI
-        //this.optionDOM = optionDOM; // 设置页面的UI
         this.permissions = permissions;
-        this.options = {...options, kind, name};
+        this.settings = {...settings, kind, name};
         this.initialed = false;
         this.launching = false;
         this.dependencies = dependencies;
@@ -54,12 +49,12 @@ export class Feature {
      */
     init = () => {
         return new Promise((resolve) => {
-            const {on} = this.options;
+            const {on} = this.settings;
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
                 if (on === false) console.warn(`Feature ${this.name} OFF`);
                 resolve(this.checkPermission().then(({pass, msg}) => {
                     if (pass) {
-                        this.initOption();
+                        this.initSetting();
                         this.addListener();
                         this.initialed = true;
                         console.log(`Feature init complete: ${this.name}`);
@@ -68,54 +63,53 @@ export class Feature {
                     } else console.error(msg);
                 }));
             } else { // 没有启动配置
-                console.error(`No options names ${_.upperFirst(this.name)}`);
+                console.error(`No settings names ${_.upperFirst(this.name)}`);
                 resolve(false);
             }
         });
     };
 
     // 初始化配置
-    initOption = () => {
-        const options = store.get(this.storeName) || {}; // 缓存配置
-        this.options = Object.assign({}, this.options, options);
-        store.set(this.storeName, this.options);
+    initSetting = () => {
+        const settings = store.get(this.storeName) || {}; // 缓存配置
+        this.settings = Object.assign({}, this.settings, settings);
+        store.set(this.storeName, this.settings);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            console.log(...message);
-            if (message.commend === 'setOption' && message.feature === this.name) {
+            if (message.commend === 'setSetting' && _.upperFirst(message.feature) === this.name) {
                 // 同步设置 background 里 memory 和 localStorage 中的设置
-                this.setOption(message.options);
+                this.setSetting(message.settings);
                 sendResponse(true);
-            } else if (message.commend === 'getOption' && message.feature === _.upperFirst(this.name)) {
-                sendResponse(this.options);
+            } else if (message.commend === 'getSetting' && _.upperFirst(message.feature) === this.name) {
+                sendResponse(this.settings);
             }
         });
     };
 
     // 获取配置
-    getOption = (featureName) => {
+    getSetting = (featureName) => {
         if (featureName === this.name || !featureName) return store.get(this.storeName) || {};
         else {
             const name = _.upperFirst(featureName);
-            return chrome.extension.getBackgroundPage().FeatureManager.features[name].getOption();
+            return chrome.extension.getBackgroundPage().FeatureManager.features[name].getSetting();
         }
     };
 
     // 设置配置
-    setOption = (options) => {
-        if (this.options.toggle === false) return;
-        if (this.initialed === false || options.on !== this.options.on) { // 没有初始化过 或者 总启动状态发生变化时
-            if (options.on === true) {
-                if (!this.initialed) this.init();
+    setSetting = (settings) => {
+        //if (this.settings.toggle === false) return;
+        if (this.initialed === false || settings.on !== this.settings.on) { // 没有初始化过 或者 总启动状态发生变化时
+            if (settings.on === true) {
+                if (!this.initialed) void this.init();
                 else this.launch();
             } else this.pause();
         }
-        this.options = options;
-        store.set(this.storeName, options);
-        this.afterSetOption(options);
+        this.settings = settings;
+        store.set(this.storeName, settings);
+        this.afterSetSetting(settings);
     };
 
     // 设置之后运行的钩子函数
-    afterSetOption = () => {};
+    afterSetSetting = () => {};
 
     // 启动 - 装载过程之后
     launch = () => {

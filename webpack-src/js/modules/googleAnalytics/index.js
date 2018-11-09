@@ -4,16 +4,15 @@
  * Description:
  */
 
-import {defineModule} from 'Utils';
-import {Feature} from 'Modules/feature';
+import {Feature} from 'Libs/feature';
 
-export const GoogleAnalytics = defineModule(['Debug'], class GoogleAnalytics extends Feature {
+export class GoogleAnalytics extends Feature {
     constructor() {
         super({
             name: 'googleAnalytics',
             kind: 'other',
-            require: ['debug'],
-            options: {
+            dependencies: ['debug'],
+            settings: {
                 on: false,
                 toggle: false,
                 title: '数据统计',
@@ -50,4 +49,4 @@ export const GoogleAnalytics = defineModule(['Debug'], class GoogleAnalytics ext
             ga('set', 'checkProtocolTask');
         }
     };
-});
+};
