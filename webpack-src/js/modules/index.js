@@ -13,6 +13,7 @@ import {Debug} from './debug';
 import {Danmu, DanmuUI} from './danmu';
 import {Popup, PopupUI} from './popup';
 import {Menu, MenuUI} from './menu';
+import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 
 export const Features = {
     Debug,
@@ -23,6 +24,7 @@ export const Features = {
     Video,
     Danmu,
     DynamicCheck,
+    ChatFilter,
 };
 
 export const UIs = {
@@ -32,4 +34,5 @@ export const UIs = {
     VideoUI,
     DanmuUI,
     DynamicCheckUI,
+    ChatFilterUI,
 };

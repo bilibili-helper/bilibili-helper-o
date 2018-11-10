@@ -7,8 +7,11 @@
 //import {initialByInterval, initialByObserver} from 'Utils';
 import 'Styles/scss/video.scss';
 import {UIManager} from 'Libs/UIManager';
+import {consoleLogo} from 'Utils';
 
-const manager = new UIManager('video');
+new UIManager('video');
+consoleLogo();
+
 //
 //initialByObserver({
 //    container: [

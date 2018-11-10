@@ -118,7 +118,6 @@ class PageConfig extends React.Component {
     }
 
     componentWillMount() {
-        consoleLogo();
         chrome.runtime.sendMessage({commend: 'getSettings', checkHide: true}, (settings) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
@@ -315,6 +314,7 @@ $(document).ready(() => {
     ReactDOM.render(
         <PageConfig/>,
         document.getElementById('root'),
+        consoleLogo,
     );
 });
 

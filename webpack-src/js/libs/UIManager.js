@@ -5,7 +5,6 @@
  */
 import _ from 'lodash';
 import {UIs} from 'Modules';
-import {consoleLogo} from 'Utils';
 
 export class UIManager {
     /**
@@ -81,7 +80,6 @@ export class UIManager {
 
         Promise.all(_.map(originQueue, this.loadUI)).then(() => {
             if (this.waitQueue.length > 0) this.dealWithWaitQueue();
-            else consoleLogo();
         });
     };
 

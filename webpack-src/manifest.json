@@ -40,6 +40,8 @@
                 "live.js",
                 "libs/ocrad.min.js"
             ],
+            "css": [
+            ],
             "matches": ["*://live.bilibili.com/*"],
             "run_at": "document_end"
         }

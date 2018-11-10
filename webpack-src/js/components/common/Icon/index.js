@@ -18,13 +18,13 @@ const iconList = {
 };
 
 const IconView = styled.div.attrs({
-    className: ({iconfont}) => iconfont ? `iconfont icon-${iconfont}` : 'icon',
+    className: ({iconfont}) => iconfont ? `bilibili-helper-iconfont bilibili-helper-icon-${iconfont}` : 'icon',
 })`
   display: inline-block;
   width: ${props => props.size || 36}px;
   height: ${props => props.size || 36}px;
   font-size: ${props => props.size || 36}px !important;
-  ${({iconfont}) => iconfont ? "font-family: 'iconfont'" : ''};
+  ${({iconfont}) => iconfont ? 'font-family: bilibili-helper-iconfont' : ''};
   background-image: url(${({icon}) => iconList[icon]});
   background-position: center;
   background-repeat: no-repeat;
