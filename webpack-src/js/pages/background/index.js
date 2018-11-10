@@ -4,7 +4,7 @@
  * Description: 扩展守护脚本
  */
 import 'babel-polyfill';
-import {createTab, hasNewVersion, version, __} from 'Utils';
+import {createTab, hasNewVersion, version, __, consoleLogo} from 'Utils';
 import {FeatureManager} from 'Libs/FeatureManager';
 
 /**
@@ -52,4 +52,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             nonInteraction: true,
         });
     }
-})
+});
+consoleLogo();

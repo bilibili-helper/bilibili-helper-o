@@ -9,7 +9,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {getURL, PERMISSION_TYPE} from 'Utils';
+import {getURL, PERMISSION_TYPE, consoleLogo} from 'Utils';
 import {
     __,
     isLogin,
@@ -118,6 +118,7 @@ class PageConfig extends React.Component {
     }
 
     componentWillMount() {
+        consoleLogo();
         chrome.runtime.sendMessage({commend: 'getSettings', checkHide: true}, (settings) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
@@ -290,98 +291,12 @@ class PageConfig extends React.Component {
                     parent={subPageParent}
                     onClose={() => this.handleSetSubPage(subPageParent)}
                 >
-                    <List>
-                        {subPageOn && this.createSubPage()}
-                    </List>
-                    {/*{subPageTitle === '高级屏蔽设置' && <SubPageBody
-                        title="打开屏蔽功能"
-                        filter={chatFilter}
-                        filterName="chatFilter"
-                        handleSetSetting={this.handleSetSetting}
-                    />}
-                    {subPageTitle === '通知栏设置' && <SubPageBody
-                        title="打开通知栏控制"
-                        filter={chatFilter}
-                        filterName="chatFilter"
-                        handleSetSetting={this.handleSetSetting}
-                    />}*/}
+                    <List>{subPageOn && this.createSubPage()}</List>
                 </SubPage>
                 {this.createSettingDOM()}
-                {/*
-                <List title="主站" ref={i => this.mainList = i}>
-                    <ListItem
-                        children="Sub Page 测试"
-                        operation={<Button icon="arrowRight"
-                                           onClick={() => this.handleSetSubPage({parent: this.mainList})}/>}
-                    />
-                    <ListItem
-                        onClick={() => this.setState({
-                            modalOn: !modalOn,
-                            modalTitle: 'Modal 测试标题',
-                            modalBody: <div>Modal 测试 body</div>,
-                            modalButtons: <Button normal
-                                                  onClick={() => this.setState({modalOn: modalOn})}>关闭</Button>,
-                        })}
-                        operation={<Radio on={modalOn}/>}
-                    >Modal 测试</ListItem>
-
-                    <ListItem
-                        onClick={() => this.handleSetOption('downloadType')}
-                        operation={<Radio on={downloadType.on}/>}
-                        subList={{
-                            hide: !downloadType.on,
-                            theme: {twoLine: false},
-                            children: <RadioButtonGroup
-                                value={downloadType.value}
-                                data={[
-                                    {title: 'FLV优先', value: 'flv'},
-                                    {title: 'MP4优先', value: 'mp4'},
-                                ]}
-                                onClick={(value) => this.handleSetOption('downloadType', value)}
-                            />,
-                        }}
-                    >视频下载</ListItem>
-
-                    <ListItem
-                        onClick={() => this.handleSetOption('videoPlayerWidenType')}
-                        operation={<Radio on={videoPlayerWidenType.on}/>}
-                        subList={{
-                            hide: !videoPlayerWidenType.on,
-                            theme: {twoLine: false},
-                            children: <RadioButtonGroup
-                                value={videoPlayerWidenType.value}
-                                data={[
-                                    {title: '一般宽屏', value: 'wide'},
-                                    {title: '网页全屏', value: 'web'},
-                                    {title: '屏幕全屏', value: 'full'},
-                                ]}
-                                onClick={(value) => this.handleSetOption('videoPlayerWidenType', value)}
-                            />,
-                        }}
-                    >播放器宽屏</ListItem>
-                </List>
-*/}
-                {/*<List title="直播" ref={i => this.liveList = i}>*/}
-                {/*<ListItem*/}
-                {/*onClick={() => this.handleSetOption('sign')}*/}
-                {/*operation={<Radio on={sign.on}/>}*/}
-                {/*>自动签到</ListItem>*/}
-                {/*<ListItem*/}
-                {/*onClick={() => this.handleSetOption('treasure')}*/}
-                {/*operation={<Radio on={treasure.on}/>}*/}
-                {/*>辅助领瓜子</ListItem>*/}
-                {/*<ListItem*/}
-                {/*onClick={() => this.handleSetSubPage({title: '高级屏蔽设置', parent: this.liveList})}*/}
-                {/*operation={<Button icon="arrowRight"/>}*/}
-                {/*>聊天信息屏蔽设置</ListItem>*/}
-                {/*</List>*/}
                 <List title="关于" ref={i => this.aboutList = i}>
-                    {/*<ListItem
-                        onClick={() => this.handleSetSubPage({title: '通知设置', parent: this.aboutList})}
-                        operation={<Button icon="arrowRight"/>}
-                    >通知屏蔽设置</ListItem>*/}
                     <ListItem
-                        //icon={<Icon icon="catSvg" image/>}
+                        icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}

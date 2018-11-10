@@ -254,9 +254,19 @@ export const wrapper = ({requireModules = [], featureClass = null, requiredUIs =
     };
 };
 
-export const defineGUI = (require, launch) => {
-    return {require, launch};
-};
 
 // 判断是否在直播间
 export const inLiveRoom = () => /^\/(\d+)$/.exec(window.location.pathname) ? true : false;
+
+export const consoleLogo = () => {
+    console.log(`%c
+ ____ _____ _      _____ ____ _____ _      _____ _    _ ______ _      _____  ______ _____  
+|  _ |_   _| |    |_   _|  _ |_   _| |    |_   _| |  | |  ____| |    |  __ \\|  ____|  __ \\ 
+| |_) || | | |      | | | |_) || | | |      | | | |__| | |__  | |    | |__) | |__  | |__) |
+|  _ < | | | |      | | |  _ < | | | |      | | |  __  |  __| | |    |  ___/|  __| |  _  / 
+| |_) _| |_| |____ _| |_| |_) _| |_| |____ _| |_| |  | | |____| |____| |    | |____| | \\ \\ 
+|____|_____|______|_____|____|_____|______|_____|_|  |_|______|______|_|    |______|_|  \\_\\
+
+-... .. .-.. .. -... .. .-.. ..    .... . .-.. .--. . .-.                    version: ${version}
+`, 'color: #00a1d6');
+};

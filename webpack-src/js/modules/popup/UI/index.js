@@ -11,6 +11,7 @@ import {UI} from 'Libs/UI';
 
 export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
   display: flex;
+  flex-direction: row-reverse;
   background-color: rgb(250,250,250);
 `;
 
