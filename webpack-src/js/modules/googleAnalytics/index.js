@@ -13,8 +13,8 @@ export class GoogleAnalytics extends Feature {
             kind: 'other',
             dependencies: ['debug'],
             settings: {
-                on: false,
-                toggle: false,
+                on: true,
+                //toggle: false,
                 title: '数据统计',
                 description: '匿名统计功能的使用情况，有助于帮助开发者改进程序为你提供更好的体验',
             },
@@ -33,7 +33,7 @@ export class GoogleAnalytics extends Feature {
 
     insertGAScriptTag = () => {
         if (document.getElementsByClassName('ga-script').length === 0) {
-            const debug = this.getOption('debug').on;
+            const debug = this.getSetting('debug').on;
             const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
             window['GoogleAnalyticsObject'] = 'ga';
             window.ga = window.ga || function() {

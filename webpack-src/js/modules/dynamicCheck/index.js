@@ -9,7 +9,7 @@ import {Feature} from 'Libs/feature';
 import {PERMISSION_TYPE, getURL, __} from 'Utils';
 
 const {login, notifications} = PERMISSION_TYPE;
-
+export {DynamicCheckUI} from './UI/index';
 export class DynamicCheck extends Feature {
     constructor() {
         super({
@@ -21,6 +21,7 @@ export class DynamicCheck extends Feature {
                 on: true, // 指feature是否执行launch function
                 title: '动态推送', // 在option页面中配置项目的显示名称
                 type: 'checkbox', // 指该feature配置子选项的类型，此处为复选框
+                hasUI: true,
                 options: [ // 子选项
                     {title: '推送通知', key: 'notification', on: true},
                 ],

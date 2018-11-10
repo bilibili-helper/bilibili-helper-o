@@ -5,7 +5,6 @@
  */
 
 import {Feature} from 'Libs/feature';
-import URL from 'url-parse';
 export {VideoUI} from './UI/index';
 export class Video extends Feature {
     constructor() {

@@ -102,7 +102,9 @@ export class Menu extends React.Component {
             const oldWatchPage = _.find(settings.options, {key: 'oldWatchPage'}).on;
             const link = !oldWatchPage ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
             const menuOptions = {};
-            _.each(settings.subPage.options, (option) => menuOptions[option.key] = option.on);
+            _.each(settings.subPage.options, (option) => {
+                menuOptions[option.key] = option.on;
+            });
 
             this.setState({
                 newWatchPageLink: link,

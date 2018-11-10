@@ -7,7 +7,7 @@
 import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ToolBtn} from 'Components';
+import {ToolBtn} from './ToolBtn';
 import {UI} from 'Libs/UI.js';
 
 export class VideoUI extends UI {

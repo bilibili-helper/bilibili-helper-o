@@ -207,8 +207,7 @@ export class Treasure extends React.Component {
                 if (this.retryTime < this.maxRetryTime) {
                     ++this.retryTime;
                     console.error(res);
-                    this.counter.text('网络错误');
-                }
+                } else this.counter.text('网络错误');
             },
         });
     };
@@ -239,8 +238,8 @@ export class Treasure extends React.Component {
                 if (this.retryTime < this.maxRetryTime) {
                     ++this.retryTime;
                     console.error(res);
-                    this.counter.text('网络错误');
-                }
+                    setTimeout(this.getCaptcha, 2000);
+                } else this.counter.text('网络错误');
             },
         });
     };
@@ -280,8 +279,7 @@ export class Treasure extends React.Component {
                 if (this.retryTime < this.maxRetryTime) {
                     ++this.retryTime;
                     console.error(res);
-                    this.counter.text('网络错误');
-                }
+                } else this.counter.text('网络错误');
             },
         });
     };
@@ -356,9 +354,6 @@ export class Treasure extends React.Component {
             max_times,
             times,
             minute,
-            sliver,
-            time_end,
-            time_start,
             counterComplete,
         } = this.state;
         open ? this.showPanel() : this.hidePanel();

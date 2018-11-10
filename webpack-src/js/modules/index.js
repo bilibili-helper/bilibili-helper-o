@@ -4,7 +4,7 @@
  * Description: 功能点打包入口
  */
 // 然后再加载子类
-import {DynamicCheck} from './dynamicCheck';
+import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {Video, VideoUI} from './video';
 //export * from './doSign';
 import {Treasure, TreasureUI} from './treasure';
@@ -31,4 +31,5 @@ export const UIs = {
     MenuUI,
     VideoUI,
     DanmuUI,
+    DynamicCheckUI,
 };

@@ -100,17 +100,20 @@ export class FeatureManager {
                     features = _.filter(this.features, feature => message.feature === feature.settings.name);
                 } else if (message.kind) {
                     features = _.filter(this.features, feature => {
-                        const {kind, hide, hasUI} = feature.settings;
+                        const {kind, hide = false, hasUI = false, on = false} = feature.settings;
                         const sameKind = kind === message.kind;
-                        const hideRes = message.checkHide && hide ? !hide && sameKind : sameKind;
-                        return message.hasUI ? hasUI && hideRes : hideRes;
+                        if (hide && message.checkHide) {
+                            return !hide && sameKind;
+                        } else if (hasUI && on && message.hasUI) {
+                            return hasUI && on && sameKind;
+                        }
                     });
                 } else features = message.checkHide ? _.filter(this.features, feature => !feature.settings.hide) : this.features;
                 const settings = {};
                 _.each(features, (feature) => {
                     const setting = feature.getSetting();
                     // 过滤掉已关闭feature
-                    if (setting.on) settings[_.upperFirst(setting.name)] = setting;
+                    settings[_.upperFirst(setting.name)] = setting;
                 });
                 sendResponse(settings);
             }
