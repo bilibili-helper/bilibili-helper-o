@@ -53,6 +53,15 @@ const FilterItemTitle = styled.span.attrs({className: 'filter-item-title'})`
   margin-right: 34px;
 `;
 
+const FilterRadio = styled(Radio)`
+  & .radio-knob {
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+  }
+`;
+
 export class ChatFilter extends React.Component {
     constructor(props) {
         super(props);
@@ -71,30 +80,31 @@ export class ChatFilter extends React.Component {
         this.store = store.get(this.storeName);
         if (_.isEmpty(this.store)) this.store = store.set(this.storeName, {});
         this.state = {
-            show: false,
             localOption: this.store[this.roomId] || {},
         };
     }
 
     componentDidMount() {
         const that = this;
-        const show = this.state.show;
         $(document).on('click', function(e) {
             const target = $(e.target);
-            if ((target.parents('#bilibili-helper-chat-filter').length <= 0) && !show) {
-                that.setState({show: false});
+            if (target.parents('#bilibili-helper-chat-filter').length <= 0 && $(that.panel).css('display') !== 'none') {
+                $(that.panel).fadeOut(200);
             }
         });
     }
 
     handleOnClick = () => {
-        this.setState({show: !this.state.show});
+        const panel = $(this.panel);
+        if (panel.css('display') === 'none') {
+            panel.fadeIn(200);
+        } else panel.fadeOut(200);
     };
 
     handleOnClickRadio = (key, on) => {
         const globalOption = _.find(this.props.setting.subPage.options, (o) => o.key === key);
         let localOption = {...this.state.localOption};
-        if (globalOption.on === on && localOption[key]) delete localOption[key];
+        if (globalOption.on === on && localOption[key] !== undefined) delete localOption[key];
         else localOption[key] = on;
 
         this.store[this.roomId] = localOption;
@@ -104,12 +114,12 @@ export class ChatFilter extends React.Component {
     render() {
         const {subPage} = this.props.setting;
         const options = subPage.options;
-        const {show, localOption} = this.state;
+        const {localOption} = this.state;
         return (
             <React.Fragment>
                 <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_894803_t8pireix5fq.css"/>
                 <ChatFilterIcon iconfont="ban" size={22} onClick={this.handleOnClick}/>
-                <ChatFilterPanel show={show}>
+                <ChatFilterPanel innerRef={i => this.panel = i}>
                     <FilterTitle>屏蔽列表</FilterTitle>
                     {_.map(options, (option) => {
                         const {key, title, on} = option;
@@ -119,7 +129,7 @@ export class ChatFilter extends React.Component {
                         return (
                             <FilterItem key={key}>
                                 <FilterItemTitle>{title}</FilterItemTitle>
-                                <Radio on={resultOn} onClick={() => this.handleOnClickRadio(key, !resultOn)}/>
+                                <FilterRadio on={resultOn} onClick={() => this.handleOnClickRadio(key, !resultOn)}/>
                                 {!!style && resultOn ? <style>{style}</style> : null}
                             </FilterItem>
                         );

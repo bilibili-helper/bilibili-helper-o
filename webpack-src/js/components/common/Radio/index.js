@@ -37,7 +37,7 @@ const Bar = styled.span`
   }
 `;
 
-const Knob = styled.span`
+const Knob = styled.span.attrs({className: 'radio-knob'})`
   display: block;
   position: relative;
   width: 16px;
