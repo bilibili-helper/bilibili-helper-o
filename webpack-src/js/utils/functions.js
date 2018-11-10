@@ -26,12 +26,12 @@ export const sendMessage = (command, key, callback) => {
  * @param name
  * @param callback
  */
-export const getCookie = (url, name, callback) => {
-    chrome.cookies.get({url, name}, function(cookie) {
-        if (callback instanceof Function) callback(cookie);
-        else console.error(`"SendMessage" (url: ${url} name: ${name}): invalid callback function.`);
-    });
-};
+//export const getCookie = (url, name, callback) => {
+//    chrome.cookies.get({url, name}, function(cookie) {
+//        if (callback instanceof Function) callback(cookie);
+//        else console.error(`"SendMessage" (url: ${url} name: ${name}): invalid callback function.`);
+//    });
+//};
 
 /**
  * @param t
@@ -91,17 +91,17 @@ export const hasNewVersion = (checkVersion) => {
     return Number(checkVersionStr) > Number(currentVersionStr);
 };
 
-export const checkNotificationPermission = () => {
-    const permission = store.get('bilibili-helper-permission') || {};
-    let notificationPermission;
-    chrome.notifications.getPermissionLevel((level) => {
-        if (level === 'granted') notificationPermission = true; // 获取到了权限
-        else if (level === 'denied') notificationPermission = false;
-        permission['notification'] = notificationPermission;
-        store.set('permission', permission);
-    });
-    return notificationPermission;
-};
+//export const checkNotificationPermission = () => {
+//    const permission = store.get('bilibili-helper-permission') || {};
+//    let notificationPermission;
+//    chrome.notifications.getPermissionLevel((level) => {
+//        if (level === 'granted') notificationPermission = true; // 获取到了权限
+//        else if (level === 'denied') notificationPermission = false;
+//        permission['notification'] = notificationPermission;
+//        store.set('permission', permission);
+//    });
+//    return notificationPermission;
+//};
 
 /**
  * 获取url
@@ -131,129 +131,6 @@ export const parseTime = (time) => {
     const second = parseInt((time / 1000) % 60);
     return String(minute).padStart(2, '0') + ':' + String(second).padStart(2, '0');
 };
-
-/**
- * 页面初始化
- * 获取页面中的目标元素
- * 会在指定目标不再变化后返回
- * @param container {string|array[string]} 容器对象的查询字符串，如果有多个选项，使用数组按优先级从高到低排列
- * @param kind {string}
- * @param interval {number} 检测间隔
- */
-export const initialByObserver = ({container, feature, kind, interval = 500}) => {
-    if (feature === undefined && kind === undefined) {
-        console.error('No kind or feature: Page initialization failed!');
-        return false;
-    }
-    const targetContainer = (() => {
-        const get = (name) => $(name).length > 0 ? $(name) : false;
-        if (typeof container === 'string') {
-            return get(container);
-        } else if (container instanceof Array) {
-            const t = _.compact(container.map((name) => get(name)));
-            if (t.length >= 1) return _.compact(container.map((name) => get(name)))[0];
-            else console.error(`No target of name: ${container}!`);
-        }
-    })();
-    if (targetContainer) {
-        /**
-         * 插入助手DOM
-         * 在B站原有脚本没有执行完时插入会导致结构莫名被破坏，原因还未查明
-         * 故使用observer检测当目标容器的父容器所有加在变化都发生后再执行插入操作
-         */
-        let timer;
-        new MutationObserver(function(mutationList, observer) {
-            if (!!timer) clearTimeout(timer);
-            timer = setTimeout(() => {
-                observer.disconnect();
-                chrome.runtime.sendMessage({
-                    commend: 'getOptions',
-                    kind,
-                    feature,
-                }, (featureOptions) => {
-                    /**
-                     * 获取相关的模块及其option配置
-                     * 根据option配置加载相应GUI
-                     */
-                    _.map(featureOptions, (option) => {
-                        const {options, name} = option;
-                        if (allGUI[name]) { // 检查是否有设置GUI
-                            const {launch = null, GUI} = allGUI[name];
-                            if (typeof launch === 'function') launch({
-                                ...options, container: targetContainer, GUI,
-                            });
-                        }
-                    });
-                });
-            }, interval);
-        }).observe(targetContainer[0], {
-            childList: true,
-            attributes: true,
-            attributeOldValue: true,
-            subtree: true,
-        });
-    } else console.error('No container!');
-};
-
-/**
- * @param container
- * @param feature
- * @param kind
- * @param interval
- * @return {void}
- */
-export const initialByInterval = ({container, feature, kind, interval = 500}) => {
-    if (feature === undefined && kind === undefined) {
-        console.error('No kind or feature: Page initialization failed!');
-        return;
-    }
-    new Promise(resolve => {
-        let targetContainer;
-        let timer = setInterval(() => {
-            const get = (name) => $(name).length > 0 ? $(name) : false;
-            if (typeof container === 'string') targetContainer = get(container);
-            else if (container instanceof Array) {
-                const t = _.compact(container.map((name) => get(name)));
-                if (t.length >= 1) targetContainer = t[0];
-                else console.error(`No target of name: ${container}!`);
-            }
-            if (targetContainer) {
-                clearInterval(timer);
-                resolve(targetContainer);
-            }
-        }, interval);
-    }).then(targetContainer => {
-        chrome.runtime.sendMessage({
-            commend: 'getOptions',
-            kind,
-            feature,
-        }, (featureOptions) => {
-            /**
-             * 获取相关的模块及其option配置
-             * 根据option配置加载相应GUI
-             */
-            _.map(featureOptions, (option) => {
-                const {options, name} = option;
-                if (allGUI[name]) { // 检查是否有设置GUI
-                    const {launch = null, GUI} = allGUI[name];
-                    if (typeof launch === 'function') launch({
-                        ...options, container: targetContainer, GUI,
-                    });
-                }
-            });
-        });
-    });
-};
-
-export const wrapper = ({requireModules = [], featureClass = null, requiredUIs = [], UIClass = null}) => {
-    return {
-        requireModules,
-        featureClass,
-        requiredUIs,
-        UIClass,
-    };
-};
-
 
 // 判断是否在直播间
 export const inLiveRoom = () => /^\/(\d+)$/.exec(window.location.pathname) ? true : false;

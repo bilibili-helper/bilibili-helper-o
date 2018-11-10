@@ -200,7 +200,7 @@ export class Danmu extends React.Component {
                 },
                 error: (res) => {
                     console.error(res);
-                    this.setState({loading: false});
+                    this.setState({loadingText: '弹幕加载失败!请刷新页面！'});
                 },
             });
         }
@@ -232,7 +232,7 @@ export class Danmu extends React.Component {
                     },
                     error: (res) => {
                         console.log(res);
-                        this.setState({loading: false});
+                        this.setState({loadingText: '查询失败!'});
                     },
                 });
             }

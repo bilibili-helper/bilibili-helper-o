@@ -5,6 +5,7 @@
  */
 
 import {Feature} from 'Libs/feature';
+import {version} from 'Utils';
 
 export class GoogleAnalytics extends Feature {
     constructor() {
@@ -30,6 +31,20 @@ export class GoogleAnalytics extends Feature {
         //    },
         //});
     };
+
+    addListener = () => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.commend === 'bilibili-helper-ga') {
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: version,
+                    eventAction: 'init',
+                    eventLabel: 'test',
+                    nonInteraction: true,
+                });
+            }
+        });
+    }
 
     insertGAScriptTag = () => {
         if (document.getElementsByClassName('ga-script').length === 0) {

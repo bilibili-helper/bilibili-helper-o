@@ -57,7 +57,7 @@ export class Feature {
                         this.initSetting();
                         this.addListener();
                         this.initialed = true;
-                        console.log(`Feature init complete: ${this.name}`);
+                        console.log(`Feature init completed: ${this.name}`);
                         return this;
                         //chrome.extension.getBackgroundPage().FeatureManager.dealWidthWaitQueue();
                     } else console.error(msg);
