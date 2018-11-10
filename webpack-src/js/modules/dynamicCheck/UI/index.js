@@ -4,6 +4,7 @@
  * Description:
  */
 import $ from 'jquery';
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DynamicBox} from './DynamicBox';
@@ -17,12 +18,15 @@ export class DynamicCheckUI extends UI {
         });
     }
 
-    load = (popupDOM) => {
+    load = (popupDOM, setting) => {
         return new Promise(resolve => {
-            const container = $('<div />').attr('class', 'bilibili-helper-dynamic-check-container');
-            $(popupDOM).append(container);
-            ReactDOM.render(<DynamicBox innerRef={i => this.container = i}/>, container[0]);
-            resolve($(this.container)[0]);
+            const dynamicCheckBoxState = _.find(setting.options,({key})=>key ==='dynamicCheckBox');
+            if (dynamicCheckBoxState.on) {
+                const container = $('<div />').attr('class', 'bilibili-helper-dynamic-check-container');
+                $(popupDOM).append(container);
+                ReactDOM.render(<DynamicBox innerRef={i => this.container = i}/>, container[0]);
+                resolve($(this.container)[0]);
+            } else resolve(null);
         });
     };
 }
