@@ -25,6 +25,11 @@ export class PopupUI extends UI {
     load = () => {
         return new Promise(resolve => {
             $(document).ready(() => {
+                chrome.runtime.sendMessage({
+                    commend: 'setGAEvent',
+                    action: 'click',
+                    category: 'popup',
+                });
                 ReactDOM.render(
                     <Main innerRef={i => this.container = i}/>,
                     document.getElementById('root'),

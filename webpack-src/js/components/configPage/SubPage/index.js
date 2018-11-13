@@ -84,7 +84,7 @@ const Container = styled.div.attrs({
   display: flex;
   flex-direction: column;
   position: absolute;
-  max-width: 600px;
+  //max-width: 600px;
   top: ${({theme}) => theme.top ? theme.top + 'px' : ''};
   left: ${({theme}) => theme.left ? theme.left + 'px' : ''};
   height: ${({theme}) => theme.height ? theme.height + 'px' : ''};

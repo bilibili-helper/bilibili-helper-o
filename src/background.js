@@ -1184,6 +1184,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
     }
     let modifiedHeaders = details.responseHeaders;
     let baseUri = details.url.split('?')[0];
+    console.log(baseUri);
     if (downloadNames[baseUri]) {
         modifiedHeaders.push({
             name: 'Content-Disposition',

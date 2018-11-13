@@ -30,26 +30,46 @@ export class GoogleAnalytics extends Feature {
         //        console.log(1);
         //    },
         //});
+
     };
 
     addListener = () => {
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'bilibili-helper-ga') {
-                ga('send', {
-                    hitType: 'event',
-                    eventCategory: version,
-                    eventAction: 'init',
-                    eventLabel: 'test',
-                    nonInteraction: true,
-                });
-            }
+        chrome.runtime.sendMessage({commend: 'debugMode'}, (on) => {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: `initialization ${(on ? 'official' : 'dev')} ${version}`,
+                eventAction: 'init',
+                eventLabel: 'initialization',
+                nonInteraction: true,
+            });
+            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+                /**
+                 * 需要如下几个字段
+                 * action 表示操作类型 click init等
+                 * category 类别 功能名称等
+                 * label 功能中的具体项目名称等
+                 * nonInteraction 标记非交互
+                 */
+                if (message.commend === 'setGAEvent' && message.action && message.category) {
+                    const {action, label, category = '', nonInteraction = false} = message;
+                    ga('send', {
+                        hitType: 'event',
+                        eventAction: action,
+                        eventCategory: category,
+                        eventLabel: label || category,
+                        nonInteraction,
+                    });
+                }
+            });
         });
-    }
 
-    insertGAScriptTag = () => {
+    };
+
+    insertGAScriptTag = (UA = 'UA-39765420-2') => {
         if (document.getElementsByClassName('ga-script').length === 0) {
-            const debug = this.getSetting('debug').on;
-            const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
+            //const debug = this.getSetting('debug').on;
+            const script = `https://www.google-analytics.com/analytics.js`;
+            //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
             window['GoogleAnalyticsObject'] = 'ga';
             window.ga = window.ga || function() {
                 (window.ga.q = window.ga.q || []).push(arguments);
@@ -60,7 +80,7 @@ export class GoogleAnalytics extends Feature {
             scriptTag.setAttribute('async', 1);
             scriptTag.setAttribute('src', script);
             document.head.appendChild(scriptTag);
-            ga('create', 'UA-39765420-2', 'auto');
+            ga('create', UA, 'auto');
             ga('set', 'checkProtocolTask');
         }
     };

@@ -17,6 +17,13 @@ export class UI {
         this.loaded = false;
     }
 
+    init = () => {
+        this.addListener();
+        return this;
+    };
+
+    addListener = () => {};
+
     /**
      * 用于重载
      */
@@ -75,7 +82,7 @@ export class UI {
                 if (container) {
                     clearInterval(timer);
                     resolve(container);
-                } else if (retryTime < retryMax){
+                } else if (retryTime < retryMax) {
                     ++retryTime;
                 } else {
                     console.warn(`Not find container ${containerSelectors}`);

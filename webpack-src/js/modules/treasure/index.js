@@ -18,14 +18,16 @@ export class Treasure extends Feature {
             kind: 'live',
             permission: {login, notification},
             dependencies: ['debug'],
+
             settings: {
                 on: true,
                 toggle: true,
                 hasUI: true,
                 title: '自动领瓜子',
+                description: '打开直播间就会自动领瓜子',
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: true},
+                    {key: 'notification', title: '推送通知', on: true, description: '领取成功后将会弹出代表成功的推送通知'},
                 ],
             },
         });

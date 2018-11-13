@@ -10,10 +10,10 @@ import ReactDOM from 'react-dom';
 import {ToolBtn} from './ToolBtn';
 import {UI} from 'Libs/UI.js';
 
-export class VideoUI extends UI {
+export class VideoAnchorUI extends UI {
     constructor() {
         super({
-            name: 'video',
+            name: 'videoAnchor',
         });
     }
 
@@ -55,20 +55,3 @@ export class VideoUI extends UI {
         });
     };
 };
-
-//export const Video = defineGUI([], ([], options) => {
-//    return new Promise (resolve => {
-//        const {on, container, name} = options;
-//        if (on) {
-//            const helperDOM = $('<span class="bilibili-helper" title="哔哩哔哩助手"/>');
-//            container.append(helperDOM);
-//            ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
-//                const container = $('<div/>').addClass(`bilibili-helper-${name}-wrapper`);
-//                const helperContentDOM = helperDOM.find('.bilibili-helper-content');
-//                helperContentDOM.append(container);
-//                resolve(container);
-//            });
-//        }
-//    });
-//
-//});

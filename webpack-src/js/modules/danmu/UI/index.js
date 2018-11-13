@@ -15,13 +15,13 @@ export class DanmuUI extends UI {
     constructor() {
         super({
             name: 'danmu',
-            dependencies: ['video'],
+            dependencies: ['videoAnchor'],
         });
     }
 
     load = ([container], settings) => {
         return new Promise(resolve => {
-            const danmuWrapper = $('<div/>').attr('class', 'bilibili-helper-danmu-wrapper');
+            const danmuWrapper = $('<div style="order: 1;"/>').attr('class', 'bilibili-helper-danmu-wrapper');
             container.append(danmuWrapper);
             danmuWrapper[0] && ReactDOM.render(<Danmu settings={settings}/>, danmuWrapper[0], resolve);
         });

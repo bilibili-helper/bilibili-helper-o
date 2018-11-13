@@ -14,11 +14,7 @@ import {Crc32Engine} from 'Libs/crc32';
 const {color} = theme;
 const crcEngine = new Crc32Engine();
 
-const DanmuWrapper = styled.div.attrs({className: 'bilibili-helper-danmu-wrapper'})`
-  position: relative;
-`;
-
-const Title = styled.div.attrs({className: 'bilibili-helper-video-gui-title'})`
+const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
   margin-bottom: 6px;
   font-size: 12px;
   font-weight: bold;
@@ -138,17 +134,6 @@ export class Danmu extends React.Component {
         chrome.runtime.sendMessage({commend: 'danmuDOMInitialized'});
     }
 
-    //componentDidUpdate(prevProps) {
-    //    /**
-    //     * 如下地址格式的视频页面加载完需要主动加载弹幕列表
-    //     * https://www.bilibili.com/video/av7895666
-    //     * 除此之外都被动加载
-    //     */
-    //    if (prevProps.cid !== this.props.cid && this.props.cid && _.isEmpty(this.orderedJSON)) {
-    //        this.getDANMUList(this.props.cid);
-    //    }
-    //}
-
     addListener = () => {
         $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
             chrome.runtime.sendMessage({commend: 'danmuTabUnload'});
@@ -181,9 +166,8 @@ export class Danmu extends React.Component {
                 method: 'get',
                 url: date ? historyUrl : url,
                 data: {
-                    platform: 'bilibiliHelper', // 必须添加，用于区分助手发出的请求，避免被监听
-                    type: 1,
                     oid: cid,
+                    type: 1,
                     date,
                 },
                 contentType: 'text/xml',
@@ -346,7 +330,7 @@ export class Danmu extends React.Component {
         const {on} = this.props.settings;
         const {loaded, danmuJSON, authorHashMap, loading, loadingText} = this.state;
         return on ? (
-            <DanmuWrapper>
+            <React.Fragment>
                 <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
                 <DanmuList>
                     {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
@@ -369,7 +353,7 @@ export class Danmu extends React.Component {
                 </DanmuList>
                 <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
                 {loading && <LoadingMask>{loadingText}</LoadingMask>}
-            </DanmuWrapper>
+            </React.Fragment>
         ) : null;
     }
 }

@@ -17,6 +17,7 @@ export class Menu extends Feature {
                 title: '扩展程序菜单栏',
                 type: 'checkbox',
                 hasUI: true,
+                description: '选择您需要在扩展菜单中显示的常用功能',
                 options: [
                     {key: 'oldWatchPage', title: '旧关注页面', on: false},
                 ],

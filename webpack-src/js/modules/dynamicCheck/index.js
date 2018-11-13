@@ -24,7 +24,7 @@ export class DynamicCheck extends Feature {
                 hasUI: true,
                 options: [ // 子选项
                     {title: '推送通知', key: 'notification', on: true},
-                    {title: '在菜单显示最近推送', key: 'dynamicCheckBox', on: true},
+                    {title: '最近推送列表', key: 'dynamicCheckBox', on: true, description: '在扩展菜单显示5条最近推送的视频'},
                 ],
             },
         });

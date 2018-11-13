@@ -40,6 +40,7 @@ const FeedImg = styled.div.attrs({className: 'feed-img'})`
   height: 85px;
   background-size: 130% auto;
   background-position: center;
+  background-color: #eee;
   filter: grayscale(0.5) brightness(0.4);
   box-shadow: inset 0px 0px 50px -10px #333;
   transition: all 0.5s;
@@ -87,6 +88,15 @@ export class DynamicBox extends React.Component {
         }, (feedList) => this.setState({feedList}));
     }
 
+    handleOnClick = (link) => {
+        chrome.runtime.sendMessage({
+            commend: 'setGAEvent',
+            action: 'click',
+            category: 'dynamicCheck',
+        });
+        createTab(link);
+    };
+
     render() {
         const {feedList} = this.state;
         return (
@@ -94,7 +104,7 @@ export class DynamicBox extends React.Component {
                 {_.map(feedList, (feed, index) => {
                     const {link, pic, title, author, duration} = feed.addition;
                     return (
-                        <FeedBox key={index} onClick={() => createTab(link)}>
+                        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
                             <FeedImg style={{backgroundImage: `url(${pic})`}}/>
                             <FeedTitle>{title}</FeedTitle>
                             <FeedInfo><span>{author}</span><span>{duration}</span></FeedInfo>

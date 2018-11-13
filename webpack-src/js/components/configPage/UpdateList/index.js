@@ -7,19 +7,34 @@
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { ListItem } from '../List';
-import { theme } from 'Styles';
+import {ListItem} from '../List';
+import {theme} from 'Styles';
 
 const {color} = theme;
 
 const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
     margin-left: -20px;
     font-size: 14px;
-    line-height: 24px;
+    line-height: 26px;
     list-style: none;
+    padding: 10px 0;
     &.serious {
       color: ${color('paper-red-500')};
       font-weight: bold;
+    }
+    i {
+      margin: 4px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-style: normal;
+      letter-spacing: 0.3px;
+      background-color: #eaf4ff;
+      color: #0070f0;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:hover {
+        background-color: #d4eaff;
+      }
     }
 `;
 
@@ -36,7 +51,7 @@ export class UpdateList extends React.Component {
                 children: _.map(data, (title, i) => <ListItem
                     key={i}
                     noBorder={false}
-                    children={<UpdateListItem>{title}</UpdateListItem>}
+                    children={<UpdateListItem dangerouslySetInnerHTML={{__html: title}}/>}
                     {...rest}
                 />),
             }}

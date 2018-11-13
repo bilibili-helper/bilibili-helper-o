@@ -5,11 +5,11 @@
  */
 
 import {Feature} from 'Libs/feature';
-export {VideoUI} from './UI/index';
-export class Video extends Feature {
+export {VideoAnchorUI} from './UI/index';
+export class VideoAnchor extends Feature {
     constructor() {
         super({
-            name: 'video',
+            name: 'videoAnchor',
             kind: 'video',
             dependencies: ['debug'],
             settings: {

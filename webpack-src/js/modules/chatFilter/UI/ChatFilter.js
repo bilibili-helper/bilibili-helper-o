@@ -107,6 +107,12 @@ export class ChatFilter extends React.Component {
         if (globalOption.on === on && localOption[key] !== undefined) delete localOption[key];
         else localOption[key] = on;
 
+        chrome.runtime.sendMessage({
+            commend: 'setGAEvent',
+            action: 'click',
+            category: 'chatFilter',
+            label: key
+        });
         this.store[this.roomId] = localOption;
         this.setState({localOption}, () => store.set(this.storeName, this.store));
     };

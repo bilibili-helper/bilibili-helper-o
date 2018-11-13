@@ -14,8 +14,9 @@ const Content = styled.div.attrs({
   right: -160px;
   top: 35px;
   display: ${({show}) => show ? 'flex' : 'none'};
+  flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
+  padding: 15px 20px 5px;
   width: 422px;
   line-height: initial;
   font-size: initial;
@@ -27,8 +28,13 @@ const Content = styled.div.attrs({
   z-index: 1000;
   cursor: auto;
   & > * {
+    position: relative;
     width: 100%;
     text-align: initial;
+    margin-bottom: 10px;
+    &:last-of-type{
+      //margin-bottom: 0;
+    }
   }
 `;
 

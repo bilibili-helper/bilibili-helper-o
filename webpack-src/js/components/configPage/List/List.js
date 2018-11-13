@@ -18,7 +18,7 @@ const ListWrapper = styled.div.attrs({
   padding: 0 10px;
   position: relative;
   width: calc(100% - 20px);
-  max-width: 600px;
+  max-width: 800px;
   min-height: 0;
   min-width: 400px;
   transition: min-height 0.3s;

@@ -17,12 +17,16 @@ const CheckBoxTitle = styled.div`
 export const CheckBoxGroup = ({data, onClick}) => {
     return <React.Fragment>
         {_.map(data, (entry, i) => {
-            const {key, title, on, toggle = true} = entry;
+            const {key, title, on, toggle = true, description} = entry;
+            const twoLine = description !== undefined;
             return <ListItem
                 key={key}
                 noBorder={false}
                 toggle={toggle}
-                children={<CheckBoxTitle>{title}</CheckBoxTitle>}
+                twoLine={twoLine}
+                first={twoLine ? <CheckBoxTitle>{title}</CheckBoxTitle> : ''}
+                second={twoLine ? <CheckBoxTitle>{description}</CheckBoxTitle> : ''}
+                children={twoLine ? null : <CheckBoxTitle>{title}</CheckBoxTitle>}
                 onClick={on !== undefined && toggle !== false ? () => onClick(key, !on) : null}
                 operation={<Radio disable={!toggle} on={on}/>}
             />;

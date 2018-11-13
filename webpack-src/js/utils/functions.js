@@ -114,7 +114,7 @@ export const getLink = (url_name) => {
             return 'https://www.bilibili.com/';
         case 'live':
             return 'https://live.bilibili.com/';
-        case 'option':
+        case 'config':
             return chrome.extension.getURL('config.html');
         case 'favourite':
             return 'https://space.bilibili.com/';

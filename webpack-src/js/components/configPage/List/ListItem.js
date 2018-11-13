@@ -110,11 +110,11 @@ const SubList = styled.div.attrs({
   display: flex;
   flex-direction: column;
   position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  background-color: white;
-  transition: all 0.5s;
   max-height: 0;
+  border-radius: 4px;
+  background-color: white;
+  transition: all 0.3s;
+  overflow: hidden;
   opacity: 1;
   .list-item {
     margin-left: 60px;

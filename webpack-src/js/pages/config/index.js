@@ -35,6 +35,9 @@ import {
 import {theme} from 'Styles';
 import updateData from 'Statics/json/update.json';
 import 'Styles/scss/config.scss';
+import feedJson from 'Statics/json/feed.json';
+
+console.log(feedJson);
 
 //const {notifications} = PERMISSION_TYPE;
 
@@ -61,24 +64,24 @@ const Cat = styled.div`
   user-select: none;
   pointer-events: none;
 `;
-
-const SubPageBody = ({title, filterName, filter, handleSetSetting}) => {
-    return (
-        <List>
-            <ListItem
-                onClick={() => handleSetSetting(filterName)}
-                operation={<Radio on={filter.on}/>}
-                subList={{
-                    children: <CheckBoxGroup
-                        data={filter.types}
-                        value={filter.value}
-                        onClick={(value) => handleSetSetting(filterName, value)}
-                    />,
-                }}
-            >{title}</ListItem>
-        </List>
-    );
-};
+//
+//const SubPageBody = ({title, filterName, filter, handleSetSetting}) => {
+//    return (
+//        <List>
+//            <ListItem
+//                onClick={() => handleSetSetting(filterName)}
+//                operation={<Radio on={filter.on}/>}
+//                subList={{
+//                    children: <CheckBoxGroup
+//                        data={filter.types}
+//                        value={filter.value}
+//                        onClick={(value) => handleSetSetting(filterName, value)}
+//                    />,
+//                }}
+//            >{title}</ListItem>
+//        </List>
+//    );
+//};
 
 class PageConfig extends React.Component {
     constructor(props) {
@@ -114,6 +117,8 @@ class PageConfig extends React.Component {
             subPageSettings: null,
             ...this.settings,
             debug: false,
+
+            subPageList: false, // 标记子页面是否为纯展示列表，目前用于显示投喂列表
         };
     }
 
@@ -172,6 +177,12 @@ class PageConfig extends React.Component {
                 settings: settingObject,
             }, (res) => {
                 if (res) {
+                    chrome.runtime.sendMessage({
+                        commend: 'setGAEvent',
+                        action: 'click',
+                        category: 'config',
+                        label: `${featureName} ${settingName ? settingName : on + ''}`,
+                    });
                     thisKindOfFeatures.map[name] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});
                 }
@@ -191,7 +202,10 @@ class PageConfig extends React.Component {
                     const mainClickCallback = !subPage ? () => this.handleSetSetting({kind, featureName}) : null;
                     const operation = !!subPage
                                       ? <Button icon="arrowRight"
-                                                onClick={() => this.handleSetSubPage(this[`${kind}Ref`], settings)}
+                                                onClick={() => this.handleSetSubPage({
+                                                    parent: this[`${kind}Ref`],
+                                                    settings,
+                                                })}
                                       />
                                       : <Radio disable={!toggleMode} on={on}/>;
                     return <ListItem
@@ -236,35 +250,57 @@ class PageConfig extends React.Component {
         return SubListChildren;
     };
 
-    handleSetSubPage = (parent = null, settings = null) => {
+    handleSetSubPage = ({parent = null, settings = null, subPageList = false, subPageTitle = null}) => {
         const {subPageOn, parent: currentParent} = this.state;
         const newState = {
             subPageOn: !subPageOn,
-            subPageTitle: settings ? settings.title : null,
+            subPageTitle: settings ? settings.title : subPageTitle,
             subPageParent: (currentParent !== parent && parent && parent.ListWrapper) ? parent.ListWrapper.querySelector('.list-body') : null,
             subPageSettings: settings,
+            subPageList,
         };
 
         this.setState(newState);
     };
 
     createSubPage = () => {
-        const {subPageSettings} = this.state;
-        const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
-        const {options, title} = subPage;
-        return <ListItem
-            toggle={toggle}
-            onClick={() => this.handleSetSetting({kind, featureName})}
-            operation={<Radio on={on}/>}
-            subList={{
-                children: <CheckBoxGroup
-                    data={options}
-                    onClick={(settingName, on) => this.handleSetSetting({
-                        kind, featureName, settingName, on, subPage: true,
-                    })}
-                />,
-            }}
-        >{title}</ListItem>;
+        const {subPageSettings, subPageList} = this.state;
+        if (!subPageList) {
+            const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
+            const {options, title} = subPage;
+            return <ListItem
+                toggle={toggle}
+                onClick={() => this.handleSetSetting({kind, featureName})}
+                operation={<Radio on={on}/>}
+                subList={{
+                    children: <CheckBoxGroup
+                        data={options}
+                        onClick={(settingName, on) => this.handleSetSetting({
+                            kind, featureName, settingName, on, subPage: true,
+                        })}
+                    />,
+                }}
+            >{title}</ListItem>;
+        } else return _.map(subPageList, (feedData, index) => {
+            const {time, name, num, ps} = feedData;
+            return (
+                <ListItem
+                    key={index}
+                    operation={`￥${Number(num).toFixed(2)}`}
+                    twoLine={true}
+                    first={name}
+                    second={`${time} - ${ps || '没有留言'}`}
+                />
+            );
+        });
+    };
+
+    handleOpenFeedList = () => {
+        this.handleSetSubPage({
+            parent: this.aboutRef,
+            subPageList: feedJson,
+            subPageTitle: '用户投喂列表'
+        });
     };
 
     render() {
@@ -293,14 +329,20 @@ class PageConfig extends React.Component {
                     <List>{subPageOn && this.createSubPage()}</List>
                 </SubPage>
                 {this.createSettingDOM()}
-                <List title="关于" ref={i => this.aboutList = i}>
+                <List title="关于" ref={i => this.aboutRef = i}>
                     <ListItem
                         icon={<Icon icon="catSvg" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
-                        separator
-                        operation={<Button disable normal>检查更新</Button>}
+                        //separator
+                        //operation={<Button disable normal>检查更新</Button>}
+                    />
+                    <ListItem
+                        twoLine={true}
+                        first={`投喂列表 - ${feedJson.length}条`}
+                        second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
+                        operation={<Button icon="arrowRight" onClick={this.handleOpenFeedList}></Button>}
                     />
                     {_.map(updateData, (data, i) => <UpdateList key={i} title={data.title} data={data.list}/>)}
                 </List>

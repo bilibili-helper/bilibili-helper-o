@@ -8,6 +8,7 @@
         "history": "^4.7.2",
         "jquery": "^3.3.1",
         "lodash": "^4.17.10",
+        "md5": "^2.2.1",
         "mobx": "^5.0.3",
         "mobx-react": "^5.2.3",
         "mobx-react-router": "^4.0.4",

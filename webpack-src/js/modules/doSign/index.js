@@ -7,7 +7,7 @@
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
 
-export const Dosign = class DoSign extends Feature {
+export class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',
@@ -21,6 +21,6 @@ export const Dosign = class DoSign extends Feature {
     }
 
     launch = () => {
-        this.options.on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
+        this.settings.on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
     };
 };

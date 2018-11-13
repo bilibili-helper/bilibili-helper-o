@@ -111,23 +111,36 @@ export class Menu extends React.Component {
                 menuOptions: menuOptions,
             });
         });
-
     }
+
+    handleOnClick = (type, link) => {
+        chrome.runtime.sendMessage({
+            commend: 'setGAEvent',
+            action: 'click',
+            category: 'menu',
+            label: type,
+        });
+        createTab(link);
+    };
 
     render() {
         const {hasLogin, newWatchPageLink, debug, menuOptions} = this.state;
         const {video, live, dynamic, favourite} = menuOptions;
         return (
             <MenuView>
-                {video && <MenuButton onClick={() => createTab(getLink('video'))}>{__('goBili')}</MenuButton>}
-                {live && <MenuButton onClick={() => createTab(getLink('live'))}>{__('goBiliLive')}</MenuButton>}
+                {video &&
+                <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>{__('goBili')}</MenuButton>}
+                {live &&
+                <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>{__('goBiliLive')}</MenuButton>}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
                 {hasLogin && <React.Fragment>
-                    {dynamic && <MenuButton onClick={() => createTab(newWatchPageLink)}>{__('goDynamic')}</MenuButton>}
-                    {favourite &&
-                    <MenuButton onClick={() => createTab(getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
+                    {dynamic && <MenuButton
+                        onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>}
+                    {favourite && <MenuButton
+                        onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
-                <MenuButton onClick={() => createTab(getLink('option'))}>{__('goOption')}</MenuButton>
+                <MenuButton
+                    onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>
                 <Title><span>Bilibili Helper</span><span>{debug ? 'Beta.' : ''}{version}</span></Title>
             </MenuView>
         );
