@@ -26,7 +26,7 @@ const Title = styled.div.attrs({className: 'bilibili-helper-video-download-title
 const DownloadLinkGroup = styled.div`
   display: inline-block;
   margin: 4px;
-  padding: 1px;
+  padding: 3px;
   border-radius: 3px;
   font-size: 12px;
   font-style: normal;
@@ -88,18 +88,28 @@ export class VideoDownload extends React.Component {
                     contentType: 'video/mp4',
                     success: (res) => {
                         let downloadData;
-                        if (message.type === 'new' || res.code === 0) downloadData = res.data;
-                        else if (message.type === 'old') downloadData = res;
-                        const {videoData} = this.state;
+                        if (type === 'new' && res.code === 0) {
+                            downloadData = res.data;
+                        } else if (type === 'old') {
+                            downloadData = res;
+                        }
 
                         const {accept_quality, accept_description, durl} = downloadData;
                         const quality = downloadData.quality;
+
                         const currentData = {accept_quality, accept_description, durl};
+                        const {videoData} = this.state;
                         const cidData = videoData[currentCid] || {};
                         cidData[quality] = currentData;
                         videoData[currentCid] = cidData;
-                        console.log(videoData, currentCid);
-                        this.setState({videoData, currentCid});
+                        //console.log(videoData, currentCid);
+                        this.setState({videoData, currentCid},() => {
+                            //chrome.runtime.sendMessage({
+                            //    commend: 'videoDownloadSendVideoName',
+                            //    filename: $('.header-info h1, #viewbox_report h1').attr('title'),
+                            //    cidData,
+                            //});
+                        });
                     },
                 });
                 //}

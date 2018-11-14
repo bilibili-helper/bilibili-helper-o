@@ -37,9 +37,9 @@ export class GoogleAnalytics extends Feature {
         chrome.runtime.sendMessage({commend: 'debugMode'}, (on) => {
             ga('send', {
                 hitType: 'event',
-                eventCategory: `initialization ${(on ? 'official' : 'dev')} ${version}`,
+                eventCategory: `initialization`,
                 eventAction: 'init',
-                eventLabel: 'initialization',
+                eventLabel: `${(on ? 'official' : 'dev')} ${version}`,
                 nonInteraction: true,
             });
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

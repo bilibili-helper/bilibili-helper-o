@@ -27,7 +27,7 @@ export class VideoAnchorUI extends UI {
             ];
             const newPage = $('.video-data');
             const addUI = (container) => {
-                const helperDOM = $('<span class="bilibili-helper" title="哔哩哔哩助手"/>');
+                const helperDOM = $('<span class="bilibili-helper"/>');
                 container.append(helperDOM);
                 ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
                     const helperContentDOM = helperDOM.find('.bilibili-helper-content');
