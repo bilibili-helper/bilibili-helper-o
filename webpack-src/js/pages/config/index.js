@@ -148,7 +148,6 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
-        console.log(featureName, settingName, on);
         const name = _.upperFirst(featureName);
         const thisKindOfFeatures = this.state[kind];
         if (!!thisKindOfFeatures.map[name]) { // find it (*≧∪≦)
