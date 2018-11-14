@@ -12,6 +12,8 @@ import {theme} from 'Styles';
 
 const {color} = theme;
 
+import './style.scss';
+
 const Title = styled.div.attrs({className: 'bilibili-helper-video-download-title'})`
   margin-bottom: 6px;
   font-size: 12px;
@@ -50,7 +52,9 @@ const DownloadLinkGroup = styled.div`
   }
 `;
 const DownloadLinkGroupTitle = styled.span`
-  padding: 0 6px;
+  display: inline-block;
+  padding: 0 8px;
+  width: 80px;
   border-right: 1px solid #fff;
   cursor: default;
 `;

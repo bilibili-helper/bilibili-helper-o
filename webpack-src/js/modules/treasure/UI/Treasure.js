@@ -89,8 +89,8 @@ export class Treasure extends React.Component {
             'g': 9,
         };
         $(document).on('click', (e) => {
-            const panelId = 'bilibili-helper-treasure-panel';
-            if ($(e.target).attr('id') === panelId || $(e.target).parents(`#${panelId}`).length === 0) {
+            const panelClass = 'treasure-box';
+            if ($(e.target).hasClass(panelClass) || $(e.target).parents(`.${panelClass}`).length === 0) {
                 this.setState({open: false});
             }
         });
