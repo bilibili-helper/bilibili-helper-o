@@ -48,12 +48,14 @@ export class UpdateList extends React.Component {
             second={`包含 ${data.length} 条内容`}
             subList={{
                 hide: hide,
-                children: _.map(data, (title, i) => <ListItem
-                    key={i}
-                    noBorder={false}
-                    children={<UpdateListItem dangerouslySetInnerHTML={{__html: title}}/>}
-                    {...rest}
-                />),
+                children: _.map(data, (title, i) => {
+                    return <ListItem
+                        key={i}
+                        noBorder={false}
+                        children={<UpdateListItem dangerouslySetInnerHTML={{__html: title}}/>}
+                        {...rest}
+                    />;
+                }),
             }}
         />;
     }

@@ -148,6 +148,7 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
+        console.log(featureName, settingName, on);
         const name = _.upperFirst(featureName);
         const thisKindOfFeatures = this.state[kind];
         if (!!thisKindOfFeatures.map[name]) { // find it (*≧∪≦)
@@ -181,7 +182,7 @@ class PageConfig extends React.Component {
                         commend: 'setGAEvent',
                         action: 'click',
                         category: 'config',
-                        label: `${featureName} ${settingName ? settingName : on + ''}`,
+                        label: `${featureName} ${settingName !== undefined ? `${settingName} ${on}` : ''}`,
                     });
                     thisKindOfFeatures.map[name] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});
@@ -282,11 +283,11 @@ class PageConfig extends React.Component {
                 }}
             >{title}</ListItem>;
         } else return _.map(subPageList, (feedData, index) => {
-            const {time, name, num, ps} = feedData;
+            const [time, name, num, ps] = feedData;
             return (
                 <ListItem
                     key={index}
-                    operation={`￥${Number(num).toFixed(2)}`}
+                    operation={`￥${(+num).toFixed(2)}`}
                     twoLine={true}
                     first={name}
                     second={`${time} - ${ps || '没有留言'}`}
@@ -299,7 +300,7 @@ class PageConfig extends React.Component {
         this.handleSetSubPage({
             parent: this.aboutRef,
             subPageList: feedJson,
-            subPageTitle: '用户投喂列表'
+            subPageTitle: '用户投喂列表',
         });
     };
 
@@ -344,7 +345,7 @@ class PageConfig extends React.Component {
                         second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
                         operation={<Button icon="arrowRight" onClick={this.handleOpenFeedList}></Button>}
                     />
-                    {_.map(updateData, (data, i) => <UpdateList key={i} title={data.title} data={data.list}/>)}
+                    {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
             </ConfigBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
