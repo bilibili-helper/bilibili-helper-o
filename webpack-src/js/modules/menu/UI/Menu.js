@@ -42,6 +42,7 @@ const MenuButton = styled(Button)`
   button {
     text-indent: 6px;
     font-size: 11px;
+    font-weight: normal;
     color: ${color('google-grey-600')};
     background-color: #fff;
     transition: all 0.3s;
@@ -67,6 +68,8 @@ const Title = styled.div`
   bottom: 3px;
   color: ${color('google-grey-300')};
 `;
+
+const MenuAnchor = styled.div.attrs({className: 'bilibili-helper-menu-anchor'})``;
 
 export class Menu extends React.Component {
     constructor(props) {
@@ -139,6 +142,7 @@ export class Menu extends React.Component {
                     {favourite && <MenuButton
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
+                <MenuAnchor/>
                 <MenuButton
                     onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>
                 <Title><span>Bilibili Helper</span><span>{debug ? 'Beta.' : ''}{version}</span></Title>

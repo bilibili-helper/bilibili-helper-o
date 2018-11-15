@@ -26,15 +26,19 @@ const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
       margin: 4px;
       padding: 1px 6px;
       border-radius: 3px;
+      font-size: 12px;
       font-style: normal;
       letter-spacing: 0.3px;
-      background-color: #eaf4ff;
-      color: #0070f0;
+      background-color: ${color('paper-pink-50')};
+      color: ${color('paper-pink-400')};
       cursor: pointer;
       transition: all 0.3s;
       &:hover {
-        background-color: #d4eaff;
+        background-color: ${color('paper-pink-50')};
       }
+    }
+    a {
+      color: ${color('paper-pink-400')};
     }
 `;
 

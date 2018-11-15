@@ -16,7 +16,9 @@ import {Menu, MenuUI} from './menu';
 import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
 import {VideoQualitySelect} from './videoQualitySelect';
+import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
 import {QuickSearch} from './quickSecrch';
+import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 
 export const Features = {
     Debug,
@@ -31,7 +33,9 @@ export const Features = {
     VideoDownload,
     DoSign,
     VideoQualitySelect,
+    PictureInPicture,
     QuickSearch,
+    VideoWiden,
 };
 
 export const UIs = {
@@ -43,4 +47,6 @@ export const UIs = {
     DynamicCheckUI,
     ChatFilterUI,
     VideoDownloadUI,
+    PictureInPictureUI,
+    VideoWidenUI,
 };

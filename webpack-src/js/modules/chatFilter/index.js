@@ -15,7 +15,7 @@ export class ChatFilter extends Feature {
             dependencies: ['debug'],
             settings: {
                 on: true,
-                title: '聊天过滤',
+                title: '去污粉',
                 hasUI: true,
                 description: '过滤直播区聊天区域的显示内容，也包括一些播放器上的广告推送',
                 subPage: {

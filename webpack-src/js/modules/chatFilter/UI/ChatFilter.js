@@ -24,7 +24,7 @@ const ChatFilterPanel = styled.div.attrs({className: 'chat-helper-panel ctrl-pan
 `;
 
 const ChatFilterIcon = styled(Icon)`
-  margin: 0 5px;
+  margin: 0 0 0 7px;
   font-size: 20px;
   vertical-align: middle;
   color: #c8c8c8;

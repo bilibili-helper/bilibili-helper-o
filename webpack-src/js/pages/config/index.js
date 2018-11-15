@@ -25,19 +25,16 @@ import {
 import {
     Body,
     List,
-    //Header,
     SubPage,
     ListItem,
     RadioButtonGroup,
     CheckBoxGroup,
     UpdateList,
-} from 'Components';
+} from 'Components/configPage';
 import {theme} from 'Styles';
 import updateData from 'Statics/json/update.json';
 import 'Styles/scss/config.scss';
 import feedJson from 'Statics/json/feed.json';
-
-console.log(feedJson);
 
 //const {notifications} = PERMISSION_TYPE;
 
@@ -51,59 +48,46 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
 `;
 
 const Cat = styled.div`
-  position: fixed;
-  top: -60px;
-  right: 0;
-  bottom: -60px;
-  left: 0;
+  width: 32px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: sub;
   background-image: url(${getURL('/statics/imgs/cat.svg')});
   background-repeat: no-repeat;
   background-size: auto 100%;
-  background-position: calc(50% + 320px) center;
-  opacity: 0.04;
   user-select: none;
   pointer-events: none;
 `;
-//
-//const SubPageBody = ({title, filterName, filter, handleSetSetting}) => {
-//    return (
-//        <List>
-//            <ListItem
-//                onClick={() => handleSetSetting(filterName)}
-//                operation={<Radio on={filter.on}/>}
-//                subList={{
-//                    children: <CheckBoxGroup
-//                        data={filter.types}
-//                        value={filter.value}
-//                        onClick={(value) => handleSetSetting(filterName, value)}
-//                    />,
-//                }}
-//            >{title}</ListItem>
-//        </List>
-//    );
-//};
+
+const Header = styled.div`
+  padding: 50px 0;
+  background-color: #e66788;
+  color: #fff;
+  & > * {
+    display: block;
+    margin: 0 auto;
+    padding: 0 10px;
+    max-width: 800px;
+  }
+`;
+
+const Footer = styled.div`
+  max-width: 800px;
+  margin: 20px auto;
+  color: #8c8c8c;
+  a {
+    color: #8c8c8c;
+  }
+`;
 
 class PageConfig extends React.Component {
     constructor(props) {
         super(props);
-
         this.settings = {
-            video: {
-                title: '主站',
-                map: {},
-            },
-            live: {
-                title: '直播',
-                map: {},
-            },
-            popup: {
-                title: '菜单栏',
-                map: {},
-            },
-            other: {
-                title: '其他',
-                map: {},
-            },
+            video: {title: '主站', map: {}},
+            live: {title: '直播', map: {}},
+            popup: {title: '菜单栏', map: {}},
+            other: {title: '其他', map: {}},
         };
         this.state = {
             modalTitle: null,
@@ -115,10 +99,10 @@ class PageConfig extends React.Component {
             subPageParent: null,
             subPageOn: false,
             subPageSettings: null,
-            ...this.settings,
-            debug: false,
-
             subPageList: false, // 标记子页面是否为纯展示列表，目前用于显示投喂列表
+            ...this.settings,
+
+            debug: false,
         };
     }
 
@@ -319,7 +303,10 @@ class PageConfig extends React.Component {
         return <React.Fragment>
             {/*<Header title="设置"/>*/}
             <ConfigBody>
-                <Cat/>
+                <Header>
+                    <h1>{/*<Cat/>*/}BIlBILI HELPER</h1>
+                    <sub>{`Version ${version}（${debug ? '测试' : '正式'}版）`}</sub>
+                </Header>
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}
@@ -346,6 +333,8 @@ class PageConfig extends React.Component {
                     />
                     {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
+                <Footer>Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
+                    href="mailto:jjj201200@gmail.com">Drowsy Flesh</a></Footer>
             </ConfigBody>
             <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
         </React.Fragment>;

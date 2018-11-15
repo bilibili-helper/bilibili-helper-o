@@ -14,7 +14,7 @@ export class QuickSearch extends Feature {
             settings: {
                 on: false,
                 toggle: false,
-                title: '快速检索',
+                title: '视频快速跳转',
                 description: '待开发',
             }
         })

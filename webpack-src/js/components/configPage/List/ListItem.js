@@ -23,7 +23,7 @@ const ListItemView = styled.div.attrs({
 })`
   //margin-top: 3px;
   background-color: #fff;
-  border-top: ${props => props.noBorder ? 'none' : '1px solid #f6f7f8'};
+  border-top: ${props => props.noBorder ? 'none' : '1px solid #f2f3f5'};
   &:nth-of-type(1) {
     border-top: none;
     margin-top: 0;
@@ -58,11 +58,18 @@ const TwoLineContainerView = styled.div.attrs({
     font-size: 13px;
   }
 `;
-
-const Secondary = styled.div`
-  height:20px;
-  color: #757575;
+const First = styled.h3`
+  margin: 0;
+  height: 20px;
+  font-size: 13px;
   font-weight: 400;
+`;
+const Secondary = styled.div`
+  margin-top: 2px;
+  height:20px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #757575;
 `;
 
 const Start = styled.div.attrs({
@@ -163,7 +170,7 @@ export class ListItem extends React.Component {
         let {
             operation = null, // 右侧操作DOM，可能是按钮，单选按钮或者面板折叠按钮
         } = this.props;
-        const {
+        let {
             icon, // 显示在最左侧的ICON
             children,
             separator = false, // 右侧操作DOM是否要添加分割线
@@ -184,14 +191,15 @@ export class ListItem extends React.Component {
                 icon={hideSubList === true ? 'arrowDown' : 'arrowUp'}
                 onClick={() => this.setState({hideSubList: !hideSubList})}
             />;
+            onClick = () => this.setState({hideSubList: !hideSubList});
         }
         return (
             <ThemeProvider theme={{twoLine, toggle}}>
                 <ListItemView noBorder={noBorder} {...rest}>
-                    <TitleView onClick={toggle ? onClick : null}>
+                    <TitleView onClick={toggle ? onClick : extend ? onClick : null}>
                         {icon && icon}
                         {twoLine && <TwoLineContainerView>
-                            {first && <h3>{first}</h3>}
+                            {first && <First>{first}</First>}
                             {second && <Secondary>{second}</Secondary>}
                         </TwoLineContainerView>}
                         {!twoLine && <Start>{children}{middle}</Start>}
@@ -203,7 +211,7 @@ export class ListItem extends React.Component {
                         <SubList
                             style={{
                                 maxHeight: (!extend && subList.hide) || (extend && hideSubList === true) ? '0' : maxHeight || '',
-                                transitionDuration: `${Math.min(Math.sqrt(subList.children.length) / 10 + 0.5, 1.2)}s`,
+                                transitionDuration: `${Math.min(Math.sqrt(subList.children.length) / 10 + (hideSubList ? 0.1 : 0.5), 1.2)}s`,
                             }}
                             innerRef={i => this.subListRef = i}
                         >{subList.children}</SubList>

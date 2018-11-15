@@ -31,9 +31,10 @@ const Bar = styled.span`
   border-radius: 8px;
   background-color: ${color('google-grey-400')};
   transition: background-color linear 80ms;
+  //opacity: 0.5;
   .checked & {
-    background-color: ${color('google-blue-600')};
-    opacity: 0.5;
+    background-color: ${color('paper-pink-200')};
+    opacity: 1;
   }
 `;
 
@@ -51,7 +52,7 @@ const Knob = styled.span.attrs({className: 'radio-knob'})`
     //opacity: 0.125;
   }
   .checked & {
-    background-color: ${color('google-blue-600')};
+    //background-color: ${color('google-blue-600')};
     transform: translate3d(18px, 0, 0);
     .ripple-item {
       background-color: ${Color(color('paper-indigo-500')).alpha(0.5).rgb().toString()};

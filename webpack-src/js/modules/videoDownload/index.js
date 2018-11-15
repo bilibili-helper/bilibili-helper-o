@@ -15,12 +15,12 @@ export class VideoDownload extends Feature {
         super({
             name: 'videoDownload',
             kind: 'video',
-            dependentLocality: ['debug', 'videoAnchor'],
+            dependencies: ['debug', 'videoAnchor'],
             settings: {
                 on: true,
                 hasUI: true,
                 title: '视频下载',
-                description: '不支持新页面，但有时候会成功，建议不使用"自动"清晰度，谜一样的功能',
+                description: '不支持新页面，但有时候会成功，建议不使用"自动"清晰度',
             },
         });
         this.store = new MessageStore('videoDownloadDOMInitialized');
@@ -72,7 +72,7 @@ export class VideoDownload extends Feature {
                 });
             }
             this.store.dealWithTabStoreTask(tabId); // 处理queue
-        }, requestFilter, ['requestHeaders', 'blocking']);
+        }, requestFilter, ['requestHeaders']);
         //chrome.runtime.onMessage.addListener((message, sender) => {
         //    if (message.commend === 'videoDownloadSendVideoName' && message.filename) {
         //        if (this.store.has(sender.tab.id)) {
