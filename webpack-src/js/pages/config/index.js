@@ -37,6 +37,7 @@ import 'Styles/scss/config.scss';
 import feedJson from 'Statics/json/feed.json';
 
 //const {notifications} = PERMISSION_TYPE;
+const {color} = theme;
 
 const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   position: absolute;
@@ -61,7 +62,7 @@ const Cat = styled.div`
 
 const Header = styled.div`
   padding: 50px 0;
-  background-color: #e66788;
+  background-color: ${color('paper-pink-300')};
   color: #fff;
   & > * {
     display: block;

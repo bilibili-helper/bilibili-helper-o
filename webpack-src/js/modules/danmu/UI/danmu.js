@@ -1,3 +1,5 @@
+import {Button} from 'Components/common/Button';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/22
@@ -108,6 +110,20 @@ const LoadingMask = styled.div`
   user-select: none;
 `;
 
+const DownloadBtn = styled(Button)`
+  float: right;
+  border-radius: 4px;
+  button {
+    padding: 0;
+    min-width: 35px;
+    font-size: 12px;
+    border: 1px solid #fb7299;
+    border-radius: 4px;
+    color: ${({on}) => on ? '#fff' : '#fb7299'};
+    background-color: ${({on}) => on ? '#fb7299' : '#fff'};
+  }
+`;
+
 export class Danmu extends React.Component {
     constructor(props) {
         super(props);
@@ -123,6 +139,8 @@ export class Danmu extends React.Component {
              */
             authorHashMap: {}, // authorHash -> uid
             queryUserMode: null, // 用户UID查询模式
+
+            currentCid: NaN,
         };
         this.orderedJSON = {}; // 经过弹幕发送时间排序的数据
         this.userMap = {}; // uid -> data
@@ -180,6 +198,7 @@ export class Danmu extends React.Component {
                         danmuJSON: danmuJSON,
                         loaded: true,
                         loading: false,
+                        currentCid: cid,
                     });
                 },
                 error: (res) => {
@@ -323,7 +342,14 @@ export class Danmu extends React.Component {
                 danmuJSON: this.queryUserModeTemplateMap,
             });
         }
+    };
 
+    handleXMLDownloadClick = () => {
+        chrome.runtime.sendMessage({
+            commend: 'downloadDanmuXML',
+            cid: this.state.currentCid,
+            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+        });
     };
 
     render() {
@@ -331,7 +357,10 @@ export class Danmu extends React.Component {
         const {loaded, danmuJSON, authorHashMap, loading, loadingText} = this.state;
         return on ? (
             <React.Fragment>
-                <Title>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</Title>
+                <Title>
+                    <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
+                    <DownloadBtn title="下载XML格式弹幕文件" onClick={this.handleXMLDownloadClick}>XML</DownloadBtn>
+                </Title>
                 <DanmuList>
                     {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
                         const {danmu, authorHash, time} = danmuData;

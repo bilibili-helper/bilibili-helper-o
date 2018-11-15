@@ -137,7 +137,7 @@ export class VideoDownload extends React.Component {
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
-                {_.map(videoData[currentCid], (part, quality) => {
+                {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
                     const {accept_quality, accept_description, durl} = part;
                     return (
                         durl ? <DownloadLinkGroup key={quality}>
@@ -160,6 +160,7 @@ export class VideoDownload extends React.Component {
                         </DownloadLinkGroup> : null
                     );
                 })}
+                {!videoData[currentCid] && <DownloadLinkGroup>未获取视频下载数据，请尝试切换视频清晰度</DownloadLinkGroup>}
             </React.Fragment>
         );
     }

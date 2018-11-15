@@ -6,10 +6,10 @@
 
 import {Feature} from 'Libs/feature';
 
-export class QuickSearch extends Feature {
+export class VideoLinker extends Feature {
     constructor() {
         super({
-            name: 'quickSearch',
+            name: 'videoLinker',
             kind: 'popup',
             settings: {
                 on: false,

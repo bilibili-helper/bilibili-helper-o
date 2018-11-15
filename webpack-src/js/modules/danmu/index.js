@@ -62,5 +62,14 @@ export class Danmu extends Feature {
             }
             this.store.dealWithTabStoreTask(tabId); // 处理queue
         }, requestFilter, ['responseHeaders']);
+        chrome.runtime.onMessage.addListener(message => {
+            if (message.commend === 'downloadDanmuXML' && message.cid) {
+                chrome.downloads.download({
+                    saveAs: true,
+                    url: `https://comment.bilibili.com/${message.cid}.xml`,
+                    filename: `${message.cid}-${message.filename}.xml`,
+                });
+            }
+        });
     };
 };

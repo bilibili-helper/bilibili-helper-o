@@ -30,7 +30,7 @@ const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
       font-style: normal;
       letter-spacing: 0.3px;
       background-color: ${color('paper-pink-50')};
-      color: ${color('paper-pink-400')};
+      color: ${color('paper-pink-300')};
       cursor: pointer;
       transition: all 0.3s;
       &:hover {
@@ -38,7 +38,7 @@ const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
       }
     }
     a {
-      color: ${color('paper-pink-400')};
+      color: ${color('paper-pink-300')};
     }
 `;
 

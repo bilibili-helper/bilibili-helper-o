@@ -33,7 +33,7 @@ const Bar = styled.span`
   transition: background-color linear 80ms;
   //opacity: 0.5;
   .checked & {
-    background-color: ${color('paper-pink-200')};
+    background-color: ${color('paper-pink-300')};
     opacity: 1;
   }
 `;

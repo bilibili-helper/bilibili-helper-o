@@ -42,13 +42,13 @@ const RadioDisc = styled.div.attrs({
     position: absolute;
     top: -2px;
     left: -2px;
-    background-color: ${color('paper-pink-400')};
+    background-color: ${color('paper-pink-300')};
     border-radius: 50%;
     transform: scale(0);
     transition: all 0.15s;
   }
   &.checked {
-    border-color: ${color('paper-pink-400')};
+    border-color: ${color('paper-pink-300')};
     &::after {
       transform: scale(0.5);
     }

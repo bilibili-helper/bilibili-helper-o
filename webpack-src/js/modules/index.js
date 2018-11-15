@@ -17,7 +17,7 @@ import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
 import {VideoQualitySelect} from './videoQualitySelect';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
-import {QuickSearch} from './quickSecrch';
+import {VideoLinker} from './videoLinker';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 
 export const Features = {
@@ -34,7 +34,7 @@ export const Features = {
     DoSign,
     VideoQualitySelect,
     PictureInPicture,
-    QuickSearch,
+    VideoLinker,
     VideoWiden,
 };
 
