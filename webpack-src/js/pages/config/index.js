@@ -305,8 +305,9 @@ class PageConfig extends React.Component {
             {/*<Header title="设置"/>*/}
             <ConfigBody>
                 <Header>
-                    <h1>{/*<Cat/>*/}BIlBILI HELPER</h1>
+                    <h1>BIlBILI HELPER</h1>
                     <sub>{`Version ${version}（${debug ? '测试' : '正式'}版）`}</sub>
+                    {/*<Cat/>*/}
                 </Header>
                 <SubPage
                     on={subPageOn}

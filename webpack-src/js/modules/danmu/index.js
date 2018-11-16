@@ -17,14 +17,9 @@ export class Danmu extends Feature {
             dependencies: ['debug', 'videoAnchor'],
             settings: {
                 on: true,
-                title: '视频弹幕相关',
-                type: 'checkbox',
+                title: '视频弹幕查询及下载',
                 hasUI: true,
-                options: [
-                    //{key: 'download', title: '视频下载', on: true},
-                    {key: 'danmu', title: '弹幕查询', on: true, description: '查询弹幕发送者，支持历史弹幕，分P，视频切换等场景'},
-                    {key: 'danmuDownload', title: '弹幕下载', on: false, toggle: false, description: '待开发'},
-                ],
+                description: '查询弹幕发送者，支持历史弹幕，分P，视频切换等场景',
             },
         });
         this.store = new MessageStore('danmuDOMInitialized');
