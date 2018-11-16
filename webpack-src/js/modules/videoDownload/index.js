@@ -61,6 +61,7 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
+                this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl') {
                 //console.log(details, data);
                 tabData.queue.push({
@@ -70,8 +71,8 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
+                this.store.dealWith(tabId); // 处理queue
             }
-            this.store.dealWithTabStoreTask(tabId); // 处理queue
         }, requestFilter, ['requestHeaders']);
         //chrome.runtime.onMessage.addListener((message, sender) => {
         //    if (message.commend === 'videoDownloadSendVideoName' && message.filename) {

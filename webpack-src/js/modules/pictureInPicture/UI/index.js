@@ -101,7 +101,9 @@ export class PictureInPictureUI extends UI {
         return new Promise(resolve => {
             const video = document.getElementsByTagName('video');
             if (video && video.length) {
-                const pipWrapper = $('<div style="position: static;"/>').attr('class', 'bilibili-helper-pip-wrapper');
+                const pipWrapper = $('<div />')
+                .attr('class', 'bilibili-helper-pip-wrapper')
+                .css({position: 'static', margin: 0});
                 container.append(pipWrapper);
                 pipWrapper[0] && ReactDOM.render(<PIP settings={settings}/>, pipWrapper[0], resolve);
             }

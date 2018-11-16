@@ -19,6 +19,7 @@ import {VideoQualitySelect} from './videoQualitySelect';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
 import {VideoLinker} from './videoLinker';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
+import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
 
 export const Features = {
     Debug,
@@ -36,6 +37,7 @@ export const Features = {
     PictureInPicture,
     VideoLinker,
     VideoWiden,
+    VideoSubtitleDownload,
 };
 
 export const UIs = {
@@ -49,4 +51,5 @@ export const UIs = {
     VideoDownloadUI,
     PictureInPictureUI,
     VideoWidenUI,
+    VideoSubtitleDownloadUI
 };

@@ -48,14 +48,15 @@ export class Danmu extends Feature {
                     commend: 'loadCurrentDanmu',
                     cid: query.oid,
                 });
+                this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     commend: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: query.date,
                 });
+                this.store.dealWith(tabId); // 处理queue
             }
-            this.store.dealWithTabStoreTask(tabId); // 处理queue
         }, requestFilter, ['responseHeaders']);
         chrome.runtime.onMessage.addListener(message => {
             if (message.commend === 'downloadDanmuXML' && message.cid) {

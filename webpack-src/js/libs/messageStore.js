@@ -25,7 +25,7 @@ export class MessageStore {
                 if (data.state === 0) {
                     data.state = 1;
                     // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
-                    this.dealWithTabStoreTask(id);
+                    this.dealWith(id);
                 } else console.warn(`This store is already in state:`, state);
             } else if (message.commend === 'danmuTabUnload' && !!this.has(sender.tab.id)) {
                 this.delete(sender.tab.id);
@@ -54,7 +54,7 @@ export class MessageStore {
     delete = (id) => delete this.store[id];
 
     // 处理任务队列
-    dealWithTabStoreTask = (id) => {
+    dealWith = (id) => {
         const doIt = (id, taskData) => {
             if (!taskData) return Promise.resolve();
             const {commend} = taskData;
@@ -67,7 +67,7 @@ export class MessageStore {
         const {state, queue} = this.store[id];
         state && queue.length > 0 && doIt(id, queue.shift()).then(() => {
             // 如果队列不为空
-            queue.length > 0 && this.dealWithTabStoreTask(id, this.store[id]);
+            queue.length > 0 && this.dealWith(id, this.store[id]);
         }, (error) => console.error(error));
     };
 }

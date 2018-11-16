@@ -12,9 +12,8 @@ import {theme} from 'Styles';
 
 const {color} = theme;
 
-import './style.scss';
-
 const Title = styled.div.attrs({className: 'bilibili-helper-video-download-title'})`
+  width: 100%;
   margin-bottom: 6px;
   font-size: 12px;
   font-weight: bold;
@@ -24,8 +23,11 @@ const Title = styled.div.attrs({className: 'bilibili-helper-video-download-title
     color: ${color('google-grey-500')};
   }
 `;
-
-const DownloadLinkGroup = styled.div`
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+const LinkGroup = styled.div`
   display: inline-block;
   margin: 4px;
   padding: 3px;
@@ -51,7 +53,7 @@ const DownloadLinkGroup = styled.div`
     }
   }
 `;
-const DownloadLinkGroupTitle = styled.span`
+const LinkGroupTitle = styled.span`
   display: inline-block;
   padding: 0 8px;
   width: 80px;
@@ -70,11 +72,8 @@ export class VideoDownload extends React.Component {
 
     }
 
-    componentWillMount() {
-        //const qualityList = $('.bpui-selectmenu-list');
-        //if (qualityList.length > 0) {
-        //    qualityList.find('li:eq(0)').click();
-        //}
+    componentDidMount() {
+        chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
     }
 
     addListener = () => {
@@ -107,7 +106,7 @@ export class VideoDownload extends React.Component {
                         cidData[quality] = currentData;
                         videoData[currentCid] = cidData;
                         //console.log(videoData, currentCid);
-                        this.setState({videoData, currentCid},() => {
+                        this.setState({videoData, currentCid}, () => {
                             //chrome.runtime.sendMessage({
                             //    commend: 'videoDownloadSendVideoName',
                             //    filename: $('.header-info h1, #viewbox_report h1').attr('title'),
@@ -137,30 +136,32 @@ export class VideoDownload extends React.Component {
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
-                {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
-                    const {accept_quality, accept_description, durl} = part;
-                    return (
-                        durl ? <DownloadLinkGroup key={quality}>
-                            {_.map(durl, (o, i) => {
-                                const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
-                                return (
-                                    <React.Fragment key={`${quality}${i}`}>
-                                        {durl.length > 1 && i === 0 ? <DownloadLinkGroupTitle
-                                            key={`title-${quality}-${i}`}
-                                        >{accept_description[accept_quality.indexOf(+quality)]}</DownloadLinkGroupTitle> : null}
-                                        <a
-                                            key={`${quality}${i}`}
-                                            referrerPolicy="unsafe-url"
-                                            href={o.url}
-                                            //onClick={() => this.handleOnClickDownload(part.url)}
-                                        >{title}</a>
-                                    </React.Fragment>
-                                );
-                            })}
-                        </DownloadLinkGroup> : null
-                    );
-                })}
-                {!videoData[currentCid] && <DownloadLinkGroup>未获取视频下载数据，请尝试切换视频清晰度</DownloadLinkGroup>}
+                <Container>
+                    {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
+                        const {accept_quality, accept_description, durl} = part;
+                        return (
+                            durl ? <LinkGroup key={quality}>
+                                {_.map(durl, (o, i) => {
+                                    const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
+                                    return (
+                                        <React.Fragment key={`${quality}${i}`}>
+                                            {durl.length > 1 && i === 0 ? <LinkGroupTitle
+                                                key={`title-${quality}-${i}`}
+                                            >{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
+                                            <a
+                                                key={`${quality}${i}`}
+                                                referrerPolicy="unsafe-url"
+                                                href={o.url}
+                                                //onClick={() => this.handleOnClickDownload(part.url)}
+                                            >{title}</a>
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </LinkGroup> : null
+                        );
+                    })}
+                    {!videoData[currentCid] && <LinkGroup>未获取视频下载数据，请尝试切换视频清晰度</LinkGroup>}
+                </Container>
             </React.Fragment>
         );
     }

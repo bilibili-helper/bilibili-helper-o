@@ -5,7 +5,6 @@
  */
 
 import $ from 'jquery';
-import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Danmu} from './danmu';
@@ -21,7 +20,7 @@ export class DanmuUI extends UI {
 
     load = ([container], settings) => {
         return new Promise(resolve => {
-            const danmuWrapper = $('<div style="order: 1;"/>').attr('class', 'bilibili-helper-danmu-wrapper');
+            const danmuWrapper = $('<div style="order: 3;"/>').attr('class', 'bilibili-helper-danmu-wrapper');
             container.append(danmuWrapper);
             danmuWrapper[0] && ReactDOM.render(<Danmu settings={settings}/>, danmuWrapper[0], resolve);
         });

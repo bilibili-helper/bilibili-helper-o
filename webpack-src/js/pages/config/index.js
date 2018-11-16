@@ -335,10 +335,24 @@ class PageConfig extends React.Component {
                     />
                     {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
-                <Footer>Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
-                    href="mailto:jjj201200@gmail.com">Drowsy Flesh</a></Footer>
+                <Footer>
+                    {/*<div style={{*/}
+                        {/*display: 'flex',*/}
+                        {/*justifyContent: 'space-around',*/}
+                        {/*width: '300px',*/}
+                    {/*}}>*/}
+                        {/*<a href="https://github.com/zacyu/bilibili-helper">Github</a>*/}
+                        {/*<a href="https://bilihelper.guguke.net">Website</a>*/}
+                        {/*<a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome Web*/}
+                            {/*Store</a>*/}
+                    {/*</div>*/}
+                    <div style={{textAlign: 'center'}}>
+                        Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
+                        href="mailto:jjj201200@gmail.com">Drowsy Flesh</a>
+                    </div>
+                </Footer>
             </ConfigBody>
-            <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
+            {/*<Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>*/}
         </React.Fragment>;
     }
 }

@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import {treasureCloseImg, treasureOpenImg} from './imgUrls';
 
 const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
+  position: relative;
+  top: -4px;
   width: 48px;
   height: 48px;
   background-position: center bottom;
@@ -58,9 +60,6 @@ const Title = styled.h2`
   font-size: 14px;
   font-weight: 400;
   color: #23ade5;
-`;
-const Progress = styled.div`
-
 `;
 
 export class Treasure extends React.Component {

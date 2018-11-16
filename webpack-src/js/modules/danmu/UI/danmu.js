@@ -29,6 +29,7 @@ const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
 
 const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
   height: 150px;
+  margin-left: 4px;
   padding: 1px;
   border: 1px solid #eee;
   border-radius: 4px 4px 0 0;
@@ -39,7 +40,8 @@ const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
 
 const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
   display: block;
-  width: 100%;
+  width: -webkit-fill-available;
+  margin-left: 4px;
   padding: 4px 6px;
   box-sizing: border-box;
   border: 1px solid #eee;
@@ -234,8 +236,10 @@ export class Danmu extends React.Component {
                         } else resolve(false);
                     },
                     error: (res) => {
-                        console.log(res);
-                        this.setState({loadingText: '查询失败!'});
+                        //console.log(res);
+                        this.setState({loadingText: '查询失败!'}, () => { // 查询失败3庙后关闭错误信息
+                            setTimeout(() => this.setState({loading: false}), 3000);
+                        });
                     },
                 });
             }
