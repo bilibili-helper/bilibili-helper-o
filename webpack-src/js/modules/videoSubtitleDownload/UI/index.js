@@ -89,7 +89,11 @@ class VideoSubtitleDownload extends React.Component {
             <React.Fragment>
                 <Title>字幕下载</Title>
                 <Container>
-                    {subtitleData.length === 0 && <LinkGroupTitle><a>未获取字幕数据，请检查该视频是否拥有字幕</a></LinkGroupTitle>}
+                    {subtitleData.length === 0 && (
+                        <LinkGroup>
+                            <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
+                        </LinkGroup>
+                    )}
                     {subtitleData.length > 0 && subtitleData.map((o) => {
                         const {id, lan_doc} = o;
                         return (

@@ -165,6 +165,7 @@ export class Danmu extends React.Component {
                     sendResponse(true);
                 } else console.error(`Error history danmu date: ${message.date}`);
             } else if (message.commend === 'loadCurrentDanmu') { // 被通知载入当日弹幕
+                console.log(message.cid);
                 this.getDANMUList(message.cid);
                 sendResponse(true);
             }

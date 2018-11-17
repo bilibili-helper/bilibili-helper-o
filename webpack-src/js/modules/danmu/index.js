@@ -29,27 +29,29 @@ export class Danmu extends Feature {
         const requestFilter = {
             urls: [
                 '*://api.bilibili.com/x/v2/dm/history?type=*', // 历史弹幕
-                '*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
+                //'*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
 
-                //'*://api.bilibili.com/x/player.so*', // 新页面特有，用于标记新页面，加载时特殊处理
+                '*://api.bilibili.com/x/player.so*', // 新页面特有，用于标记新页面，加载时特殊处理
+                '*://interface.bilibili.com/player?id=cid:*' // 老页面特有
             ],
         };
-        chrome.webRequest.onCompleted.addListener((details) => {
+        chrome.webRequest.onBeforeRequest.addListener((details) => {
             const {tabId, initiator} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             //console.log(tabId, 'onCompleted', pathname, query);
             // 收到前端页面请求
-            const tabData = this.store.createData(tabId);
-            if (pathname === '/x/v1/dm/list.so') { // 如果tab请求了当天弹幕
-                tabData.data.cid = query.oid;
+            if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
+                const tabData = this.store.createData(tabId);
+                tabData.data.cid = query.id.slice(4);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     commend: 'loadCurrentDanmu',
-                    cid: query.oid,
+                    cid: tabData.data.cid,
                 });
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
+                const tabData = this.store.createData(tabId);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     commend: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
@@ -57,7 +59,7 @@ export class Danmu extends Feature {
                 });
                 this.store.dealWith(tabId); // 处理queue
             }
-        }, requestFilter, ['responseHeaders']);
+        }, requestFilter);
         chrome.runtime.onMessage.addListener(message => {
             if (message.commend === 'downloadDanmuXML' && message.cid) {
                 chrome.downloads.download({
