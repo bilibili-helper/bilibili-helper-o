@@ -44,8 +44,10 @@ http://addons-privacy.com/
 ## Module
 
 框架中module为modules文件夹中的一个模块，负责实现一种助手的功能，例如：
+
 ​debug：该模块提供一个调试变量，所有模块都需要依赖他执行，用他来标记是否需要让用户看到调试信息。未来可以取消所有依赖，当其他模块需要的时候进行单独检查。
-​videoAnchor：该模块作为一个锚，没有任何后台监听功能。让其他依赖项可以获取其返回的UI对象，从而实现定向的DOM注入。
+
+videoAnchor：该模块作为一个锚，没有任何后台监听功能。让其他依赖项可以获取其返回的UI对象，从而实现定向的DOM注入。
 
 ### 目录结构约定
 
@@ -66,6 +68,7 @@ moduleName
 1: 该文件必须导出继承自Feature的类。如果有UI的话，需要同时导出UI目录下的index.js。类名为首字母大写模块名。如：模块videoAnchor的UI类为VideoAnchor。
 
 2: 该文件必须导出继承自UI的类。类名必须为xxxUI，其中xxx为模块名。如：模块videoAnchor的UI类为VideoAnchorUI。
+
 3: 该目录名必须为`localesSupportList.json`中存在的名称，且目录下只能有json文件，文件名不作约定。
 
 ## Feature
@@ -173,12 +176,12 @@ Feature类拥有一些方便的方法，便于开发调用，具体如下：
 
 #### afterSetSetting
 
-### UI
+## UI
 
-### FeatureManager
+## FeatureManager
 
-### UIManager
+## UIManager
 
-### MessageStore
+## MessageStore
 
-### i18n
+## i18n
