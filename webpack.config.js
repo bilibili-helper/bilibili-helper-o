@@ -1,23 +1,28 @@
+/* global require */
 /**
  * Author: Ruo
  * Create: 2018-05-30
  * Description:
  */
 
-const _ = require('lodash');
-const glob = require('glob');
 const path = require('path');
-const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 
 const webpackPath = path.resolve('webpack-src');
 const buildPath = path.resolve('build');
 const webpackJSPath = path.resolve(webpackPath, 'js');
 const indexFilename = 'index.js';
+
+const localesSupportList = require('./localesSupportList.json');
+const localesGroup = localesSupportList.map((name) => ({
+    pattern: `{./webpack-src/**/_locales/${name}/messages.json,./webpack-src/_locales/${name}/messages.json}`,
+    fileName: `./_locales/${name}/messages.json`,
+}));
 
 module.exports = {
     watch: true,
@@ -91,10 +96,13 @@ module.exports = {
         new CopyWebpackPlugin([
             {from: 'webpack-src/html/*.html', to: '', flatten: true},
             {from: 'webpack-src/*.json', to: '', flatten: true},
-            {from: 'webpack-src/_locales', to: '_locales'},
             {from: 'webpack-src/statics', to: 'statics'},
             {from: 'webpack-src/js/libs', to: 'libs'},
             // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
         ]),
+        new MergeJsonWebpackPlugin({
+            debug: true,
+            output: {groupBy: localesGroup},
+        }),
     ],
 };

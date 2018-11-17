@@ -147,6 +147,9 @@ export class Danmu extends React.Component {
         this.orderedJSON = {}; // 经过弹幕发送时间排序的数据
         this.userMap = {}; // uid -> data
         this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
+        this.danmuDocumentStr = null;
+        const today = new Date();
+        this.danmuDate = `${today.getMonth() + 1}-${today.getDate()}`; // 当前弹幕日期
         this.addListener();
     }
 
@@ -165,9 +168,14 @@ export class Danmu extends React.Component {
                     sendResponse(true);
                 } else console.error(`Error history danmu date: ${message.date}`);
             } else if (message.commend === 'loadCurrentDanmu') { // 被通知载入当日弹幕
-                console.log(message.cid);
                 this.getDANMUList(message.cid);
                 sendResponse(true);
+            }
+        });
+        // 对pakku的hack，仅发送历史弹幕的请求
+        window.addEventListener('message', function(e) {
+            if (e.data.type === 'pakku_ajax_request' && /x\/v2\/dm\/history/.test(e.data.arg)) {
+                chrome.runtime.sendMessage({commend: 'pakkuGetHistoryDanmu', url: e.data.arg});
             }
         });
     };
@@ -194,6 +202,9 @@ export class Danmu extends React.Component {
                 contentType: 'text/xml',
                 success: (danmuDocument) => {
                     clearTimeout(timer);
+                    if (date) this.danmuDate = date;
+                    var oSerializer = new XMLSerializer();
+                    this.danmuDocumentStr = oSerializer.serializeToString(danmuDocument);
                     const danmuJSON = this.danmuDocument2JSON(danmuDocument);
                     danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
                     this.orderedJSON = {...danmuJSON};
@@ -353,6 +364,8 @@ export class Danmu extends React.Component {
         chrome.runtime.sendMessage({
             commend: 'downloadDanmuXML',
             cid: this.state.currentCid,
+            danmuDocumentStr: this.danmuDocumentStr,
+            date: this.danmuDate,
             filename: $('#viewbox_report h1, .header-info h1').attr('title'),
         });
     };

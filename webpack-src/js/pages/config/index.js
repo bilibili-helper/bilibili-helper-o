@@ -150,8 +150,15 @@ class PageConfig extends React.Component {
                     return;
                 }
             } else if (settingName && settingObject.subPage && subPage) { // 二级页面
-                const index = _.findIndex(settingObject.subPage.options, {key: settingName});
-                settingObject.subPage.options[index].on = on;
+                if (settingObject.subPage.type === 'checkbox') {
+                    const index = _.findIndex(settingObject.subPage.options, {key: settingName});
+                    settingObject.subPage.options[index].on = on;
+                } else if (settingObject.subPage.type === 'radio') {
+                    settingObject.subPage.value = settingName;
+                } else {
+                    console.error(`Undefined type: ${settingObject.subPage.type} (⊙ˍ⊙)!`);
+                    return;
+                }
             } else {
                 console.error(`Error Setting Object Σ(oﾟдﾟoﾉ)!`);
                 return;
@@ -252,20 +259,16 @@ class PageConfig extends React.Component {
         const {subPageSettings, subPageList} = this.state;
         if (!subPageList) {
             const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
-            const {options, title} = subPage;
+            const subList = this.createSubListComponent({kind, featureName, settings: subPage});
             return <ListItem
                 toggle={toggle}
                 onClick={() => this.handleSetSetting({kind, featureName})}
                 operation={<Radio on={on}/>}
                 subList={{
-                    children: <CheckBoxGroup
-                        data={options}
-                        onClick={(settingName, on) => this.handleSetSetting({
-                            kind, featureName, settingName, on, subPage: true,
-                        })}
-                    />,
+                    hide: on === undefined ? false : !on,
+                    children: subList,
                 }}
-            >{title}</ListItem>;
+            >{subPage.title}</ListItem>;
         } else return _.map(subPageList, (feedData, index) => {
             const [time, name, num, ps] = feedData;
             return (
@@ -337,14 +340,14 @@ class PageConfig extends React.Component {
                 </List>
                 <Footer>
                     {/*<div style={{*/}
-                        {/*display: 'flex',*/}
-                        {/*justifyContent: 'space-around',*/}
-                        {/*width: '300px',*/}
+                    {/*display: 'flex',*/}
+                    {/*justifyContent: 'space-around',*/}
+                    {/*width: '300px',*/}
                     {/*}}>*/}
-                        {/*<a href="https://github.com/zacyu/bilibili-helper">Github</a>*/}
-                        {/*<a href="https://bilihelper.guguke.net">Website</a>*/}
-                        {/*<a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome Web*/}
-                            {/*Store</a>*/}
+                    {/*<a href="https://github.com/zacyu/bilibili-helper">Github</a>*/}
+                    {/*<a href="https://bilihelper.guguke.net">Website</a>*/}
+                    {/*<a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome Web*/}
+                    {/*Store</a>*/}
                     {/*</div>*/}
                     <div style={{textAlign: 'center'}}>
                         Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a

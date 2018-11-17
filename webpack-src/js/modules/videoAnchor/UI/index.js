@@ -48,7 +48,7 @@ export class VideoAnchorUI extends UI {
                         const container = $('#arc_toolbar_report .ops');
                         addUI(container);
                     } else ++retryTime;
-                }, 500);
+                }, 1000);
             } else { // 老的番剧页面
                 this.observer(containerSelectors).then(addUI);
             }

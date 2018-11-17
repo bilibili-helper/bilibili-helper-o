@@ -80,6 +80,11 @@ class VideoSubtitleDownload extends React.Component {
 
     handleDownloadSubtitle = (id) => {
         chrome.runtime.sendMessage({
+            commend: 'setGAEvent',
+            action: 'click',
+            category: 'videoSubtitleDownload',
+        });
+        chrome.runtime.sendMessage({
             commend: 'downloadSubtitle',
             id,
             filename: $('#viewbox_report h1, .header-info h1').attr('title'),

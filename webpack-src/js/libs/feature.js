@@ -5,15 +5,7 @@
  */
 import _ from 'lodash';
 import store from 'store';
-import {
-    getOption,
-    setOption,
-    isLogin,
-    PERMISSION_STATUS,
-    PERMISSION_TYPE,
-} from 'Utils';
-
-const {login, notifications} = PERMISSION_TYPE;
+import {isLogin} from 'Utils';
 
 /**
  * 特性
@@ -87,7 +79,7 @@ export class Feature {
 
     // 获取配置
     getSetting = (featureName) => {
-        if (featureName === this.name || !featureName) return store.get(this.storeName) || {};
+        if (featureName === this.name || !featureName) return this.settings || {};
         else {
             const name = _.upperFirst(featureName);
             return chrome.extension.getBackgroundPage().FeatureManager.features[name].getSetting();

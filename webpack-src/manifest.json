@@ -2,10 +2,10 @@
     "version": "1.0.9",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
-    "name": "__MSG_extName__",
-    "short_name": "__MSG_extShortName__",
+    "name": "__MSG_extensionName__",
+    "short_name": "__MSG_extensionShortName__",
     "default_locale": "zh_CN",
-    "description": "__MSG_extDescription__",
+    "description": "__MSG_extensionDescription__",
     "options_ui": {
         "page": "config.html"
     },
@@ -19,7 +19,7 @@
             "38": "statics/imgs/icon-38.png"
         },
         "default_popup": "popup.html",
-        "default_title": "__MSG_extShortName__"
+        "default_title": "__MSG_extensionShortName__"
     },
     "content_scripts": [
         {

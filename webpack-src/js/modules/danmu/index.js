@@ -5,7 +5,7 @@
  */
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import URL from 'url-parse';
+import URLParse from 'url-parse';
 
 export {DanmuUI} from './UI/index';
 
@@ -32,13 +32,13 @@ export class Danmu extends Feature {
                 //'*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
 
                 '*://api.bilibili.com/x/player.so*', // 新页面特有，用于标记新页面，加载时特殊处理
-                '*://interface.bilibili.com/player?id=cid:*' // 老页面特有
+                '*://interface.bilibili.com/player?id=cid:*', // 老页面特有
             ],
         };
         chrome.webRequest.onBeforeRequest.addListener((details) => {
             const {tabId, initiator} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
-            const url = new URL(details.url, '', true);
+            const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
             //console.log(tabId, 'onCompleted', pathname, query);
             // 收到前端页面请求
@@ -60,13 +60,25 @@ export class Danmu extends Feature {
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter);
-        chrome.runtime.onMessage.addListener(message => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'downloadDanmuXML' && message.cid) {
+                const url = (window.URL ? URL : webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
+                    type: 'application/xml',
+                }));
                 chrome.downloads.download({
                     saveAs: true,
-                    url: `https://comment.bilibili.com/${message.cid}.xml`,
-                    filename: `${message.cid}-${message.filename}.xml`,
+                    url,
+                    filename: `${message.filename}.${message.cid}.${message.date}.xml`,
                 });
+            } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
+                const tabData = this.store.createData(sender.tab.id);
+                const url = new URLParse(message.url, '', true);
+                tabData.queue.push({
+                    commend: 'loadHistoryDanmu',
+                    cid: tabData.data.cid,
+                    date: url.query.date,
+                });
+                this.store.dealWith(sender.tab.id);
             }
         });
     };
