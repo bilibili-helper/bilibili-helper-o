@@ -325,7 +325,7 @@ class PageConfig extends React.Component {
                     <ListItem
                         icon={<Icon icon="catSvg" image/>}
                         twoLine
-                        first={chrome.i18n.getMessage('extName')}
+                        first={chrome.i18n.getMessage('extensionName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
                         //separator
                         //operation={<Button disable normal>检查更新</Button>}

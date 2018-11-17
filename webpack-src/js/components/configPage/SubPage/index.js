@@ -101,7 +101,7 @@ const Container = styled.div.attrs({
     transition: opacity 0.2s;
     animation-name: ${ContainerEnterKeyFrame};
     animation-delay: 0.05s;
-    animation-duration: 0.3s;
+    animation-duration: 0.2s;
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
     & > * {
@@ -110,7 +110,7 @@ const Container = styled.div.attrs({
     }
   }
   &.will-leave {
-    transition: all 0s 0.4s, border-radius 0.3s, opacity 0.2s 0.19s;
+    transition: all 0s 0.2s, border-radius 0.2s, opacity 0.2s 0.19s;
     opacity: 0;
     visibility: hidden;
     border-radius: 4px;
