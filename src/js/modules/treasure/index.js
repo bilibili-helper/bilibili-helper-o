@@ -18,7 +18,6 @@ export class Treasure extends Feature {
             kind: 'live',
             permission: {login, notification},
             dependencies: ['debug'],
-
             settings: {
                 on: true,
                 toggle: true,

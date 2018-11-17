@@ -20,7 +20,7 @@ const indexFilename = 'index.js';
 
 const localesSupportList = require('./localesSupportList.json');
 const localesGroup = localesSupportList.map((name) => ({
-    pattern: `{./src/**/_locales/${name}/messages.json,./src/_locales/${name}/messages.json}`,
+    pattern: `{./src/**/_locales/${name}/messages.json,./src/_locales/${name}/*.json}`,
     fileName: `./_locales/${name}/messages.json`,
 }));
 

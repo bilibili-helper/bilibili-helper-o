@@ -11,7 +11,6 @@ export class FeatureManager {
     constructor() {
         this.features = {};
         this.waitQueue = [];
-        this.UISettings = {};
         this.addListener();
         this.instantiateFeatures().then(this.loadFeatures);
         this.retryMax = _.keys(Features).length;

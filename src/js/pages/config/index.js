@@ -262,15 +262,20 @@ class PageConfig extends React.Component {
         if (!subPageList) {
             const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
             const subList = this.createSubListComponent({kind, featureName, settings: subPage, subPage: true});
+            const twoLine = subPage.description !== undefined;
             return <ListItem
                 toggle={toggle}
                 onClick={() => this.handleSetSetting({kind, featureName})}
                 operation={<Radio on={on}/>}
+                twoLine={twoLine}
+                first={twoLine ? subPage.title : ''}
+                second={twoLine ? subPage.description : ''}
+                children={twoLine ? null : subPage.title}
                 subList={{
                     hide: on === undefined ? false : !on,
                     children: subList,
                 }}
-            >{subPage.title}</ListItem>;
+            />;
         } else return _.map(subPageList, (feedData, index) => {
             const [time, name, num, ps] = feedData;
             return (

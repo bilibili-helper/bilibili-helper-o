@@ -121,11 +121,6 @@ export class Feature {
         return;
     };
 
-    // 渲染特性/功能UI
-    render = () => {
-        return;
-    };
-
     // 鉴权
     checkPermission = () => {
         return new Promise(resolve => {
@@ -162,13 +157,5 @@ export class Feature {
             });
             resolve({pass, msg});
         });
-    };
-
-    /**
-     * 装载 - 初始化成功后
-     * 不同功能有不同的装载要求和时机
-     */
-    install = (feature) => {
-        //feature.launch();
     };
 }
