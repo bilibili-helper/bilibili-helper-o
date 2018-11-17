@@ -55,6 +55,10 @@ const LinkGroup = styled.div`
 const LinkGroupTitle = styled.span`
   display: inline-block;
   cursor: default;
+  p {
+      color: ${color('google-grey-900')};
+      font-size: 12px;
+  }
 `;
 
 class VideoSubtitleDownload extends React.Component {
