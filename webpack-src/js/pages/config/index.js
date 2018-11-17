@@ -219,7 +219,7 @@ class PageConfig extends React.Component {
         });
     };
 
-    createSubListComponent = ({kind = '', featureName = '', settings = {}}) => {
+    createSubListComponent = ({kind = '', featureName = '', settings = {}, subPage = false}) => {
         let SubListChildren = null;
         const {options, type, value} = settings;
         if (!!options && !!type) {
@@ -227,14 +227,16 @@ class PageConfig extends React.Component {
                 case 'checkbox':
                     SubListChildren = <CheckBoxGroup
                         data={options}
-                        onClick={(settingName, on) => this.handleSetSetting({kind, featureName, settingName, on})}
+                        onClick={(settingName, on) => this.handleSetSetting({
+                            kind, featureName, settingName, on, subPage,
+                        })}
                     />;
                     break;
                 case 'radio':
                     SubListChildren = <RadioButtonGroup
                         value={value}
                         data={options}
-                        onClick={(settingName) => this.handleSetSetting({kind, featureName, settingName})}
+                        onClick={(settingName) => this.handleSetSetting({kind, featureName, settingName, subPage})}
                     />;
                     break;
             }
@@ -259,7 +261,7 @@ class PageConfig extends React.Component {
         const {subPageSettings, subPageList} = this.state;
         if (!subPageList) {
             const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
-            const subList = this.createSubListComponent({kind, featureName, settings: subPage});
+            const subList = this.createSubListComponent({kind, featureName, settings: subPage, subPage: true});
             return <ListItem
                 toggle={toggle}
                 onClick={() => this.handleSetSetting({kind, featureName})}
