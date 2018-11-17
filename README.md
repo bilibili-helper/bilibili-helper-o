@@ -51,22 +51,22 @@ http://addons-privacy.com/
 
 ```
 moduleName
-  index.js         [^1]
+  index.js         1
   UI
-    index.js       [^2]
+    index.js       2
     ...
   _locales 
-    zh_CN          [^3]
+    zh_CN          3
       messages.json
       ...
     ...
   ...
 ```
 
-[^1]: 该文件必须导出继承自Feature的类。如果有UI的话，需要同时导出UI目录下的index.js。类名为首字母大写模块名。如：模块videoAnchor的UI类为VideoAnchor。
+1: 该文件必须导出继承自Feature的类。如果有UI的话，需要同时导出UI目录下的index.js。类名为首字母大写模块名。如：模块videoAnchor的UI类为VideoAnchor。
 
-[^2]: 该文件必须导出继承自UI的类。类名必须为xxxUI，其中xxx为模块名。如：模块videoAnchor的UI类为VideoAnchorUI。
-[^3]: 该目录名必须为`localesSupportList.json`中存在的名称，且目录下只能有json文件，文件名不作约定。
+2: 该文件必须导出继承自UI的类。类名必须为xxxUI，其中xxx为模块名。如：模块videoAnchor的UI类为VideoAnchorUI。
+3: 该目录名必须为`localesSupportList.json`中存在的名称，且目录下只能有json文件，文件名不作约定。
 
 ## Feature
 
@@ -115,7 +115,7 @@ export class Debug extends Feature {
 {
     name: 'moduleName',
     kind: 'kindName',
-    permission: {login, notification}, [^4] // 需要特定权限时，在执行init方法时鉴权，默认为空 
+    permission: {login, notification}, 4 // 需要特定权限时，在执行init方法时鉴权，默认为空 
     dependencies: ['dependency1',...], // 指定模块的依赖，默认为空
     settings: {
     	on: true, // 指模块是否执行launch方法
@@ -153,7 +153,7 @@ export class Debug extends Feature {
 }
 ```
 
-[^4]: 需要扩展`Utils`中的`PERMISSION_TYPE`，已经有的鉴权对象为`login`和` notification`。
+4: 需要扩展`Utils`中的`PERMISSION_TYPE`，已经有的鉴权对象为`login`和` notification`。
 
 
 ### methods
@@ -172,3 +172,13 @@ Feature类拥有一些方便的方法，便于开发调用，具体如下：
 #### setSetting
 
 #### afterSetSetting
+
+### UI
+
+### FeatureManager
+
+### UIManager
+
+### MessageStore
+
+### i18n
