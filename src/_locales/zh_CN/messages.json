@@ -1,102 +1,30 @@
 {
-  "extName": {
-    "message": "哔哩哔哩助手：bilibili.com 综合辅助扩展",
-    "description": "Extension: Name"
-  },
-  "extShortName": {
-    "message": "哔哩哔哩助手",
-    "description": "Extension: Short Name"
-  },
-  "extDescription": {
-    "message": "哔哩哔哩弹幕网辅助扩展，拥有视频区和直播区的人性化功能",
-    "description": "Extension: Description"
-  },
-  "goBili": {
-    "message": "一键前往bilibili.com",
-    "description": "Popup Button: go_bili"
-  },
-  "goBiliLive": {
-    "message": "一键前往Bilibili Live",
-    "description": "Popup Button: go_bili_live"
-  },
-  "adModeOff": {
-    "message": "进入点广告模式",
-    "description": "Popup Button: ad_mode_off"
-  },
-  "adModeOn": {
-    "message": "离开点广告模式",
-    "description": "Popup Button: ad_mode_on"
-  },
-  "goVideo": {
-    "message": "跳转",
-    "description": "Popup Button: go_video"
-  },
-  "goDynamic": {
-    "message": "我的关注",
-    "description": "Popup Button: go_dynamic"
-  },
-  "goFavorite": {
-    "message": "我的收藏",
-    "description": "Popup Button: go_favorite"
-  },
-  "notLogged": {
-    "message": "(未登录)",
-    "description": "Popup Button: not_logged"
-  },
-  "nNewUpdate": {
-    "message": "(%n个更新)",
-    "description": "Popup Button: new_update"
-  },
-  "goSubscription": {
-    "message": "我订阅的",
-    "description": "Popup Button: go_subscription"
-  },
-  "goOption": {
-    "message": "更多选项",
-    "description": "Popup Button: go_option"
-  },
-  "searchBili": {
-    "message": "用 哔哩哔哩 搜索 “%s”",
-    "description": "Context Menu: Title"
-  },
-  "optionPage": {
-    "message": "选项页",
-    "description": "Option Page: Title"
-  },
-  "noticeficationTitle": {
-    "message": "哔哩哔哩助手提醒",
-    "description": "Noticefication: Title"
-  },
-  "noticeficationExtensionUpdate": {
-    "message": "哔哩哔哩助手已自动更新到 v%v!",
-    "description": "Noticefication: Extension Update"
-  },
-  "noticeficationNewFeatures": {
-    "message": "查看更新内容",
-    "description": "Noticefication: New Features"
-  },
-  "followingUpdateMessage": {
-    "message": "您的哔哩哔哩关注更新了(%n 个新动态)!\n%uploader 刚刚发布了「%title」!",
-    "description": "Noticefication: Following Update Message"
-  },
-  "notificationWatch": {
-    "message": "观看",
-    "description": "Noticefication: Watch"
-  },
-  "notificationShowAll": {
-    "message": "显示全部",
-    "description": "Noticefication: Show All"
-  },
-  "notificationLiveOn": {
-    "message": "开播啦",
-    "description": "Noticefication: Live On"
-  },
-  "notificationGetTv": {
-    "message": "前往参加",
-    "description": "Noticefication: Get TV"
-  },
-  "notificationWatchLater": {
-    "message": "稍后观看",
-    "description": "Noticefication: Watch Later"
-  }
+    "extensionName": {
+        "message": "哔哩哔哩助手：bilibili.com 综合辅助扩展",
+        "description": "Extension: Name"
+    },
+    "extensionShortName": {
+        "message": "哔哩哔哩助手",
+        "description": "Extension: Short Name"
+    },
+    "extensionDescription": {
+        "message": "哔哩哔哩弹幕网辅助扩展，拥有视频区和直播区的人性化功能",
+        "description": "Extension: Description"
+    },
+    "extensionNotificationTitle": {
+        "message": "哔哩哔哩助手提醒",
+        "description": "Notification: Title"
+    },
+    "extensionNotificationExtensionUpdate": {
+        "message": "哔哩哔哩助手已自动更新到 v%v!",
+        "description": "Notification: Extension Update"
+    },
+    "extensionNotificationNewFeatures": {
+        "message": "查看更新内容",
+        "description": "Notification: New Features"
+    },
+    "extensionNotificationWatch": {
+        "message": "观看",
+        "description": "Notification: Watch"
+    }
 }

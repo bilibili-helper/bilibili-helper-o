@@ -1,0 +1,9 @@
+//
+// 
+//
+@import "var";
+
+@mixin box {
+  padding: 0 20px;
+  box-shadow: $box_shadow;
+}
