@@ -5,7 +5,7 @@
         "从1.0.0版本开始不再提供“礼物包裹增强”功能"
     ],
     "第三方引用声明": [
-        "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://opensource.org/licenses/GPL-3.0\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的部分代码"
+        "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
     "版本 1.0.9": [
         "增加主站视频<i>字幕下载</i>功能"
