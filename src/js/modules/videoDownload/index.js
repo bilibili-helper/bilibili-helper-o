@@ -86,7 +86,8 @@ export class VideoDownload extends Feature {
         });
         //chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
         //    if (/^http:\/\/.+\.acgvideo\.com\//.test()) {
-        //        suggest({filename: this.downloadFilenames[downloadItem.url], conflictAction: true});
+        //        const url = new URL(downloadItem.url, '', true);
+        //        suggest({filename: this.downloadFilenames[url.pathname].filename, conflictAction: true});
         //    }
         //});
         chrome.webRequest.onHeadersReceived.addListener((details) => {
