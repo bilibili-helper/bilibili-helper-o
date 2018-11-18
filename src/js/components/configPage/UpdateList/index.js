@@ -14,7 +14,7 @@ const {color} = theme;
 
 const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
     margin-left: -20px;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 26px;
     list-style: none;
     padding: 10px 0;

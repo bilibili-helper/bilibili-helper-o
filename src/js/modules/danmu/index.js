@@ -6,6 +6,7 @@
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import URLParse from 'url-parse';
+import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader'
 
 export {DanmuUI} from './UI/index';
 
@@ -69,6 +70,22 @@ export class Danmu extends Feature {
                     saveAs: true,
                     url,
                     filename: `${message.filename}.${message.cid}.${message.date}.xml`,
+                });
+            } else if (message.commend === 'downloadDanmuASS' && message.cid) {
+                const parser = new DOMParser();
+                const parsedXML = parser.parseFromString(
+                    message.danmuDocumentStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
+                const assData = '\ufeff' + GenerateASS(parsedXML, {
+                        'title': message.filename,
+                        'ori': message.origin,
+                    });
+                const url = (window.URL ? URL : webkitURL).createObjectURL(new Blob([assData], {
+                    type: 'application/octet-stream',
+                }));
+                chrome.downloads.download({
+                    saveAs: true,
+                    url,
+                    filename: `${message.filename}.${message.cid}.${message.date}.ass`,
                 });
             } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
                 const tabData = this.store.createData(sender.tab.id);
