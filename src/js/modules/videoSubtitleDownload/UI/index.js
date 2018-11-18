@@ -54,7 +54,8 @@ const LinkGroup = styled.div`
 `;
 const LinkGroupTitle = styled.span`
   display: inline-block;
-  cursor: default;
+  padding: 0 8px;
+  border-right: 1px solid #fff;
   p {
       color: ${color('google-grey-900')};
       font-size: 12px;
@@ -99,9 +100,7 @@ class VideoSubtitleDownload extends React.Component {
                 <Title>字幕下载</Title>
                 <Container>
                     {subtitleData.length === 0 && (
-                        <LinkGroup>
-                            <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
-                        </LinkGroup>
+                        <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
                     )}
                     {subtitleData.length > 0 && subtitleData.map((o) => {
                         const {id, lan_doc} = o;

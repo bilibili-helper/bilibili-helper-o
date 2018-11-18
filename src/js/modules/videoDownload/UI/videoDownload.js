@@ -56,9 +56,11 @@ const LinkGroup = styled.div`
 const LinkGroupTitle = styled.span`
   display: inline-block;
   padding: 0 8px;
-  width: 80px;
   border-right: 1px solid #fff;
-  cursor: default;
+  p {
+    color: ${color('google-grey-900')};
+    font-size: 12px;
+  }
 `;
 
 export class VideoDownload extends React.Component {
@@ -160,7 +162,7 @@ export class VideoDownload extends React.Component {
                             </LinkGroup> : null
                         );
                     })}
-                    {!videoData[currentCid] && <LinkGroup>未获取视频下载数据，请尝试切换视频清晰度</LinkGroup>}
+                    {!videoData[currentCid] && <LinkGroupTitle><p>未获取视频下载数据，请尝试切换视频清晰度</p></LinkGroupTitle>}
                 </Container>
             </React.Fragment>
         );
