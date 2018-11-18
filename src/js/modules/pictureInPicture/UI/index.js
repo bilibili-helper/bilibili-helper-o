@@ -99,14 +99,11 @@ export class PictureInPictureUI extends UI {
 
     load = ([container], settings) => {
         return new Promise(resolve => {
-            const video = document.getElementsByTagName('video');
-            if (video && video.length) {
-                const pipWrapper = $('<div />')
-                .attr('class', 'bilibili-helper-pip-wrapper')
-                .css({position: 'static', margin: 0});
-                container.append(pipWrapper);
-                pipWrapper[0] && ReactDOM.render(<PIP settings={settings}/>, pipWrapper[0], resolve);
-            }
+            const pipWrapper = $('<div />')
+            .attr('class', 'bilibili-helper-pip-wrapper')
+            .css({position: 'static', margin: 0});
+            container.append(pipWrapper);
+            pipWrapper[0] && ReactDOM.render(<PIP settings={settings}/>, pipWrapper[0], resolve);
             resolve();
         });
     };
