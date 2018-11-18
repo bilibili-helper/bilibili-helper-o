@@ -84,24 +84,15 @@ export class VideoDownload extends Feature {
                 };
             }
         });
-        //chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
-        //    if (/^http:\/\/.+\.acgvideo\.com\//.test()) {
-        //        const url = new URL(downloadItem.url, '', true);
-        //        suggest({filename: this.downloadFilenames[url.pathname].filename, conflictAction: true});
-        //    }
-        //});
         chrome.webRequest.onHeadersReceived.addListener((details) => {
             const {responseHeaders, initiator, url} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
             const urlObject = new URL(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
-            //console.log(filenameObject);
             if (filenameObject) {
                 const {filename, cid} = filenameObject;
-                responseHeaders.push({
-                    name: 'Content-Disposition',
-                    value: `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`,
-                });
+                const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
+                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`
             }
             return {responseHeaders};
         }, {

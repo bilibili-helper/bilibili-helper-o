@@ -76,12 +76,11 @@ moduleName
 
 ## Feature
 
-Feature为助手的一个功能模块，即一个Feature等于一个module。Feature可以拥有UI，如需要则在模块目录下创建名为`UI`的目录，同时导出继承自UI类的UI模块
+Feature为助手的一个功能模块，即一个Feature等于一个module。Feature可以拥有UI，如需要则在模块目录下创建名为`UI`的目录，同时导出继承自UI类的UI类
 
 ### Feature类
 
-该类由FeatureManager负责实例化并加载。
-几个简单的Feature示例：
+该类由FeatureManager负责实例化并加载。一个简单的Feature示例：
 
 ```javascript
 // debug feature
@@ -167,6 +166,7 @@ export class Debug extends Feature {
 Feature类拥有一些方便的方法，便于开发调用，具体如下：
 
 #### launch
+
 如果模块启用则会调用该方法
 
 #### pause
