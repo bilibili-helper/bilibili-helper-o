@@ -19,7 +19,7 @@ export class VideoSubtitleDownload extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '字幕下载',
+                title: '外挂字幕下载',
             },
         });
         this.store = new MessageStore('videoSubtitleDownloadDOMInitialized');

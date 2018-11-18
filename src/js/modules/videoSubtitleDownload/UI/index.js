@@ -97,7 +97,7 @@ class VideoSubtitleDownload extends React.Component {
         const {subtitleData} = this.state;
         return (
             <React.Fragment>
-                <Title>字幕下载</Title>
+                <Title>外挂字幕下载</Title>
                 <Container>
                     {subtitleData.length === 0 && (
                         <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
