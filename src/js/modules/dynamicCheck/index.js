@@ -100,7 +100,7 @@ export class DynamicCheck extends Feature {
                     iconUrl: getURL('/statics/imgs/cat.svg'),
                     title: __('notificationTitle'),
                     message: addition.title,
-                    buttons: [{title: __('notificationWatch')}],
+                    buttons: [{title: __('extensionNotificationWatch')}],
                 }, (notificationId) => {
                     this.feedList[notificationId] = addition.link;
                 });

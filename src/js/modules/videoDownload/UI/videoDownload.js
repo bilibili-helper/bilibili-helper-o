@@ -3,7 +3,6 @@
  * Create: 2018/11/12
  * Description:
  */
-import md5 from 'md5';
 import _ from 'lodash';
 import $ from 'jquery';
 import React from 'react';
@@ -112,7 +111,7 @@ export class VideoDownload extends React.Component {
                             //chrome.runtime.sendMessage({
                             //    commend: 'videoDownloadSendVideoName',
                             //    filename: $('.header-info h1, #viewbox_report h1').attr('title'),
-                            //    cidData,
+                            //    cid: currentCid,
                             //});
                         });
                     },
@@ -124,14 +123,14 @@ export class VideoDownload extends React.Component {
         });
     };
 
-    /*handleOnClickDownload = (downloadUrl) => {
+    handleOnClickDownload = (downloadUrl) => {
         chrome.runtime.sendMessage({
-            commend: 'createVideoDownload',
-            referrer: location.href,
-            url: downloadUrl,
-            filename: $('#viewbox_report h1').attr('title'),
+            commend: 'sendVideoFilename',
+            url: downloadUrl.split('?')[0],
+            cid: this.state.currentCid,
+            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
         });
-    };*/
+    };
 
     render() {
         const {videoData, currentCid} = this.state;
@@ -154,7 +153,7 @@ export class VideoDownload extends React.Component {
                                                 key={`${quality}${i}`}
                                                 referrerPolicy="unsafe-url"
                                                 href={o.url}
-                                                //onClick={() => this.handleOnClickDownload(part.url)}
+                                                onClick={() => this.handleOnClickDownload(o.url)}
                                             >{title}</a>
                                         </React.Fragment>
                                     );

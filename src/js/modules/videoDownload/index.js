@@ -24,6 +24,7 @@ export class VideoDownload extends Feature {
             },
         });
         this.store = new MessageStore('videoDownloadDOMInitialized');
+        this.downloadFilenames = {};
     }
 
     launch = () => {};
@@ -74,19 +75,36 @@ export class VideoDownload extends Feature {
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
-        //chrome.runtime.onMessage.addListener((message, sender) => {
-        //    if (message.commend === 'videoDownloadSendVideoName' && message.filename) {
-        //        if (this.store.has(sender.tab.id)) {
-        //            const tabData = this.store.createData(sender.tab.id);
-        //            tabData.data.filename = message.filename;
-        //            tabData.data.cidData = message.cidData;
-        //        }
-        //    }
-        //});
+        chrome.runtime.onMessage.addListener((message) => {
+            if (message.commend === 'sendVideoFilename' && message.cid) {
+                const url = new URL(message.url, '', true);
+                this.downloadFilenames[url.pathname] = {
+                    filename: message.filename,
+                    cid: message.cid,
+                };
+            }
+        });
         //chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
-        //    if (/^http:\/\/.+\.acgvideo\.com\//.test(downloadItem.url)) {
-        //        //suggest({filename: })
+        //    if (/^http:\/\/.+\.acgvideo\.com\//.test()) {
+        //        suggest({filename: this.downloadFilenames[downloadItem.url], conflictAction: true});
         //    }
         //});
+        chrome.webRequest.onHeadersReceived.addListener((details) => {
+            const {responseHeaders, initiator, url} = details;
+            if (/^chrome-extension:\/\//.test(initiator)) return;
+            const urlObject = new URL(url, '', true);
+            const filenameObject = this.downloadFilenames[urlObject.pathname];
+            //console.log(filenameObject);
+            if (filenameObject) {
+                const {filename, cid} = filenameObject;
+                responseHeaders.push({
+                    name: 'Content-Disposition',
+                    value: `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`,
+                });
+            }
+            return {responseHeaders};
+        }, {
+            urls: ['*://*.acgvideo.com/*'],
+        }, ['responseHeaders', 'blocking']);
     };
 }

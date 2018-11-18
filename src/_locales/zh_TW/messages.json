@@ -79,7 +79,7 @@
     "message": "您的嗶哩嗶哩關注更新了(%n 個新動態)!\n%uploader 剛剛釋出了「%title」!",
     "description": "Notification: Following Update Message"
   },
-  "notificationWatch": {
+  "extensionNotificationWatch": {
     "message": "觀看",
     "description": "Notification: Watch"
   },
