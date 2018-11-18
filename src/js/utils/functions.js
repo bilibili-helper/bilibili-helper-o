@@ -4,10 +4,6 @@
  * Description: 常用方法
  */
 /* global chrome */
-//import $ from 'jquery';
-//import _ from 'lodash';
-//import * as allGUI from 'Modules/index_GUI';
-import store from 'store';
 
 /**
  * @param command
@@ -20,18 +16,6 @@ export const sendMessage = (command, key, callback) => {
         else console.error(`"SendMessage" (command: ${command} key: ${key}): invalid callback function.`);
     });
 };
-
-/**
- * @param url
- * @param name
- * @param callback
- */
-//export const getCookie = (url, name, callback) => {
-//    chrome.cookies.get({url, name}, function(cookie) {
-//        if (callback instanceof Function) callback(cookie);
-//        else console.error(`"SendMessage" (url: ${url} name: ${name}): invalid callback function.`);
-//    });
-//};
 
 /**
  * @param t
