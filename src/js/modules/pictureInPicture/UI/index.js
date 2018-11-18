@@ -30,8 +30,8 @@ const PipButton = styled(Button)`
   top: 14px;
   border-radius: 4px;
   button {
-    padding: 0;
-    min-width: 30px;
+    padding: 0 4px;
+    min-width: unset;
     font-size: 12px;
     border: 1px solid #fb7299;
     border-radius: 4px;
@@ -63,6 +63,7 @@ class PIP extends React.Component {
     }
 
     handleOnClick = () => {
+        if (this.video.requestPictureInPicture) this.video = document.getElementsByTagName('video')[0];
         if (!this.video) return;
         if (!this.state.inPIP) {
             this.video.requestPictureInPicture().then(() => {
@@ -83,7 +84,7 @@ class PIP extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>PIP</PipButton>
+                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>画中画</PipButton>
             </React.Fragment>
         );
     }
