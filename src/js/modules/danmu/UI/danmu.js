@@ -115,6 +115,7 @@ const LoadingMask = styled.div`
 const DownloadBtn = styled(Button)`
   float: right;
   border-radius: 4px;
+  margin-left: 4px;
   button {
     padding: 0;
     min-width: 35px;
@@ -370,6 +371,17 @@ export class Danmu extends React.Component {
         });
     };
 
+    handleASSDownloadClick = () => {
+        chrome.runtime.sendMessage({
+            commend: 'downloadDanmuASS',
+            cid: this.state.currentCid,
+            danmuDocumentStr: this.danmuDocumentStr,
+            date: this.danmuDate,
+            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+            origin: document.location.href
+        });
+    };
+
     render() {
         const {on} = this.props.settings;
         const {loaded, danmuJSON, authorHashMap, loading, loadingText} = this.state;
@@ -377,7 +389,8 @@ export class Danmu extends React.Component {
             <React.Fragment>
                 <Title>
                     <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
-                    <DownloadBtn title="下载XML格式弹幕文件" onClick={this.handleXMLDownloadClick}>XML</DownloadBtn>
+                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={this.handleASSDownloadClick}>ASS</DownloadBtn>
+                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={this.handleXMLDownloadClick}>XML</DownloadBtn>
                 </Title>
                 <DanmuList>
                     {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {

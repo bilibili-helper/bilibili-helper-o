@@ -653,3 +653,7 @@ let mina = function(cid0) {
 };
 
 initFont();
+
+export function GenerateASS(parsedXML, options) {
+    return generateASS(setPosition(parseXML('', parsedXML)), options);
+}
