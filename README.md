@@ -124,6 +124,7 @@ export class Debug extends Feature {
     dependencies: ['dependency1',...], // 指定模块的依赖，默认为空
     settings: {
     	on: true, // 指模块是否执行launch方法
+    	hide: true, // 如果为true，则不在config中显示设置项目
     	toggle: false, // 指模块在config页面是否可以设置on属性
     	title: 'module title', // 用于在config页面显示的模块名称
     	description: 'module description', // 用于在config页面显示的模块描述

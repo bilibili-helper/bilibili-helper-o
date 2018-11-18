@@ -12,7 +12,7 @@ export class Debug extends Feature {
             name: 'debug',
             kind: 'other',
             settings: {
-                on: true,
+                on: false,
                 toggle: false,
                 title: '调试模式',
                 description: '开启后会在控制台输出更多信息，并执行更多用于测试的代码',

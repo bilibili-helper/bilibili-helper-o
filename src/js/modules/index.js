@@ -33,9 +33,9 @@ export const Features = {
     ChatFilter,
     VideoDownload,
     DoSign,
-    VideoQualitySelect,
+    //VideoQualitySelect,
     PictureInPicture,
-    VideoLinker,
+    //VideoLinker,
     VideoWiden,
     VideoSubtitleDownload,
 };

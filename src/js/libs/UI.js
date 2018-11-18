@@ -75,7 +75,7 @@ export class UI {
 
     interval = (containerSelectors, interval = 500) => {
         let retryTime = 0;
-        const retryMax = 30;
+        const retryMax = 15;
         return new Promise(resolve => {
             let timer = setInterval(() => {
                 const container = this.getContainer(containerSelectors);
@@ -86,7 +86,7 @@ export class UI {
                     ++retryTime;
                 } else {
                     console.warn(`Not find container ${containerSelectors}`);
-                    resolve(false);
+                    resolve();
                 }
             }, interval);
         });
