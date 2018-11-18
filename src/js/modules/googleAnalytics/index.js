@@ -34,35 +34,25 @@ export class GoogleAnalytics extends Feature {
     };
 
     addListener = () => {
-        chrome.runtime.sendMessage({commend: 'debugMode'}, (on) => {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: `initialization`,
-                eventAction: 'init',
-                eventLabel: `${(on ? 'official' : 'dev')} ${version}`,
-                nonInteraction: true,
-            });
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                /**
-                 * 需要如下几个字段
-                 * action 表示操作类型 click init等
-                 * category 类别 功能名称等
-                 * label 功能中的具体项目名称等
-                 * nonInteraction 标记非交互
-                 */
-                if (message.commend === 'setGAEvent' && message.action && message.category) {
-                    const {action, label, category = '', nonInteraction = false} = message;
-                    ga('send', {
-                        hitType: 'event',
-                        eventAction: action,
-                        eventCategory: category,
-                        eventLabel: label || category,
-                        nonInteraction,
-                    });
-                }
-            });
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            /**
+             * 需要如下几个字段
+             * action 表示操作类型 click init等
+             * category 类别 功能名称等
+             * label 功能中的具体项目名称等
+             * nonInteraction 标记非交互
+             */
+            if (message.commend === 'setGAEvent' && message.action && message.category) {
+                const {action, label, category = '', nonInteraction = false} = message;
+                ga('send', {
+                    hitType: 'event',
+                    eventAction: action,
+                    eventCategory: category,
+                    eventLabel: label || category,
+                    nonInteraction,
+                });
+            }
         });
-
     };
 
     insertGAScriptTag = (UA = 'UA-39765420-2') => {
@@ -82,6 +72,15 @@ export class GoogleAnalytics extends Feature {
             document.head.appendChild(scriptTag);
             ga('create', UA, 'auto');
             ga('set', 'checkProtocolTask');
+
+            const debugMode = this.getSetting('debug').on;
+            ga('send', {
+                hitType: 'event',
+                eventCategory: `initialization`,
+                eventAction: 'init',
+                eventLabel: `${(debugMode ? 'official' : 'dev')} ${version}`,
+                nonInteraction: true,
+            });
         }
     };
 };
