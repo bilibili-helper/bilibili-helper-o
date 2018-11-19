@@ -145,7 +145,7 @@ export class Menu extends React.Component {
                 <MenuAnchor/>
                 <MenuButton
                     onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>
-                <Title><span>Bilibili Helper</span><span>{debug ? 'Beta.' : ''}{version}</span></Title>
+                <Title><span>Bilibili Helper</span><span>{debug === true ? 'Beta.' : ''}{version}</span></Title>
             </MenuView>
         );
     }
