@@ -1,13 +1,13 @@
 {
-  "extName": {
+  "extensionName": {
     "message": "Bilibili Helper: Bilibili.com Auxiliary",
     "description": "Extension: Name"
   },
-  "extShortName": {
+  "extensionShortName": {
     "message": "Bilibili Helper",
     "description": "Extension: Short Name"
   },
-  "extDescription": {
+  "extensionDescription": {
     "message": "An extension for Bilibili that provides convenient features/shortcuts.",
     "description": "Extension: Description"
   },
@@ -63,7 +63,7 @@
     "message": "Options",
     "description": "Option Page: Title"
   },
-  "notificationTitle": {
+  "extensionNotificationTitle": {
     "message": "Bilibili Helper Notification",
     "description": "Notification: Title"
   },
@@ -71,7 +71,7 @@
     "message": "Bilibili Helper just auto updated to v%v!",
     "description": "Notification: Extension Update"
   },
-  "notificationNewFeatures": {
+  "extensionNotificationNewFeatures": {
     "message": "What's New",
     "description": "Notification: New Features"
   },
@@ -79,23 +79,23 @@
     "message": "Your bilibili followings updated (%n new)!\n%uploader just published '%title'!",
     "description": "Notification: Following Update Message"
   },
-  "notificationWatch": {
+  "extensionNotificationWatch": {
     "message": "Watch",
     "description": "Notification: Watch"
   },
-  "notificationShowAll": {
+  "extensionNotificationShowAll": {
     "message": "Show All",
     "description": "Notification: Show All"
   },
-  "notificationLiveOn": {
+  "extensionNotificationLiveOn": {
     "message": " is live-streaming!",
     "description": "Notification: Live On"
   },
-  "notificationGetTv": {
+  "extensionNotificationGetTv": {
     "message": "Attend it.",
     "description": "Notification: Get TV"
   },
-  "notificationWatchLater": {
+  "extensionNotificationWatchLater": {
     "message": "Watch Later",
     "description": "Notification: Watch Later"
   }
