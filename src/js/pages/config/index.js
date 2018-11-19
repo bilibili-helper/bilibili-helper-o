@@ -48,16 +48,28 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   overflow: auto;
 `;
 
-const Cat = styled.div`
-  width: 32px;
-  height: 30px;
-  display: inline-block;
-  vertical-align: sub;
-  background-image: url(${getURL('/statics/imgs/cat.svg')});
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  user-select: none;
-  pointer-events: none;
+//const Cat = styled.div`
+//  width: 32px;
+//  height: 30px;
+//  display: inline-block;
+//  vertical-align: sub;
+//  background-image: url(${getURL('/statics/imgs/cat.svg')});
+//  background-repeat: no-repeat;
+//  background-size: auto 100%;
+//  user-select: none;
+//  pointer-events: none;
+//`;
+const Figure = styled.figure`
+  position: fixed;
+  left: calc(50% + 380px);
+  bottom: 43px;
+  z-index: -1;
+  figcaption {
+    text-align: center;
+  }
+`;
+const Alipay = styled.img`
+  width: 60px;
 `;
 
 const Header = styled.div`
@@ -74,10 +86,17 @@ const Header = styled.div`
 
 const Footer = styled.div`
   max-width: 800px;
+  width: 100%;
   margin: 20px auto;
   color: #8c8c8c;
-  a {
+  & a {
     color: #8c8c8c;
+  }
+  & > a {
+    margin-right: 16px;
+  }
+  span {
+    float: right;
   }
 `;
 
@@ -346,20 +365,17 @@ class PageConfig extends React.Component {
                     {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
                 <Footer>
-                    {/*<div style={{*/}
-                    {/*display: 'flex',*/}
-                    {/*justifyContent: 'space-around',*/}
-                    {/*width: '300px',*/}
-                    {/*}}>*/}
-                    {/*<a href="https://github.com/zacyu/bilibili-helper">Github</a>*/}
-                    {/*<a href="https://bilihelper.guguke.net">Website</a>*/}
-                    {/*<a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome Web*/}
-                    {/*Store</a>*/}
-                    {/*</div>*/}
-                    <div style={{textAlign: 'center'}}>
+                    <a href="https://github.com/zacyu/bilibili-helper">Github</a>
+                    <a href="https://bilihelper.guguke.net">Website</a>
+                    <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome WebStore</a>
+                    <span>
                         Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
                         href="mailto:jjj201200@gmail.com">Drowsy Flesh</a>
-                    </div>
+                    </span>
+                    <Figure>
+                        <Alipay src="./statics/imgs/alipay-df.png" alt="alipay"/>
+                        <figcaption>感谢支持</figcaption>
+                    </Figure>
                 </Footer>
             </ConfigBody>
             {/*<Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>*/}

@@ -53,9 +53,15 @@ module.exports = {
                 cache: true,
                 parallel: true,
                 sourceMap: true, // set to true if you want JS source maps
+                uglifyOptions: {
+                    compress: false,
+                    ecma: 6,
+                    mangle: true
+                },
             }),
             new OptimizeCSSAssetsPlugin({}),
         ],
+        nodeEnv: 'production',
     },
     resolve: {
         alias: {
