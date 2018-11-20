@@ -79,7 +79,7 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
   height: 36px;
   margin-bottom: 6px;
   position: relative;
-  border: 1px solid whitesmoke;
+  border: 1px solid ${({error}) => error ? 'red' : 'whitesmoke'};
   box-sizing: border-box;
   font-size: 11px;
   font-weight: normal;
@@ -195,6 +195,7 @@ export class Menu extends React.Component {
 
     handleKeyPress = (event) => {
         if (event.key === 'Enter') this.link();
+        else this.setState({linkerError: false});
     };
 
     render() {
@@ -214,7 +215,7 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
-                    <Linker errpr={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"/>
+                    <Linker error={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"/>
                     <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
                 </LinkerWrapper>}
                 <MenuButton

@@ -20,7 +20,6 @@ export class QuickSearch extends Feature {
     }
 
     launch = () => {
-        chrome.contextMenus.remove('bilibili-searchBili');
         chrome.contextMenus.create({
             id: 'bilibili-searchBili',
             title: __('searchBili'),
