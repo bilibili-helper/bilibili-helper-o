@@ -3,8 +3,7 @@
  * Create: 2018/10/10
  * Description:
  */
-
-
+import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {ToolContent} from './ToolContent';
@@ -28,27 +27,34 @@ const HelperBtn = styled.span`
 `;
 
 export class ToolBtn extends React.Component {
-    state = {
-        show: false,
-    };
+    constructor(props) {
+        super(props);
+        this.show = false;
+    }
 
     handleClick = (e) => {
         e.preventDefault();
-        this.setState({show: !this.state.show});
+        if (this.show) {
+            this.show = false;
+            $('.bilibili-helper-content').css({visibility: 'hidden'});
+        } else {
+            this.show = true;
+            $('.bilibili-helper-content').css({visibility: 'visible'});
+        }
     };
+
     componentDidMount() {
 
     }
 
     render() {
-        const {show} = this.state;
         return (
             <React.Fragment>
                 <link href="//at.alicdn.com/t/font_862696_227xf8jklcw.css" type="text/css" rel="stylesheet"/>
-                <HelperBtn onClick={this.handleClick} className={show ? 'show' : ''}>
+                <HelperBtn onClick={this.handleClick}>
                     <span title="哔哩哔哩助手">哔哩哔哩助手</span>
                 </HelperBtn>
-                <ToolContent show={show}/>
+                <ToolContent/>
             </React.Fragment>
         );
     }

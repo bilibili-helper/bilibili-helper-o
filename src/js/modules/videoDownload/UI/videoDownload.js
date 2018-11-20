@@ -36,7 +36,7 @@ const LinkGroup = styled.div`
   letter-spacing: 0.3px;
   background-color: #eaf4ff;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s, visibility 0s;
   &:hover {
     background-color: #d4eaff;
   }
@@ -76,7 +76,8 @@ export class VideoDownload extends React.Component {
         _.map(document.scripts, (o) => {
             if (/^window.__playinfo__=/.test(o.innerHTML)) {
                 const playInfo = JSON.parse(o.innerHTML.slice(20));
-                this.originVideoData = playInfo.data || playInfo;
+                let i = playInfo.data || playInfo;
+                if (i.durl) this.originVideoData = i;
             }
         });
     }
@@ -170,7 +171,7 @@ export class VideoDownload extends React.Component {
                             </LinkGroup> : null
                         );
                     })}
-                    {!videoData[currentCid] && <LinkGroupTitle><p>未获取视频下载数据，请尝试切换视频清晰度</p></LinkGroupTitle>}
+                    {!videoData[currentCid] && <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle>}
                 </Container>
             </React.Fragment>
         );

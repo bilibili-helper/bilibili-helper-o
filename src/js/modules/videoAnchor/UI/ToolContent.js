@@ -13,7 +13,8 @@ const Content = styled.div.attrs({
   position: absolute;
   right: -160px;
   top: 35px;
-  display: ${({show}) => show ? 'flex' : 'none'};
+  display: flex;
+  visibility: hidden;
   flex-direction: column;
   justify-content: space-between;
   padding: 15px 20px 5px;

@@ -396,7 +396,7 @@ export class Danmu extends React.Component {
                         const authorName = this.userMap[uid] ? this.userMap[uid].name : '';
                         return (
                             <DanmuListLine
-                                key={index}
+                                key={time + authorHash}
                                 title={`[${time}] ${danmu} ${authorName ? `by:${authorName}` : ''}`}
                                 onClick={() => uid ? this.handleAuthorClick(uid) : this.handleDanmuLineClick(authorHash)}
                                 hasQueried={authorName}
