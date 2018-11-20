@@ -8,6 +8,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
+import store from 'store';
 import {Button} from 'Components/common/Button';
 import {createTab, isLogin, getLink, version, __} from 'Utils';
 import {theme} from 'Styles';
@@ -91,6 +92,7 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
 
 const Enter = styled(MenuButton)`
   width: 40px;
+  height: 34px;
   button {
     min-width: unset;
     text-indent: 0;
@@ -106,6 +108,7 @@ export class Menu extends React.Component {
             newWatchPageLink: '',
             menuOptions: {},
             linkerError: false,
+            lastSearch: store.get('lastSearch') || '',
         };
     }
 
@@ -156,34 +159,41 @@ export class Menu extends React.Component {
     link = () => {
         const value = $('.bilibili-helper-menu-linker-input').val();
         if (value) {
-            const res = /(ss|s|md|u|cv|au+)?(\d+)/.exec(value);
+            const res = /(av|ss|s|md|u|cv|au+)?(\d+)/.exec(value);
             let url = '';
             let pass = true;
             if (res && res[1]) {
                 switch (res[1]) {
+                    case 'av':
+                        url = 'https://www.bilibili.com/video/' + value;
+                        break;
                     case 'ss':
-                        url = 'https://www.bilibili.com/bangumi/play/' + res[1];
+                        url = 'https://www.bilibili.com/bangumi/play/' + value;
                         break;
                     case 's':
-                        url = 'https://bangumi.bilibili.com/anime/' + res[1];
+                        url = 'https://bangumi.bilibili.com/anime/' + value;
                         break;
                     case 'md':
-                        url = 'https://www.bilibili.com/bangumi/media/' + res[1];
+                        url = 'https://www.bilibili.com/bangumi/media/' + value;
                         break;
                     case 'u':
                         if (res[2]) url = 'https://space.bilibili.com/' + res[2];
                         else pass = false;
                         break;
                     case 'cv':
-                        url = 'https://www.bilibili.com/read/' + res[1];
+                        url = 'https://www.bilibili.com/read/' + value;
                         break;
                     case 'au':
-                        url = 'https://www.bilibili.com/audio/' + res[1];
+                        url = 'https://www.bilibili.com/audio/' + value;
                         break;
                 }
             } else pass = false;
             if (pass) {
                 this.setState({linkerError: false});
+                this.lastSearch = value;
+                this.setState({lastSearch: value}, () => {
+                    store.set('lastSearch', value);
+                });
                 createTab(url);
             } else this.setState({linkerError: true});
         }
@@ -195,11 +205,15 @@ export class Menu extends React.Component {
 
     handleKeyPress = (event) => {
         if (event.key === 'Enter') this.link();
-        else this.setState({linkerError: false});
+        else {
+            const value = $('.bilibili-helper-menu-linker-input').val();
+            const res = /(av|ss|s|md|u|cv|au+)?(\d+)/.test(value);
+            this.setState({linkerError: !res});
+        }
     };
 
     render() {
-        const {hasLogin, newWatchPageLink, debug, menuOptions, linkerError} = this.state;
+        const {hasLogin, newWatchPageLink, debug, menuOptions, linkerError, lastSearch} = this.state;
         const {video, live, dynamic, favourite, linker} = menuOptions;
         return (
             <MenuView>
@@ -215,7 +229,8 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
-                    <Linker error={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"/>
+                    <Linker error={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"
+                            defaultValue={lastSearch}/>
                     <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
                 </LinkerWrapper>}
                 <MenuButton

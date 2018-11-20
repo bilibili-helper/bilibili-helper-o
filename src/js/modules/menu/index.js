@@ -29,7 +29,7 @@ export class Menu extends Feature {
                         {key: 'live', title: '前往直播区', on: true},
                         {key: 'dynamic', title: '我的关注', on: true},
                         {key: 'favourite', title: '我的收藏', on: true},
-                        {key: 'linker', title: '视频快速跳转', on: true},
+                        {key: 'linker', title: '视频快速跳转', on: true, description: '支持avXXXX，ssXXX，sXXX，mdxxx'},
                     ],
                 },
             },

@@ -9,6 +9,7 @@
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
     "版本 1.1.0 - 1.1.2": [
+        "更新<i>视频下载</i>功能，新播放页面中，当清晰度模式默认不再为'自动'时生效",
         "增加<i>自动检测更新</i>功能，可关闭",
         "增加<i>自动跳转</i>功能",
         "增加<i>银瓜子自动换硬币</i>功能",

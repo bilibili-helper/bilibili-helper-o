@@ -72,9 +72,7 @@ const Wrapper = styled.div.attrs({
   &.on {
     overflow: auto;
     background-color: ${theme.color('google-grey-50')};
-  }
-  &.off {
-    
+    pointer-events: auto;
   }
 `;
 
@@ -186,11 +184,13 @@ export class SubPage extends React.Component {
             <ThemeProvider theme={{...theme, on, top, left, height, width}}>
                 <Wrapper>
                     <Container innerRef={i => this.containerRef = i}>
-                        <Header>
-                            <Button icon="arrowLeft" onClick={onClose}/>
-                            <Title>{title}</Title>
-                        </Header>
-                        <Body>{children}</Body>
+                        <div>
+                            <Header>
+                                <Button icon="arrowLeft" onClick={onClose}/>
+                                <Title>{title}</Title>
+                            </Header>
+                            <Body>{children}</Body>
+                        </div>
                     </Container>
                 </Wrapper>
             </ThemeProvider>

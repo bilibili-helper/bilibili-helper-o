@@ -30,6 +30,9 @@ export class VideoAnchorUI extends UI {
                 const helperDOM = $('<span class="bilibili-helper"/>');
                 container.append(helperDOM);
                 ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
+                    $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
+                        chrome.runtime.sendMessage({commend: 'tabUnload'}, response => response(true));
+                    });
                     const helperContentDOM = helperDOM.find('.bilibili-helper-content');
                     resolve(helperContentDOM);
                 });

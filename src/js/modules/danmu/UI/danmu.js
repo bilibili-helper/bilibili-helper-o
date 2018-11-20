@@ -159,9 +159,6 @@ export class Danmu extends React.Component {
     }
 
     addListener = () => {
-        $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
-            chrome.runtime.sendMessage({commend: 'danmuTabUnload'});
-        });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                 if (message.date) {
@@ -378,7 +375,7 @@ export class Danmu extends React.Component {
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
             filename: $('#viewbox_report h1, .header-info h1').attr('title'),
-            origin: document.location.href
+            origin: document.location.href,
         });
     };
 

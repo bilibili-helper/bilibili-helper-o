@@ -65,15 +65,24 @@ const LinkGroupTitle = styled.span`
 export class VideoDownload extends React.Component {
     constructor(props) {
         super(props);
+        this.inited = false;
+        this.originVideoData = {};
         this.state = {
             videoData: {},
             currentCid: NaN,
+            originVideoData: {},
         };
         this.addListener();
-
+        _.map(document.scripts, (o) => {
+            if (/^window.__playinfo__=/.test(o.innerHTML)) {
+                const playInfo = JSON.parse(o.innerHTML.slice(20));
+                this.originVideoData = playInfo.data || playInfo;
+            }
+        });
     }
 
     componentDidMount() {
+        this.inited = true;
         chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
     }
 
@@ -98,26 +107,26 @@ export class VideoDownload extends React.Component {
                             downloadData = res;
                         }
 
-                        const {accept_quality, accept_description, durl} = downloadData;
-                        const quality = downloadData.quality;
-
+                        const {accept_quality, accept_description, durl, quality} = downloadData;
                         const currentData = {accept_quality, accept_description, durl};
                         const {videoData} = this.state;
                         const cidData = videoData[currentCid] || {};
                         cidData[quality] = currentData;
                         videoData[currentCid] = cidData;
-                        //console.log(videoData, currentCid);
-                        this.setState({videoData, currentCid}, () => {
-                            //chrome.runtime.sendMessage({
-                            //    commend: 'videoDownloadSendVideoName',
-                            //    filename: $('.header-info h1, #viewbox_report h1').attr('title'),
-                            //    cid: currentCid,
-                            //});
-                        });
+                        this.setState({videoData, currentCid});
                     },
                 });
-                //}
-
+                sendResponse(true);
+            } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
+                const {videoData} = this.state;
+                if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
+                    const {accept_quality, accept_description, durl, quality} = this.originVideoData;
+                    const currentData = {accept_quality, accept_description, durl};
+                    const cidData = videoData[message.cid] || {};
+                    cidData[quality] = currentData;
+                    videoData[message.cid] = cidData;
+                    this.setState({currentCid: message.cid, videoData});
+                }
                 sendResponse(true);
             }
         });

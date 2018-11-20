@@ -27,7 +27,7 @@ export class MessageStore {
                     // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
                     this.dealWith(id);
                 } else console.warn(`This store is already in state:`, state);
-            } else if (message.commend === 'danmuTabUnload' && !!this.has(sender.tab.id)) {
+            } else if (message.commend === 'tabUnload' && !!this.has(sender.tab.id)) {
                 this.delete(sender.tab.id);
             }
         });
@@ -66,8 +66,7 @@ export class MessageStore {
         };
         const {state, queue} = this.store[id];
         state && queue.length > 0 && doIt(id, queue.shift()).then(() => {
-            // 如果队列不为空
-            queue.length > 0 && this.dealWith(id, this.store[id]);
+            queue.length > 0 && this.dealWith(id, this.store[id]); // 如果队列不为空
         }, (error) => console.error(error));
     };
 }
