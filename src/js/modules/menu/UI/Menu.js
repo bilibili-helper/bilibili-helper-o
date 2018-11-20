@@ -193,7 +193,14 @@ export class Menu extends React.Component {
                 this.lastSearch = value;
                 this.setState({lastSearch: value}, () => {
                     store.set('lastSearch', value);
+                    chrome.runtime.sendMessage({
+                        commend: 'setGAEvent',
+                        action: 'click',
+                        category: 'menu',
+                        label: 'linker ' + res[1],
+                    });
                 });
+
                 createTab(url);
             } else this.setState({linkerError: true});
         }

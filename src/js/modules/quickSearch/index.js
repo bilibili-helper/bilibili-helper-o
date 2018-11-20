@@ -25,6 +25,11 @@ export class QuickSearch extends Feature {
             title: __('searchBili'),
             contexts: ['selection'],
             onclick: function(info) {
+                chrome.runtime.sendMessage({
+                    commend: 'setGAEvent',
+                    action: 'click',
+                    category: 'quickSearch',
+                });
                 createTab(`https://search.bilibili.com/all?keyword=${encodeURIComponent(info.selectionText)}`);
             },
         });

@@ -17,7 +17,7 @@ export class GoogleAnalytics extends Feature {
                 on: true,
                 //toggle: false,
                 title: '数据统计',
-                description: '匿名统计功能的使用情况，有助于帮助开发者改进程序为你提供更好的体验',
+                description: '匿名统计功能的使用情况，有助于帮助开发者改进程序为您提供更好的体验',
             },
         });
     }

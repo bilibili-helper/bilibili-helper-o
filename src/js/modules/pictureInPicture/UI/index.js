@@ -3,6 +3,7 @@
  * Create: 2018/11/16
  * Description:
  */
+import _ from 'lodash';
 import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -47,30 +48,70 @@ class PIP extends React.Component {
             inPIP: false,
         };
         this.video = null;
+        this.pipSrc = null;
     }
 
-    componentWillMount() {
-        this.video = document.getElementsByTagName('video')[0];
+    componentDidMount() {
+        this.video = $('#bofqi video')[0];
+        this.addListener(this.video);
+        new MutationObserver((mutationList) => {
+            _.map(mutationList, (mutation) => {
+                if (mutation.oldValue) {
+                    if (this.state.inPIP) {
+                        $(document)[0].exitPictureInPicture();
+                        this.setState({inPIP: false});
+                    }
+                    this.video = $('#bofqi video')[0];
+                    this.addListener(this.video);
+                }
+            });
+        }).observe($('#bofqi')[0], {
+            attributeFilter: ['src'],
+            attributes: true,
+            attributeOldValue: true,
+            subtree: true,
+        });
+    }
+
+    addListener = (videoDOM) => {
+        if (!videoDOM || !videoDOM.addEventListener) return;
         const that = this;
-        if (this.video) {
-            this.video.addEventListener('enterpictureinpicture', function() {
-                that.setState({inPIP: true});
-            });
-            this.video.addEventListener('leavepictureinpicture', function() {
-                that.setState({inPIP: false});
-            });
+        videoDOM.removeEventListener('enterpictureinpicture', null);
+        videoDOM.removeEventListener('leavepictureinpicture', null);
+        videoDOM.addEventListener('enterpictureinpicture', function(event) {
+            that.setState({inPIP: true});
+        });
+        videoDOM.addEventListener('leavepictureinpicture', function() {
+            that.setState({inPIP: false});
+            this.play();
+        });
+    };
+
+    play = () => {
+        if (window.player) {
+            if (window.player.getDuration() !== window.player.getCurrentTime()) {
+                window.player.play();
+            }
         }
     }
 
+    // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
     handleOnClick = () => {
-        if (this.video.requestPictureInPicture) this.video = document.getElementsByTagName('video')[0];
-        if (!this.video) return;
+        if (!this.video) {
+            this.video = $('#bofqi video')[0];
+            this.addListener(this.video);
+        }
+        if (!this.video.requestPictureInPicture) return;
         if (!this.state.inPIP) {
             this.video.requestPictureInPicture().then(() => {
                 this.setState({inPIP: true});
             });
         } else if (this.state.inPIP) {
-            document.exitPictureInPicture().then(() => {
+            $(document)[0].exitPictureInPicture().then((e) => {
+                this.setState({inPIP: false});
+                this.play();
+            }).catch(e => {
+                console.log(e);
                 this.setState({inPIP: false});
             });
         }

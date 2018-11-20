@@ -8,11 +8,15 @@
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
+    "版本 1.1.3": [
+        "修复<i>弹幕查询</i>功能中查询同一作者弹幕时弹幕列表显示异常的问题",
+        "优化<i>画中画</i>功能的实现逻辑，现在可以支持未关闭画中画窗口时切换分P或其他视频"
+    ],
     "版本 1.1.0 - 1.1.2": [
         "增加<i>自动检测更新</i>功能，可关闭",
         "增加<i>自动跳转</i>功能",
         "增加<i>银瓜子自动换硬币</i>功能",
-        "增加<i>右键用哔哩哔哩搜索</i>功能"
+        "增加<i>z</i>功能"
     ],
     "版本 1.0.9 - 1.0.10": [
         "增加主站视频<i>字幕下载</i>功能",
