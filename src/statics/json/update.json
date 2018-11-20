@@ -8,13 +8,10 @@
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
-    "版本 1.0.10": [
-        "增加<i>弹幕下载</i>功能对ASS格式的支持",
-        "更新<i>视频下载</i>功能文件名默认为title.cid.flv",
-        "修复<i>数据统计</i>和<i>画中画</i>bug",
-        "修正部分样式和文字显示"
+    "版本 1.1.0 - 1.1.1": [
+        "增加<i>自动检测更新</i>功能，可关闭"
     ],
-    "版本 1.0.9": [
+    "版本 1.0.9 - 1.0.10": [
         "增加主站视频<i>字幕下载</i>功能",
         "增加<i>弹幕下载</i>功能中对历史弹幕的支持",
         "增加对<i>Pakku v9.2</i>扩展的兼容",
