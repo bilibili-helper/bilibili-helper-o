@@ -41,12 +41,12 @@ export class Feature {
      */
     init = () => {
         return new Promise((resolve) => {
+            this.initSetting();
             const {on} = this.settings;
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
                 if (on === false) console.warn(`Feature ${this.name} OFF`);
                 resolve(this.checkPermission().then(({pass, msg}) => {
                     if (pass) {
-                        this.initSetting();
                         this.addListener();
                         this.initialed = true;
                         console.log(`Feature init completed: ${this.name}`);

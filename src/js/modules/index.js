@@ -17,10 +17,11 @@ import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
 //import {VideoQualitySelect} from './videoQualitySelect';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
-//import {VideoLinker} from './videoLinker';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
 import {CheckVersion} from 'Modules/checkVersion';
+import {Silver2coin} from 'Modules/silver2coin';
+import {QuickSearch} from 'Modules/quickSearch';
 
 export const Features = {
     Debug,
@@ -36,10 +37,11 @@ export const Features = {
     DoSign,
     //VideoQualitySelect,
     PictureInPicture,
-    //VideoLinker,
     VideoWiden,
     VideoSubtitleDownload,
     CheckVersion,
+    Silver2coin,
+    QuickSearch,
 };
 
 export const UIs = {

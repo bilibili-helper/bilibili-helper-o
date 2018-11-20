@@ -4,6 +4,7 @@
  * Description:
  */
 
+import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
@@ -69,7 +70,32 @@ const Title = styled.div`
   color: ${color('google-grey-300')};
 `;
 
-const MenuAnchor = styled.div.attrs({className: 'bilibili-helper-menu-anchor'})``;
+const LinkerWrapper = styled.div`
+  display: flex;
+`;
+const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input'})`
+  display: block;
+  width: 110px;
+  height: 36px;
+  margin-bottom: 6px;
+  position: relative;
+  border: 1px solid whitesmoke;
+  box-sizing: border-box;
+  font-size: 11px;
+  font-weight: normal;
+  background-color: rgb(255, 255, 255);
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  outline: none;
+`;
+
+const Enter = styled(MenuButton)`
+  width: 40px;
+  button {
+    min-width: unset;
+    text-indent: 0;
+  }
+`;
 
 export class Menu extends React.Component {
     constructor(props) {
@@ -79,6 +105,7 @@ export class Menu extends React.Component {
             debug: false,
             newWatchPageLink: '',
             menuOptions: {},
+            linkerError: false,
         };
     }
 
@@ -126,9 +153,53 @@ export class Menu extends React.Component {
         createTab(link);
     };
 
+    link = () => {
+        const value = $('.bilibili-helper-menu-linker-input').val();
+        if (value) {
+            const res = /(ss|s|md|u|cv|au+)?(\d+)/.exec(value);
+            let url = '';
+            let pass = true;
+            if (res && res[1]) {
+                switch (res[1]) {
+                    case 'ss':
+                        url = 'https://www.bilibili.com/bangumi/play/' + res[1];
+                        break;
+                    case 's':
+                        url = 'https://bangumi.bilibili.com/anime/' + res[1];
+                        break;
+                    case 'md':
+                        url = 'https://www.bilibili.com/bangumi/media/' + res[1];
+                        break;
+                    case 'u':
+                        if (res[2]) url = 'https://space.bilibili.com/' + res[2];
+                        else pass = false;
+                        break;
+                    case 'cv':
+                        url = 'https://www.bilibili.com/read/' + res[1];
+                        break;
+                    case 'au':
+                        url = 'https://www.bilibili.com/audio/' + res[1];
+                        break;
+                }
+            } else pass = false;
+            if (pass) {
+                this.setState({linkerError: false});
+                createTab(url);
+            } else this.setState({linkerError: true});
+        }
+    };
+
+    handleLinkerClick = () => {
+        this.link();
+    };
+
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter') this.link();
+    };
+
     render() {
-        const {hasLogin, newWatchPageLink, debug, menuOptions} = this.state;
-        const {video, live, dynamic, favourite} = menuOptions;
+        const {hasLogin, newWatchPageLink, debug, menuOptions, linkerError} = this.state;
+        const {video, live, dynamic, favourite, linker} = menuOptions;
         return (
             <MenuView>
                 {video &&
@@ -142,7 +213,10 @@ export class Menu extends React.Component {
                     {favourite && <MenuButton
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
-                <MenuAnchor/>
+                {linker && <LinkerWrapper>
+                    <Linker errpr={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"/>
+                    <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
+                </LinkerWrapper>}
                 <MenuButton
                     onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>
                 <Title><span>Bilibili Helper</span><span>{debug === true ? 'Beta.' : ''}{version}</span></Title>
