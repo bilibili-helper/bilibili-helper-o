@@ -98,7 +98,7 @@ export class DynamicCheck extends Feature {
                 chrome.notifications.create('bilibili-helper-aid' + aid, {
                     type: 'basic',
                     iconUrl: getURL('/statics/imgs/cat.svg'),
-                    title: __('notificationTitle'),
+                    title: __('extensionNotificationTitle'),
                     message: addition.title,
                     buttons: [{title: __('extensionNotificationWatch')}],
                 }, (notificationId) => {

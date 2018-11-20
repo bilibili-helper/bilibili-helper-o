@@ -1,0 +1,10 @@
+{
+    "checkVersionGetUpdateError": {
+        "message": "get update information failed",
+        "description": "Notification: Extension Update Error"
+    },
+    "checkVersionNewVersion": {
+        "message": "New version detected:",
+        "description": "Notification: new version detected"
+    }
+}

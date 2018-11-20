@@ -39,7 +39,7 @@ export class Treasure extends Feature {
                 chrome.notifications.create('bilibili-helper-treasure' + time_start, {
                     type: 'basic',
                     iconUrl: treasureOpenImg,
-                    title: __('notificationTitle'),
+                    title: __('extensionNotificationTitle'),
                     message: `成功领取${silver}瓜子`,
                 });
             }

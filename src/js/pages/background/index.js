@@ -20,7 +20,7 @@ chrome.runtime.onInstalled.addListener(function(details) { // 安装完成后事
         chrome.notifications.create('bilibili-helper-update', {
             type: 'basic',
             iconUrl: '../statics/imgs/icon-256.png',
-            title: __('notificationTitle'),
+            title: __('extensionNotificationTitle'),
             message: __('notificationExtensionUpdate').replace('%v', version),
         });
     }

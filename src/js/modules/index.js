@@ -15,11 +15,12 @@ import {Popup, PopupUI} from './popup';
 import {Menu, MenuUI} from './menu';
 import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
-import {VideoQualitySelect} from './videoQualitySelect';
+//import {VideoQualitySelect} from './videoQualitySelect';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
-import {VideoLinker} from './videoLinker';
+//import {VideoLinker} from './videoLinker';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
+import {CheckVersion} from 'Modules/checkVersion';
 
 export const Features = {
     Debug,
@@ -38,6 +39,7 @@ export const Features = {
     //VideoLinker,
     VideoWiden,
     VideoSubtitleDownload,
+    CheckVersion,
 };
 
 export const UIs = {
@@ -51,5 +53,5 @@ export const UIs = {
     VideoDownloadUI,
     PictureInPictureUI,
     VideoWidenUI,
-    VideoSubtitleDownloadUI
+    VideoSubtitleDownloadUI,
 };
