@@ -15,7 +15,7 @@ export class VideoWidenUI extends UI {
 
     load = (containers, settings) => {
         return new Promise(resolve => {
-            const option = settings.value;
+            const option = settings.subPage.value;
             switch (option) {
                 case 'wide':
                     document.getElementsByClassName('bilibili-player-video-btn-widescreen')[0].click();

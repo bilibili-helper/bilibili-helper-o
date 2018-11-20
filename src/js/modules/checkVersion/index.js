@@ -40,6 +40,8 @@ export class CheckVersion extends Feature {
                 if (this.compareVersion(res.version, version) > 0 && day !== new Date().getDate()) { // 比较今天是否有检测过
                     this.setVersion(res.version);
                     const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
+
+                    console.log(__('extensionNotificationTitle'), __('checkVersionNewVersion'));
                     notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
                         type: 'basic',
                         iconUrl: getURL('/statics/imgs/cat.svg'),
