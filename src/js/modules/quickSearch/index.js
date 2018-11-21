@@ -33,4 +33,8 @@ export class QuickSearch extends Feature {
             },
         });
     };
+
+    pause = () => {
+        chrome.contextMenus.remove('bilibili-searchBili', null);
+    };
 }
