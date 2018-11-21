@@ -23,7 +23,7 @@ export class DynamicCheck extends Feature {
                 description: '第一时间通知关注UP主的视频消息，每分钟检测一次',
                 hasUI: true,
                 options: [ // 子选项
-                    {title: '推送通知', key: 'notification', on: true},
+                    {title: '推送通知', key: 'notification', on: false},
                     {title: '最近推送列表', key: 'dynamicCheckBox', on: true, description: '在扩展菜单显示10条最近推送的视频'},
                 ],
             },
@@ -96,7 +96,7 @@ export class DynamicCheck extends Feature {
             if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
                 chrome.notifications.create('bilibili-helper-aid' + aid, {
                     type: 'basic',
-                    iconUrl: getURL('/statics/imgs/cat.svg'),
+                    iconUrl: addition.pic || getURL('/statics/imgs/cat.svg'),
                     title: __('extensionNotificationTitle'),
                     message: addition.title,
                     buttons: [{title: __('extensionNotificationWatch')}],

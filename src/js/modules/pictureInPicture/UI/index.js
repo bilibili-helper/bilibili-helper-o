@@ -89,11 +89,11 @@ class PIP extends React.Component {
 
     play = () => {
         if (window.player) {
-            if (window.player.getDuration() !== window.player.getCurrentTime()) {
+            if (window.player.getDuration() !== window.player.getCurrentTime() && window.player.getState() !== 'PAUSED') {
                 window.player.play();
             }
         }
-    }
+    };
 
     // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
     handleOnClick = () => {

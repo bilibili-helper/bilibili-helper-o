@@ -98,10 +98,7 @@ export class VideoDownload extends React.Component {
                 $.ajax({
                     method,
                     url,
-                    data: {
-                        platform: 'bilibili-helper',
-                        ...data
-                    },
+                    data,
                     contentType: 'video/mp4',
                     success: (res) => {
                         if (res.code === 10005) {
@@ -175,7 +172,7 @@ export class VideoDownload extends React.Component {
                                         </React.Fragment>
                                     );
                                 })}
-                            </LinkGroup> : null
+                            </LinkGroup> : <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle>
                         );
                     })}
                     {!videoData[currentCid] && <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle>}

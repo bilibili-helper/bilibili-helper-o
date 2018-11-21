@@ -25,6 +25,7 @@ export class VideoDownload extends Feature {
         });
         this.store = new MessageStore('videoDownloadDOMInitialized');
         this.downloadFilenames = {};
+        this.onceRequestList = [];
     }
 
     launch = () => {};
@@ -49,15 +50,11 @@ export class VideoDownload extends Feature {
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {tabId, method, responseHeaders, requestHeaders, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator)) return;
+            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
             const url = new URL(details.url, '', true);
             const {pathname, query: data, host} = url;
             const tabData = this.store.createData(tabId);
-            //console.log(url, tabId, pathname, method, requestHeaders, query);
-            //console.log(details, tabData.data['hasLoad'], pathname, /\/upgcxcode\//.test(pathname));
-
             if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
-                //console.log(details, data);
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'old',
@@ -65,6 +62,7 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
+                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl') {
                 //console.log(details, data);
@@ -75,12 +73,14 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
+                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
                 tabData.queue.push({
                     commend: 'videoDownloadCid',
                     cid: +data.id.slice(4),
                 });
+                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
@@ -101,7 +101,7 @@ export class VideoDownload extends Feature {
             if (filenameObject) {
                 const {filename, cid} = filenameObject;
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
-                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`
+                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`;
             }
             return {responseHeaders};
         }, {

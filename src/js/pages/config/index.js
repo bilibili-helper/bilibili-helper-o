@@ -192,7 +192,7 @@ class PageConfig extends React.Component {
                         commend: 'setGAEvent',
                         action: 'click',
                         category: 'config',
-                        label: `${featureName} ${settingName !== undefined ? `${settingName} ${on}` : ''}`,
+                        label: `${featureName} ${settingName !== undefined ? `${settingName} ${on}` : on}`,
                     });
                     thisKindOfFeatures.map[name] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});

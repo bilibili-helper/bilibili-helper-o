@@ -23,10 +23,17 @@ export class CheckVersion extends Feature {
                 title: '自动检测更新',
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: true},
+                    {key: 'notification', title: '推送通知', on: false},
                 ],
             },
         });
+        if (!store.get('version')) {
+            this.settings.version = {
+                number: version,
+                day: new Date().getDate(),
+            };
+            store.set('version', this.settings.version);
+        }
     }
 
     launch = () => {
@@ -35,7 +42,7 @@ export class CheckVersion extends Feature {
             url: `https://bilihelper.guguke.net/version.json`,
             success: (res) => {
                 const {day} = this.getVersion();
-                if (this.compareVersion(res.version, version) > 0 && day !== new Date().getDate()) { // 比较今天是否有检测过
+                if (this.compareVersion(res.version, version) > 0 || day !== new Date().getDate()) { // 比较今天是否有检测过
                     this.setVersion(res.version);
                     const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
                     notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
@@ -47,7 +54,8 @@ export class CheckVersion extends Feature {
                 }
             },
             error: (e) => {
-                chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
+                const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
+                notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
                     type: 'basic',
                     iconUrl: getURL('/statics/imgs/cat.svg'),
                     title: __('extensionNotificationTitle'),
@@ -59,15 +67,15 @@ export class CheckVersion extends Feature {
     };
 
     setVersion = (version) => {
-        if (store.get('version') === undefined) {
+        if (!store.get('version')) {
             this.settings.version = {
                 number: version,
-                checked: true,
-                day: null,
+                day: new Date().getDate(),
             };
+        } else {
+            this.settings.version.number = version;
+            this.settings.version.day = new Date().getDate();
         }
-        this.settings.version.number = version;
-        this.settings.version.day = new Date().getDate();
         store.set('version', this.settings.version);
     };
 

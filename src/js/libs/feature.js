@@ -40,9 +40,9 @@ export class Feature {
      * 3.配置初始化
      * @return {Promise} true 表示初始化成功 返回字符串表示初始化失败说明
      */
-    init = () => {
+    init = (settings) => {
         return new Promise((resolve) => {
-            this.initSetting();
+            this.initSetting(settings);
             const {on} = this.settings;
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
                 if (on === false) {
@@ -73,8 +73,8 @@ export class Feature {
     };
 
     // 初始化配置
-    initSetting = () => {
-        const settings = store.get(this.storeName) || {}; // 缓存配置
+    initSetting = (sets) => {
+        const settings = sets || store.get(this.storeName) || {}; // 缓存配置
         this.settings = Object.assign({}, this.settings, settings);
         store.set(this.storeName, this.settings);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -102,7 +102,7 @@ export class Feature {
         //if (this.settings.toggle === false) return;
         if (this.initialed === false || settings.on !== this.settings.on) { // 没有初始化过 或者 总启动状态发生变化时
             if (settings.on === true) {
-                if (!this.initialed) void this.init();
+                if (!this.initialed) void this.init(settings);
                 else this.launch();
             } else this.pause();
         }

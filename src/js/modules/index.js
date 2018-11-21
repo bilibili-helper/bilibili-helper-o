@@ -22,6 +22,7 @@ import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubti
 import {CheckVersion} from 'Modules/checkVersion';
 import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
+import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 
 export const Features = {
     Debug,
@@ -42,6 +43,7 @@ export const Features = {
     CheckVersion,
     Silver2coin,
     QuickSearch,
+    VideoHideDanmu,
 };
 
 export const UIs = {
@@ -56,4 +58,5 @@ export const UIs = {
     PictureInPictureUI,
     VideoWidenUI,
     VideoSubtitleDownloadUI,
+    VideoHideDanmuUI,
 };

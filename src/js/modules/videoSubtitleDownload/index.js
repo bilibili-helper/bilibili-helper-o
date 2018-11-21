@@ -36,6 +36,7 @@ export class VideoSubtitleDownload extends Feature {
             ],
         };
         chrome.webRequest.onCompleted.addListener(details => {
+            const that = this;
             const {tabId, initiator} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
             const url = new URL(details.url, '', true);
@@ -56,7 +57,7 @@ export class VideoSubtitleDownload extends Feature {
                                 commend: 'loadSubtitle',
                                 data: subtitleData,
                             });
-                            this.store.dealWith(tabId); // 处理queue
+                            that.store.dealWith(tabId); // 处理queue
                         }
                     },
                     error: function(e) {

@@ -3,7 +3,9 @@
  * Create: 2018/11/16
  * Description:
  */
+import $ from 'jquery';
 import {UI} from 'Libs/UI';
+import _ from 'lodash';
 
 export class VideoWidenUI extends UI {
     constructor() {
@@ -16,15 +18,42 @@ export class VideoWidenUI extends UI {
     load = (containers, settings) => {
         return new Promise(resolve => {
             const option = settings.subPage.value;
-            switch (option) {
-                case 'wide':
-                    document.getElementsByClassName('bilibili-player-video-btn-widescreen')[0].click();
-                    break;
-                case 'web':
-                    document.getElementsByClassName('bilibili-player-video-web-fullscreen')[0].click();
-                    break;
-            }
+            this.setWide(option);
+            new MutationObserver((mutationList) => {
+                _.map(mutationList, (mutation) => {
+                    if (mutation.oldValue) {
+                        this.setWide(option);
+                    }
+                });
+            }).observe($('#bofqi')[0], {
+                attributeFilter: ['src'],
+                attributes: true,
+                attributeOldValue: true,
+                subtree: true,
+            });
             resolve();
         });
+    };
+
+    setWide = (option) => {
+        switch (option) {
+            case 'wide': {
+                const btn = $('.bilibili-player-video-btn-widescreen');
+                if (btn.length > 0 && !btn.attr('bilibili-helper-data')) {
+                    btn.attr({'bilibili-helper-data': true});
+                    btn.click();
+                }
+                break;
+            }
+            case 'web': {
+                const btn = $('.bilibili-player-video-web-fullscreen');
+                document.getElementsByClassName('bilibili-player-video-web-fullscreen')[0].click();
+                if (btn.length > 0 && !btn.attr('bilibili-helper-data')) {
+                    btn.attr({'bilibili-helper-data': true});
+                    btn.click();
+                }
+                break;
+            }
+        }
     };
 }
