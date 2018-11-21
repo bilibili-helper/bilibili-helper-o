@@ -7,7 +7,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import store from 'store';
 import {Feature} from 'Libs/feature';
-import {__, createTab, getURL, version} from 'Utils';
+import {__, getURL, version} from 'Utils';
 import {PERMISSION_STATUS} from 'Utils';
 
 const {notifications} = PERMISSION_STATUS;
@@ -17,8 +17,7 @@ export class CheckVersion extends Feature {
         super({
             name: 'checkVersion',
             kind: 'other',
-            permission: {notifications},
-            dependencies: ['debug'],
+            permissions: {notifications},
             settings: {
                 on: true,
                 title: '自动检测更新',

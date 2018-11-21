@@ -12,7 +12,6 @@ export class GoogleAnalytics extends Feature {
         super({
             name: 'googleAnalytics',
             kind: 'other',
-            dependencies: ['debug'],
             settings: {
                 on: true,
                 //toggle: false,

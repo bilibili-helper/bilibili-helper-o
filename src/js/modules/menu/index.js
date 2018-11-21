@@ -10,7 +10,7 @@ export class Menu extends Feature {
         super({
             name: 'menu',
             kind: 'popup',
-            dependencies: ['debug', 'popup'],
+            dependencies: ['popup'],
             settings: {
                 on: true,
                 toggle: false,

@@ -15,7 +15,7 @@ export class Danmu extends Feature {
         super({
             name: 'danmu',
             kind: 'video',
-            dependencies: ['debug', 'videoAnchor'],
+            dependencies: ['videoAnchor'],
             settings: {
                 on: true,
                 title: '视频弹幕查询及下载',
@@ -32,7 +32,7 @@ export class Danmu extends Feature {
                 '*://api.bilibili.com/x/v2/dm/history?type=*', // 历史弹幕
                 //'*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
 
-                '*://api.bilibili.com/x/player.so*', // 新页面特有，用于标记新页面，加载时特殊处理
+                '*://api.bilibili.com/x/player.so?id=cid:*', // 新页面特有，用于标记新页面，加载时特殊处理
                 '*://interface.bilibili.com/player?id=cid:*', // 老页面特有
             ],
         };

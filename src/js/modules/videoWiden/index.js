@@ -13,7 +13,6 @@ export class VideoWiden extends Feature {
         super({
             name: 'videoWiden',
             kind: 'video',
-            dependencies: ['debug'],
             settings: {
                 on: true,
                 title: '宽屏模式',

@@ -98,7 +98,10 @@ export class VideoDownload extends React.Component {
                 $.ajax({
                     method,
                     url,
-                    data,
+                    data: {
+                        platform: 'bilibili-helper',
+                        ...data
+                    },
                     contentType: 'video/mp4',
                     success: (res) => {
                         if (res.code === 10005) {

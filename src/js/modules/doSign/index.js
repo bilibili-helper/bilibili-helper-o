@@ -6,13 +6,16 @@
  */
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
+import {PERMISSION_TYPE} from 'Utils';
+
+const {login} = PERMISSION_TYPE;
 
 export class DoSign extends Feature {
     constructor() {
         super({
             name: 'doSign',
             kind: 'live',
-            dependencies: ['debug'],
+            permissions: {login},
             settings: {
                 on: true,
                 title: '自动签到',

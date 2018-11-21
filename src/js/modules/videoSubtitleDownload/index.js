@@ -7,6 +7,9 @@ import $ from 'jquery';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
+import {isLogin, PERMISSION_TYPE} from 'Utils';
+
+const {login} = PERMISSION_TYPE;
 
 export {VideoSubtitleDownloadUI} from './UI';
 
@@ -15,7 +18,8 @@ export class VideoSubtitleDownload extends Feature {
         super({
             name: 'videoSubtitleDownload',
             kind: 'video',
-            dependencies: ['debug', 'videoAnchor'],
+            permissions: {login},
+            dependencies: ['videoAnchor'],
             settings: {
                 on: true,
                 hasUI: true,
@@ -28,7 +32,7 @@ export class VideoSubtitleDownload extends Feature {
     addListener = () => {
         const requestFilter = {
             urls: [
-                '*://api.bilibili.com/x/player.so*',
+                '*://api.bilibili.com/x/player.so?id=cid:*',
             ],
         };
         chrome.webRequest.onCompleted.addListener(details => {
@@ -42,7 +46,7 @@ export class VideoSubtitleDownload extends Feature {
                 $.ajax({
                     method: 'get',
                     url: details.url,
-                    success: (res) => {
+                    success: function(res) {
                         const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
                         if (regExpRes.length > 0) {
                             const subtitleData = JSON.parse(regExpRes[1]).subtitles;
@@ -55,6 +59,10 @@ export class VideoSubtitleDownload extends Feature {
                             this.store.dealWith(tabId); // 处理queue
                         }
                     },
+                    error: function(e) {
+                        if (e.status === 403) return;
+                        console.log(e);
+                    }
                 });
             }
         }, requestFilter);

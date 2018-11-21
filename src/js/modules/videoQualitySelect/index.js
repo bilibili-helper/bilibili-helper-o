@@ -14,7 +14,7 @@ export class VideoQualitySelect extends Feature {
         super({
             name: 'videoQualitySelect',
             kind: 'video',
-            dependencies: ['debug', 'videoAnchor'],
+            dependencies: ['videoAnchor'],
             settings: {
                 on: false,
                 toggle: false,

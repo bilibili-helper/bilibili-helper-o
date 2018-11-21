@@ -12,7 +12,6 @@ export class Popup extends Feature {
         super({
             name: 'popup',
             kind: 'popup',
-            dependencies: ['debug'],
             settings: {
                 on: true,
                 hide: true,

@@ -6,6 +6,7 @@
 import _ from 'lodash';
 import store from 'store';
 import {isLogin} from 'Utils';
+import {PERMISSION_STATUS} from 'Utils';
 
 /**
  * 特性
@@ -43,17 +44,27 @@ export class Feature {
         return new Promise((resolve) => {
             this.initSetting();
             const {on} = this.settings;
+
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
-                if (on === false) console.warn(`Feature ${this.name} OFF`);
-                resolve(this.checkPermission().then(({pass, msg}) => {
-                    if (pass) {
-                        this.addListener();
-                        this.initialed = true;
-                        console.log(`Feature init completed: ${this.name}`);
-                        return this;
-                        //chrome.extension.getBackgroundPage().FeatureManager.dealWidthWaitQueue();
-                    } else console.error(msg);
-                }));
+                if (on === false) {
+                    console.warn(`Feature ${this.name} OFF`);
+                    resolve(false);
+                } else {
+                    this.checkPermission().then((res) => {
+                        const {pass, msg} = res;
+                        if (pass) {
+                            this.addListener();
+                            this.initialed = true;
+                            console.log(`Feature init completed: ${this.name}`);
+                            resolve(this);
+                        } else {
+                            console.error(`Feature ${this.name}: ${msg}`);
+                            this.settings.on = false;
+                            resolve(false);
+                        }
+
+                    });
+                }
             } else { // 没有启动配置
                 console.error(`No settings names ${_.upperFirst(this.name)}`);
                 resolve(false);
@@ -124,38 +135,47 @@ export class Feature {
     // 鉴权
     checkPermission = () => {
         return new Promise(resolve => {
-            if (!this.permissions) return true; // 没有设置需要检查的权限，则无条件通过
+            if (_.isEmpty(this.permissions)) resolve({pass: true, msg: ''});// 没有设置需要检查的权限，则无条件通过
             let [pass, msg] = [true, '']; // 通过状态
-            _.map(this.permissions, async (permission, permissionName) => {
-                if (!permission) { // 未知权限类型
-                    [pass, msg] = [false, `Undefined permission: ${permissionName}`];
-                } else if (permission.check && !permission.value) {// 已经检查过 且 没有检查通过 直接返回之前的检查结果
-                    [pass, msg] = [permission.value, permission.errorMsg];
-                } else { // 权限没有检查过
-                    switch (permissionName) {
-                        case 'login': {
-                            await isLogin().then((login) => {
-                                pass = login ? true : false;
-                                msg = permission.errorMsg;
-                            });
-                            break;
-                        }
-                        case 'notifications': {
-                            await chrome.notifications.getPermissionLevel((level) => {
-                                pass = level === 'granted' ? true : false;
-                                msg = permission.errorMsg;
-                            });
-                            break;
+
+            const checkPromise = _.map(this.permissions, (permission, permissionName) => {
+                return new Promise((resolve1) => {
+                    if (!permission) { // 未知权限类型
+                        [pass, msg] = [false, `Undefined permission: ${permissionName}`];
+                    } else if (permission.check && !permission.value) {// 已经检查过 且 没有检查通过 直接返回之前的检查结果
+                        [pass, msg] = [permission.value, permission.errorMsg];
+                    } else { // 权限没有检查过
+                        switch (permissionName) {
+                            case 'login': {
+                                return isLogin().then((login) => {
+                                    pass = login ? true : false;
+                                    msg = PERMISSION_STATUS['login'].errorMsg;
+                                    if (!pass) resolve1({pass, msg});
+                                });
+                                break;
+                            }
+                            case 'notifications': {
+                                chrome.notifications.getPermissionLevel((level) => {
+                                    pass = level === 'granted' ? true : false;
+                                    msg = PERMISSION_STATUS['notifications'].errorMsg;
+                                });
+                                break;
+                            }
                         }
                     }
-                }
-                if (!pass) return false; // 权限检查没过
-                else {
-                    permission.check = true;
-                    permission.value = true;
-                }
+                    resolve1({pass, msg});
+                });
             });
-            resolve({pass, msg});
+            Promise.all(checkPromise).then(checkResults => {
+                let p = true, message = '';
+                _.each(checkResults, ({pass, msg}) => {
+                    if (!pass) {
+                        p = false;
+                        message = msg;
+                    }
+                });
+                resolve({pass: p, msg: message});
+            });
         });
     };
 }

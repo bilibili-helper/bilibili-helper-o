@@ -29,24 +29,31 @@ export class FeatureManager {
 
     // 特性模块列表载入
     loadFeatures = () => {
-        return Promise.all(_.map(this.features, async (feature, featureName) => {
-            const {dependencies} = feature;
-            if (this.checkModuleRequire(dependencies)) {
-                return this.loadFeature(featureName); // return Promise
-            } else {
-                this.waitQueue.push({dependencies, featureName});
-                return false;
-            }
-        })).then(() => {
+        const PromiseMap = _.map(this.features, (feature, featureName) => {
+            return new Promise(resolve => {
+                const {dependencies} = feature;
+                const checkResult = this.checkModuleRequire(dependencies);
+                if (checkResult) {
+                    const loadResult = this.loadFeature(featureName);
+                    resolve(loadResult);// return Promise
+                } else {
+                    this.waitQueue.push({dependencies, featureName});
+                    resolve(false);
+                }
+            });
+        });
+        return Promise.all(PromiseMap).then((e) => {
             this.dealWidthWaitQueue();
         });
     };
 
     // 单个模块载入
-    loadFeature = async (featureName) => {
-        return this.features[featureName].init().then(f => {
-            f.settings.on && f.launch();
-            return true;
+    loadFeature = (featureName) => {
+        return new Promise(resolve => {
+            this.features[featureName].init().then(f => {
+                f && f.settings.on && f.launch();
+                resolve(true);
+            });
         });
     };
 
@@ -56,12 +63,17 @@ export class FeatureManager {
         ++this.retryTime;
         const newWaitQueue = [];
         const promiseList = _.map(this.waitQueue, (FeatureDefineObject) => {
-            const {dependencies, featureName} = FeatureDefineObject;
-            if (this.checkModuleRequire(dependencies)) { // 依赖检查通过
-                return this.loadFeature(featureName);
-            } else {
-                newWaitQueue.push(FeatureDefineObject);
-            }
+            return new Promise(resolve => {
+                const {dependencies, featureName} = FeatureDefineObject;
+                if (this.checkModuleRequire(dependencies)) { // 依赖检查通过
+                    const loadResult = this.loadFeature(featureName);
+                    resolve(loadResult);
+                } else {
+                    newWaitQueue.push(FeatureDefineObject);
+                    resolve(false);
+                }
+            });
+
         });
         this.waitQueue = newWaitQueue;
         Promise.all(promiseList).then(() => this.waitQueue.length > 0 && this.dealWidthWaitQueue());

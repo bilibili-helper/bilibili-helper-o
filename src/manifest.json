@@ -2,6 +2,7 @@
     "version": "1.1.3",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
+    "minimum_chrome_version": "56.0.0",
     "name": "__MSG_extensionName__",
     "short_name": "__MSG_extensionShortName__",
     "default_locale": "zh_CN",
@@ -74,5 +75,5 @@
         "js/*"
     ],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js https://www.google-analytics.com/analytics_debug.js; object-src 'self';",
-    "incognito": "not_allowed"
+    "incognito": "split"
 }

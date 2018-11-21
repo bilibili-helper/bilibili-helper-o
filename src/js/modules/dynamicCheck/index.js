@@ -16,7 +16,6 @@ export class DynamicCheck extends Feature {
             name: 'dynamicCheck',
             kind: 'popup',
             permissions: {login, notifications},
-            dependencies: ['debug'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function
                 title: '动态推送', // 在option页面中配置项目的显示名称

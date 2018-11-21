@@ -10,7 +10,6 @@ export class QuickSearch extends Feature {
     constructor() {
         super({
             name: 'quickSearch',
-            dependencies: ['debug'],
             kind: 'other',
             settings: {
                 on: true,

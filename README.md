@@ -120,7 +120,7 @@ export class Debug extends Feature {
 {
     name: 'moduleName',
     kind: 'kindName',
-    permission: {login, notification}, 4 // 需要特定权限时，在执行init方法时鉴权，默认为空 
+    permission: {login, notifications}, 4 // 需要特定权限时，在执行init方法时鉴权，默认为空
     dependencies: ['dependency1',...], // 指定模块的依赖，默认为空
     settings: {
     	on: true, // 指模块是否执行launch方法

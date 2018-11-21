@@ -9,15 +9,14 @@ import {Feature} from 'Libs/feature';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
 import {__, PERMISSION_TYPE} from 'Utils';
 
-const {login, notification} = PERMISSION_TYPE;
+const {login, notifications} = PERMISSION_TYPE;
 export {TreasureUI} from './UI/index';
 export class Treasure extends Feature {
     constructor() {
         super({
             name: 'treasure',
             kind: 'live',
-            permission: {login, notification},
-            dependencies: ['debug'],
+            permissions: {login, notifications},
             settings: {
                 on: true,
                 toggle: true,

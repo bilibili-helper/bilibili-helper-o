@@ -12,7 +12,6 @@ export class ChatFilter extends Feature {
         super({
             name: 'chatFilter',
             kind: 'live',
-            dependencies: ['debug'],
             settings: {
                 on: true,
                 title: '去污粉',

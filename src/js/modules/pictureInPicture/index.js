@@ -12,7 +12,7 @@ export class PictureInPicture extends Feature {
         super({
             name: 'pictureInPicture',
             kind: 'video',
-            dependencies: ['debug', 'videoAnchor'],
+            dependencies: ['videoAnchor'],
             settings: {
                 on: true,
                 title: '画中画（PIP）',
