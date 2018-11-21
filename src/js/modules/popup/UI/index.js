@@ -13,6 +13,7 @@ export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
   display: flex;
   flex-direction: row-reverse;
   background-color: rgb(250,250,250);
+  max-height: 290px;
 `;
 
 export class PopupUI extends UI {
