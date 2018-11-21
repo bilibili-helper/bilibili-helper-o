@@ -44,7 +44,6 @@ export class Feature {
         return new Promise((resolve) => {
             this.initSetting();
             const {on} = this.settings;
-
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
                 if (on === false) {
                     console.warn(`Feature ${this.name} OFF`);
@@ -60,6 +59,7 @@ export class Feature {
                         } else {
                             console.error(`Feature ${this.name}: ${msg}`);
                             this.settings.on = false;
+                            this.settings.toggle = false;
                             resolve(false);
                         }
 
@@ -149,8 +149,8 @@ export class Feature {
                             case 'login': {
                                 return isLogin().then((login) => {
                                     pass = login ? true : false;
-                                    msg = PERMISSION_STATUS['login'].errorMsg;
-                                    if (!pass) resolve1({pass, msg});
+                                    msg = !pass ? PERMISSION_STATUS['login'].errorMsg : '';
+                                    resolve1({pass, msg});
                                 });
                                 break;
                             }
