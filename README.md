@@ -120,14 +120,14 @@ export class Debug extends Feature {
 {
     name: 'moduleName',
     kind: 'kindName',
-    permission: {login, notifications}, 4 // 需要特定权限时，在执行init方法时鉴权，默认为空
+    permissions: {login, notifications}, 4 // 需要特定权限时，在执行init方法时鉴权，默认为空
     dependencies: ['dependency1',...], // 指定模块的依赖，默认为空
     settings: {
-    	on: true, // 指模块是否执行launch方法
-    	hide: true, // 如果为true，则不在config中显示设置项目
-    	toggle: false, // 指模块在config页面是否可以设置on属性
-    	title: 'module title', // 用于在config页面显示的模块名称
-    	description: 'module description', // 用于在config页面显示的模块描述
+        on: true, // 指模块是否执行launch方法
+        hide: true, // 如果为true，则不在config中显示设置项目
+        toggle: false, // 指模块在config页面是否可以设置on属性
+        title: 'module title', // 用于在config页面显示的模块名称
+        description: 'module description', // 用于在config页面显示的模块描述
         type: 'checkout | radio', // 当模块拥有子选项时，规定选项是类别
         options: [ // 一级页面子选项配置
             {
@@ -144,18 +144,18 @@ export class Debug extends Feature {
             description: 'subPage description', // 该模块在config页面二级页面的描述
             type: 'checkout | radio', // 该模块在config页面二级页面的子选项类型
             options: [ // 同上
-            	{
-                	key: 'option1',
-                	title: 'option1 title',
-                	value: 'option1 value',
-                	on: true,
-                	description: 'option1 description',
-            	},
-            	...
-        	],
+                {
+                    key: 'option1',
+                    title: 'option1 title',
+                    value: 'option1 value',
+                    on: true,
+                    description: 'option1 description',
+                },
+                ...
+            ],
             value: 'option1',
         },
-	},
+    },
 }
 ```
 

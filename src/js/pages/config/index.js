@@ -210,19 +210,15 @@ class PageConfig extends React.Component {
                     const SubListChildren = this.createSubListComponent({kind, featureName, settings});
                     const toggleMode = toggle === undefined || subPage ? true : toggle;
                     const twoLine = description !== undefined;
-                    const mainClickCallback = !subPage ? () => this.handleSetSetting({kind, featureName}) : null;
+                    const handleOpenSubPage = () => this.handleSetSubPage({parent: this[`${kind}Ref`], settings});
+                    const onClick = !!subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
                     const operation = !!subPage
-                                      ? <Button icon="arrowRight"
-                                                onClick={() => this.handleSetSubPage({
-                                                    parent: this[`${kind}Ref`],
-                                                    settings,
-                                                })}
-                                      />
+                                      ? <Button icon="arrowRight"/>
                                       : <Radio disable={!toggleMode} on={on}/>;
                     return <ListItem
                         key={featureName}
                         toggle={toggleMode}
-                        onClick={on !== undefined && toggleMode !== false ? mainClickCallback : null}
+                        onClick={on !== undefined && toggleMode !== false ? onClick : null}
                         operation={on !== undefined ? operation : null}
                         subList={SubListChildren ? {
                             hide: on === undefined ? false : !on,
@@ -360,14 +356,16 @@ class PageConfig extends React.Component {
                         twoLine={true}
                         first={`投喂列表 - ${feedJson.length}条`}
                         second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
-                        operation={<Button icon="arrowRight" onClick={this.handleOpenFeedList}></Button>}
+                        onClick={this.handleOpenFeedList}
+                        operation={<Button icon="arrowRight"></Button>}
                     />
                     {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
                 <Footer>
                     <a href="https://github.com/zacyu/bilibili-helper">Github</a>
                     <a href="https://bilihelper.guguke.net">Website</a>
-                    <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome WebStore</a>
+                    <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome
+                        WebStore</a>
                     <span>
                         Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
                         href="mailto:jjj201200@gmail.com">Drowsy Flesh</a>
