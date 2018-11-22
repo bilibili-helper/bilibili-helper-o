@@ -226,28 +226,19 @@ export class Danmu extends React.Component {
         return new Promise((resolve) => {
             if (this.userMap[uid]) resolve(this.userMap[uid]);
             else {
-                const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
-                    this.setState({
-                        loading: true,
-                        loadingText: '努力查询中~(๑•̀ㅂ•́)و',
-                    });
-                }, 300);
                 uid && $.ajax({
                     method: 'get',
                     url: 'https://api.bilibili.com/x/web-interface/card',
                     data: {mid: uid},
-                    //beforeSend: ,
                     success: ({code, data}) => {
-                        clearTimeout(timer);
                         if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
                             this.userMap[uid] = {...data.card};
-                            this.setState({loading: false});
                             resolve(uid);
                         } else resolve(false);
                     },
                     error: (res) => {
-                        //console.log(res);
-                        this.setState({loadingText: '查询失败!'}, () => { // 查询失败3庙后关闭错误信息
+                        console.error(res);
+                        this.setState({loadingText: '查询失败!'}, () => { // 查询失败3秒后关闭错误信息
                             setTimeout(() => this.setState({loading: false}), 3000);
                         });
                     },
@@ -258,14 +249,11 @@ export class Danmu extends React.Component {
 
     // 检查机器人用户
     isRobotUser = (userData = {}) => {
-        const {archive_count, article_count, follower, card} = userData;
-        const {level_info, official_verify, name} = card;
-        const {current_level, current_exp} = level_info; // 当前用户等级
+        const {card} = userData;
+        const {level_info} = card;
+        const {current_level} = level_info; // 当前用户等级
         //const {type} = official_verify; // 正式用户!?(･_･;?
-        if (archive_count === 0 && article_count === 0 && follower === 0 && current_level === 0 && current_exp === 0
-            && name === '') {
-            return true;
-        } else return false;
+        return current_level === 0;
     };
 
     // 将弹幕数据以时间顺序排序
@@ -325,30 +313,36 @@ export class Danmu extends React.Component {
         } else {
             uids = crcEngine.crack(authorHash);
         }
+        this.setState({
+            loading: true,
+            loadingText: '努力查询中~(๑•̀ㅂ•́)و',
+        });
+        const {authorHashMap} = this.state;
+        let thisHashMap = [];
         Promise.all(uids.map((uid) => this.getUserInfoByUid(uid))).then((res) => {
-            const {authorHashMap} = this.state;
-            authorHashMap[authorHash] = _.compact(res)[0];
-            this.setState({authorHashMap});
+            thisHashMap = thisHashMap.concat(_.compact(res));
+        }).then(() => {
+            if (thisHashMap.length > 0) authorHashMap[authorHash] = thisHashMap;
+            this.setState({loading: false, authorHashMap});
         });
     };
 
     // 当点击查询过用户名的弹幕行时
-    handleAuthorClick = (uid) => {
-        const {queryUserMode} = this.state;
-        if (!queryUserMode) {
-            const authorHash = _.findKey(this.state.authorHashMap, (id) => id === uid);
-            const {cid, list} = this.orderedJSON;
+    handleAuthorClick = (uids) => {
+        if (!this.state.queryUserMode) {
             const queryList = [];
-            _.forEach(list, (data) => {
-                if (data.authorHash === authorHash) {
-                    // 这里一定要复制一份，不然会修改原数据
-                    queryList.push({...data});
-                }
+            this.queryUserModeTemplateMap = {...this.state.danmuJSON}; // 保存当前查询列表
+            _.each(uids, (uid) => {
+                const authorHash = _.findKey(this.state.authorHashMap, (id) => !!~id.indexOf(uid));
+                _.each(this.orderedJSON.list, (data) => {
+                    if (data.authorHash === authorHash) {
+                        queryList.push({...data}); // 这里一定要复制一份，不然会修改原数据
+                    }
+                });
             });
-            this.queryUserModeTemplateMap = {...this.state.danmuJSON};
             this.setState({
                 queryUserMode: true,
-                danmuJSON: {cid, count: queryList.length, list: queryList},
+                danmuJSON: {cid: this.orderedJSON.cid, count: queryList.length, list: queryList},
             });
         } else {
             this.setState({
@@ -392,18 +386,22 @@ export class Danmu extends React.Component {
                 <DanmuList>
                     {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
                         const {danmu, authorHash, time} = danmuData;
-                        const uid = authorHashMap[authorHash];
-                        const authorName = this.userMap[uid] ? this.userMap[uid].name : '';
+                        const uids = authorHashMap[authorHash];
+                        let authorNames = _.map(uids, (uid) => this.userMap[uid] ? this.userMap[uid].name : '');
                         return (
                             <DanmuListLine
                                 key={index}
-                                title={`[${time}] ${danmu} ${authorName ? `by:${authorName}` : ''}`}
-                                onClick={() => uid ? this.handleAuthorClick(uid) : this.handleDanmuLineClick(authorHash)}
-                                hasQueried={authorName}
+                                title={`[${time}] ${danmu} ${authorNames ? `by:${authorNames.join(',')}` : ''}`}
+                                onClick={() => uids ? this.handleAuthorClick(uids) : this.handleDanmuLineClick(authorHash)}
+                                hasQueried={!_.isEmpty(authorNames)}
                             >
                                 <span className="time">{time}</span>
                                 <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
-                                <span className="author" data-usercard-mid={uid}>{authorName}</span>
+                                <span className="author">
+                                    {_.map(authorNames, (name, index) => {
+                                        return <div data-usercard-mid={uids[index]}>{name}</div>;
+                                    })}
+                                </span>
                             </DanmuListLine>
                         );
                     }) : <DanmuListLine>无数据</DanmuListLine>}

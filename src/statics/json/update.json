@@ -8,6 +8,9 @@
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
+    "版本 1.1.5": [
+        "优化<i>弹幕查询</i>功能中的查询结果，现在可以列出多个可能的结果，排除等级0的用户"
+    ],
     "版本 1.1.4": [
         "修复<i>视频下载</i>，<i>外挂字幕下载</i>和<i>自动更新检测</i>功能的bug",
         "优化设置页面交互，调整部分功能UI样式",
