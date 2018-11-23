@@ -102,7 +102,15 @@ export class VideoDownload extends Feature {
                 this.onceRequestList.push(details.url);
                 const {filename, cid} = filenameObject;
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
-                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`;
+                const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`;
+                if (targetData) {
+                    targetData.value = nameValue;
+                } else {
+                    responseHeaders.push({
+                        name: 'Content-Disposition',
+                        value: nameValue,
+                    });
+                }
             }
             return {responseHeaders};
         }, {

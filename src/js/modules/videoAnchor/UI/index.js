@@ -31,12 +31,12 @@ export class VideoAnchorUI extends UI {
                 container.append(helperDOM);
                 ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
                     $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
-                        chrome.runtime.sendMessage({commend: 'tabUnload'}, response => response(true));
+                        chrome.runtime.sendMessage({commend: 'tabUnload'}, () => true);
                     });
                     const helperContentDOM = helperDOM.find('.bilibili-helper-content');
                     resolve(helperContentDOM);
                 });
-            }
+            };
             if (newPage.length > 0) { // 新页面要先判断b站代码是否跑完
                 const retryMax = 10;
                 let retryTime = 0;
