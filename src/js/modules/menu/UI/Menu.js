@@ -218,7 +218,6 @@ export class Menu extends React.Component {
     checkLinkerValue = (value) => {
         const minAvId = 1000;
         const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
-        console.warn(res)
         if (res && res[1] && res[2]) return true;
         else if (res && !res[1] && res[2] > minAvId) return true;
         else return false;
