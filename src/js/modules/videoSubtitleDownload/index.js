@@ -39,13 +39,12 @@ export class VideoSubtitleDownload extends Feature {
         chrome.webRequest.onCompleted.addListener(details => {
             const that = this;
             const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url)) {
-                return;
-            }
+            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
+
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             if (pathname === '/x/player.so') {
-                this.onceRequestList.push(details.url)
+                this.onceRequestList.push(details.url);
                 const storeObject = this.store.createData(tabId);
                 const {data, queue} = storeObject;
                 $.ajax({
@@ -69,11 +68,11 @@ export class VideoSubtitleDownload extends Feature {
                         if (e.status === 403) {
                             return;
                         }
-                    }
+                    },
                 });
             }
         }, requestFilter);
-        chrome.runtime.onMessage.addListener((message,sender) => {
+        chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadSubtitle' && message.id && message.filename) {
                 const tabData = this.store.createData(sender.tab.id);
                 if (tabData) {

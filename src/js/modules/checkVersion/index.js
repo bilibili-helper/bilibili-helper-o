@@ -41,9 +41,9 @@ export class CheckVersion extends Feature {
             method: 'get',
             url: `https://bilihelper.guguke.net/version.json`,
             success: (res) => {
-                const {day} = this.getVersion();
-                if (this.compareVersion(res.version, version) > 0 || day !== new Date().getDate()) { // 比较今天是否有检测过
-                    this.setVersion(res.version);
+                const {day, updateTime} = this.getVersion();
+                if ((this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) && day !== new Date().getDate()) { // 比较今天是否有检测过
+                    this.setVersion(res);
                     const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
                     notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
                         type: 'basic',
@@ -66,7 +66,7 @@ export class CheckVersion extends Feature {
         });
     };
 
-    setVersion = (version) => {
+    setVersion = ({version, update_time: updateTime}) => {
         if (!store.get('version')) {
             this.settings.version = {
                 number: version,
@@ -74,6 +74,7 @@ export class CheckVersion extends Feature {
             };
         } else {
             this.settings.version.number = version;
+            this.settings.version.updateTime = updateTime;
             this.settings.version.day = new Date().getDate();
         }
         store.set('version', this.settings.version);
@@ -84,6 +85,7 @@ export class CheckVersion extends Feature {
         if (v === undefined) {
             this.settings.version = {
                 number: null,
+                updateTime: null,
                 date: null,
             };
         } else {

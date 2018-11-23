@@ -5,7 +5,5 @@
  */
 import 'Styles/scss/video.scss';
 import {UIManager} from 'Libs/UIManager';
-import {consoleLogo} from 'Utils';
 
 new UIManager('video');
-consoleLogo();

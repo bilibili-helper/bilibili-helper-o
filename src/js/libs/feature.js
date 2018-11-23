@@ -46,7 +46,7 @@ export class Feature {
             const {on} = this.settings;
             if (on !== undefined) { // 检查启用状态，如果没有启动则不会执行后续的装载和启动过程
                 if (on === false) {
-                    console.warn(`Feature ${this.name} OFF`);
+                    //console.warn(`Feature ${this.name} OFF`);
                     resolve(false);
                 } else {
                     this.checkPermission().then((res) => {
@@ -60,7 +60,6 @@ export class Feature {
                             console.error(`Feature ${this.name}: ${msg}`);
                             resolve(false);
                         }
-
                     });
                 }
             } else { // 没有启动配置

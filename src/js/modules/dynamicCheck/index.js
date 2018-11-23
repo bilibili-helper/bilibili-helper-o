@@ -98,7 +98,7 @@ export class DynamicCheck extends Feature {
                     type: 'basic',
                     iconUrl: addition.pic || getURL('/statics/imgs/cat.svg'),
                     title: __('extensionNotificationTitle'),
-                    message: addition.title,
+                    message: `${addition.author}: ${addition.title}`,
                     buttons: [{title: __('extensionNotificationWatch')}],
                 }, (notificationId) => {
                     this.feedList[notificationId] = addition.link;

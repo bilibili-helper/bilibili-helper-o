@@ -4,7 +4,7 @@
  * Description: 扩展守护脚本
  */
 import 'babel-polyfill';
-import {createTab, hasNewVersion, version, __, consoleLogo} from 'Utils';
+import {createTab, hasNewVersion, version, __} from 'Utils';
 import {FeatureManager} from 'Libs/FeatureManager';
 
 /**
@@ -25,6 +25,15 @@ chrome.runtime.onInstalled.addListener(function(details) { // 安装完成后事
         });
     }
 });
+chrome.cookies.onChanged.addListener(function(changeInfo) {
+    const {/*cause,*/ cookie} = changeInfo;
+    const {name, domain} = cookie;
+    if (name === 'bili_jct' && domain === '.bilibili.com') {
+        console.warn(changeInfo);
+    }
+})
+
+
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -36,4 +45,3 @@ if (typeof (chrome.runtime.setUninstallURL) === 'function') { // 卸载成功后
 }
 
 window.FeatureManager = new FeatureManager(); // 创建统一模块管理对象
-consoleLogo();

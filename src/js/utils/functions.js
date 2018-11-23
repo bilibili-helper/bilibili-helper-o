@@ -24,7 +24,7 @@ export const sendMessage = (command, key, callback) => {
  * @param t {string}
  * @param options {object}
  */
-export const __ = (t, options) => chrome.i18n.getMessage(t, options);
+export const __ = (t, options = null) => chrome.i18n.getMessage(t, options);
 
 /**
  * 判断是否登录

@@ -221,8 +221,7 @@ export class Menu extends React.Component {
         if (res && res[1] && res[2]) return true;
         else if (res && !res[1] && res[2] > minAvId) return true;
         else return false;
-    }
-
+    };
 
     handleLinkerClick = () => {
         this.link();
@@ -254,8 +253,13 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
-                    <Linker error={linkerError} onKeyUp={this.handleKeyUp} placeholder="请输入各种ID"
-                            defaultValue={lastSearch}/>
+                    <Linker
+                        error={linkerError}
+                        onKeyUp={this.handleKeyUp}
+                        onfocusin={this.handleKeyUp}
+                        placeholder="请输入各种ID"
+                        defaultValue={lastSearch}
+                    />
                     <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
                 </LinkerWrapper>}
                 <MenuButton
