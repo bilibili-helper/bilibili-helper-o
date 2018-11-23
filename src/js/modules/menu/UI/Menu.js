@@ -80,7 +80,7 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
   height: 36px;
   margin-bottom: 6px;
   position: relative;
-  border: 1px solid ${({error}) => error ? 'red' : 'whitesmoke'};
+  border: 1px solid ${({error}) => error ? 'red !important' : 'whitesmoke'};
   box-sizing: border-box;
   font-size: 11px;
   font-weight: normal;
@@ -88,6 +88,9 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
   transition: all 0.3s ease 0s;
   text-align: center;
   outline: none;
+  &:focus {
+    border-color: #009cd6;
+  }
 `;
 
 const Enter = styled(MenuButton)`
@@ -110,6 +113,7 @@ export class Menu extends React.Component {
             linkerError: false,
             lastSearch: store.get('lastSearch') || '',
         };
+        this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au)?(\d{4,})$/);
     }
 
     componentDidMount() {
@@ -159,7 +163,8 @@ export class Menu extends React.Component {
     link = () => {
         const value = $('.bilibili-helper-menu-linker-input').val();
         if (value) {
-            const res = /^(av|ss|s|md|u|cv|au)(\d+)$/.exec(_.lowerCase(value));
+            const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
+            const minAvId = 1000;
             let url = '';
             let pass = true;
             if (res && res[1]) {
@@ -177,7 +182,7 @@ export class Menu extends React.Component {
                         url = 'https://www.bilibili.com/bangumi/media/' + value;
                         break;
                     case 'u':
-                        if (res[2]) url = 'https://space.bilibili.com/' + res[2];
+                        if (res[2] && res[2] > minAvId) url = 'https://space.bilibili.com/' + res[2];
                         else pass = false;
                         break;
                     case 'cv':
@@ -187,7 +192,11 @@ export class Menu extends React.Component {
                         url = 'https://www.bilibili.com/audio/' + value;
                         break;
                 }
-            } else pass = false;
+            } else if (res && !res[1] && res[2] > minAvId) { // av号大于1000
+                url = 'https://www.bilibili.com/video/av' + res[2];
+            } else {
+                pass = false;
+            }
             if (pass) {
                 this.setState({linkerError: false});
                 this.lastSearch = value;
@@ -206,16 +215,26 @@ export class Menu extends React.Component {
         }
     };
 
+    checkLinkerValue = (value) => {
+        const minAvId = 1000;
+        const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
+        console.warn(res)
+        if (res && res[1] && res[2]) return true;
+        else if (res && !res[1] && res[2] > minAvId) return true;
+        else return false;
+    }
+
+
     handleLinkerClick = () => {
         this.link();
     };
 
-    handleKeyPress = (event) => {
+    handleKeyUp = (event) => {
         if (event.key === 'Enter') this.link();
         else {
-            const value = String(event.target.value).toLowerCase();
-            const res = /^(av|ss|s|md|u|cv|au+)(\d{4,})$/.exec(value);
-            this.setState({linkerError: !res});
+            const value = String(event.target.value).toLowerCase().trim();
+            const res = this.checkLinkerValue(value);
+            this.setState({linkerError: !res && value !== ''});
         }
     };
 
@@ -236,7 +255,7 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
-                    <Linker error={linkerError} onKeyUp={this.handleKeyPress} placeholder="请输入各种ID"
+                    <Linker error={linkerError} onKeyUp={this.handleKeyUp} placeholder="请输入各种ID"
                             defaultValue={lastSearch}/>
                     <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
                 </LinkerWrapper>}
