@@ -5,6 +5,7 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
@@ -63,6 +64,10 @@ const FilterRadio = styled(Radio)`
 `;
 
 export class ChatFilter extends React.Component {
+    propTypes = {
+        settings: PropTypes.object,
+    }
+
     constructor(props) {
         super(props);
         this.styleList = {
@@ -102,7 +107,7 @@ export class ChatFilter extends React.Component {
     };
 
     handleOnClickRadio = (key, on) => {
-        const globalOption = _.find(this.props.setting.subPage.options, (o) => o.key === key);
+        const globalOption = _.find(this.props.settings.subPage.options, (o) => o.key === key);
         let localOption = {...this.state.localOption};
         if (globalOption.on === on && localOption[key] !== undefined) delete localOption[key];
         else localOption[key] = on;
@@ -118,7 +123,7 @@ export class ChatFilter extends React.Component {
     };
 
     render() {
-        const {subPage} = this.props.setting;
+        const {subPage} = this.props.settings;
         const options = subPage.options;
         const {localOption} = this.state;
         return (

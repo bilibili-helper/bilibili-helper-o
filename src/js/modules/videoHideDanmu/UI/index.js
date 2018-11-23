@@ -15,7 +15,7 @@ export class VideoHideDanmuUI extends UI {
         });
     }
 
-    load = ([container], settings) => {
+    load = (containers, settings) => {
         return new Promise(resolve => {
             this.hide(settings.on);
             new MutationObserver((mutationList) => {

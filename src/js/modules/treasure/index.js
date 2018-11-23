@@ -32,7 +32,7 @@ export class Treasure extends Feature {
     }
 
     addListener = () => {
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener((message) => {
             if (message.commend === 'sendNotification' && message.type === 'treasure') {
                 const {time_start, silver} = message;
                 chrome.notifications.create('bilibili-helper-treasure' + time_start, {

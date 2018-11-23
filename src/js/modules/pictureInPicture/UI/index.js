@@ -10,20 +10,6 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {UI} from 'Libs/UI';
 import {Button} from 'Components/common/Button';
-import {theme} from 'Styles';
-
-const {color} = theme;
-
-const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
-  margin-bottom: 6px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: left;
-  .count {
-    margin-left: 10px;
-    color: ${color('google-grey-500')};
-  }
-`;
 
 const PipButton = styled(Button)`
   position: absolute;
@@ -78,7 +64,7 @@ class PIP extends React.Component {
         const that = this;
         videoDOM.removeEventListener('enterpictureinpicture', null);
         videoDOM.removeEventListener('leavepictureinpicture', null);
-        videoDOM.addEventListener('enterpictureinpicture', function(event) {
+        videoDOM.addEventListener('enterpictureinpicture', function() {
             that.setState({inPIP: true});
         });
         videoDOM.addEventListener('leavepictureinpicture', function() {
@@ -107,11 +93,11 @@ class PIP extends React.Component {
                 this.setState({inPIP: true});
             });
         } else if (this.state.inPIP) {
-            $(document)[0].exitPictureInPicture().then((e) => {
+            $(document)[0].exitPictureInPicture().then(() => {
                 this.setState({inPIP: false});
                 this.play();
             }).catch(e => {
-                console.log(e);
+                console.error(e);
                 this.setState({inPIP: false});
             });
         }

@@ -24,6 +24,7 @@ export class Silver2coin extends Feature {
     }
 
     launch = () => {
+        if (!chrome.extension.inIncognitoContext) return; // 隐身模式
         chrome.cookies.get({
             url: 'http://www.bilibili.com',
             name: 'bili_jct',

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {theme} from 'Styles';
 
@@ -75,6 +76,13 @@ const ButtonContainer = styled.div.attrs({
 `;
 
 export class Modal extends React.Component {
+    propTypes = {
+        on: PropTypes.bool,
+        title: PropTypes.string,
+        body: PropTypes.any,
+        buttons: PropTypes.any,
+    }
+
     constructor() {
         super();
         this.handleMaskClick = ::this.handleMaskClick;

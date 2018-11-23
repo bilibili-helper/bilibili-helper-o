@@ -82,7 +82,7 @@ export class DynamicBox extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         chrome.runtime.sendMessage({
             commend: 'getDynamicList',
         }, (feedList) => this.setState({feedList}));

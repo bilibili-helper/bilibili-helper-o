@@ -6,7 +6,7 @@
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import URLParse from 'url-parse';
-import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader'
+import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
 
 export {DanmuUI} from './UI/index';
 
@@ -24,6 +24,7 @@ export class Danmu extends Feature {
             },
         });
         this.store = new MessageStore('danmuDOMInitialized');
+        this.onceRequestList = [];
     }
 
     addListener = () => {
@@ -38,7 +39,7 @@ export class Danmu extends Feature {
         };
         chrome.webRequest.onBeforeRequest.addListener((details) => {
             const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator)) return;
+            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
             const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
             //console.log(tabId, 'onCompleted', pathname, query);
@@ -50,6 +51,7 @@ export class Danmu extends Feature {
                     commend: 'loadCurrentDanmu',
                     cid: tabData.data.cid,
                 });
+                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
                 const tabData = this.store.createData(tabId);
@@ -58,12 +60,13 @@ export class Danmu extends Feature {
                     cid: tabData.data.cid,
                     date: query.date,
                 });
+                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter);
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadDanmuXML' && message.cid) {
-                const url = (window.URL ? URL : webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
+                const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',
                 }));
                 chrome.downloads.download({
@@ -76,10 +79,10 @@ export class Danmu extends Feature {
                 const parsedXML = parser.parseFromString(
                     message.danmuDocumentStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
                 const assData = '\ufeff' + GenerateASS(parsedXML, {
-                        'title': message.filename,
-                        'ori': message.origin,
-                    });
-                const url = (window.URL ? URL : webkitURL).createObjectURL(new Blob([assData], {
+                    'title': message.filename,
+                    'ori': message.origin,
+                });
+                const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([assData], {
                     type: 'application/octet-stream',
                 }));
                 chrome.downloads.download({
@@ -99,4 +102,4 @@ export class Danmu extends Feature {
             }
         });
     };
-};
+}

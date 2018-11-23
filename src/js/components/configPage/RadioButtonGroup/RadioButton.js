@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled, {ThemeProvider} from 'styled-components';
 import Color from 'color';
 import {Ripple} from 'Components';
@@ -53,7 +54,7 @@ const RadioDisc = styled.div.attrs({
       transform: scale(0.5);
     }
     .ripple-item {
-      background-color: ${Color(color('paper-indigo-500')).alpha(0.5).rgb().toString()};
+      background-color: ${Color(color('paper-pink-500')).alpha(0.5).rgb().toString()};
     }
   }
 `;
@@ -65,6 +66,12 @@ const RadioTitle = styled.div.attrs({
 `;
 
 export class RadioButton extends React.Component {
+    propTypes = {
+        on: PropTypes.bool,
+        title: PropTypes.string,
+        onClick: PropTypes.func,
+        disable: PropTypes.bool,
+    }
     constructor() {
         super();
         this.handleOnMouseDown = ::this.handleOnMouseDown;
@@ -74,7 +81,7 @@ export class RadioButton extends React.Component {
         };
     }
 
-    handleOnMouseDown(e) {
+    handleOnMouseDown() {
         this.setState({mouseDown: true});
     }
 

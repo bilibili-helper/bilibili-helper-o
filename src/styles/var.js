@@ -5,7 +5,7 @@
  */
 
 import _ from 'lodash';
-import styled, {css} from 'styled-components';
+import {css} from 'styled-components';
 import Color from 'color';
 import {colorValues} from './colorValues';
 export * from './opacity';
@@ -59,9 +59,9 @@ export const color = (colorName, alpha = 1)=> colorValues[colorName] ? Color(col
  * @param alpha 透明度（0-1）
  */
 export const boxShadow = ([...rest]) => {
-    const dp = 1, shadowColor = colors.black, alpha = 0.5;
+    const dp = 1, shadowColor = '#000000', alpha = 0.5;
     let boxShadowString = '';
-    for (i in rest) {
+    for (let i in rest) {
         const {
             h,
             v,

@@ -16,9 +16,8 @@ export const RadioButtonGroup = ({data, value, onClick}) => {
                 return <ListItem
                     key={i}
                     noBorder={false}
-                    children={<RadioButton disable={disable} title={title} on={key === value}/>}
                     onClick={!disable ? () => onClick(key) : null}
-                />;
+                ><RadioButton disable={disable} title={title} on={key === value}/></ListItem>;
             })}
         </React.Fragment>;
     } else {

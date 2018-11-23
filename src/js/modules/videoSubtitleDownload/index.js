@@ -7,7 +7,7 @@ import $ from 'jquery';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import {isLogin, PERMISSION_TYPE} from 'Utils';
+import {PERMISSION_TYPE} from 'Utils';
 
 const {login} = PERMISSION_TYPE;
 
@@ -27,6 +27,7 @@ export class VideoSubtitleDownload extends Feature {
             },
         });
         this.store = new MessageStore('videoSubtitleDownloadDOMInitialized');
+        this.onceRequestList = [];
     }
 
     addListener = () => {
@@ -38,10 +39,13 @@ export class VideoSubtitleDownload extends Feature {
         chrome.webRequest.onCompleted.addListener(details => {
             const that = this;
             const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator)) return;
+            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url)) {
+                return;
+            }
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             if (pathname === '/x/player.so') {
+                this.onceRequestList.push(details.url)
                 const storeObject = this.store.createData(tabId);
                 const {data, queue} = storeObject;
                 $.ajax({
@@ -61,8 +65,10 @@ export class VideoSubtitleDownload extends Feature {
                         }
                     },
                     error: function(e) {
-                        if (e.status === 403) return;
-                        console.log(e);
+                        console.error(e);
+                        if (e.status === 403) {
+                            return;
+                        }
                     }
                 });
             }
@@ -78,7 +84,6 @@ export class VideoSubtitleDownload extends Feature {
                         filename: `${message.filename}-${cid}.${lan}.bbc`,
                     });
                 }
-
             }
         });
     };

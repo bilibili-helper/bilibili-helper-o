@@ -70,7 +70,7 @@ class VideoSubtitleDownload extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'loadSubtitle' && message.data) {
                 this.setState({subtitleData: message.data});
@@ -126,7 +126,7 @@ export class VideoSubtitleDownloadUI extends UI {
         });
     }
 
-    load = ([container], settings) => {
+    load = ([container]) => {
         return new Promise(resolve => {
             const wrapper = $('<div style="order: 2;"/>').attr('class', 'bilibili-helper-subtitle-download-wrapper');
             container.append(wrapper);

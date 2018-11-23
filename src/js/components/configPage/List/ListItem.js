@@ -7,13 +7,7 @@
 import _ from 'lodash';
 import React from 'react';
 import styled, {ThemeProvider} from 'styled-components';
-import {theme} from 'Styles';
-import {
-    Icon,
-    Button,
-} from 'Components';
-
-// const {color} = theme;
+import {Button} from 'Components';
 
 /**
  * props: twoLine
@@ -183,7 +177,7 @@ export class ListItem extends React.Component {
             extend = false, // subList是否为可折叠，如果没有设定operation就会自动将operation设定为折叠按钮
             onClick,
             toggle = true, // 是否可以切换，即operation是否可点击
-            ...rest,
+            ...rest
         } = this.props;
         const {maxHeight, hideSubList} = this.state;
         if (!operation && subList && subList.children && extend) {

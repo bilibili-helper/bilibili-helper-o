@@ -4,7 +4,6 @@
  * Description:
  */
 
-import React from 'react';
 import styled from 'styled-components';
 
 export const Body = styled.div.attrs({

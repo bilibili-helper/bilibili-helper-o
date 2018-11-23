@@ -4,14 +4,9 @@
  * Description:
  */
 import React from 'react';
-import styled, {
-    ThemeProvider,
-    keyframes,
-} from 'styled-components';
-import {
-    Button,
-    Icon,
-} from 'Components';
+import PropTypes from 'prop-types';
+import styled, {ThemeProvider, keyframes} from 'styled-components';
+import {Button} from 'Components';
 import {theme} from 'Styles';
 
 const ContainerEnterKeyFrame = keyframes`
@@ -159,6 +154,14 @@ const Body = styled.div.attrs({
 `;
 
 export class SubPage extends React.Component {
+    propTypes = {
+        on: PropTypes.bool,
+        title: PropTypes.string,
+        children: PropTypes.any,
+        onClose: PropTypes.func,
+        theme: PropTypes.object,
+    };
+
     constructor() {
         super();
         this.state = {
@@ -169,11 +172,16 @@ export class SubPage extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps, nextContent) {
-        const {parent = null} = nextProps;
+    static getDerivedStateFromProps(props) {
+        const {parent = null} = props;
         if (parent) {
             const {top, left, height, width} = parent.getBoundingClientRect();
-            this.setState({top: top - theme.headerHeight, left, height, width});
+            return {
+                top: top - theme.headerHeight,
+                left,
+                height,
+                width,
+            };
         }
     }
 

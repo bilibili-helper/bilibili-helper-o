@@ -1,4 +1,3 @@
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/24
@@ -24,6 +23,9 @@ export class DoSign extends Feature {
     }
 
     launch = () => {
-        this.settings.on && $.ajax({method: 'get', url: 'https://api.live.bilibili.com/sign/doSign'});
+        this.settings.on && !chrome.extension.inIncognitoContext && $.ajax({
+            method: 'get',
+            url: 'https://api.live.bilibili.com/sign/doSign',
+        });
     };
 };

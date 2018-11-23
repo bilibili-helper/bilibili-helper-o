@@ -49,10 +49,10 @@ export class VideoDownload extends Feature {
             ],
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
-            const {tabId, method, responseHeaders, requestHeaders, initiator} = details;
+            const {tabId, initiator} = details;
             if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
             const url = new URL(details.url, '', true);
-            const {pathname, query: data, host} = url;
+            const {pathname, query: data} = url;
             const tabData = this.store.createData(tabId);
             if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
                 tabData.queue.push({
@@ -95,13 +95,14 @@ export class VideoDownload extends Feature {
         });
         chrome.webRequest.onHeadersReceived.addListener((details) => {
             const {responseHeaders, initiator, url} = details;
-            if (/^chrome-extension:\/\//.test(initiator)) return;
+            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
             const urlObject = new URL(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
+                this.onceRequestList.push(details.url);
                 const {filename, cid} = filenameObject;
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
-                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8\' \'${encodeURIComponent(filename)}.${cid}.flv`;
+                targetData.value = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`;
             }
             return {responseHeaders};
         }, {

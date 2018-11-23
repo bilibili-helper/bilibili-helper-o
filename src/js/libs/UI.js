@@ -1,8 +1,5 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import {Treasure} from 'Modules/treasure/UI/Treasure';
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 /**
  * Author: DrowsyFlesh
@@ -14,7 +11,6 @@ export class UI {
     constructor({name, dependencies = []}) {
         this.name = name;
         this.dependencies = dependencies;
-        this.loaded = false;
     }
 
     init = () => {

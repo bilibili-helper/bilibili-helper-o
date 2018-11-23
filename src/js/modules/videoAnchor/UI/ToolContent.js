@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Content = styled.div.attrs({
@@ -40,9 +41,14 @@ const Content = styled.div.attrs({
 `;
 
 export class ToolContent extends React.Component {
+    propTypes = {
+        show: PropTypes.bool,
+    };
+
     render() {
+        const {show = false} = this.props;
         return (
-            <Content show={this.props.show}/>
+            <Content show={show}/>
         );
     }
 }

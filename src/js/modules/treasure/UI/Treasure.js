@@ -104,7 +104,12 @@ export class Treasure extends React.Component {
         });
         this.counter = $(this.counterDOM);
         this.imgDOM.crossOrigin = 'Anonymous';
-        this.getCurrentTask();
+        chrome.runtime.sendMessage({
+            commend: 'inIncognitoContext',
+        }, (inIncognitoContext) => {
+            if (!inIncognitoContext) this.getCurrentTask();
+        });
+
     }
 
     /**
@@ -129,7 +134,7 @@ export class Treasure extends React.Component {
             context.fillRect(i % 120, Math.round(i / 120), 1, 1);
         }
         try {
-            const question = this.adjustQuestion(OCRAD(context.getImageData(0, 0, 120, 40)));
+            const question = this.adjustQuestion(window.OCRAD(context.getImageData(0, 0, 120, 40)));
             const answer = new Function('return ' + question)();
             this.getAward(answer);
         } catch (e) {
@@ -257,7 +262,7 @@ export class Treasure extends React.Component {
             data: {time_start, time_end, captcha},
             success: (res) => {
                 if (this.retryTime) this.retryTime = 0;
-                switch(res.code) {
+                switch (res.code) {
                     case 0:
                         if (!res.data.isEnd) { // 没有全部领完
                             this.sendNotification();
@@ -313,7 +318,7 @@ export class Treasure extends React.Component {
         return map;
     };
 
-    orderFilter2In3x3 = (grayscaleMap, n = 9, width = 120, height = 40) => {
+    orderFilter2In3x3 = (grayscaleMap, n = 9, width = 120/*, height = 40*/) => {
         const gray = (x, y) => (x + y * width >= 0) ? grayscaleMap[x + y * width] : 255;
         const map = [];
         const length = grayscaleMap.length;
@@ -336,14 +341,14 @@ export class Treasure extends React.Component {
         return map;
     };
 
-    adjustQuestion = (question) => {
-        var q = '',
-            question = question.trim();
+    adjustQuestion = (originQuestion) => {
+        let q = '';
+        let question = originQuestion.trim();
         for (let i in question) {
             let a = this.correctStr[question[i]];
-            q += (a != undefined ? a : question[i]);
+            q += (a !== undefined ? a : question[i]);
         }
-        if (q[2] == '4') q[2] = '+';
+        if (q[2] === '4') q[2] = '+';
         return q;
     };
 

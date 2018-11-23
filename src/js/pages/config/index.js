@@ -9,19 +9,9 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {getURL, PERMISSION_TYPE, consoleLogo} from 'Utils';
-import {
-    __,
-    isLogin,
-    createTab,
-    version,
-} from 'Utils';
-import {
-    Button,
-    Icon,
-    Modal,
-    Radio,
-} from 'Components';
+import {consoleLogo} from 'Utils';
+import {version} from 'Utils';
+import {Button, Icon, Radio,} from 'Components';
 import {
     Body,
     List,
@@ -36,7 +26,6 @@ import updateData from 'Statics/json/update.json';
 import 'Styles/scss/config.scss';
 import feedJson from 'Statics/json/feed.json';
 
-//const {notifications} = PERMISSION_TYPE;
 const {color} = theme;
 
 const ConfigBody = styled(Body).attrs({className: 'config-body'})`
@@ -100,6 +89,11 @@ const Footer = styled.div`
   }
 `;
 
+const Broadcast = styled.p`
+  text-align: center;
+  color: ${color('paper-pink-300')};
+`;
+
 class PageConfig extends React.Component {
     constructor(props) {
         super(props);
@@ -109,6 +103,7 @@ class PageConfig extends React.Component {
             popup: {title: '菜单栏', map: {}},
             other: {title: '其他', map: {}},
         };
+        this.defaultBroadcast = '如果您的版本显示为测试版并出现了问题，请先卸载本扩展后重新安装';
         this.state = {
             modalTitle: null,
             modalBody: null,
@@ -123,10 +118,13 @@ class PageConfig extends React.Component {
             ...this.settings,
 
             debug: false,
+
+            broadcast: this.defaultBroadcast, // header下的通知条
         };
+
     }
 
-    componentWillMount() {
+    componentDidMount() {
         chrome.runtime.sendMessage({commend: 'getSettings', checkHide: true}, (settings) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
@@ -145,6 +143,14 @@ class PageConfig extends React.Component {
         // 获取调试模式
         chrome.runtime.sendMessage({commend: 'getSetting', feature: 'Debug'}, (setting) => {
             this.setState({debug: setting.on});
+        });
+
+        chrome.runtime.sendMessage({commend: 'inIncognitoContext'}, (inIncognitoContext) => {
+            if (inIncognitoContext) {
+                this.setState({broadcast: '您正在使用隐身模式，该模式下部分功能将无法正常启用'});
+            } else {
+                this.setState({broadcast: this.defaultBroadcast});
+            }
         });
     }
 
@@ -165,7 +171,7 @@ class PageConfig extends React.Component {
                 } else if (settingObject.type === 'radio') { // 单选组的值存于选项数组外 (￣.￣)
                     settingObject.value = settingName;
                 } else {
-                    console.error(`Undefined type: ${settingObject.type} (⊙ˍ⊙)!`);
+                    console.error(`Undefined type: ${settingObject.type} (⊙ˍ⊙)!`);
                     return;
                 }
             } else if (settingName && settingObject.subPage && subPage) { // 二级页面
@@ -175,7 +181,7 @@ class PageConfig extends React.Component {
                 } else if (settingObject.subPage.type === 'radio') {
                     settingObject.subPage.value = settingName;
                 } else {
-                    console.error(`Undefined type: ${settingObject.subPage.type} (⊙ˍ⊙)!`);
+                    console.error(`Undefined type: ${settingObject.subPage.type} (⊙ˍ⊙)!`);
                     return;
                 }
             } else {
@@ -192,7 +198,7 @@ class PageConfig extends React.Component {
                         commend: 'setGAEvent',
                         action: 'click',
                         category: 'config',
-                        label: `${featureName} ${settingName !== undefined ? `${settingName} ${on}` : on}`,
+                        label: `${featureName} ${settingName !== undefined ? `${settingName} ${settingObject.on}` : settingObject.on}`,
                     });
                     thisKindOfFeatures.map[name] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});
@@ -227,8 +233,7 @@ class PageConfig extends React.Component {
                         twoLine={twoLine}
                         first={twoLine ? title : ''}
                         second={twoLine ? description : ''}
-                        children={twoLine ? null : title}
-                    />;
+                    >{twoLine ? null : title}</ListItem>;
                 })}
             </List> : null;
         });
@@ -285,24 +290,25 @@ class PageConfig extends React.Component {
                 twoLine={twoLine}
                 first={twoLine ? subPage.title : ''}
                 second={twoLine ? subPage.description : ''}
-                children={twoLine ? null : subPage.title}
                 subList={{
                     hide: on === undefined ? false : !on,
                     children: subList,
                 }}
-            />;
-        } else return _.map(subPageList, (feedData, index) => {
-            const [time, name, num, ps] = feedData;
-            return (
-                <ListItem
-                    key={index}
-                    operation={`￥${(+num).toFixed(2)}`}
-                    twoLine={true}
-                    first={name}
-                    second={`${time} - ${ps || '没有留言'}`}
-                />
-            );
-        });
+            >{twoLine ? null : subPage.title}</ListItem>;
+        } else {
+            return _.map(subPageList, (feedData, index) => {
+                const [time, name, num, ps] = feedData;
+                return (
+                    <ListItem
+                        key={index}
+                        operation={`￥${(+num).toFixed(2)}`}
+                        twoLine={true}
+                        first={name}
+                        second={`${time} - ${ps || '没有留言'}`}
+                    />
+                );
+            });
+        }
     };
 
     handleOpenFeedList = () => {
@@ -316,15 +322,16 @@ class PageConfig extends React.Component {
     render() {
         const {
             // modal state
-            modalOn,
-            modalTitle,
-            modalBody,
-            modalButtons,
+            //modalOn,
+            //modalTitle,
+            //modalBody,
+            //modalButtons,
             // sub page state
             subPageOn,
             subPageTitle,
             subPageParent,
             debug,
+            broadcast,
         } = this.state;
         return <React.Fragment>
             {/*<Header title="设置"/>*/}
@@ -334,6 +341,7 @@ class PageConfig extends React.Component {
                     <sub>{`Version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
                     {/*<Cat/>*/}
                 </Header>
+                <Broadcast>{broadcast}</Broadcast>
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}

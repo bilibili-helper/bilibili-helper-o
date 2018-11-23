@@ -18,7 +18,7 @@ export class ChatFilterUI extends UI {
         });
     }
 
-    load = (containers, setting) => {
+    load = (containers, settings) => {
         return new Promise(resolve => {
             this.interval('.control-panel-icon-row .icon-left-part').then((container) => {
                 if (container) {
@@ -28,7 +28,7 @@ export class ChatFilterUI extends UI {
                         'style': "position: relative;",
                     });
                     container.append(chatFilter);
-                    ReactDOM.render(<ChatFilter setting={setting}/>, chatFilter[0], resolve);
+                    ReactDOM.render(<ChatFilter settings={settings}/>, chatFilter[0], resolve);
                 }
             });
         });

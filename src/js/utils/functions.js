@@ -6,19 +6,23 @@
 /* global chrome */
 
 /**
- * @param command
- * @param key
- * @param callback
+ * @param command {string}
+ * @param key {string}
+ * @param callback {Function}
  */
 export const sendMessage = (command, key, callback) => {
     chrome.runtime.sendMessage({command, key}, (response) => {
-        if (callback instanceof Function) callback(response);
-        else console.error(`"SendMessage" (command: ${command} key: ${key}): invalid callback function.`);
+        if (callback instanceof Function) {
+            callback(response);
+        } else {
+            console.error(`"SendMessage" (command: ${command} key: ${key}): invalid callback function.`);
+        }
     });
 };
 
 /**
- * @param t
+ * @param t {string}
+ * @param options {object}
  */
 export const __ = (t, options) => chrome.i18n.getMessage(t, options);
 
@@ -35,7 +39,9 @@ export const isLogin = () => {
             // expirationDate 是秒数
             if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
                 resolve(true);
-            } else resolve(false);
+            } else {
+                resolve(false);
+            }
         });
     });
 };
@@ -75,18 +81,6 @@ export const hasNewVersion = (checkVersion) => {
     return Number(checkVersionStr) > Number(currentVersionStr);
 };
 
-//export const checkNotificationPermission = () => {
-//    const permission = store.get('bilibili-helper-permission') || {};
-//    let notificationPermission;
-//    chrome.notifications.getPermissionLevel((level) => {
-//        if (level === 'granted') notificationPermission = true; // 获取到了权限
-//        else if (level === 'denied') notificationPermission = false;
-//        permission['notification'] = notificationPermission;
-//        store.set('permission', permission);
-//    });
-//    return notificationPermission;
-//};
-
 /**
  * 获取url
  * @param url_name
@@ -120,6 +114,7 @@ export const parseTime = (time) => {
 export const inLiveRoom = () => /^\/(\d+)$/.exec(window.location.pathname) ? true : false;
 
 export const consoleLogo = () => {
+    // eslint-disable-next-line no-console
     console.log(`%c
  ____ _____ _      _____ ____ _____ _      _____ _    _ ______ _      _____  ______ _____  
 |  _ |_   _| |    |_   _|  _ |_   _| |    |_   _| |  | |  ____| |    |  __ \\|  ____|  __ \\ 

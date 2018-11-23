@@ -8,8 +8,10 @@
     "default_locale": "zh_CN",
     "description": "__MSG_extensionDescription__",
     "options_ui": {
-        "page": "config.html"
+        "page": "config.html",
+        "open_in_tab": true
     },
+    "options_page": "config.html",
     "background": {
         "page": "background.html",
         "persistent": true

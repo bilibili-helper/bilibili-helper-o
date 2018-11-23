@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles/theme';
 import {Ripple} from 'Components';
@@ -52,15 +53,20 @@ const Knob = styled.span.attrs({className: 'radio-knob'})`
     //opacity: 0.125;
   }
   .checked & {
-    //background-color: ${color('google-blue-600')};
     transform: translate3d(18px, 0, 0);
     .ripple-item {
-      background-color: ${Color(color('paper-indigo-500')).alpha(0.5).rgb().toString()};
+      background-color: ${Color(color('paper-pink-500')).alpha(0.5).rgb().toString()};
     }
   }
 `;
 
 export class Radio extends React.Component {
+    propTypes = {
+        on: PropTypes.bool,
+        onClick: PropTypes.func,
+        disable: PropTypes.bool,
+    }
+
     constructor() {
         super();
         this.handleOnMouseDown = ::this.handleOnMouseDown;
@@ -71,7 +77,7 @@ export class Radio extends React.Component {
         };
     }
 
-    handleOnMouseDown(e) {
+    handleOnMouseDown() {
         this.setState({mouseDown: true});
     }
 

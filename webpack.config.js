@@ -56,7 +56,7 @@ module.exports = {
                 uglifyOptions: {
                     compress: false,
                     ecma: 6,
-                    mangle: true
+                    mangle: true,
                 },
             }),
             new OptimizeCSSAssetsPlugin({}),
@@ -78,8 +78,21 @@ module.exports = {
     module: {
         rules: [
             {
+                enforce: 'pre',
                 test: /\.js$/,
-                loaders: ['babel-loader'],
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+                options: {
+                    emitError: true,
+                    failOnError: true,
+                    fix: true,
+                }
+            },
+            {
+                test: /\.js$/,
+                loaders: [
+                    'babel-loader',
+                ],
             },
             {
                 test: /\.(css|scss|sass)$/,

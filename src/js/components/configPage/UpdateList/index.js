@@ -56,9 +56,8 @@ export class UpdateList extends React.Component {
                     return <ListItem
                         key={i}
                         noBorder={false}
-                        children={<UpdateListItem dangerouslySetInnerHTML={{__html: title}}/>}
                         {...rest}
-                    />;
+                    ><UpdateListItem dangerouslySetInnerHTML={{__html: title}}/></ListItem>;
                 }),
             }}
         />;

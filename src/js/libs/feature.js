@@ -54,12 +54,10 @@ export class Feature {
                         if (pass) {
                             this.addListener();
                             this.initialed = true;
-                            console.log(`Feature init completed: ${this.name}`);
+                            //console.log(`Feature init completed: ${this.name}`);
                             resolve(this);
                         } else {
                             console.error(`Feature ${this.name}: ${msg}`);
-                            this.settings.on = false;
-                            this.settings.toggle = false;
                             resolve(false);
                         }
 
@@ -152,7 +150,6 @@ export class Feature {
                                     msg = !pass ? PERMISSION_STATUS['login'].errorMsg : '';
                                     resolve1({pass, msg});
                                 });
-                                break;
                             }
                             case 'notifications': {
                                 chrome.notifications.getPermissionLevel((level) => {

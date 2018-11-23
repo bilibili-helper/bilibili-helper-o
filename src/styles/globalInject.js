@@ -4,11 +4,9 @@
  * Description: 全局
  */
 
-import styled, {injectGlobal} from 'styled-components';
+import {injectGlobal} from 'styled-components';
 import {fontFamily} from './var';
 import {theme} from './theme';
-
-const {color} = theme;
 
 injectGlobal`
   html,body {

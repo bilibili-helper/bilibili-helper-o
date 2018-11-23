@@ -7,9 +7,6 @@ import _ from 'lodash';
 import {UIs} from 'Modules';
 
 export class UIManager {
-    /**
-     * @param kind {string} 指该ui管理器加载那个页面（由kind字段指定）的Feature的UI
-     */
     constructor(kind) {
         this.kind = kind;
         this.settings = {};
@@ -44,14 +41,18 @@ export class UIManager {
             //console.log(UIs, name, UIClass);
             if (UIClass) {
                 this.UIMap[name] = new UIClass();
-            } else throw(`Wrong UI class ${option.name}`);
+            } else {
+                throw(`Wrong UI class ${option.name}`);
+            }
             resolveUI();
         })));
     };
 
     loadUIs = () => {
         Promise.all(_.map(this.UIMap, this.loadUI)).then(() => {
-            if (this.waitQueue.length > 0) this.dealWithWaitQueue();
+            if (this.waitQueue.length > 0) {
+                this.dealWithWaitQueue();
+            }
         });
     };
 
@@ -62,7 +63,7 @@ export class UIManager {
                 UI.init().load(dependDOM, this.settings[name]).then((outputDOM = null) => {
                     UI.loaded = true;
                     UI.outputDOM = outputDOM;
-                    console.log(`UI loaded: ${UI.name}`);
+                    //console.log(`UI loaded: ${UI.name}`);
                     resolve(true);
                 });
             } else {
@@ -73,13 +74,17 @@ export class UIManager {
     };
 
     dealWithWaitQueue = () => {
-        if (this.retryTime > this.retryMax) return;
+        if (this.retryTime > this.retryMax) {
+            return;
+        }
         ++this.retryTime;
         const originQueue = _.mapKeys(this.waitQueue, (setting) => _.upperFirst(setting.name));
         this.waitQueue = [];
 
         Promise.all(_.map(originQueue, this.loadUI)).then(() => {
-            if (this.waitQueue.length > 0) this.dealWithWaitQueue();
+            if (this.waitQueue.length > 0) {
+                this.dealWithWaitQueue();
+            }
         });
     };
 
@@ -93,7 +98,9 @@ export class UIManager {
             const UI = this.UIMap[_.upperFirst(dependency)];
             if (!(UI && UI.loaded)) {
                 return pass = false;
-            } else dependDOM.push(UI.outputDOM);
+            } else {
+                dependDOM.push(UI.outputDOM);
+            }
         });
         return {pass, dependDOM};
     };

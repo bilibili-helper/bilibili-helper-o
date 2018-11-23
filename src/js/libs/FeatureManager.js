@@ -21,7 +21,9 @@ export class FeatureManager {
     instantiateFeatures = async () => {
         _.map(Features, (FeatureClass, featureName) => {
             if (!this.features[featureName]) {
-                if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
+                if (!FeatureClass) {
+                    throw `Feature ${featureName}'s feature class is not defined!`;
+                }
                 this.features[featureName] = new FeatureClass();
             }
         });
@@ -42,7 +44,7 @@ export class FeatureManager {
                 }
             });
         });
-        return Promise.all(PromiseMap).then((e) => {
+        return Promise.all(PromiseMap).then(() => {
             this.dealWidthWaitQueue();
         });
     };
@@ -59,7 +61,9 @@ export class FeatureManager {
 
     // 处理等待队列
     dealWidthWaitQueue = () => {
-        if (this.retryTime > this.retryMax) return;
+        if (this.retryTime > this.retryMax) {
+            return;
+        }
         ++this.retryTime;
         const newWaitQueue = [];
         const promiseList = _.map(this.waitQueue, (FeatureDefineObject) => {
@@ -81,7 +85,9 @@ export class FeatureManager {
 
     // 依赖检查 全部通过返回true
     checkModuleRequire = (requireList = []) => {
-        if (requireList.length === 0) return true;
+        if (requireList.length === 0) {
+            return true;
+        }
         let counter = requireList.length;
         _.map(requireList, (requireName) => {
             const name = _.upperFirst(requireName);
@@ -119,7 +125,9 @@ export class FeatureManager {
                             return hasUI && on && sameKind;
                         }
                     });
-                } else features = message.checkHide ? _.filter(this.features, feature => !feature.settings.hide) : this.features;
+                } else {
+                    features = message.checkHide ? _.filter(this.features, feature => !feature.settings.hide) : this.features;
+                }
                 const settings = {};
                 _.each(features, (feature) => {
                     const setting = feature.getSetting();
@@ -127,6 +135,8 @@ export class FeatureManager {
                     settings[_.upperFirst(setting.name)] = setting;
                 });
                 sendResponse(settings);
+            } else if (message.commend === 'inIncognitoContext') {
+                sendResponse(chrome.extension.inIncognitoContext);
             }
         });
     };

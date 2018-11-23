@@ -1,4 +1,4 @@
-import {Button} from 'Components/common/Button';
+
 
 /**
  * Author: DrowsyFlesh
@@ -8,7 +8,9 @@ import {Button} from 'Components/common/Button';
 import _ from 'lodash';
 import $ from 'jquery';
 import React from 'react';
+import PropTypes from 'prop-types'
 import styled from 'styled-components';
+import {Button} from 'Components/common/Button';
 import {parseTime} from 'Utils';
 import {theme} from 'Styles';
 import {Crc32Engine} from 'Libs/crc32';
@@ -128,6 +130,10 @@ const DownloadBtn = styled(Button)`
 `;
 
 export class Danmu extends React.Component {
+    propTypes = {
+        settings: PropTypes.object,
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -229,7 +235,10 @@ export class Danmu extends React.Component {
                 uid && $.ajax({
                     method: 'get',
                     url: 'https://api.bilibili.com/x/web-interface/card',
-                    data: {mid: uid},
+                    data: {
+                        mid: uid,
+                        photo: 0,
+                    },
                     success: ({code, data}) => {
                         if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
                             this.userMap[uid] = {...data.card};
@@ -267,19 +276,19 @@ export class Danmu extends React.Component {
         _.forEach(document.getElementsByTagName('d'), (d) => {
             const [
                 time, danmuMode, fontSize, color, unixTime,
-                unknow,
+                unknow, // eslint-disable-line
                 authorHash, rowId,
             ] = d.getAttribute('p').split(',');
             const danmu = d.innerHTML;
             list.push({danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu, time: parseTime(time * 1000)});
         });
+        this.setState({loaded: true});
         return {
             cid: Number(document.getElementsByTagName('chatid')[0].innerHTML),
             maxLimit: Number(document.getElementsByTagName('maxlimit')[0].innerHTML),
             count: list.length,
             list,
         };
-        this.setState({loaded: true});
     };
 
     // 搜索框编辑事件
@@ -292,9 +301,9 @@ export class Danmu extends React.Component {
             this.setState({danmuJSON: {cid, count, list}});
         } else {
             const list = [];
-            _.forEach(this.orderedJSON.list, (data, time) => {
+            _.forEach(this.orderedJSON.list, (data) => {
                 const index = data.danmu.indexOf(value);
-                if (!!~index) {
+                if (index >= 0) {
                     // 这里一定要复制一份，不然会修改原数据
                     const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
                     list.push({...data, danmu});

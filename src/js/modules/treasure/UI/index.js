@@ -3,7 +3,6 @@
  * Create: 2018/11/8
  * Description:
  */
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI.js';

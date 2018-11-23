@@ -47,28 +47,29 @@ const RippleView = styled.div.attrs({
 class RippleClass extends React.Component {
     constructor() {
         super();
-        this.currentRipple = null;
+        this.state = {
+            currentRipple: null,
+            box: null,
+        };
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        const {active, x, y, theme} = nextProps;
+    static getDerivedStateFromProps(props, state) {
+        const {active, x, y, theme} = props;
         const {radius = 15, size = 1} = theme;
         let style = `width:${2 * radius * size}px;height:${2 * radius * size}px;margin: -${radius * size}px;`;
         if (x !== undefined && y !== undefined) style += `top:${y}px;left:${x}px;`;
         if (active) {
-            this.currentRipple = $(`<div class="ripple-item" style="${style}"/>`);
-            $(this.box).prepend(this.currentRipple);
-        } else if (this.currentRipple) {
-            this.currentRipple.addClass('hiding');
-            ((t) => {
-                const c = t.currentRipple;
-                setTimeout(() => c.remove(), 300);
-            })(this);
+            const currentRipple = $(`<div class="ripple-item" style="${style}"/>`);
+            $(state.box).prepend(currentRipple);
+            return {currentRipple};
+        } else if (state.currentRipple) {
+            state.currentRipple.addClass('hiding');
+            setTimeout(() => state.currentRipple.remove(), 300);
         }
     }
 
     render() {
-        return <RippleView innerRef={i => this.box = i}></RippleView>;
+        return <RippleView innerRef={i => !this.state.box && this.setState({box: i})}></RippleView>;
     }
 }
 

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import styled, {ThemeProvider} from 'styled-components';
+import {ThemeProvider} from 'styled-components';
 import {Button, Icon} from 'Components';
 
 export const IconButton = ({type, theme, ...rest}) => {

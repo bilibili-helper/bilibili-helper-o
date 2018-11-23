@@ -112,11 +112,11 @@ export class Menu extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         isLogin().then(res => this.setState({hasLogin: res}));
         chrome.browserAction.setBadgeText({text: ''});
         // 监听配置更新
-        chrome.runtime.onMessage.addListener(((message, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener(((message) => {
             if (message.commend === 'debugMode' && message.value !== undefined) {
                 this.setState({debug: message.value});
             }
@@ -159,7 +159,7 @@ export class Menu extends React.Component {
     link = () => {
         const value = $('.bilibili-helper-menu-linker-input').val();
         if (value) {
-            const res = /(av|ss|s|md|u|cv|au+)?(\d+)/.exec(value);
+            const res = /^(av|ss|s|md|u|cv|au)(\d+)$/.exec(_.lowerCase(value));
             let url = '';
             let pass = true;
             if (res && res[1]) {
@@ -213,8 +213,8 @@ export class Menu extends React.Component {
     handleKeyPress = (event) => {
         if (event.key === 'Enter') this.link();
         else {
-            const value = $('.bilibili-helper-menu-linker-input').val();
-            const res = /(av|ss|s|md|u|cv|au+)?(\d+)/.test(value);
+            const value = String(event.target.value).toLowerCase();
+            const res = /^(av|ss|s|md|u|cv|au+)(\d{4,})$/.exec(value);
             this.setState({linkerError: !res});
         }
     };
@@ -236,7 +236,7 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
-                    <Linker error={linkerError} onKeyPress={this.handleKeyPress} placeholder="请输入各种ID"
+                    <Linker error={linkerError} onKeyUp={this.handleKeyPress} placeholder="请输入各种ID"
                             defaultValue={lastSearch}/>
                     <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
                 </LinkerWrapper>}

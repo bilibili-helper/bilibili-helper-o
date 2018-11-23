@@ -86,7 +86,9 @@ export class CheckVersion extends Feature {
                 number: null,
                 date: null,
             };
-        } else this.settings.version = v;
+        } else {
+            this.settings.version = v;
+        }
         return this.settings.version;
     };
 

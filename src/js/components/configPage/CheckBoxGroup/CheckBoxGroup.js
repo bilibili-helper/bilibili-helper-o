@@ -6,6 +6,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {Radio} from 'Components';
 import {ListItem} from '../List';
@@ -14,9 +15,10 @@ const CheckBoxTitle = styled.div`
   margin-left: -20px;
 `;
 
-export const CheckBoxGroup = ({data, onClick}) => {
+export const CheckBoxGroup = (props) => {
+    const {data, onClick} = props;
     return <React.Fragment>
-        {_.map(data, (entry, i) => {
+        {_.map(data, (entry) => {
             const {key, title, on, toggle = true, description} = entry;
             const twoLine = description !== undefined;
             return <ListItem
@@ -26,10 +28,13 @@ export const CheckBoxGroup = ({data, onClick}) => {
                 twoLine={twoLine}
                 first={twoLine ? <CheckBoxTitle>{title}</CheckBoxTitle> : ''}
                 second={twoLine ? <CheckBoxTitle>{description}</CheckBoxTitle> : ''}
-                children={twoLine ? null : <CheckBoxTitle>{title}</CheckBoxTitle>}
                 onClick={on !== undefined && toggle !== false ? () => onClick(key, !on) : null}
                 operation={<Radio disable={!toggle} on={on}/>}
-            />;
+            >{twoLine ? null : <CheckBoxTitle>{title}</CheckBoxTitle>}</ListItem>;
         })}
     </React.Fragment>;
 };
+CheckBoxGroup.propTypes = {
+    data: PropTypes.any,
+    onClick: PropTypes.func,
+}

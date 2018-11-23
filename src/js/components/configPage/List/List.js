@@ -5,10 +5,11 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles/theme';
 
-const {color, headerHeight} = theme;
+const {color} = theme;
 
 const ListWrapper = styled.div.attrs({
     className: 'list-wrapper',
@@ -45,7 +46,7 @@ const ListHeader = styled.div.attrs({
   opacity: 1;
 `;
 
-const BodyWrapper = styled.div.attrs({
+/*const BodyWrapper = styled.div.attrs({
     className: 'list-body-wrapper',
 })`
   position: relative;
@@ -60,7 +61,7 @@ const BodyWrapper = styled.div.attrs({
     bottom: 0;
     background-color: #fff;
   }
-`;
+`;*/
 
 const ListBody = styled.div.attrs({
     className: 'list-body',
@@ -85,6 +86,13 @@ const ListBody = styled.div.attrs({
 `;
 
 export class List extends React.Component {
+    propTypes = {
+        children: PropTypes.any,
+        title: PropTypes.string,
+        theme: PropTypes.object,
+        hidden: PropTypes.bool,
+    };
+
     constructor() {
         super();
         this.top = 0;

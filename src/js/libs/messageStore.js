@@ -26,7 +26,9 @@ export class MessageStore {
                     data.state = 1;
                     // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
                     this.dealWith(id);
-                } else console.warn(`This store is already in state:`, state);
+                } else {
+                    console.warn(`This store is already in state:`, data.state);
+                }
             } else if (message.commend === 'tabUnload' && !!this.has(sender.tab.id)) {
                 this.delete(sender.tab.id);
             }
