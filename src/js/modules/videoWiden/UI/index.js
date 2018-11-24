@@ -26,7 +26,6 @@ export class VideoWidenUI extends UI {
                     }
                 });
             }).observe($('#bofqi')[0], {
-                attributeFilter: ['src'],
                 attributes: true,
                 attributeOldValue: true,
                 subtree: true,

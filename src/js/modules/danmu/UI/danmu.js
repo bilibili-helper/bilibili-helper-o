@@ -203,6 +203,9 @@ export class Danmu extends React.Component {
                     type: 1,
                     date,
                 },
+                headers: {
+                    'From': 'bilibili-helper',
+                },
                 contentType: 'text/xml',
                 success: (danmuDocument) => {
                     clearTimeout(timer);

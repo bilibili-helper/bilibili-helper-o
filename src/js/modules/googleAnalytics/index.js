@@ -4,6 +4,7 @@
  * Description:
  */
 
+import store from 'store';
 import {Feature} from 'Libs/feature';
 import {version} from 'Utils';
 
@@ -19,6 +20,7 @@ export class GoogleAnalytics extends Feature {
                 description: '匿名统计功能的使用情况，帮助开发者改进程序为您提供更好的体验',
             },
         });
+        this.userID = null;
     }
 
     launch = () => {
@@ -73,6 +75,11 @@ export class GoogleAnalytics extends Feature {
     insertGAScriptTag = (UA = 'UA-39765420-2') => {
         return new Promise(resolve => {
             if (document.getElementsByClassName('ga-script').length === 0) {
+                const userID = store.get('userID');
+                if (!userID) {
+                    this.gaKey = String(Math.random()).slice(2);
+                    store.set('userID', this.gaKey);
+                } else this.userID = userID;
                 const script = `https://www.google-analytics.com/analytics.js`;
                 //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
                 window['GoogleAnalyticsObject'] = 'ga';
@@ -87,6 +94,7 @@ export class GoogleAnalytics extends Feature {
                 document.head.appendChild(scriptTag);
                 window.ga('create', UA, 'auto');
                 window.ga('set', 'checkProtocolTask');
+                window.ga('set', 'userId', this.userID);
                 resolve();
             } else resolve();
         });

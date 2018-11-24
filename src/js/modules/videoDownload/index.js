@@ -25,7 +25,7 @@ export class VideoDownload extends Feature {
         });
         this.store = new MessageStore('videoDownloadDOMInitialized');
         this.downloadFilenames = {};
-        this.onceRequestList = [];
+        this.onceRequestList = {};
     }
 
     launch = () => {};
@@ -49,8 +49,9 @@ export class VideoDownload extends Feature {
             ],
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
-            const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
+            const {tabId, initiator, requestHeaders} = details;
+            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
             const url = new URL(details.url, '', true);
             const {pathname, query: data} = url;
             const tabData = this.store.createData(tabId);
@@ -58,29 +59,24 @@ export class VideoDownload extends Feature {
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'old',
-                    //headers,
                     data,
                     url: url.origin + url.pathname,
                 });
-                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl') {
                 //console.log(details, data);
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'new',
-                    //headers,
                     data,
                     url: url.origin + url.pathname,
                 });
-                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
                 tabData.queue.push({
                     commend: 'videoDownloadCid',
                     cid: +data.id.slice(4),
                 });
-                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
@@ -95,15 +91,13 @@ export class VideoDownload extends Feature {
         });
         chrome.webRequest.onHeadersReceived.addListener((details) => {
             const {responseHeaders, initiator, url} = details;
-            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
+            if (/^chrome-extension:\/\//.test(initiator)) return;
             const urlObject = new URL(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
-                this.onceRequestList.push(details.url);
                 const {filename, cid} = filenameObject;
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
                 const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`.replace('/', '%2f');
-                console.warn(nameValue);
                 if (targetData) {
                     targetData.value = nameValue;
                 } else {

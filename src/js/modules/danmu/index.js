@@ -5,6 +5,7 @@
  */
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
+import _ from 'lodash';
 import URLParse from 'url-parse';
 import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
 
@@ -37,12 +38,12 @@ export class Danmu extends Feature {
                 '*://interface.bilibili.com/player?id=cid:*', // 老页面特有
             ],
         };
-        chrome.webRequest.onBeforeRequest.addListener((details) => {
-            const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
+        chrome.webRequest.onSendHeaders.addListener((details) => {
+            const {tabId, initiator, requestHeaders} = details;
+            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
             const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
-            //console.log(tabId, 'onCompleted', pathname, query);
             // 收到前端页面请求
             if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
                 const tabData = this.store.createData(tabId);
@@ -63,7 +64,7 @@ export class Danmu extends Feature {
                 this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             }
-        }, requestFilter);
+        }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadDanmuXML' && message.cid) {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {

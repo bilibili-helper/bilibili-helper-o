@@ -4,6 +4,7 @@
  * Description:
  */
 import $ from 'jquery';
+import _ from 'lodash';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
@@ -27,7 +28,6 @@ export class VideoSubtitleDownload extends Feature {
             },
         });
         this.store = new MessageStore('videoSubtitleDownloadDOMInitialized');
-        this.onceRequestList = [];
     }
 
     addListener = () => {
@@ -36,19 +36,22 @@ export class VideoSubtitleDownload extends Feature {
                 '*://api.bilibili.com/x/player.so?id=cid:*',
             ],
         };
-        chrome.webRequest.onCompleted.addListener(details => {
+        chrome.webRequest.onSendHeaders.addListener(details => {
             const that = this;
-            const {tabId, initiator} = details;
-            if (/^chrome-extension:\/\//.test(initiator) || this.onceRequestList.indexOf(details.url) >= 0) return;
+            const {tabId, initiator, requestHeaders} = details;
+            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
 
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             if (pathname === '/x/player.so') {
-                this.onceRequestList.push(details.url);
                 const storeObject = this.store.createData(tabId);
                 const {data, queue} = storeObject;
                 $.ajax({
                     method: 'get',
+                    headers: {
+                        'From': 'bilibili-helper',
+                    },
                     url: details.url,
                     success: function(res) {
                         const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
@@ -71,7 +74,7 @@ export class VideoSubtitleDownload extends Feature {
                     },
                 });
             }
-        }, requestFilter);
+        }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadSubtitle' && message.id && message.filename) {
                 const tabData = this.store.createData(sender.tab.id);

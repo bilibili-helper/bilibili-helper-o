@@ -99,6 +99,9 @@ export class VideoDownload extends React.Component {
                     method,
                     url,
                     data,
+                    headers: {
+                        'From': 'bilibili-helper',
+                    },
                     contentType: 'video/mp4',
                     success: (res) => {
                         if (res.code === 10005) {
