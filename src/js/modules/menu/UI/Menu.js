@@ -113,7 +113,7 @@ export class Menu extends React.Component {
             linkerError: false,
             lastSearch: store.get('lastSearch') || '',
         };
-        this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au)?(\d{4,})$/);
+        this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au)?(\d+)$/);
     }
 
     componentDidMount() {
