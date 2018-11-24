@@ -1,0 +1,79 @@
+#arc_toolbar_report {
+	.ops {
+		.share {
+			width: 90px;
+		}
+		.bilibili-helper {
+			position: relative;
+		}
+	}
+	& > .tb-line, .app-download {
+		display: none;
+	}
+	& > .bilibili-helper {
+		display: inline-block;
+		width: 170px;
+		height: 80px;
+		line-height: 80px;
+		float: left;
+		& > span {
+			user-select: none;
+			cursor: pointer;
+			span {
+				color: #000;
+				display: inline-block;
+				font-size: 16px;
+				height: 50px;
+				line-height: 68px;
+			}
+		}
+		.bilibili-helper-content {
+			right: -1px;
+			top: 80px;
+			box-shadow: none;
+			border-radius: 0;
+		}
+	}
+}
+#bangumi_detail .info-title {
+	& > a {
+		h2 {
+			width: auto !important;
+			max-width: 300px !important;
+			min-width: 170px !important;
+		}
+	}
+	.func-module {
+		display: flex;
+		& > * {
+			order: 1;
+		}
+		.bilibili-helper {
+			order: 0;
+			display: inline-block;
+			width: auto;
+			height: 28px;
+			margin: 0 20px 0 0;
+			padding: 0;
+			line-height: 28px;
+			text-align: center;
+			font-size: 14px;
+			color: #6d757a;
+			&:hover {
+				color: #00a1d6;
+				border-color: #00a1d6;
+			}
+			& > span {
+				cursor: pointer;
+				user-select: none;
+				.iconfont {
+					display: none;
+				}
+			}
+			.bilibili-helper-content {
+				top: 40px;
+				right: 200px;
+			}
+		}
+	}
+}

@@ -1,0 +1,6 @@
+{
+    "followingUpdateMessage": {
+        "message": "您的哔哩哔哩关注更新了(%n 个新动态)!\n%uploader 刚刚发布了「%title」!",
+        "description": "Notification: Following Update Message"
+    }
+}

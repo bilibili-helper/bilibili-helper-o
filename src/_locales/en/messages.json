@@ -1,13 +1,13 @@
 {
-  "extName": {
+  "extensionName": {
     "message": "Bilibili Helper: Bilibili.com Auxiliary",
     "description": "Extension: Name"
   },
-  "extShortName": {
+  "extensionShortName": {
     "message": "Bilibili Helper",
     "description": "Extension: Short Name"
   },
-  "extDescription": {
+  "extensionDescription": {
     "message": "An extension for Bilibili that provides convenient features/shortcuts.",
     "description": "Extension: Description"
   },
@@ -35,9 +35,9 @@
     "message": "Followings",
     "description": "Popup Button: go_dynamic"
   },
-  "goFavorite": {
-    "message": "Favorites",
-    "description": "Popup Button: go_favorite"
+  "goFavourite": {
+    "message": "Favourites",
+    "description": "Popup Button: go_favourite"
   },
   "notLogged": {
     "message": " (Please Login)",
@@ -63,15 +63,15 @@
     "message": "Options",
     "description": "Option Page: Title"
   },
-  "noticeficationTitle": {
+  "extensionNotificationTitle": {
     "message": "Bilibili Helper Notification",
     "description": "Notification: Title"
   },
-  "noticeficationExtensionUpdate": {
+  "notificationExtensionUpdate": {
     "message": "Bilibili Helper just auto updated to v%v!",
     "description": "Notification: Extension Update"
   },
-  "noticeficationNewFeatures": {
+  "extensionNotificationNewFeatures": {
     "message": "What's New",
     "description": "Notification: New Features"
   },
@@ -79,24 +79,24 @@
     "message": "Your bilibili followings updated (%n new)!\n%uploader just published '%title'!",
     "description": "Notification: Following Update Message"
   },
-  "notificationWatch": {
+  "extensionNotificationWatch": {
     "message": "Watch",
     "description": "Notification: Watch"
   },
-  "notificationShowAll": {
+  "extensionNotificationShowAll": {
     "message": "Show All",
     "description": "Notification: Show All"
   },
-  "notificationLiveOn": {
+  "extensionNotificationLiveOn": {
     "message": " is live-streaming!",
-    "description": "Noticefication: Live On"
+    "description": "Notification: Live On"
   },
-  "notificationGetTv": {
+  "extensionNotificationGetTv": {
     "message": "Attend it.",
-    "description": "Noticefication: Get TV"
+    "description": "Notification: Get TV"
   },
-  "notificationWatchLater": {
+  "extensionNotificationWatchLater": {
     "message": "Watch Later",
-    "description": "Noticefication: Watch Later"
+    "description": "Notification: Watch Later"
   }
 }

@@ -1,0 +1,22 @@
+{
+    "presets": [
+        "react",
+        [
+            "env",
+            {
+                "modules": false
+            }
+        ]
+    ],
+    "plugins": [
+        "transform-decorators-legacy",
+        "transform-object-rest-spread",
+        "transform-object-assign",
+        "transform-decorators",
+        "syntax-dynamic-import",
+        "transform-class-properties",
+        "transform-function-bind",
+        "lodash"
+    ],
+    "comments": false
+}

@@ -1,0 +1,26 @@
+{
+  "goBili": {
+    "message": "Go to bilibili.com",
+    "description": "Popup Button: go_bili"
+  },
+  "goBiliLive": {
+    "message": "Go to Bilibili Live",
+    "description": "Popup Button: go_bili_live"
+  },
+  "goVideo": {
+    "message": "GO!",
+    "description": "Popup Button: go_video"
+  },
+  "goDynamic": {
+    "message": "Followings",
+    "description": "Popup Button: go_dynamic"
+  },
+  "goFavourite": {
+    "message": "Favourites",
+    "description": "Popup Button: go_favourite"
+  },
+  "goOption": {
+    "message": "Options",
+    "description": "Popup Button: go_option"
+  }
+}

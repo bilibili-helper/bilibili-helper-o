@@ -1,0 +1,10 @@
+{
+    "checkVersionGetUpdateError": {
+        "message": "获取更新信息失败",
+        "description": "Notification: Extension Update Error"
+    },
+    "checkVersionNewVersion": {
+        "message": "检测到新版本:",
+        "description": "Notification: new version detected"
+    }
+}

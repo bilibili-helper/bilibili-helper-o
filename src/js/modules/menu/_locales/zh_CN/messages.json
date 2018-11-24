@@ -1,0 +1,26 @@
+{
+    "goBili": {
+        "message": "前往 Bilibili.com",
+        "description": "Popup Button: go_bili"
+    },
+    "goBiliLive": {
+        "message": "前往 Bilibili Live",
+        "description": "Popup Button: go_bili_live"
+    },
+    "goVideo": {
+        "message": "跳转",
+        "description": "Popup Button: go_video"
+    },
+    "goDynamic": {
+        "message": "我的关注",
+        "description": "Popup Button: go_dynamic"
+    },
+    "goFavourite": {
+        "message": "我的收藏",
+        "description": "Popup Button: go_favourite"
+    },
+    "goOption": {
+        "message": "更多选项",
+        "description": "Popup Button: go_option"
+    }
+}

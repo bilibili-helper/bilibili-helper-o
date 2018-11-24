@@ -1,79 +1,81 @@
 {
-  "version": "0.9.9",
-  "update_url": "https://clients2.google.com/service/update2/crx",
-  "manifest_version": 2,
-  "name": "__MSG_extName__",
-  "short_name": "__MSG_extShortName__",
-  "options_page": "options.html",
-  "default_locale": "zh_CN",
-  "description": "__MSG_extDescription__",
-  "background": {
-    "page": "background.html",
-    "persistent": true
-  },
-  "browser_action": {
-    "default_icon": {
-      "19": "imgs/icon-19.png",
-      "38": "imgs/icon-38.png"
+    "version": "1.1.5",
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "manifest_version": 2,
+    "minimum_chrome_version": "56.0.0",
+    "name": "__MSG_extensionName__",
+    "short_name": "__MSG_extensionShortName__",
+    "default_locale": "zh_CN",
+    "description": "__MSG_extensionDescription__",
+    "options_ui": {
+        "page": "config.html",
+        "open_in_tab": true
     },
-    "default_popup": "popup.html",
-    "default_title": "__MSG_extShortName__"
-  },
-  "content_scripts": [
-    {
-      "all_frames": true,
-      "js": [
-        "jquery-3.2.1.min.js",
-        "lodash.min.js",
-        "store.min.js",
-        "ocrad.min.js",
-        "bilibili_ASS_Danmaku_Downloader.min.js",
-        "filename-sanitize.min.js",
-        "bilibili_injected.min.js",
-        "bilibili_live.min.js",
-        "ColPick.min.js"
-      ],
-      "matches": [
-        "*://*.bilibili.com/*"
-      ],
-      "run_at": "document_end"
-    }
-  ],
-  "icons": {
-    "256": "imgs/icon-256.png",
-    "128": "imgs/icon-128.png",
-    "16": "imgs/icon-16.png",
-    "32": "imgs/icon-32.png"
-  },
-  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDd/wqh8sN1lnVWVGyKqhGM0Zz0ZuY3Dq5hNK3qNBw1/+B/XGe+zzwe7aSyr0qikd8pkN5HpoDvEDdkFHcdhPwXWoQGKiNAnKtohuz/2+g5YzLYzQg2bRqKdYJebEoCoiHtoSNS/HRtUeg483ypAH26LLyD6p+ykwQNo9DvtBo0kwIDAQAB",
-  "permissions": [
-    "downloads",
-    "alarms",
-    "contextMenus",
-    "cookies",
-    "notifications",
-    "storage",
-    "tabs",
-    "webRequest",
-    "webRequestBlocking",
-    "http://*/",
-    "https://*/"
-  ],
-  "web_accessible_resources": [
-    "bilibili-helper.woff",
-    "options.min.css",
-    "popup.min.css",
-    "imgs/icon-32.png",
-    "imgs/loading.gif",
-    "imgs/jinkela.png",
-    "imgs/loading.gif",
-    "imgs/helper-neko.png",
-    "imgs/icon.png",
-    "options.html",
-    "imgs/menu-icon.png",
-    "live.min.css",
-    "live-content-script.min.js",
-    "bilibiliHelperAd.min.css",
-    "bilibiliHelperVideo.min.css"
-  ]
+    "options_page": "config.html",
+    "background": {
+        "page": "background.html",
+        "persistent": true
+    },
+    "browser_action": {
+        "default_icon": {
+            "19": "statics/imgs/icon-19.png",
+            "38": "statics/imgs/icon-38.png"
+        },
+        "default_popup": "popup.html",
+        "default_title": "__MSG_extensionShortName__"
+    },
+    "content_scripts": [
+        {
+            "all_frames": false,
+            "js": ["video.js"],
+            "css": [
+                "styles/video.css"
+            ],
+            "matches": [
+                "*://*.bilibili.com/bangumi/play/ss*",
+                "*://*.bilibili.com/bangumi/play/ep*",
+                "*://*.bilibili.com/video/av*"
+            ],
+            "run_at": "document_end"
+        }, {
+            "all_frames": false,
+            "js": [
+                "live.js",
+                "libs/ocrad.min.js"
+            ],
+            "css": [
+            ],
+            "matches": ["*://live.bilibili.com/*"],
+            "run_at": "document_end"
+        }
+    ],
+    "icons": {
+        "256": "statics/imgs/icon-256.png",
+        "128": "statics/imgs/icon-128.png",
+        "16": "statics/imgs/icon-16.png",
+        "32": "statics/imgs/icon-32.png"
+    },
+    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDd/wqh8sN1lnVWVGyKqhGM0Zz0ZuY3Dq5hNK3qNBw1/+B/XGe+zzwe7aSyr0qikd8pkN5HpoDvEDdkFHcdhPwXWoQGKiNAnKtohuz/2+g5YzLYzQg2bRqKdYJebEoCoiHtoSNS/HRtUeg483ypAH26LLyD6p+ykwQNo9DvtBo0kwIDAQAB",
+    "permissions": [
+        "downloads",
+        "alarms",
+        "contextMenus",
+        "cookies",
+        "notifications",
+        "storage",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "http://*/",
+        "https://*/"
+    ],
+    "web_accessible_resources": [
+        "statics/*",
+        "bilibili-helper.woff",
+        "at.alicdn.com/t/*",
+        "libs/*",
+        "js/*"
+    ],
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js https://www.google-analytics.com/analytics_debug.js; object-src 'self';",
+    "incognito": "split"
 }

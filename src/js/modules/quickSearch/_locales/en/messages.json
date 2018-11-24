@@ -1,0 +1,6 @@
+{
+  "searchBili": {
+    "message": "Search Bilibili for '%s'",
+    "description": "Context Menu: Title"
+  }
+}
