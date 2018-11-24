@@ -164,7 +164,7 @@ export class Menu extends React.Component {
         const value = $('.bilibili-helper-menu-linker-input').val();
         if (value) {
             const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
-            const minAvId = 1000;
+            const minAvId = 0;
             let url = '';
             let pass = true;
             if (res && res[1]) {
