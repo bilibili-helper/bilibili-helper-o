@@ -113,7 +113,7 @@ export class Menu extends React.Component {
             linkerError: false,
             lastSearch: store.get('lastSearch') || '',
         };
-        this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au)?(\d+)$/);
+        this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au|ep)?(\d+)$/);
     }
 
     componentDidMount() {
@@ -164,7 +164,6 @@ export class Menu extends React.Component {
         const value = $('.bilibili-helper-menu-linker-input').val();
         if (value) {
             const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
-            const minAvId = 0;
             let url = '';
             let pass = true;
             if (res && res[1]) {
@@ -182,7 +181,7 @@ export class Menu extends React.Component {
                         url = 'https://www.bilibili.com/bangumi/media/' + value;
                         break;
                     case 'u':
-                        if (res[2] && res[2] > minAvId) url = 'https://space.bilibili.com/' + res[2];
+                        if (res[2]) url = 'https://space.bilibili.com/' + res[2];
                         else pass = false;
                         break;
                     case 'cv':
@@ -191,8 +190,10 @@ export class Menu extends React.Component {
                     case 'au':
                         url = 'https://www.bilibili.com/audio/' + value;
                         break;
+                    case 'ep':
+                        url = 'https://www.bilibili.com/bangumi/play/' + value;
                 }
-            } else if (res && !res[1] && res[2] > minAvId) { // av号大于1000
+            } else if (res && !res[1] && res[2]) {
                 url = 'https://www.bilibili.com/video/av' + res[2];
             } else {
                 pass = false;
@@ -216,10 +217,9 @@ export class Menu extends React.Component {
     };
 
     checkLinkerValue = (value) => {
-        const minAvId = 1000;
         const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
         if (res && res[1] && res[2]) return true;
-        else if (res && !res[1] && res[2] > minAvId) return true;
+        else if (res && !res[1] && res[2]) return true;
         else return false;
     };
 
@@ -234,6 +234,11 @@ export class Menu extends React.Component {
             const res = this.checkLinkerValue(value);
             this.setState({linkerError: !res && value !== ''});
         }
+    };
+
+    handleFocusIn = (e) => {
+        e.target.select();
+        this.handleKeyUp(e);
     };
 
     render() {
@@ -254,9 +259,10 @@ export class Menu extends React.Component {
                 </React.Fragment>}
                 {linker && <LinkerWrapper>
                     <Linker
+                        innerRef={i => this.linkerRef = i}
                         error={linkerError}
                         onKeyUp={this.handleKeyUp}
-                        onfocusin={this.handleKeyUp}
+                        onFocus={this.handleFocusIn}
                         placeholder="请输入各种ID"
                         defaultValue={lastSearch}
                     />

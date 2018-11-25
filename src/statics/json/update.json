@@ -8,6 +8,10 @@
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
+    "版本 1.1.6": [
+        "修复<i>快速跳转</i>功能中数字ID至少为4位的问题",
+        ""
+    ],
     "版本 1.1.5": [
         "修复了<i>外挂字幕下载</i>功能会在后台不停发送请求的问题",
         "修复了在未登录情况下<i>设置页面</i>部分功能无法启用的问题",
