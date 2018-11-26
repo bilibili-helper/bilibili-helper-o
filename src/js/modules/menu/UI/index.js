@@ -17,11 +17,11 @@ export class MenuUI extends UI {
         });
     }
 
-    load = (popupDOM) => {
+    load = ([popupDOM], settings) => {
         return new Promise(resolve => {
             const container = $('<div />').attr('class', 'bilibili-helper-menu-container');
-            $(popupDOM).append(container);
-            ReactDOM.render(<Menu innerRef={i => this.container = i}/>, container[0]);
+            popupDOM.appendChild(container[0]);
+            ReactDOM.render(<Menu settings={settings} innerRef={i => this.container = i}/>, container[0]);
             resolve($(this.container)[0]);
         });
     };

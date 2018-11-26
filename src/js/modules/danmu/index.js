@@ -3,10 +3,10 @@
  * Create: 2018/10/30
  * Description:
  */
-import {Feature} from 'Libs/feature';
-import {MessageStore} from 'Libs/messageStore';
 import _ from 'lodash';
 import URLParse from 'url-parse';
+import {Feature} from 'Libs/feature';
+import {MessageStore} from 'Libs/messageStore';
 import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
 
 export {DanmuUI} from './UI/index';
@@ -25,7 +25,6 @@ export class Danmu extends Feature {
             },
         });
         this.store = new MessageStore('danmuDOMInitialized');
-        this.onceRequestList = [];
     }
 
     addListener = () => {
@@ -52,7 +51,6 @@ export class Danmu extends Feature {
                     commend: 'loadCurrentDanmu',
                     cid: tabData.data.cid,
                 });
-                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
                 const tabData = this.store.createData(tabId);
@@ -61,7 +59,6 @@ export class Danmu extends Feature {
                     cid: tabData.data.cid,
                     date: query.date,
                 });
-                this.onceRequestList.push(details.url);
                 this.store.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);

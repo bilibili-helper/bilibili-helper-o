@@ -6,16 +6,13 @@
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
 import {__} from 'Utils';
-import {PERMISSION_TYPE} from 'Utils';
-
-const {login} = PERMISSION_TYPE;
 
 export class Silver2coin extends Feature {
     constructor() {
         super({
             name: 'silver2coin',
             kind: 'live',
-            permissions: {login},
+            permissions: ['login'],
             settings: {
                 on: false,
                 title: '银瓜子自动换硬币',

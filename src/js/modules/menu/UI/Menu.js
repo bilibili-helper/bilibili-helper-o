@@ -10,7 +10,7 @@ import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
 import {Button} from 'Components/common/Button';
-import {createTab, isLogin, getLink, version, __} from 'Utils';
+import {createTab, getLink, version, __} from 'Utils';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -106,23 +106,27 @@ export class Menu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hasLogin: false,
             debug: false,
             newWatchPageLink: '',
             menuOptions: {},
             linkerError: false,
             lastSearch: store.get('lastSearch') || '',
+            permissionMap: {},
         };
         this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au|ep)?(\d+)$/);
     }
 
     componentDidMount() {
-        isLogin().then(res => this.setState({hasLogin: res}));
         chrome.browserAction.setBadgeText({text: ''});
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
             if (message.commend === 'debugMode' && message.value !== undefined) {
                 this.setState({debug: message.value});
+            } else if (message.commend === 'permissionUpdate') {
+                console.warn(message);
+                const permissionMap = {...this.state.permissionMap};
+                permissionMap[message.permission] = message.value;
+                this.setState({permissionMap});
             }
         }));
         // 获取调试模式
@@ -148,6 +152,13 @@ export class Menu extends React.Component {
                 menuOptions: menuOptions,
             });
         });
+
+        chrome.runtime.sendMessage({
+            commend: 'getPermissionMap',
+        }, (permissionMap) => {
+            console.warn(permissionMap);
+            this.setState({permissionMap});
+        })
     }
 
     handleOnClick = (type, link) => {
@@ -175,7 +186,8 @@ export class Menu extends React.Component {
                         url = 'https://www.bilibili.com/bangumi/play/' + value;
                         break;
                     case 's':
-                        url = 'https://bangumi.bilibili.com/anime/' + value;
+                        if (res[2]) url = 'https://bangumi.bilibili.com/anime/' + res[2];
+                        else pass = false;
                         break;
                     case 'md':
                         url = 'https://www.bilibili.com/bangumi/media/' + value;
@@ -242,7 +254,7 @@ export class Menu extends React.Component {
     };
 
     render() {
-        const {hasLogin, newWatchPageLink, debug, menuOptions, linkerError, lastSearch} = this.state;
+        const {newWatchPageLink, debug, menuOptions, linkerError, lastSearch, permissionMap} = this.state;
         const {video, live, dynamic, favourite, linker} = menuOptions;
         return (
             <MenuView>
@@ -251,12 +263,12 @@ export class Menu extends React.Component {
                 {live &&
                 <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>{__('goBiliLive')}</MenuButton>}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
-                {hasLogin && <React.Fragment>
+                {permissionMap.login ? <React.Fragment>
                     {dynamic && <MenuButton
                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>}
                     {favourite && <MenuButton
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
-                </React.Fragment>}
+                </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                 {linker && <LinkerWrapper>
                     <Linker
                         innerRef={i => this.linkerRef = i}

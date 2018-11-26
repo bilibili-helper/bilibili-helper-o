@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {UI} from 'Libs/UI';
 import {Button} from 'Components/common/Button';
+import {__} from 'Utils';
 
 const PipButton = styled(Button)`
   position: absolute;
@@ -111,7 +112,7 @@ class PIP extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>画中画</PipButton>
+                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>{__('pictureInPictureTitle')}</PipButton>
             </React.Fragment>
         );
     }

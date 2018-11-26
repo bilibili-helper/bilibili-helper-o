@@ -8,9 +8,6 @@ import _ from 'lodash';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import {PERMISSION_TYPE} from 'Utils';
-
-const {login} = PERMISSION_TYPE;
 
 export {VideoSubtitleDownloadUI} from './UI';
 
@@ -19,7 +16,7 @@ export class VideoSubtitleDownload extends Feature {
         super({
             name: 'videoSubtitleDownload',
             kind: 'video',
-            permissions: {login},
+            permissions: ['login'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,

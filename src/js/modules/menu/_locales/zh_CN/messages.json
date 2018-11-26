@@ -22,5 +22,9 @@
     "goOption": {
         "message": "更多选项",
         "description": "Popup Button: go_option"
+    },
+    "notLogin": {
+        "message": "未登录",
+        "description": "Popup Button: not login"
     }
 }

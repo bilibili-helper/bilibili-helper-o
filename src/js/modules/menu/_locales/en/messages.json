@@ -22,5 +22,9 @@
   "goOption": {
     "message": "Options",
     "description": "Popup Button: go_option"
-  }
+  },
+    "notLogin": {
+        "message": "not login",
+        "description": "Popup Button: not login"
+    }
 }

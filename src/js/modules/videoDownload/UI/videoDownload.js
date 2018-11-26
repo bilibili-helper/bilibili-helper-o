@@ -104,10 +104,7 @@ export class VideoDownload extends React.Component {
                     },
                     contentType: 'video/mp4',
                     success: (res) => {
-                        if (res.code === 10005) {
-                            console.error(res);
-                            return;
-                        }
+                        if (res.code === 10005) return console.error(res);
                         let downloadData;
                         if (type === 'new' && res.code === 0) {
                             downloadData = res.data;

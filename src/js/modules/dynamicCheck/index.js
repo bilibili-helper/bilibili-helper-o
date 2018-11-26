@@ -6,16 +6,15 @@
 import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {PERMISSION_TYPE, getURL, __} from 'Utils';
+import {getURL, __} from 'Utils';
 
-const {login, notifications} = PERMISSION_TYPE;
 export {DynamicCheckUI} from './UI/index';
 export class DynamicCheck extends Feature {
     constructor() {
         super({
             name: 'dynamicCheck',
             kind: 'popup',
-            permissions: {login, notifications},
+            permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function
                 title: '动态推送', // 在option页面中配置项目的显示名称

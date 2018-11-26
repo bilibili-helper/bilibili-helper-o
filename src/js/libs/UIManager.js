@@ -63,7 +63,7 @@ export class UIManager {
         return new Promise(resolve => {
             let {pass, dependDOM} = this.checkDependencies(UI.dependencies);
             if (pass) {
-                UI.init().load(dependDOM, this.settings[name]).then((outputDOM = null) => {
+                UI.init().load(dependDOM, this.settings[name]).then((outputDOM = []) => {
                     UI.loaded = true;
                     UI.outputDOM = outputDOM;
                     //console.log(`UI loaded: ${UI.name}`);

@@ -79,13 +79,9 @@ export const PERMISSION_TYPE = {
  */
 export const PERMISSION_STATUS = {
     login: {
-        value: false,
-        check: false,
         errorMsg: 'you have not log in',
     },
     notifications: {
-        value: false,
-        check: false,
         errorMsg: 'no permission for notifications',
     },
 };

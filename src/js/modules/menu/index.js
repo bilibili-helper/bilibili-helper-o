@@ -10,6 +10,7 @@ export class Menu extends Feature {
         super({
             name: 'menu',
             kind: 'popup',
+            permissions: ['login'],
             dependencies: ['popup'],
             settings: {
                 on: true,

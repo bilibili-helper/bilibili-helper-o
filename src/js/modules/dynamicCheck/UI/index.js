@@ -18,12 +18,12 @@ export class DynamicCheckUI extends UI {
         });
     }
 
-    load = (popupDOM, setting) => {
+    load = ([popupDOM], settings) => {
         return new Promise(resolve => {
-            const dynamicCheckBoxState = _.find(setting.options,({key})=>key ==='dynamicCheckBox');
+            const dynamicCheckBoxState = _.find(settings.options,({key})=>key ==='dynamicCheckBox');
             if (dynamicCheckBoxState.on) {
                 const container = $('<div />').attr('class', 'bilibili-helper-dynamic-check-container');
-                $(popupDOM).append(container);
+                popupDOM.appendChild(container[0]);
                 ReactDOM.render(<DynamicBox innerRef={i => this.container = i}/>, container[0]);
                 resolve($(this.container)[0]);
             } else resolve(null);

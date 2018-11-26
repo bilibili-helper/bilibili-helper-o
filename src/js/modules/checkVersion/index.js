@@ -8,16 +8,13 @@ import _ from 'lodash';
 import store from 'store';
 import {Feature} from 'Libs/feature';
 import {__, getURL, version} from 'Utils';
-import {PERMISSION_STATUS} from 'Utils';
-
-const {notifications} = PERMISSION_STATUS;
 
 export class CheckVersion extends Feature {
     constructor() {
         super({
             name: 'checkVersion',
             kind: 'other',
-            permissions: {notifications},
+            permissions: ['notifications'],
             settings: {
                 on: true,
                 title: '自动检测更新',
