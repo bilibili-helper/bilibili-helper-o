@@ -27,26 +27,6 @@ export const sendMessage = (command, key, callback) => {
 export const __ = (t, options = null) => chrome.i18n.getMessage(t, options);
 
 /**
- * 判断是否登录
- * @return {Promise|boolean}
- */
-export const isLogin = () => {
-    return new Promise((resolve) => {
-        chrome.cookies.get({
-            url: 'http://interface.bilibili.com/',
-            name: 'DedeUserID',
-        }, function(cookie) {
-            // expirationDate 是秒数
-            if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        });
-    });
-};
-
-/**
  * 创建新tab页面
  * @param url
  */

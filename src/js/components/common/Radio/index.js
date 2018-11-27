@@ -34,7 +34,7 @@ const Bar = styled.span`
   transition: background-color linear 80ms;
   //opacity: 0.5;
   .checked & {
-    background-color: ${color('paper-pink-300')};
+    background-color: ${color('bilibili-pink')};
     opacity: 1;
   }
 `;
@@ -55,7 +55,7 @@ const Knob = styled.span.attrs({className: 'radio-knob'})`
   .checked & {
     transform: translate3d(18px, 0, 0);
     .ripple-item {
-      background-color: ${Color(color('paper-pink-500')).alpha(0.5).rgb().toString()};
+      background-color: ${Color(color('bilibili-pink')).alpha(0.5).rgb().toString()};
     }
   }
 `;

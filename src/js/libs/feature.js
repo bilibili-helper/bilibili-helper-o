@@ -25,8 +25,8 @@ export class Feature {
         this.kind = kind;
         this.initialed = false;
         this.dependencies = dependencies;
-        this.settings = {...settings, kind, name: this.name};
         this.permissions = permissions;
+        this.settings = {...settings, kind, name: this.name, permissions};
         this.permissionMap = {};
         _.each(this.permissions, (permissionName) => {
             this.permissionMap[permissionName] = false;
@@ -50,12 +50,8 @@ export class Feature {
     };
 
     setPermission = (name, value) => {
-        const originValue = this.permissionMap[name];
-        if (value !== undefined && originValue !== value) {
-            this.permissionMap[name] = value;
-            const f = this[`permissionHandle${_.upperFirst(name)}`];
-            if (typeof f === 'function') f(value);
-        }
+        const f = this[`permissionHandle${_.upperFirst(name)}`];
+        if (typeof f === 'function') f(value);
     };
 
     // 初始化配置

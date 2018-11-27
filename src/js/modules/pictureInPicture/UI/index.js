@@ -35,7 +35,6 @@ class PIP extends React.Component {
             inPIP: false,
         };
         this.video = null;
-        this.pipSrc = null;
     }
 
     componentDidMount() {
@@ -75,10 +74,9 @@ class PIP extends React.Component {
     };
 
     play = () => {
-        if (window.player) {
-            if (window.player.getDuration() !== window.player.getCurrentTime() && window.player.getState() !== 'PAUSED') {
-                window.player.play();
-            }
+        if (!window.player) return;
+        if (window.player.getDuration() !== window.player.getCurrentTime() && window.player.getState() !== 'PAUSED') {
+            window.player.play();
         }
     };
 
@@ -112,7 +110,9 @@ class PIP extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>{__('pictureInPictureTitle')}</PipButton>
+                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>
+                    {__('pictureInPictureTitle')}
+                </PipButton>
             </React.Fragment>
         );
     }

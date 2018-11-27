@@ -67,6 +67,7 @@ class VideoSubtitleDownload extends React.Component {
         super(props);
         this.state = {
             subtitleData: [], // 因为有多种语言，所以是数组
+            permissionMap: {},
         };
     }
 
@@ -76,6 +77,11 @@ class VideoSubtitleDownload extends React.Component {
                 this.setState({subtitleData: message.data});
                 sendResponse(true);
             }
+        });
+        chrome.runtime.sendMessage({
+            commend: 'getPermissionMap',
+        }, (permissionMap) => {
+            this.setState({permissionMap});
         });
     }
 
@@ -93,25 +99,26 @@ class VideoSubtitleDownload extends React.Component {
     };
 
     render() {
-
-        const {subtitleData} = this.state;
+        const {subtitleData, permissionMap} = this.state;
         return (
             <React.Fragment>
                 <Title>外挂字幕下载</Title>
                 <Container>
-                    {subtitleData.length === 0 && (
-                        <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
-                    )}
-                    {subtitleData.length > 0 && subtitleData.map((o) => {
-                        const {id, lan_doc} = o;
-                        return (
-                            <LinkGroup key={id}>
-                                <LinkGroupTitle onClick={() => this.handleDownloadSubtitle(id)}>
-                                    <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
-                                </LinkGroupTitle>
-                            </LinkGroup>
-                        );
-                    })}
+                    {permissionMap.login ? <React.Fragment>
+                        {subtitleData.length === 0
+                         ? <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
+                         : subtitleData.map((o) => {
+                                const {id, lan_doc} = o;
+                                return (
+                                    <LinkGroup key={id}>
+                                        <LinkGroupTitle onClick={() => this.handleDownloadSubtitle(id)}>
+                                            <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
+                                        </LinkGroupTitle>
+                                    </LinkGroup>
+                                );
+                            })
+                        }
+                    </React.Fragment> : <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
                 </Container>
             </React.Fragment>
         );

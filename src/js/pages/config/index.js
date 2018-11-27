@@ -11,7 +11,8 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {consoleLogo} from 'Utils';
 import {version} from 'Utils';
-import {Button, Icon, Radio,} from 'Components';
+import {Button, Icon, Radio} from 'Components';
+import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
     Body,
     List,
@@ -63,7 +64,7 @@ const Alipay = styled.img`
 
 const Header = styled.div`
   padding: 50px 0;
-  background-color: ${color('paper-pink-300')};
+  background-color: ${color('bilibili-pink')};
   color: #fff;
   & > * {
     display: block;
@@ -90,8 +91,31 @@ const Footer = styled.div`
 `;
 
 const Broadcast = styled.p`
-  text-align: center;
-  color: ${color('paper-pink-300')};
+  width: 100%;
+  max-width: 800px;
+  margin: 16px auto;
+  padding: 0px 10px;
+  text-align: left;
+  color: ${color('bilibili-pink')};
+`;
+/*
+const PermissionTag = styled.span.attrs({
+    title: ({title}) => title,
+})`
+  padding: 0 6px;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  background-color: ${color('bilibili-blue')};
+  color: #fff;
+`;*/
+
+const PermissionErrorDescription = styled.span`
+  padding: 0 6px;
+  color: ${color('bilibili-pink')};
+  &:first-of-type {
+    padding-left: 0;
+  }
 `;
 
 class PageConfig extends React.Component {
@@ -120,6 +144,8 @@ class PageConfig extends React.Component {
             debug: false,
 
             broadcast: this.defaultBroadcast, // header下的通知条
+
+            permissionMap: {},
         };
 
     }
@@ -151,6 +177,11 @@ class PageConfig extends React.Component {
             } else {
                 this.setState({broadcast: this.defaultBroadcast});
             }
+        });
+        chrome.runtime.sendMessage({
+            commend: 'getPermissionMap',
+        }, (permissionMap) => {
+            this.setState({permissionMap});
         });
     }
 
@@ -208,19 +239,32 @@ class PageConfig extends React.Component {
     };
 
     createSettingDOM = () => {
+        const {permissionMap} = this.state;
         return _.map(this.settings, (e, kind) => {
             const list = this.state[kind];
             return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
                 {_.map(list.map, (settings, featureName) => {
-                    const {on, description, title, subPage, toggle} = settings;
+                    const {on, description, title, subPage, toggle, permissions} = settings;
                     const SubListChildren = this.createSubListComponent({kind, featureName, settings});
                     const toggleMode = toggle === undefined || subPage ? true : toggle;
-                    const twoLine = description !== undefined;
+
                     const handleOpenSubPage = () => this.handleSetSubPage({parent: this[`${kind}Ref`], settings});
-                    const onClick = !!subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
-                    const operation = !!subPage
-                                      ? <Button icon="arrowRight"/>
-                                      : <Radio disable={!toggleMode} on={on}/>;
+                    const onClick = subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
+                    const operation = subPage ? <Button icon="arrowRight"/> : <Radio disable={!toggleMode} on={on}/>;
+
+                    let errorDescription = [];
+                    const permissionList = _.map(permissions, (name) => {
+                        if (name in permissionMap && !permissionMap[name]) {
+                            errorDescription.push(
+                                <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
+                            );
+                        }
+                        /*return <PermissionTag title={PERMISSION_STATUS[name].description}>
+                            {_.upperFirst(name)}
+                        </PermissionTag>;*/
+                        return null;
+                    });
+                    const twoLine = description !== undefined || errorDescription.length > 0;
                     return <ListItem
                         key={featureName}
                         toggle={toggleMode}
@@ -231,9 +275,9 @@ class PageConfig extends React.Component {
                             children: SubListChildren,
                         } : null}
                         twoLine={twoLine}
-                        first={twoLine ? title : ''}
-                        second={twoLine ? description : ''}
-                    >{twoLine ? null : title}</ListItem>;
+                        first={twoLine ? <React.Fragment>{title}{permissionList}</React.Fragment> : ''}
+                        second={twoLine ? errorDescription.length > 0 ? errorDescription : description : ''}
+                    >{twoLine ? null : title}{permissionList}</ListItem>;
                 })}
             </List> : null;
         });

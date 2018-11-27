@@ -123,7 +123,6 @@ export class Menu extends React.Component {
             if (message.commend === 'debugMode' && message.value !== undefined) {
                 this.setState({debug: message.value});
             } else if (message.commend === 'permissionUpdate') {
-                console.warn(message);
                 const permissionMap = {...this.state.permissionMap};
                 permissionMap[message.permission] = message.value;
                 this.setState({permissionMap});
@@ -156,7 +155,6 @@ export class Menu extends React.Component {
         chrome.runtime.sendMessage({
             commend: 'getPermissionMap',
         }, (permissionMap) => {
-            console.warn(permissionMap);
             this.setState({permissionMap});
         })
     }

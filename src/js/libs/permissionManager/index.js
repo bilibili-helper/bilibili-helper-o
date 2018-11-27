@@ -4,16 +4,19 @@
  * Description:
  */
 import _ from 'lodash';
+import {__} from 'Utils';
 
 /**
  * @param check 检查标记，指示该权限有没有被检查过
  */
-const PERMISSION_STATUS = {
+export const PERMISSION_STATUS = {
     login: {
-        errorMsg: 'you have not log in',
+        errorMsg: __('permissionManager_login_error_massage'),
+        description: __('permissionManager_login_description'),
     },
     notifications: {
-        errorMsg: 'no permission for notifications',
+        errorMsg: __('permissionManager_notifications_error_massage'),
+        description: __('permissionManager_notifications_description'),
     },
 };
 
@@ -86,7 +89,7 @@ export class PermissionManager {
                 let [pass, msg] = [false, ''];
                 // expirationDate 是秒数
                 if (cookie && cookie.expirationDate > thisSecond) [pass, msg] = [true, ''];
-                else [pass, msg] = [false, PERMISSION_STATUS.login];
+                else [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg];
 
                 this.updatePermission('login', pass);
                 resolve({pass, msg});
@@ -109,6 +112,15 @@ export class PermissionManager {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getPermissionMap') {
                 sendResponse(this.permissionMap);
+            }
+        });
+
+        // 检测登录登出时cookie变化更新UI状态
+        chrome.cookies.onChanged.addListener((changeInfo) => {
+            const {/*cause,*/ cookie} = changeInfo;
+            const {name, domain} = cookie;
+            if (name === 'bili_jct' && domain === '.bilibili.com') {
+                this.hasLogin();
             }
         });
     };

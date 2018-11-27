@@ -21,30 +21,27 @@ export class Silver2coin extends Feature {
     }
 
     launch = () => {
-        if (!chrome.extension.inIncognitoContext) return; // 隐身模式
-        chrome.cookies.get({
+        if (chrome.extension.inIncognitoContext) return; // 隐身模式
+        this.settings.on && this.permissionMap.login && chrome.cookies.get({
             url: 'http://www.bilibili.com',
             name: 'bili_jct',
         }, function(cookie) {
-            // expirationDate 是秒数
-            if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
-                $.ajax({
-                    method: 'get',
-                    url: 'https://api.live.bilibili.com/pay/v1/Exchange/silver2coin',
-                    data: {
-                        platform: 'pc',
-                        csrf_token: cookie.value,
-                    },
-                    success: (res) => {
-                        if (res.code === 0) {
-                            let msg = new Notification(__('extensionNotificationTitle'), {
-                                body: '银瓜子兑换成功',
-                            });
-                            setTimeout(() => msg.close(), 10000);
-                        }
+            $.ajax({
+                method: 'get',
+                url: 'https://api.live.bilibili.com/pay/v1/Exchange/silver2coin',
+                data: {
+                    platform: 'pc',
+                    csrf_token: cookie.value,
+                },
+                success: (res) => {
+                    if (res.code === 0) {
+                        let msg = new Notification(__('extensionNotificationTitle'), {
+                            body: '银瓜子兑换成功',
+                        });
+                        setTimeout(() => msg.close(), 10000);
                     }
-                });
-            }
+                },
+            });
         });
     };
 }

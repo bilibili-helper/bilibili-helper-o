@@ -4,5 +4,4 @@
  */
 
 // 导出常量
-export * from './const';
 export * from './functions';

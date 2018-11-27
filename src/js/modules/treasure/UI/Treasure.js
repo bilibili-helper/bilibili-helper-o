@@ -74,6 +74,7 @@ export class Treasure extends React.Component {
             time_end: NaN,
             time_start: NaN,
             counterComplete: true, // 计时器结束状态
+            permissionMap: {},
         };
         this.retryTime = 0;
         this.maxRetryTime = 10;
@@ -109,7 +110,11 @@ export class Treasure extends React.Component {
         }, (inIncognitoContext) => {
             if (!inIncognitoContext) this.getCurrentTask();
         });
-
+        chrome.runtime.sendMessage({
+            commend: 'getPermissionMap',
+        }, (permissionMap) => {
+            this.setState({permissionMap})
+        });
     }
 
     /**
@@ -359,12 +364,13 @@ export class Treasure extends React.Component {
             times,
             minute,
             counterComplete,
+            permissionMap,
         } = this.state;
         open ? this.showPanel() : this.hidePanel();
         return (
             <React.Fragment>
                 <Box open={counterComplete} onClick={!!times ? this.handleOnClickTreasure : null}>
-                    <Counter innerRef={i => this.counterDOM = i}>载入中</Counter>
+                    <Counter innerRef={i => this.counterDOM = i}>{permissionMap.login ? '载入中' : '未登录'}</Counter>
                 </Box>
                 <PanelView innerRef={i => this.panel = i}>
                     <Title>宝箱 - 第{times}/{max_times}轮 - 第{minute / 3}次</Title>

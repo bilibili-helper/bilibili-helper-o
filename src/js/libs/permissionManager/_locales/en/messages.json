@@ -1,0 +1,18 @@
+{
+    "permissionManager_login_error_massage": {
+        "message": "not login",
+        "description": "not login"
+    },
+    "permissionManager_login_description": {
+        "message": "You need to log in to your bilibili's account.",
+        "description": "You need to log in to your bilibili's account."
+    },
+    "permissionManager_notifications_error_massage": {
+        "message": "no notification permission",
+        "description": "no notification permission"
+    },
+    "permissionManager_notifications_description": {
+        "message": "You should agree with the permission for notify to turn on related features",
+        "description": "You should agree with the permission for notify to turn on related features."
+    }
+}

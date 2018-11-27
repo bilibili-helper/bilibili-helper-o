@@ -6,7 +6,7 @@
 
 import _ from 'lodash';
 import {Features} from 'Modules/index';
-import {PermissionManager} from 'Libs/PermissionManager';
+import {PermissionManager} from 'Libs/permissionManager';
 
 export class FeatureManager {
     constructor() {
@@ -56,12 +56,12 @@ export class FeatureManager {
                 } else if (!settings.on) { // 功能未启用
                     resolve(false);
                 } else {
-                    this.permissionManager.load(feature).then(({pass, data}) => {
+                    this.permissionManager.load(feature).then(({pass}) => {
                         if (pass) { // 鉴权通过
                             feature.init();
                             resolve(true);
                         } else { // 鉴权未通过
-                            console.error(`Feature ${name}: ${_.map(data, o => o.msg).join(', ')}`);
+                            //console.error(`Feature ${name}: ${_.map(data, o => o.msg).join(', ')}`);
                             resolve(false);
                         }
                     });

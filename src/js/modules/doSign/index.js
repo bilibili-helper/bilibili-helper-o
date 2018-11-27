@@ -20,7 +20,8 @@ export class DoSign extends Feature {
     }
 
     launch = () => {
-        this.settings.on && !chrome.extension.inIncognitoContext && $.ajax({
+        if (chrome.extension.inIncognitoContext) return; // 隐身模式
+        this.settings.on && this.permissionMap.login && $.ajax({
             method: 'get',
             url: 'https://api.live.bilibili.com/sign/doSign',
         });

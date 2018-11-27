@@ -1,0 +1,18 @@
+{
+    "permissionManager_login_error_massage": {
+        "message": "未登錄",
+        "description": "未登錄"
+    },
+    "permissionManager_login_description": {
+        "message": "您需要登錄Bilibili的賬號",
+        "description": "您需要登錄Bilibili的賬號"
+    },
+    "permissionManager_notifications_error_massage": {
+        "message": "未獲得通知功能的權限",
+        "description": "未獲得通知功能的權限"
+    },
+    "permissionManager_notifications_description": {
+        "message": "需要獲得通知功能的權限以便開啟相關功能",
+        "description": "需要獲得通知功能的權限以便開啟相關功能"
+    }
+}

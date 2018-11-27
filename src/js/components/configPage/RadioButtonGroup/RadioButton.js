@@ -43,18 +43,18 @@ const RadioDisc = styled.div.attrs({
     position: absolute;
     top: -2px;
     left: -2px;
-    background-color: ${color('paper-pink-300')};
+    background-color: ${color('bilibili-pink')};
     border-radius: 50%;
     transform: scale(0);
     transition: all 0.15s;
   }
   &.checked {
-    border-color: ${color('paper-pink-300')};
+    border-color: ${color('bilibili-pink')};
     &::after {
       transform: scale(0.5);
     }
     .ripple-item {
-      background-color: ${Color(color('paper-pink-500')).alpha(0.5).rgb().toString()};
+      background-color: ${Color(color('bilibili-pink')).alpha(0.5).rgb().toString()};
     }
   }
 `;

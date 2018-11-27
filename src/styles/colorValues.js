@@ -281,4 +281,7 @@ export const colorValues = {
     'paper-blue-grey-600': '#546e7a',
     'paper-blue-grey-700': '#455a64',
     'paper-blue-grey-800': '#37474f',
+    'bilibili-blue': '#23ADE5',
+    'bilibili-pink': '#FB7299',
+    'bilibili-gray': '#F4F4F4',
 }

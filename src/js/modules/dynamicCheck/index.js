@@ -9,6 +9,7 @@ import {Feature} from 'Libs/feature';
 import {getURL, __} from 'Utils';
 
 export {DynamicCheckUI} from './UI/index';
+
 export class DynamicCheck extends Feature {
     constructor() {
         super({
@@ -60,6 +61,11 @@ export class DynamicCheck extends Feature {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getDynamicList') sendResponse(this.feedList);
         });
+    };
+
+    permissionHandleLogin = (value) => {
+        if (value) this.launch();
+        else this.pause();
     };
 
     // 检查未读推送
