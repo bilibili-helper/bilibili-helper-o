@@ -3,8 +3,9 @@
  * Create: 2018/10/24
  * Description:
  */
-import $ from 'jquery';
 import {Feature} from 'Libs/feature';
+
+export {DoSignUI} from './UI';
 
 export class DoSign extends Feature {
     constructor() {
@@ -15,15 +16,8 @@ export class DoSign extends Feature {
             settings: {
                 on: true,
                 title: '自动签到',
+                hasUI: true,
             },
         });
     }
-
-    launch = () => {
-        if (chrome.extension.inIncognitoContext) return; // 隐身模式
-        this.settings.on && this.permissionMap.login && $.ajax({
-            method: 'get',
-            url: 'https://api.live.bilibili.com/sign/doSign',
-        });
-    };
 };
