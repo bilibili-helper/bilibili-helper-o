@@ -3,7 +3,6 @@
  * Create: 2018/11/17
  * Description:
  */
-import $ from 'jquery';
 import _ from 'lodash';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
@@ -34,52 +33,33 @@ export class VideoSubtitleDownload extends Feature {
             ],
         };
         chrome.webRequest.onSendHeaders.addListener(details => {
-            const that = this;
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
 
+            const tabData = this.store.createData(tabId);
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             if (pathname === '/x/player.so') {
+                tabData.data.cid = query.id.slice(4);
                 const storeObject = this.store.createData(tabId);
-                const {data, queue} = storeObject;
-                $.ajax({
-                    method: 'get',
-                    headers: {
-                        'From': 'bilibili-helper',
-                    },
+                const {queue} = storeObject;
+                queue.push({
+                    commend: 'loadSubtitle',
                     url: details.url,
-                    success: function(res) {
-                        const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
-                        if (regExpRes.length > 0) {
-                            const subtitleData = JSON.parse(regExpRes[1]).subtitles;
-                            const cid = +query.id.slice(4);
-                            subtitleData.map((o) => data[o.id] = {...o, cid});
-                            queue.push({
-                                commend: 'loadSubtitle',
-                                data: subtitleData,
-                            });
-                            that.store.dealWith(tabId); // 处理queue
-                        }
-                    },
-                    error: function(e) {
-                        console.error(e);
-                        if (e.status === 403) {
-                            return;
-                        }
-                    },
                 });
+                this.store.dealWith(tabId);
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
-            if (message.commend === 'downloadSubtitle' && message.id && message.filename) {
+            if (message.commend === 'downloadSubtitle' && message.subtitleObject) {
                 const tabData = this.store.createData(sender.tab.id);
                 if (tabData) {
-                    const {subtitle_url, lan, cid} = tabData.data[message.id];
+                    const {lan, subtitle_url} = message.subtitleObject;
+                    const {cid} = tabData.data;
                     chrome.downloads.download({
                         saveAs: true,
-                        url: `http://${subtitle_url}`,
+                        url: `http:${subtitle_url}`,
                         filename: `${message.filename}-${cid}.${lan}.bbc`,
                     });
                 }

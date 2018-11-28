@@ -56,6 +56,9 @@ const LinkGroupTitle = styled.span`
   display: inline-block;
   padding: 0 8px;
   border-right: 1px solid #fff;
+  &:last-of-type {
+    border-right: none;
+  }
   p {
       color: ${color('google-grey-900')};
       font-size: 12px;
@@ -73,8 +76,25 @@ class VideoSubtitleDownload extends React.Component {
 
     componentDidMount() {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'loadSubtitle' && message.data) {
-                this.setState({subtitleData: message.data});
+            if (message.commend === 'loadSubtitle' && message.url) {
+                $.ajax({
+                    method: 'get',
+                    headers: {'From': 'bilibili-helper'},
+                    url: message.url,
+                    success: (res) => {
+                        const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
+                        if (regExpRes.length > 0) {
+                            const subtitleData = JSON.parse(regExpRes[1]).subtitles;
+                            this.setState({subtitleData});
+                        }
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        if (e.status === 403) {
+                            return;
+                        }
+                    },
+                });
                 sendResponse(true);
             }
         });
@@ -85,7 +105,7 @@ class VideoSubtitleDownload extends React.Component {
         });
     }
 
-    handleDownloadSubtitle = (id) => {
+    handleDownloadSubtitle = (subtitleObject) => {
         chrome.runtime.sendMessage({
             commend: 'setGAEvent',
             action: 'click',
@@ -93,7 +113,7 @@ class VideoSubtitleDownload extends React.Component {
         });
         chrome.runtime.sendMessage({
             commend: 'downloadSubtitle',
-            id,
+            subtitleObject,
             filename: $('#viewbox_report h1, .header-info h1').attr('title'),
         });
     };
@@ -107,16 +127,14 @@ class VideoSubtitleDownload extends React.Component {
                     {permissionMap.login ? <React.Fragment>
                         {subtitleData.length === 0
                          ? <LinkGroupTitle><p>未获取字幕数据，请检查该视频是否拥有字幕</p></LinkGroupTitle>
-                         : subtitleData.map((o) => {
-                                const {id, lan_doc} = o;
-                                return (
-                                    <LinkGroup key={id}>
-                                        <LinkGroupTitle onClick={() => this.handleDownloadSubtitle(id)}>
-                                            <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
-                                        </LinkGroupTitle>
-                                    </LinkGroup>
-                                );
-                            })
+                         : <LinkGroup>
+                             {subtitleData.map((subtitle) => {
+                                 const {id, lan_doc} = subtitle;
+                                 return (<LinkGroupTitle key={id} onClick={() => this.handleDownloadSubtitle(subtitle)}>
+                                     <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
+                                 </LinkGroupTitle>);
+                             })}
+                         </LinkGroup>
                         }
                     </React.Fragment> : <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
                 </Container>

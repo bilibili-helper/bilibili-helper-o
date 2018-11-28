@@ -9,8 +9,10 @@
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
     "版本 1.1.6": [
-        "修复在后台打开页面时助手加载失败或部分功能失效的问题",
-        "修复<i>快速跳转</i>功能中数字ID至少为4位和sID检索错误的问题，并增加检索种类：epID"
+        "修复<i>自动宽屏</i>功能在后台打开页面时失效的问题",
+        "修复<i>快速跳转</i>功能中数字ID至少为4位和sID检索错误的问题，并增加检索种类：epID",
+        "修复<i>字幕下载</i>功能",
+        "增加1条投喂信息"
     ],
     "版本 1.1.5": [
         "修复了<i>外挂字幕下载</i>功能会在后台不停发送请求的问题",

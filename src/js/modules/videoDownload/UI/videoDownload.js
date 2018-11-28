@@ -62,6 +62,13 @@ const LinkGroupTitle = styled.span`
   }
 `;
 
+const Suggest = styled.p`
+  margin-bottom: 6px;
+  margin-left: 5px;
+  font-size: 10px;
+  color: ${color('bilibili-pink')};
+`;
+
 export class VideoDownload extends React.Component {
     constructor(props) {
         super(props);
@@ -148,34 +155,38 @@ export class VideoDownload extends React.Component {
 
     render() {
         const {videoData, currentCid} = this.state;
+        let notSupported = true;
+        let morePart = false;
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
+                {morePart && <Suggest>若分段较多，可以尝试切换清晰度以重新获取下载数据</Suggest>}
                 <Container>
                     {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
                         const {accept_quality, accept_description, durl} = part;
-                        return (
-                            durl ? <LinkGroup key={quality}>
-                                {_.map(durl, (o, i) => {
-                                    const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
-                                    return (
-                                        <React.Fragment key={`${quality}${i}`}>
-                                            {durl.length > 1 && i === 0 ? <LinkGroupTitle
-                                                key={`title-${quality}-${i}`}
-                                            >{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
-                                            <a
-                                                key={`${quality}${i}`}
-                                                referrerPolicy="unsafe-url"
-                                                href={o.url}
-                                                onClick={() => this.handleOnClickDownload(o.url)}
-                                            >{title}</a>
-                                        </React.Fragment>
-                                    );
-                                })}
-                            </LinkGroup> : <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle>
-                        );
+                        if (durl) notSupported = false;
+                        if (durl && durl.length > 3) morePart = true;
+                        return (durl && !notSupported ? <LinkGroup key={quality}>
+                            {_.map(durl, (o, i) => {
+                                const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
+                                return (
+                                    <React.Fragment key={`${quality}${i}`}>
+                                        {durl.length > 1 && i === 0 ? <LinkGroupTitle
+                                            key={`title-${quality}-${i}`}
+                                        >{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
+                                        <a
+                                            key={`${quality}${i}`}
+                                            referrerPolicy="unsafe-url"
+                                            href={o.url}
+                                            onClick={() => this.handleOnClickDownload(o.url)}
+                                        >{title}</a>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </LinkGroup> : null);
                     })}
-                    {!videoData[currentCid] && <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle>}
+                    {notSupported && videoData[currentCid] ? <LinkGroupTitle><p>未支持的视频数据</p></LinkGroupTitle> : null}
+                    {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>
         );
