@@ -2,17 +2,17 @@
     "功能删除须知": [
         "从0.8.16.13版本开始不再提供<i>区域限制解锁</i>和<i>自动抽奖</i>功能",
         "从0.8.16.20版本开始不再提供<i>播放器切换</i>功能",
-        "从1.0.0版本开始不再提供<i>礼物包裹增强</i>功能"
+        "从1.0.0版本开始不再提供<i>礼物包裹增强</i>和主站播放器的<i>自动定位</i>功能"
     ],
     "第三方引用声明": [
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
     "版本 1.1.7":[
-        "优化助手在主站的加载逻辑",
+        "优化助手在主站的加载逻辑，在此特别鸣谢“巫师”和“04”等网友的帮助，非常感谢",
         "优化<i>自动签到</i>功能的执行时间，从原来每次打开直播就签到一次改为每次打开浏览器立即执行一次和每天至少一次",
         "修复<i>银瓜子兑换硬币</i>功能存在的BUG，执行逻辑改为和<i>自动签到</i>功能一样",
-        "修复<i>弹幕下载</i>和<i>视频下载<i/>中的BUG"
+        "修复由于部分视频标题存在非法字符而导致<i>弹幕下载</i>和<i>视频下载<i/>功能无法正常使用的问题"
     ],
     "版本 1.1.6": [
         "修复<i>自动宽屏</i>功能在后台打开页面时失效的问题",
