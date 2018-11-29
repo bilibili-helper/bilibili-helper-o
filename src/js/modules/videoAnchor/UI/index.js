@@ -54,26 +54,21 @@ export class VideoAnchorUI extends UI {
                     } else ++retryTime;
                 }, 1000);
             } else { // 老的番剧页面
-                this.observer(containerSelectors).then((container) => {
-                    let timer;
-                    let timeout = false;
-                    timer = setTimeout(() => {
-                        timeout = true;
-                        container.length > 0 && addUI(container);
-                    }, 700);
-                    container.length > 0 && new MutationObserver(function(mutationList, observer) {
-                        if (timeout) observer.disconnect();
-                        if (!!timer) clearTimeout(timer);
-                        if ($('.fav-box .num').text() !== 0 || $('.coin-box .num').text() !== '--') {
-                            observer.disconnect();
-                            addUI(container);
+                this.interval(containerSelectors).then((container) => {
+                    const retryMax = 10;
+                    let retryTime = 0;
+                    let timer = setInterval(() => {
+                        if (retryTime > retryMax) {
+                            clearInterval(timer);
+                            return console.error(`title for view has not changed!`);
                         }
-                    }).observe(container[0], {
-                        childList: true,
-                        attributes: true,
-                        attributeOldValue: true,
-                        subtree: true,
-                    });
+                        const favNum = container.find('.fav-box .num').text();
+                        const coinNum = container.find('.coin-box .num').text();
+                        if (favNum !== 0 && coinNum !== '--') {
+                            clearInterval(timer);
+                            addUI($('#arc_toolbar_report, #bangumi_detail .func-module'));
+                        } else ++retryTime;
+                    }, 1000);
                 });
             }
         });

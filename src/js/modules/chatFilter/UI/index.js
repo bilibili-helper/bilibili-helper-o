@@ -20,7 +20,7 @@ export class ChatFilterUI extends UI {
 
     load = (containers, settings) => {
         return new Promise(resolve => {
-            this.interval('.aside-area .control-panel-icon-row').then((container) => {
+            this.interval('.aside-area .control-panel-icon-row', 1000).then((container) => {
                 if (container) {
                     const panel = container.find('.icon-left-part');
                     const chatFilter = $('<span />').attr({
