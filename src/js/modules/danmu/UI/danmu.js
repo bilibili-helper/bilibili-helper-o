@@ -371,7 +371,7 @@ export class Danmu extends React.Component {
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}}`,
+            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
         });
     };
 
@@ -382,7 +382,7 @@ export class Danmu extends React.Component {
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}}`,
+            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
             origin: document.location.href,
         });
     };
