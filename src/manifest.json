@@ -27,7 +27,10 @@
     "content_scripts": [
         {
             "all_frames": false,
-            "js": ["video.js"],
+            "js": [
+                "video.js",
+                "vendors.bundle.js"
+            ],
             "css": [
                 "styles/video.css"
             ],
@@ -40,6 +43,7 @@
         }, {
             "all_frames": false,
             "js": [
+                "vendors.bundle.js",
                 "live.js",
                 "libs/ocrad.min.js"
             ],

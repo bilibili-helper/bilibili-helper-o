@@ -12,6 +12,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const srcPath = path.resolve('src');
 const buildPath = path.resolve('build');
@@ -46,8 +47,20 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: buildPath,
+        chunkFilename: '[name].bundle.js',
     },
     optimization: {
+        splitChunks: {
+            minChunks: 2,
+            cacheGroups: {
+                vendors: {
+                    name: 'vendors',
+                    test: /[\\/](node_modules|src\/js\/libs|src\/js\/utils|src\/_locales|src\/js\/components)[\\/]/,
+                    chunks: 'all',
+                    priority: 1,
+                },
+            },
+        },
         minimizer: [
             new UglifyJsPlugin({
                 cache: true,
@@ -86,7 +99,7 @@ module.exports = {
                     emitError: true,
                     failOnError: true,
                     fix: true,
-                }
+                },
             },
             {
                 test: /\.js$/,
@@ -123,5 +136,6 @@ module.exports = {
             debug: true,
             output: {groupBy: localesGroup},
         }),
+        new BundleAnalyzerPlugin(),
     ],
 };
