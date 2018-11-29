@@ -6,7 +6,7 @@ Feature 作为一个功能点，需要使用FeatureManager进行加载。如果�
 
 ## Directory
 
-```
+```javascript
 moduleName
     index.js
     UI

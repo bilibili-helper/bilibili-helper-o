@@ -4,7 +4,6 @@
  * Description: 直播区功能脚本
  */
 import {UIManager} from 'Libs/UIManager';
-import {inLiveRoom, consoleLogo} from 'Utils';
+import {inLiveRoom} from 'Utils';
 
 inLiveRoom() && new UIManager('live');
-consoleLogo();

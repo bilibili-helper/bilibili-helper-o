@@ -5,14 +5,14 @@
  */
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
-import {__} from 'Utils';
+import {__, getURL} from 'Utils';
 
 export class Silver2coin extends Feature {
     constructor() {
         super({
             name: 'silver2coin',
             kind: 'live',
-            permissions: ['login'],
+            permissions: ['login', 'notifications'],
             settings: {
                 on: false,
                 title: '银瓜子自动换硬币',
@@ -21,11 +21,34 @@ export class Silver2coin extends Feature {
     }
 
     launch = () => {
+        chrome.alarms.create('silver2coin', {periodInMinutes: 60 * 24});
+        this.request();
+    };
+
+    pause = () => {
+        chrome.alarms.clear('silver2coin');
+    }
+
+    addListener = () => {
+        chrome.alarms.onAlarm.addListener((alarm) => {
+            switch (alarm.name) {
+                case 'silver2coin':
+                    this.request();
+                    break;
+            }
+        });
+    };
+
+    permissionHandleLogin = (hasLogin) => {
+        this.request(hasLogin);
+    };
+
+    request = (hasLogin = this.permissionMap.login) => {
         if (chrome.extension.inIncognitoContext) return; // 隐身模式
-        this.settings.on && this.permissionMap.login && chrome.cookies.get({
+        this.settings.on && hasLogin && chrome.cookies.get({
             url: 'http://www.bilibili.com',
             name: 'bili_jct',
-        }, function(cookie) {
+        }, (cookie) => {
             $.ajax({
                 method: 'get',
                 url: 'https://api.live.bilibili.com/pay/v1/Exchange/silver2coin',
@@ -35,10 +58,13 @@ export class Silver2coin extends Feature {
                 },
                 success: (res) => {
                     if (res.code === 0) {
-                        let msg = new Notification(__('extensionNotificationTitle'), {
-                            body: '银瓜子兑换成功',
+                        chrome.notifications.create('bilibili-helper-silver2coin', {
+                            type: 'basic',
+                            iconUrl: getURL('/statics/imgs/cat.svg'),
+                            title: __('extensionNotificationTitle'),
+                            message: '银瓜子换硬币成功！',
+                            buttons: [],
                         });
-                        setTimeout(() => msg.close(), 10000);
                     }
                 },
             });
