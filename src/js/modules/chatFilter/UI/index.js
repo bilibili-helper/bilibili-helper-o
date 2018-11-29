@@ -20,14 +20,15 @@ export class ChatFilterUI extends UI {
 
     load = (containers, settings) => {
         return new Promise(resolve => {
-            this.interval('.control-panel-icon-row .icon-left-part').then((container) => {
+            this.interval('.aside-area .control-panel-icon-row').then((container) => {
                 if (container) {
+                    const panel = container.find('.icon-left-part');
                     const chatFilter = $('<span />').attr({
                         'class': 'icon-item icon-font',
                         'id': 'bilibili-helper-chat-filter',
-                        'style': "position: relative;",
+                        'style': 'position: relative;',
                     });
-                    container.append(chatFilter);
+                    panel.append(chatFilter);
                     ReactDOM.render(<ChatFilter settings={settings}/>, chatFilter[0], resolve);
                 }
             });
