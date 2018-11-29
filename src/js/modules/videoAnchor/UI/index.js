@@ -27,6 +27,7 @@ export class VideoAnchorUI extends UI {
             ];
             const newPage = $('.video-data');
             const addUI = (container) => {
+                if ($('.bilibili-helper').length > 0) return;
                 const helperDOM = $('<span class="bilibili-helper"/>');
                 container.append(helperDOM);
                 ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
@@ -53,7 +54,28 @@ export class VideoAnchorUI extends UI {
                     } else ++retryTime;
                 }, 1000);
             } else { // 老的番剧页面
-                this.observer(containerSelectors).then(addUI);
+                this.observer(containerSelectors).then(() => {
+                    const container = $('#arc_toolbar_report');
+                    let timer;
+                    let timeout = false;
+                    timer = setTimeout(() => {
+                        timeout = true;
+                        addUI(container);
+                    }, 700);
+                    container.length > 0 && new MutationObserver(function(mutationList, observer) {
+                        if (timeout) observer.disconnect();
+                        if (!!timer) clearTimeout(timer);
+                        if ($('.fav-box .num').text() !== 0 || $('.coin-box .num').text() !== '--') {
+                            observer.disconnect();
+                            addUI(container);
+                        }
+                    }).observe(container[0], {
+                        childList: true,
+                        attributes: true,
+                        attributeOldValue: true,
+                        subtree: true,
+                    });
+                });
             }
         });
     };

@@ -95,7 +95,8 @@ export class VideoDownload extends Feature {
             const urlObject = new URL(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
-                const {filename, cid} = filenameObject;
+                const {filename: originFilename, cid} = filenameObject;
+                const filename = originFilename.replace(/[|"*?:<>]/g, "_");
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
                 const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`.replace('/', '%2f');
                 if (targetData) {

@@ -21,7 +21,7 @@ export class Silver2coin extends Feature {
     }
 
     launch = () => {
-        chrome.alarms.create('silver2coin', {periodInMinutes: 60 * 24});
+        chrome.alarms.create('silver2coin', {periodInMinutes: 5});
         this.request();
     };
 

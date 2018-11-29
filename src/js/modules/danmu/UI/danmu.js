@@ -365,22 +365,24 @@ export class Danmu extends React.Component {
     };
 
     handleXMLDownloadClick = () => {
+        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
         chrome.runtime.sendMessage({
             commend: 'downloadDanmuXML',
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}}`,
         });
     };
 
     handleASSDownloadClick = () => {
+        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
         chrome.runtime.sendMessage({
             commend: 'downloadDanmuASS',
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}}`,
             origin: document.location.href,
         });
     };

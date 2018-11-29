@@ -57,7 +57,6 @@ export class UI {
                 if (!!timer) clearTimeout(timer);
                 timer = setTimeout(() => {
                     observer.disconnect();
-
                     resolve(container);
                 }, interval);
             }).observe(container[0], {

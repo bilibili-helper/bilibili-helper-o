@@ -18,6 +18,10 @@ export const PERMISSION_STATUS = {
         errorMsg: __('permissionManager_notifications_error_massage'),
         description: __('permissionManager_notifications_description'),
     },
+    pip: {
+        errorMsg: '您的浏览器不支持画中画功能',
+        description: '您需要升级浏览器版本或者更换为更加高级的浏览器',
+    },
 };
 
 export class PermissionManager {
@@ -48,6 +52,8 @@ export class PermissionManager {
                         return this.hasLogin();
                     case 'notifications':
                         return this.checkNotification();
+                    case 'pip':
+                        return this.pip();
                 }
             })).then(checkResults => {
                 const res = _.filter(checkResults, ({pass}) => !pass);
@@ -94,6 +100,13 @@ export class PermissionManager {
                 this.updatePermission('login', pass);
                 resolve({pass, msg});
             });
+        });
+    };
+
+    pip = () => {
+        return new Promise(resolve => {
+            const enabled = document.pictureInPictureEnabled;
+            resolve({pass: enabled, msg: PERMISSION_STATUS.pip.errorMsg});
         });
     };
 

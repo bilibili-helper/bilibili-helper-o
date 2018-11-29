@@ -9,8 +9,10 @@
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
     ],
     "版本 1.1.7":[
+        "优化助手在主站的加载逻辑",
         "优化<i>自动签到</i>功能的执行时间，从原来每次打开直播就签到一次改为每次打开浏览器立即执行一次和每天至少一次",
-        "修复<i>银瓜子兑换硬币</i>功能存在的BUG，执行逻辑改为和<i>自动签到</i>功能一样"
+        "修复<i>银瓜子兑换硬币</i>功能存在的BUG，执行逻辑改为和<i>自动签到</i>功能一样",
+        "修复<i>弹幕下载</i>和<i>视频下载<i/>中的BUG"
     ],
     "版本 1.1.6": [
         "修复<i>自动宽屏</i>功能在后台打开页面时失效的问题",

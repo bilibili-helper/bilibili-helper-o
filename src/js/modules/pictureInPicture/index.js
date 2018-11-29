@@ -12,6 +12,7 @@ export class PictureInPicture extends Feature {
         super({
             name: 'pictureInPicture',
             kind: 'video',
+            permissions: ['pip'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,

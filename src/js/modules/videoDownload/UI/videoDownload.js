@@ -145,11 +145,12 @@ export class VideoDownload extends React.Component {
     };
 
     handleOnClickDownload = (downloadUrl) => {
+        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
         chrome.runtime.sendMessage({
             commend: 'sendVideoFilename',
             url: downloadUrl.split('?')[0],
             cid: this.state.currentCid,
-            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
         });
     };
 

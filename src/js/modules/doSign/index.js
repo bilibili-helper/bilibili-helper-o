@@ -25,7 +25,7 @@ export class DoSign extends Feature {
     }
 
     launch = () => {
-        chrome.alarms.create('doSign', {periodInMinutes: 60 * 24});
+        chrome.alarms.create('doSign', {periodInMinutes: 5});
         this.request();
     };
 
