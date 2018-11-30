@@ -15,7 +15,7 @@ export class VideoSubtitleDownload extends Feature {
         super({
             name: 'videoSubtitleDownload',
             kind: 'video',
-            permissions: ['login'],
+            permissions: ['login', 'downloads'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,

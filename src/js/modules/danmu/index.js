@@ -16,6 +16,7 @@ export class Danmu extends Feature {
         super({
             name: 'danmu',
             kind: 'video',
+            permissions: ['downloads'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,

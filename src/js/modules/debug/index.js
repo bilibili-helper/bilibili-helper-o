@@ -19,4 +19,7 @@ export class Debug extends Feature {
             },
         });
     }
+    afterSetSetting = async ({on}) => {
+        chrome.runtime.sendMessage({commend: 'debugMode', value: on});
+    };
 }

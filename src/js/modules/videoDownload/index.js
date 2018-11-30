@@ -15,6 +15,7 @@ export class VideoDownload extends Feature {
         super({
             name: 'videoDownload',
             kind: 'video',
+            permissions: ['downloads'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,

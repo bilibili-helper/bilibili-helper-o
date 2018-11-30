@@ -136,6 +136,6 @@ module.exports = {
             debug: true,
             output: {groupBy: localesGroup},
         }),
-        new BundleAnalyzerPlugin(),
+        //new BundleAnalyzerPlugin(),
     ],
 };

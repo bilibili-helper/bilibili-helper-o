@@ -92,23 +92,23 @@ const Footer = styled.div`
 
 const Broadcast = styled.p`
   width: 100%;
+  line-height: 30px;
   max-width: 800px;
   margin: 16px auto;
   padding: 0px 10px;
   text-align: left;
   color: ${color('bilibili-pink')};
 `;
-/*
 const PermissionTag = styled.span.attrs({
     title: ({title}) => title,
 })`
-  padding: 0 6px;
-  margin-left: 8px;
+  margin: 0 4px;
+  padding: 0 3px;
   border-radius: 4px;
   font-size: 10px;
   background-color: ${color('bilibili-blue')};
   color: #fff;
-`;*/
+`;
 
 const PermissionErrorDescription = styled.span`
   padding: 0 6px;
@@ -127,7 +127,7 @@ class PageConfig extends React.Component {
             popup: {title: '菜单栏', map: {}},
             other: {title: '其他', map: {}},
         };
-        this.defaultBroadcast = '如果您的版本显示为测试版并出现了问题，请先卸载本扩展后重新安装';
+        this.defaultBroadcast = '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装';
         this.state = {
             modalTitle: null,
             modalBody: null,
@@ -147,7 +147,12 @@ class PageConfig extends React.Component {
 
             permissionMap: {},
         };
-
+        // 监听配置更新
+        chrome.runtime.onMessage.addListener(((message) => {
+            if (message.commend === 'debugMode') {
+                this.setState({debug: message.value});
+            }
+        }));
     }
 
     componentDidMount() {
@@ -159,13 +164,6 @@ class PageConfig extends React.Component {
             });
             this.setState(this.settings);
         });
-
-        // 监听配置更新
-        chrome.runtime.onMessage.addListener(((message) => {
-            if (message.commend === 'debugMode' && message.value !== undefined) {
-                this.setState({debug: message.value});
-            }
-        }));
         // 获取调试模式
         chrome.runtime.sendMessage({commend: 'getSetting', feature: 'Debug'}, (setting) => {
             this.setState({debug: setting.on});
@@ -178,9 +176,7 @@ class PageConfig extends React.Component {
                 this.setState({broadcast: this.defaultBroadcast});
             }
         });
-        chrome.runtime.sendMessage({
-            commend: 'getPermissionMap',
-        }, (permissionMap) => {
+        chrome.runtime.sendMessage({commend: 'getPermissionMap'}, (permissionMap) => {
             this.setState({permissionMap});
         });
     }
@@ -239,7 +235,7 @@ class PageConfig extends React.Component {
     };
 
     createSettingDOM = () => {
-        const {permissionMap} = this.state;
+        const {permissionMap, debug} = this.state;
         return _.map(this.settings, (e, kind) => {
             const list = this.state[kind];
             return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
@@ -259,10 +255,9 @@ class PageConfig extends React.Component {
                                 <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
                             );
                         }
-                        /*return <PermissionTag title={PERMISSION_STATUS[name].description}>
+                        return debug ? <PermissionTag title={PERMISSION_STATUS[name].description}>
                             {_.upperFirst(name)}
-                        </PermissionTag>;*/
-                        return null;
+                        </PermissionTag> : null;
                     });
                     const twoLine = description !== undefined || errorDescription.length > 0;
                     return <ListItem
@@ -385,7 +380,10 @@ class PageConfig extends React.Component {
                     <sub>{`Version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
                     {/*<Cat/>*/}
                 </Header>
-                <Broadcast>{broadcast}</Broadcast>
+                <Broadcast>
+                    {broadcast}<br/>
+                    {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
+                </Broadcast>
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}

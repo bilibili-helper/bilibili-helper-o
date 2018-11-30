@@ -22,14 +22,15 @@ export const PERMISSION_STATUS = {
         errorMsg: '您的浏览器不支持画中画功能',
         description: '您需要升级浏览器版本或者更换为更加高级的浏览器',
     },
+    downloads: {
+        errorMsg: '助手未获取到管理下载内容的权限',
+        description: '助手需要获得管理下载内容的权限，以便于给您下载的弹幕或视频文件重命名',
+    },
 };
 
 export class PermissionManager {
     constructor() {
-        this.permissionMap = {
-            login: false,
-            notifications: false,
-        };
+        this.permissionMap = {};
         this.features = {};
         this.addListener();
     }
@@ -44,7 +45,7 @@ export class PermissionManager {
             let [pass, msg] = [true, '']; // 通过状态
             if (_.isEmpty(feature.permissions)) resolve({pass, msg});// 没有设置需要检查的权限，则无条件通过
             Promise.all(_.map(feature.permissions, async (permissionName) => {
-                if (!(permissionName in this.permissionMap)) { // 未定义权限类型
+                if (!(permissionName in PERMISSION_STATUS)) { // 未定义权限类型
                     return {pass: false, msg: `Undefined permission: ${permissionName}`};
                 }
                 switch (permissionName) {
@@ -54,6 +55,8 @@ export class PermissionManager {
                         return this.checkNotification();
                     case 'pip':
                         return this.pip();
+                    case 'downloads':
+                        return this.downloads();
                 }
             })).then(checkResults => {
                 const res = _.filter(checkResults, ({pass}) => !pass);
@@ -64,8 +67,8 @@ export class PermissionManager {
     };
 
     updatePermission = (permissionName, value) => {
-        if (this.permissionMap[permissionName] === undefined) throw('Undefined permission: ' + permissionName);
-        if (this.permissionMap[permissionName] !== value) {
+        if (this.permissionMap[permissionName] === undefined) this.permissionMap[permissionName] = value;
+        else if (this.permissionMap[permissionName] !== value) {
             this.permissionMap[permissionName] = value;
             this.triggerListener(permissionName, value);
         }
@@ -109,6 +112,9 @@ export class PermissionManager {
             resolve({pass: enabled, msg: PERMISSION_STATUS.pip.errorMsg});
         });
     };
+    downloads = () => {
+        return Promise.resolve({pass: true, msg: PERMISSION_STATUS.downloads.errorMsg})
+    }
 
     checkNotification = () => {
         return new Promise(resolve => {
