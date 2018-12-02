@@ -364,26 +364,16 @@ export class Danmu extends React.Component {
         }
     };
 
-    handleXMLDownloadClick = () => {
+    handleDownloadClick = (type) => {
         const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
+        const title = $('#viewbox_report h1, .header-info h1').attr('title');
         chrome.runtime.sendMessage({
-            commend: 'downloadDanmuXML',
+            commend: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
-        });
-    };
-
-    handleASSDownloadClick = () => {
-        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
-        chrome.runtime.sendMessage({
-            commend: 'downloadDanmuASS',
-            cid: this.state.currentCid,
-            danmuDocumentStr: this.danmuDocumentStr,
-            date: this.danmuDate,
-            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
-            origin: document.location.href,
+            filename: `${title}${partName ? `_${partName}` : ''}`,
+            origin: type === 'ass' ? document.location.href : null,
         });
     };
 
@@ -394,8 +384,8 @@ export class Danmu extends React.Component {
             <React.Fragment>
                 <Title>
                     <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
-                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={this.handleASSDownloadClick}>ASS</DownloadBtn>
-                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={this.handleXMLDownloadClick}>XML</DownloadBtn>
+                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={() => this.handleDownloadClick('xml')}>ASS</DownloadBtn>
+                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>XML</DownloadBtn>
                 </Title>
                 <DanmuList>
                     {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
