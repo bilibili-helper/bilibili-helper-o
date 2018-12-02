@@ -68,10 +68,11 @@ export class Danmu extends Feature {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',
                 }));
+                const filename = `${message.filename}.${message.cid}.${message.date}.xml`;
                 chrome.downloads.download({
                     saveAs: true,
                     url,
-                    filename: `${message.filename}.${message.cid}.${message.date}.xml`.replace(/[|"*?:<>]/g, "_"),
+                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
                 });
             } else if (message.commend === 'downloadDanmuASS' && message.cid) {
                 const parser = new DOMParser();
@@ -84,10 +85,11 @@ export class Danmu extends Feature {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([assData], {
                     type: 'application/octet-stream',
                 }));
+                const filename = `${message.filename}.${message.cid}.${message.date}.xml`;
                 chrome.downloads.download({
                     saveAs: true,
                     url,
-                    filename: `${message.filename}.${message.cid}.${message.date}.xml`.replace(/[|"*?:<>]/g, "_"),
+                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
                 });
             } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
                 const tabData = this.store.createData(sender.tab.id);

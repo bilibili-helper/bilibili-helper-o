@@ -123,10 +123,10 @@ const DownloadBtn = styled(Button)`
     padding: 0;
     min-width: 35px;
     font-size: 12px;
-    border: 1px solid #fb7299;
+    border: 1px solid ${color('bilibili-pink')};
     border-radius: 4px;
-    color: ${({on}) => on ? '#fff' : '#fb7299'};
-    background-color: ${({on}) => on ? '#fb7299' : '#fff'};
+    color: ${({on}) => on ? '#fff' : color('bilibili-pink')};
+    background-color: ${({on}) => on ? color('bilibili-pink') : '#fff'};
   }
 `;
 
