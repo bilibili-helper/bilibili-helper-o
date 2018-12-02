@@ -8,6 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 import {treasureCloseImg, treasureOpenImg} from './imgUrls';
+import apis from '../apis.js';
 
 const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
   position: relative;
@@ -201,7 +202,7 @@ export class Treasure extends React.Component {
     getCurrentTask = () => {
         $.ajax({
             method: 'get',
-            url: 'https://api.live.bilibili.com/lottery/v1/SilverBox/getCurrentTask',
+            url: apis.getCurrentTask,
             success: (res) => {
                 if (this.retryTime) this.retryTime = 0;
                 if (res.code === 0) {
@@ -227,7 +228,7 @@ export class Treasure extends React.Component {
     getCaptcha = () => {
         $.ajax({
             method: 'get',
-            url: 'https://api.live.bilibili.com/lottery/v1/SilverBox/getCaptcha',
+            url: apis.getCaptcha,
             data: {
                 ts: Date.now(),
             },
@@ -263,7 +264,7 @@ export class Treasure extends React.Component {
         const {time_start, time_end} = this.state;
         $.ajax({
             method: 'get',
-            url: 'https://api.live.bilibili.com/lottery/v1/SilverBox/getAward',
+            url: apis.getAward,
             data: {time_start, time_end, captcha},
             success: (res) => {
                 if (this.retryTime) this.retryTime = 0;

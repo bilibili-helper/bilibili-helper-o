@@ -7,6 +7,7 @@ import $ from 'jquery';
  */
 import {Feature} from 'Libs/feature';
 import {__, getURL} from 'Utils';
+import apis from './apis';
 
 export {DoSignUI} from './UI';
 
@@ -51,7 +52,7 @@ export class DoSign extends Feature {
         if (chrome.extension.inIncognitoContext) return; // 隐身模式
         this.settings.on && hasLogin && $.ajax({
             method: 'get',
-            url: 'https://api.live.bilibili.com/sign/doSign',
+            url: apis.doSign,
             success: (res) => {
                 if (res.code === 0) {
                     chrome.notifications.create('bilibili-helper-doSign', {

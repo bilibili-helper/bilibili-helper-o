@@ -6,6 +6,7 @@
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
 import {__, getURL} from 'Utils';
+import apis from './apis';
 
 export class Silver2coin extends Feature {
     constructor() {
@@ -27,7 +28,7 @@ export class Silver2coin extends Feature {
 
     pause = () => {
         chrome.alarms.clear('silver2coin');
-    }
+    };
 
     addListener = () => {
         chrome.alarms.onAlarm.addListener((alarm) => {
@@ -51,7 +52,7 @@ export class Silver2coin extends Feature {
         }, (cookie) => {
             $.ajax({
                 method: 'get',
-                url: 'https://api.live.bilibili.com/pay/v1/Exchange/silver2coin',
+                url: apis.silver2coin,
                 data: {
                     platform: 'pc',
                     csrf_token: cookie.value,

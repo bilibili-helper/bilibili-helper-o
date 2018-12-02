@@ -8,6 +8,7 @@ import _ from 'lodash';
 import store from 'store';
 import {Feature} from 'Libs/feature';
 import {__, getURL, version} from 'Utils';
+import apis from './apis';
 
 export class CheckVersion extends Feature {
     constructor() {
@@ -36,7 +37,7 @@ export class CheckVersion extends Feature {
     launch = () => {
         $.ajax({
             method: 'get',
-            url: `https://bilihelper.guguke.net/version.json`,
+            url: apis.version,
             success: (res) => {
                 const {day, updateTime} = this.getVersion();
                 if ((this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) && day !== new Date().getDate()) { // 比较今天是否有检测过

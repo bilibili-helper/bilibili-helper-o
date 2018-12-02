@@ -14,6 +14,7 @@ import {Button} from 'Components/common/Button';
 import {parseTime} from 'Utils';
 import {theme} from 'Styles';
 import {Crc32Engine} from 'Libs/crc32';
+import apis from '../apis.js';
 
 const {color} = theme;
 const crcEngine = new Crc32Engine();
@@ -186,9 +187,8 @@ export class Danmu extends React.Component {
 
     // 获取弹幕xml数据源
     getDANMUList = (cid, date) => {
-        const url = 'https://api.bilibili.com/x/v1/dm/list.so';
-        const historyUrl = 'https://api.bilibili.com/x/v2/dm/history';
         if (!!cid && !this.state.loading) {
+            const {list, historyList} = apis;
             const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
                 this.setState({
                     loading: true,
@@ -197,7 +197,7 @@ export class Danmu extends React.Component {
             }, 800);
             $.ajax({
                 method: 'get',
-                url: date ? historyUrl : url,
+                url: date ? historyList : list,
                 data: {
                     oid: cid,
                     type: 1,
@@ -237,7 +237,7 @@ export class Danmu extends React.Component {
             else {
                 uid && $.ajax({
                     method: 'get',
-                    url: 'https://api.bilibili.com/x/web-interface/card',
+                    url: apis.card,
                     data: {
                         mid: uid,
                         photo: 0,

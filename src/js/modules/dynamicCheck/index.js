@@ -7,6 +7,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
 import {getURL, __} from 'Utils';
+import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index';
 
@@ -70,7 +71,7 @@ export class DynamicCheck extends Feature {
 
     // 检查未读推送
     checkUnread = () => {
-        return $.get('https://api.bilibili.com/x/feed/unread/count?type=0', {}, (unreadRes) => {
+        return $.get(apis.unread, {}, (unreadRes) => {
             if (unreadRes.code === 0 && unreadRes.data.all > 0) {
                 chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                 this.getFeed().then(this.sendNotification);
@@ -80,7 +81,7 @@ export class DynamicCheck extends Feature {
 
     // 获取并存储推送数据 - 不缓存到本地(￣.￣)
     getFeed = async () => {
-        return $.get('https://api.bilibili.com/x/feed/pull?ps=1&type=0', {}, (feedRes) => {
+        return $.get(apis.feed, {}, (feedRes) => {
             const {code, data} = feedRes;
             if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
                 this.lastCheckTime = Date.now();
