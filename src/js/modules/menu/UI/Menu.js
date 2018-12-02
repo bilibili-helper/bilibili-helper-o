@@ -45,7 +45,7 @@ const MenuButton = styled(Button)`
     text-indent: 6px;
     font-size: 11px;
     font-weight: normal;
-    color: ${color('google-grey-600')};
+    color: ${color('google-grey-700')};
     background-color: #fff;
     transition: all 0.3s;
     &[disabled] {
@@ -84,12 +84,13 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
   box-sizing: border-box;
   font-size: 11px;
   font-weight: normal;
-  background-color: rgb(255, 255, 255);
   transition: all 0.3s ease 0s;
   text-align: center;
   outline: none;
+  color: ${color('google-grey-700')};
   &:focus {
     border-color: #009cd6;
+    color: #000000;
   }
 `;
 

@@ -1,5 +1,5 @@
 {
-    "version": "1.1.7",
+    "version": "1.1.8",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
@@ -46,8 +46,6 @@
                 "vendors.bundle.js",
                 "live.js",
                 "libs/ocrad.min.js"
-            ],
-            "css": [
             ],
             "matches": ["*://live.bilibili.com/*"],
             "run_at": "document_end"
