@@ -14,6 +14,7 @@
 
 1. 创建一个拥有定时器的功能：参见 [dynamicCheck](../src/js/modules/dynamicCheck/index.js)
 2. 创建一个拥有UI的功能：参见 [menu](../src/js/modules/menu)
+3. 创建一个后端发送消息来更细UI的功能：参见 [videoDownload](../src/js/modules/videoDownload)
 
 注意：
 
@@ -26,4 +27,8 @@
 FeatureManager：[link](./FeatureManager.md)
 
 Feature：[link](./Feature.md)
+
+UIManager: [link](./UIManager.md)
+
+MessageStore: [link](./MessageStore.md)
 

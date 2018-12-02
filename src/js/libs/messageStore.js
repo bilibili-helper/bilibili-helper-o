@@ -29,7 +29,7 @@ export class MessageStore {
                 } else {
                     console.warn(`This store is already in state:`, data.state);
                 }
-            } else if (message.commend === 'tabUnload' && !!this.has(sender.tab.id)) {
+            } else if (message.commend === 'tabUnload' && this.has(sender.tab.id)) {
                 this.delete(sender.tab.id);
             }
         });
