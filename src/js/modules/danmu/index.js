@@ -85,7 +85,7 @@ export class Danmu extends Feature {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([assData], {
                     type: 'application/octet-stream',
                 }));
-                const filename = `${message.filename}.${message.cid}.${message.date}.xml`;
+                const filename = `${message.filename}.${message.cid}.${message.date}.ass`;
                 chrome.downloads.download({
                     saveAs: true,
                     url,
