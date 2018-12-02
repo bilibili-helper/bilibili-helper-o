@@ -11,7 +11,7 @@ export class Menu extends Feature {
             name: 'menu',
             kind: 'popup',
             permissions: ['login'],
-            dependencies: ['popup'],
+            dependencies: ['popupAnchor'],
             settings: {
                 on: true,
                 toggle: false,

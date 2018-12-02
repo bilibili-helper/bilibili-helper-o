@@ -14,7 +14,7 @@ export class DynamicCheckUI extends UI {
     constructor() {
         super({
             name: 'dynamicCheck',
-            dependencies: ['popup'],
+            dependencies: ['popupAnchor'],
         });
     }
 

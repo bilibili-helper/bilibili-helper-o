@@ -11,11 +11,10 @@ import {Treasure, TreasureUI} from './treasure';
 import {GoogleAnalytics} from './googleAnalytics';
 import {Debug} from './debug';
 import {Danmu, DanmuUI} from './danmu';
-import {Popup, PopupUI} from './popup';
+import {PopupAnchor, PopupAnchorUI} from './PopupAnchor';
 import {Menu, MenuUI} from './menu';
 import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
-//import {VideoQualitySelect} from './videoQualitySelect';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
@@ -26,7 +25,7 @@ import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 
 export const Features = {
     Debug,
-    Popup,
+    PopupAnchor,
     Treasure,
     Menu,
     GoogleAnalytics,
@@ -36,7 +35,6 @@ export const Features = {
     ChatFilter,
     VideoDownload,
     DoSign,
-    //VideoQualitySelect,
     PictureInPicture,
     VideoWiden,
     VideoSubtitleDownload,
@@ -47,7 +45,7 @@ export const Features = {
 };
 
 export const UIs = {
-    PopupUI,
+    PopupAnchorUI,
     TreasureUI,
     MenuUI,
     VideoAnchorUI,

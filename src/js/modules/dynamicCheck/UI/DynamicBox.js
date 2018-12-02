@@ -43,7 +43,7 @@ const FeedImg = styled.div.attrs({className: 'feed-img'})`
   background-color: #eee;
   filter: grayscale(0.5) brightness(0.4);
   box-shadow: inset 0px 0px 50px -10px #333;
-  transition: all 0.5s;
+  transition: all 0.3s;
 `;
 
 const FeedTitle = styled.h4.attrs({className: 'feed-title'})`
@@ -106,8 +106,8 @@ export class DynamicBox extends React.Component {
                     return (
                         <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
                             <FeedImg style={{backgroundImage: `url(${pic})`}}/>
-                            <FeedTitle>{title}</FeedTitle>
-                            <FeedInfo><span>{author}</span><span>{duration}</span></FeedInfo>
+                            <FeedInfo><span title={author}>{author}</span><span>{duration}</span></FeedInfo>
+                            <FeedTitle title={title}>{title}</FeedTitle>
                         </FeedBox>
                     );
                 })}

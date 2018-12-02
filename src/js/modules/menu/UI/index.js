@@ -13,7 +13,7 @@ export class MenuUI extends UI {
     constructor() {
         super({
             name: 'menu',
-            dependencies: ['popup'],
+            dependencies: ['popupAnchor'],
         });
     }
 

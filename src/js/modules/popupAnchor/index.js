@@ -4,13 +4,13 @@
  * Description:
  */
 
-export {PopupUI} from './UI/index';
+export {PopupAnchorUI} from './UI/index';
 import {Feature} from 'Libs/feature';
 
-export class Popup extends Feature {
+export class PopupAnchor extends Feature {
     constructor() {
         super({
-            name: 'popup',
+            name: 'popupAnchor',
             kind: 'popup',
             settings: {
                 on: true,

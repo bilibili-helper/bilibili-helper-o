@@ -16,7 +16,7 @@ export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
   max-height: 290px;
 `;
 
-export class PopupUI extends UI {
+export class PopupAnchorUI extends UI {
     constructor() {
         super({
             name: 'popup',
