@@ -25,19 +25,37 @@ getSetting 获取指定参数（feature）的配置
 
 ### instantiateFeatures
 
+实例化各项功能的Feature类，并缓存到FeatureManager中备用
+
 ### loadFeatures
 
-### checkModuleRequire
+开始处理实例化后的Feature类，进行如下步骤
 
-### loadFeautre
+### 	checkModuleRequire
 
-### initSetting
+检查Feature的依赖是否已经初始化，即只要初始化完成了（initialed为true）就认为依赖加载完成
 
-### permissionCheck
+### 	loadFeautre 
 
-### launch
+执行具体的载入流程
+
+### 		initSetting
+
+初始化Feature配置
+
+### 		permissionCheck
+
+检查所需权限是否满足
+
+### 		launch
+
+启动功能
 
 ### dealwith wait queue
+
+若功能依赖没有被全部加载，则将该功能暂时加入待加载队列。
+
+上一队列遍历完后检查待加载队列是否为空，如果不为空则开始新一轮队列再次执行`checkModuleRequire`以下的所有步骤。
 
 
 
