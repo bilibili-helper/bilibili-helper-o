@@ -5,6 +5,7 @@
  */
 import $ from 'jquery';
 import {Feature} from 'Libs/feature';
+import _ from 'lodash';
 import {__, getURL} from 'Utils';
 import apis from './apis';
 
@@ -17,6 +18,10 @@ export class Silver2coin extends Feature {
             settings: {
                 on: false,
                 title: '银瓜子自动换硬币',
+                type: 'checkbox',
+                options: [
+                    {key: 'notification', title: '推送通知', on: true, description: '兑换成功后将会弹出代表成功的推送通知'},
+                ],
             },
         });
     }
@@ -58,7 +63,8 @@ export class Silver2coin extends Feature {
                     csrf_token: cookie.value,
                 },
                 success: (res) => {
-                    if (res.code === 0) {
+                    const notificationState = _.find(this.settings.options, {key: 'notification'});
+                    if (res.code === 0 && notificationState && notificationState.on) {
                         chrome.notifications.create('bilibili-helper-silver2coin', {
                             type: 'basic',
                             iconUrl: getURL('/statics/imgs/cat.svg'),

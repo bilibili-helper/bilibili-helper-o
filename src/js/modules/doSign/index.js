@@ -6,6 +6,7 @@ import $ from 'jquery';
  * Description:
  */
 import {Feature} from 'Libs/feature';
+import _ from 'lodash';
 import {__, getURL} from 'Utils';
 import apis from './apis';
 
@@ -21,6 +22,10 @@ export class DoSign extends Feature {
                 on: true,
                 title: '自动签到',
                 hasUI: true,
+                type: 'checkbox',
+                options: [
+                    {key: 'notification', title: '推送通知', on: true, description: '签到成功后将会弹出代表成功的推送通知'},
+                ],
             },
         });
     }
@@ -54,7 +59,8 @@ export class DoSign extends Feature {
             method: 'get',
             url: apis.doSign,
             success: (res) => {
-                if (res.code === 0) {
+                const notificationState = _.find(this.settings.options, {key: 'notification'});
+                if (res.code === 0 && notificationState && notificationState.on) {
                     chrome.notifications.create('bilibili-helper-doSign', {
                         type: 'basic',
                         iconUrl: getURL('/statics/imgs/cat.svg'),

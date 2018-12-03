@@ -4,12 +4,13 @@
  * Description:
  */
 
-
 import {Feature} from 'Libs/feature';
+import _ from 'lodash';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
 import {__} from 'Utils';
 
 export {TreasureUI} from './UI/index';
+
 export class Treasure extends Feature {
     constructor() {
         super({
@@ -34,12 +35,15 @@ export class Treasure extends Feature {
         chrome.runtime.onMessage.addListener((message) => {
             if (message.commend === 'sendNotification' && message.type === 'treasure') {
                 const {time_start, silver} = message;
-                chrome.notifications.create('bilibili-helper-treasure' + time_start, {
-                    type: 'basic',
-                    iconUrl: treasureOpenImg,
-                    title: __('extensionNotificationTitle'),
-                    message: `成功领取${silver}瓜子`,
-                });
+                const notificationState = _.find(this.settings.options, {key: 'notification'});
+                if (notificationState && notificationState.on) {
+                    chrome.notifications.create('bilibili-helper-treasure' + time_start, {
+                        type: 'basic',
+                        iconUrl: treasureOpenImg,
+                        title: __('extensionNotificationTitle'),
+                        message: `成功领取${silver}瓜子`,
+                    });
+                }
             }
         });
     };
