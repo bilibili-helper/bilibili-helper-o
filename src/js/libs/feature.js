@@ -58,8 +58,8 @@ export class Feature {
     initSetting = (sets) => {
         return new Promise(resolve => {
             const settings = sets || store.get(this.storeName) || {}; // 缓存配置
-            this.settings = Object.assign({}, this.settings, settings);
-            store.set(this.storeName, this.settings);
+            this.settings = this.mergeSetting(this.settings, settings);
+            store.set(this.storeName, this.simplifySetting(this.settings));
             resolve(this);
         });
     };
@@ -76,7 +76,7 @@ export class Feature {
     // 设置配置
     setSetting = (settings) => {
         this.settings = settings;
-        store.set(this.storeName, settings);
+        store.set(this.storeName, this.simplifySetting(settings));
         this.afterSetSetting(settings);
     };
 
@@ -91,4 +91,57 @@ export class Feature {
 
     // 添加监听器
     addListener = () => {};
+
+    /**
+     * 合并配置，该操作以originSetting为模板，忽略originSetting中没有但localSetting中有的键
+     * @param originSetting
+     * @param localSetting
+     */
+    mergeSetting = (originSetting, localSetting) => {
+        const mergeArray = (originArray, localArray) => {
+            return _.map(originArray, (object) => {
+                const localObject = _.find(localArray, (o) => o.key === object.key);
+                if (localObject) return mergeObject(object, localObject);
+            });
+        };
+        const mergeObject = (originObject, localObject) => {
+            const tempObject = {};
+            _.each(originObject, (value, key) => {
+                if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
+                    tempObject[key] = mergeArray(value, localObject[key]);
+                } else if (_.isPlainObject(value)) {
+                    tempObject[key] = mergeObject(value, localObject[key]);
+                } else if (localObject && localObject[key] !== undefined) {
+                    tempObject[key] = localObject[key];
+                } else {
+                    tempObject[key] = originObject[key];
+                }
+            });
+            return tempObject;
+        };
+        return mergeObject(originSetting, localSetting);
+    };
+
+    /**
+     * 简化配置，便于缓存
+     * @param setting
+     */
+    simplifySetting = (setting) => {
+        const filterList = [
+            'description', 'title', 'permissions', 'dependencies',
+            'type', 'hasUI', 'kind', 'name', 'hide', 'toggle',
+        ];
+        const tempObject = {};
+        _.each(setting, (value, key) => {
+            if (filterList.indexOf(key) > -1) return true;
+            if (_.isArray(value) && value.length > 0) {
+                tempObject[key] = _.map(value, (o) => this.simplifySetting(o));
+            } else if (_.isPlainObject(value)) {
+                tempObject[key] = this.simplifySetting(value);
+            } else {
+                tempObject[key] = value;
+            }
+        });
+        return tempObject;
+    };
 }
