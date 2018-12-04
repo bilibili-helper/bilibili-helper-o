@@ -31,6 +31,10 @@ export class Feature {
         _.each(this.permissions, (permissionName) => {
             this.permissionMap[permissionName] = false;
         });
+        this.simplifyFilterList = [
+            'description', 'title', 'permissions', 'dependencies',
+            'type', 'hasUI', 'kind', 'name', 'hide', 'toggle',
+        ];
     }
 
     /**
@@ -97,29 +101,23 @@ export class Feature {
      * @param originSetting
      * @param localSetting
      */
-    mergeSetting = (originSetting, localSetting) => {
-        const mergeArray = (originArray, localArray) => {
-            return _.map(originArray, (object) => {
-                const localObject = _.find(localArray, (o) => o.key === object.key);
-                if (localObject) return mergeObject(object, localObject);
-            });
-        };
-        const mergeObject = (originObject, localObject) => {
-            const tempObject = {};
-            _.each(originObject, (value, key) => {
-                if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
-                    tempObject[key] = mergeArray(value, localObject[key]);
-                } else if (_.isPlainObject(value)) {
-                    tempObject[key] = mergeObject(value, localObject[key]);
-                } else if (localObject && localObject[key] !== undefined) {
-                    tempObject[key] = localObject[key];
-                } else {
-                    tempObject[key] = originObject[key];
-                }
-            });
-            return tempObject;
-        };
-        return mergeObject(originSetting, localSetting);
+    mergeSetting = (originObject, localObject) => {
+        const tempObject = {};
+        _.each(originObject, (value, key) => {
+            if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
+                tempObject[key] = _.map(value, (object) => {
+                    const localObject = _.find(localObject[key], (o) => o.key === object.key);
+                    if (localObject) return this.mergeSetting(object, localObject);
+                });
+            } else if (_.isPlainObject(value)) {
+                tempObject[key] = this.mergeSetting(value, localObject[key]);
+            } else if (localObject && localObject[key] !== undefined) {
+                tempObject[key] = localObject[key];
+            } else {
+                tempObject[key] = originObject[key];
+            }
+        });
+        return tempObject;
     };
 
     /**
@@ -127,13 +125,9 @@ export class Feature {
      * @param setting
      */
     simplifySetting = (setting) => {
-        const filterList = [
-            'description', 'title', 'permissions', 'dependencies',
-            'type', 'hasUI', 'kind', 'name', 'hide', 'toggle',
-        ];
         const tempObject = {};
         _.each(setting, (value, key) => {
-            if (filterList.indexOf(key) > -1) return true;
+            if (this.simplifyFilterList.indexOf(key) > -1) return true;
             if (_.isArray(value) && value.length > 0) {
                 tempObject[key] = _.map(value, (o) => this.simplifySetting(o));
             } else if (_.isPlainObject(value)) {
