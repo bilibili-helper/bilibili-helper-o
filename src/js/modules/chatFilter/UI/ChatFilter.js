@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
-import {Icon, Radio} from 'Components';
+import {Icon, CheckBoxButton} from 'Components';
 
 const ChatFilterPanel = styled.div.attrs({className: 'chat-helper-panel ctrl-panel'})`
   position: absolute;
@@ -54,7 +54,7 @@ const FilterItemTitle = styled.span.attrs({className: 'filter-item-title'})`
   margin-right: 34px;
 `;
 
-const FilterRadio = styled(Radio)`
+const FilterRadio = styled(CheckBoxButton)`
   & .radio-knob {
     top: 2px;
     left: 2px;

@@ -23,7 +23,8 @@ import {
     UpdateList,
 } from 'Components/configPage';
 import {theme} from 'Styles';
-import updateData from 'Statics/json/update.json';
+import updateList from 'Statics/json/update.json';
+import announcementList from 'Statics/json/announcement.json';
 import 'Styles/scss/config.scss';
 import feedJson from 'Statics/json/feed.json';
 
@@ -50,9 +51,9 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
 //  pointer-events: none;
 //`;
 const Figure = styled.figure`
-  position: fixed;
+  position: absolute;
   left: calc(50% + 380px);
-  bottom: 43px;
+  bottom: 4px;
   z-index: -1;
   figcaption {
     text-align: center;
@@ -75,9 +76,12 @@ const Header = styled.div`
 `;
 
 const Footer = styled.div`
+  position: relative;
   max-width: 800px;
   width: 100%;
   margin: 20px auto;
+  padding: 0 10px;
+  box-sizing: border-box;
   color: #8c8c8c;
   & a {
     color: #8c8c8c;
@@ -303,7 +307,7 @@ class PageConfig extends React.Component {
         return SubListChildren;
     };
 
-    handleSetSubPage = ({parent = null, settings = null, subPageList = false, subPageTitle = null}) => {
+    handleSetSubPage = ({parent = null, settings = null, subPageList = false, subPageTitle = null, pageType}) => {
         const {subPageOn, parent: currentParent} = this.state;
         const newState = {
             subPageOn: !subPageOn,
@@ -311,42 +315,47 @@ class PageConfig extends React.Component {
             subPageParent: (currentParent !== parent && parent && parent.ListWrapper) ? parent.ListWrapper.querySelector('.list-body') : null,
             subPageSettings: settings,
             subPageList,
+            pageType,
         };
 
         this.setState(newState);
     };
 
-    createSubPage = () => {
+    createSubPage = (pageType) => {
         const {subPageSettings, subPageList} = this.state;
-        if (!subPageList) {
-            const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
-            const subList = this.createSubListComponent({kind, featureName, settings: subPage, subPage: true});
-            const twoLine = subPage.description !== undefined;
-            return <ListItem
-                toggle={toggle}
-                onClick={() => this.handleSetSetting({kind, featureName})}
-                operation={<Radio on={on}/>}
-                twoLine={twoLine}
-                first={twoLine ? subPage.title : ''}
-                second={twoLine ? subPage.description : ''}
-                subList={{
-                    hide: on === undefined ? false : !on,
-                    children: subList,
-                }}
-            >{twoLine ? null : subPage.title}</ListItem>;
-        } else {
-            return _.map(subPageList, (feedData, index) => {
-                const [time, name, num, ps] = feedData;
-                return (
-                    <ListItem
-                        key={index}
-                        operation={`￥${(+num).toFixed(2)}`}
-                        twoLine={true}
-                        first={name}
-                        second={`${time} - ${ps || '没有留言'}`}
-                    />
-                );
-            });
+        switch (pageType) {
+            case 'feed':
+                return _.map(subPageList, (feedData, index) => {
+                    const [time, name, num, ps] = feedData;
+                    return (
+                        <ListItem
+                            key={index}
+                            operation={`￥${(+num).toFixed(2)}`}
+                            twoLine={true}
+                            first={name}
+                            second={`${time} - ${ps || '没有留言'}`}
+                        />
+                    );
+                });
+            case 'update':
+                return _.map(subPageList, (list, title) => <UpdateList key={title} title={title} data={list}/>);
+            default: {
+                const {kind, name: featureName, on, toggle, subPage} = subPageSettings;
+                const subList = this.createSubListComponent({kind, featureName, settings: subPage, subPage: true});
+                const twoLine = subPage.description !== undefined;
+                return <ListItem
+                    toggle={toggle}
+                    onClick={() => this.handleSetSetting({kind, featureName})}
+                    operation={<Radio on={on}/>}
+                    twoLine={twoLine}
+                    first={twoLine ? subPage.title : ''}
+                    second={twoLine ? subPage.description : ''}
+                    subList={{
+                        hide: on === undefined ? false : !on,
+                        children: subList,
+                    }}
+                >{twoLine ? null : subPage.title}</ListItem>;
+            }
         }
     };
 
@@ -355,6 +364,15 @@ class PageConfig extends React.Component {
             parent: this.aboutRef,
             subPageList: feedJson,
             subPageTitle: '用户投喂列表',
+            pageType: 'feed',
+        });
+    };
+    handleOpenUpdateList = () => {
+        this.handleSetSubPage({
+            parent: this.aboutRef,
+            subPageList: updateList,
+            subPageTitle: '版本更新日志',
+            pageType: 'update',
         });
     };
 
@@ -369,6 +387,7 @@ class PageConfig extends React.Component {
             subPageOn,
             subPageTitle,
             subPageParent,
+            pageType,
             debug,
             broadcast,
         } = this.state;
@@ -390,7 +409,7 @@ class PageConfig extends React.Component {
                     parent={subPageParent}
                     onClose={() => this.handleSetSubPage(subPageParent)}
                 >
-                    <List>{subPageOn && this.createSubPage()}</List>
+                    <List>{subPageOn && this.createSubPage(pageType)}</List>
                 </SubPage>
                 {this.createSettingDOM()}
                 <List title="关于" ref={i => this.aboutRef = i}>
@@ -402,6 +421,14 @@ class PageConfig extends React.Component {
                         //separator
                         //operation={<Button disable normal>检查更新</Button>}
                     />
+                    {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
+                    <ListItem
+                        twoLine={true}
+                        first="更新日志"
+                        second={`包含 ${Object.keys(updateList).length} 次更新`}
+                        onClick={this.handleOpenUpdateList}
+                        operation={<Button icon="arrowRight"></Button>}
+                    ></ListItem>
                     <ListItem
                         twoLine={true}
                         first={`投喂列表 - ${feedJson.length}条`}
@@ -409,7 +436,6 @@ class PageConfig extends React.Component {
                         onClick={this.handleOpenFeedList}
                         operation={<Button icon="arrowRight"></Button>}
                     />
-                    {_.map(updateData, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 </List>
                 <Footer>
                     <a href="https://github.com/zacyu/bilibili-helper">Github</a>

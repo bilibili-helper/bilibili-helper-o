@@ -106,8 +106,8 @@ export class Feature {
         _.each(originObject, (value, key) => {
             if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
                 tempObject[key] = _.map(value, (object) => {
-                    const localObject = _.find(localObject[key], (o) => o.key === object.key);
-                    if (localObject) return this.mergeSetting(object, localObject);
+                    const local = _.find(localObject[key], (o) => o.key === object.key);
+                    if (local) return this.mergeSetting(object, local);
                 });
             } else if (_.isPlainObject(value)) {
                 tempObject[key] = this.mergeSetting(value, localObject[key]);
