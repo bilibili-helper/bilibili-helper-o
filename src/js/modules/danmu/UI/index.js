@@ -4,7 +4,6 @@
  * Description:
  */
 
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Danmu} from './danmu';
@@ -20,9 +19,15 @@ export class DanmuUI extends UI {
 
     load = ([container], settings) => {
         return new Promise(resolve => {
-            const danmuWrapper = $('<div style="order: 3;"/>').attr('class', 'bilibili-helper-danmu-wrapper');
-            container.append(danmuWrapper);
-            danmuWrapper[0] && ReactDOM.render(<Danmu settings={settings}/>, danmuWrapper[0], resolve);
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('class', 'bilibili-helper-danmu-wrapper');
+            wrapper.setAttribute('style', 'order: 3;');
+            container.appendChild(wrapper);
+            ReactDOM.render(
+                <Danmu innerRef={i => this.container = i} settings={settings}/>,
+                wrapper,
+                () => resolve(this.container),
+            );
         });
     };
 }

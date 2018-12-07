@@ -3,7 +3,6 @@
  * Create: 2018/11/16
  * Description:
  */
-import $ from 'jquery';
 import {UI} from 'Libs/UI';
 import _ from 'lodash';
 
@@ -25,7 +24,7 @@ export class VideoWidenUI extends UI {
                         this.setWide(option);
                     }
                 });
-            }).observe($('#bofqi')[0], {
+            }).observe(document.querySelector('#bofqi'), {
                 attributes: true,
                 attributeOldValue: true,
                 subtree: true,
@@ -37,17 +36,17 @@ export class VideoWidenUI extends UI {
     setWide = (option) => {
         switch (option) {
             case 'wide': {
-                const btn = $('.bilibili-player-video-btn-widescreen');
-                if (btn.length > 0 && !btn.attr('bilibili-helper-data')) {
-                    btn.attr({'bilibili-helper-data': true});
+                const btn = document.querySelector('.bilibili-player-video-btn-widescreen');
+                if (btn && !btn.getAttribute('bilibili-helper-data')) {
+                    btn.setAttribute('bilibili-helper-data', true);
                     btn.click();
                 }
                 break;
             }
             case 'web': {
-                const btn = $('.bilibili-player-video-web-fullscreen');
-                if (btn.length > 0 && !btn.attr('bilibili-helper-data')) {
-                    btn.attr({'bilibili-helper-data': true});
+                const btn = document.querySelector('.bilibili-player-video-web-fullscreen');
+                if (btn && !btn.getAttribute('bilibili-helper-data')) {
+                    btn.setAttribute('bilibili-helper-data', true);
                     btn.click();
                 }
                 break;

@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {Radio} from 'Components';
+import {CheckBoxButton} from 'Components';
 import {ListItem} from '../List';
 
 const CheckBoxTitle = styled.div`
@@ -29,7 +29,7 @@ export const CheckBoxGroup = (props) => {
                 first={twoLine ? <CheckBoxTitle>{title}</CheckBoxTitle> : ''}
                 second={twoLine ? <CheckBoxTitle>{description}</CheckBoxTitle> : ''}
                 onClick={on !== undefined && toggle !== false ? () => onClick(key, !on) : null}
-                operation={<Radio disable={!toggle} on={on}/>}
+                operation={<CheckBoxButton disable={!toggle} on={on}/>}
             >{twoLine ? null : <CheckBoxTitle>{title}</CheckBoxTitle>}</ListItem>;
         })}
     </React.Fragment>;

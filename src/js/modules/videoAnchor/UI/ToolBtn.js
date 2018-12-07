@@ -3,7 +3,6 @@
  * Create: 2018/10/10
  * Description:
  */
-import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {ToolContent} from './ToolContent';
@@ -34,12 +33,13 @@ export class ToolBtn extends React.Component {
 
     handleClick = (e) => {
         e.preventDefault();
+        const content = document.querySelector('.bilibili-helper-content');
         if (this.show) {
             this.show = false;
-            $('.bilibili-helper-content').css({visibility: 'hidden'});
+            content && content.setAttribute('style', 'visibility: hidden;')
         } else {
             this.show = true;
-            $('.bilibili-helper-content').css({visibility: 'visible'});
+            content && content.setAttribute('style', 'visibility: visible;')
         }
     };
 

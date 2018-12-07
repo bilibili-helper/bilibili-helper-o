@@ -3,7 +3,6 @@
  * Create: 2018/11/11
  * Description:
  */
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI';
@@ -19,12 +18,16 @@ export class VideoDownloadUI extends UI {
 
     load = ([container], setting) => {
         return new Promise(resolve => {
-            const wrapper = $('<div style="order: 0;"class="bilibili-helper-video-download-wrapper"/>');
-            container.append(wrapper);
-            ReactDOM.render(<VideoDownload setting={setting}/>, wrapper[0], () => {
-                chrome.runtime.sendMessage({commend: 'videoDownloadDOMInitialized'});
-                resolve(wrapper);
-            });
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('class', 'bilibili-helper-video-download-wrapper');
+            wrapper.setAttribute('style', 'order: 0;');
+
+            container.appendChild(wrapper);
+            ReactDOM.render(
+                <VideoDownload innerRef={i => this.container = i} setting={setting}/>,
+                wrapper,
+                () => resolve(this.container),
+            );
         });
     };
 }

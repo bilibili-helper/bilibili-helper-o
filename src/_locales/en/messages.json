@@ -67,7 +67,7 @@
     "message": "Bilibili Helper Notification",
     "description": "Notification: Title"
   },
-  "notificationExtensionUpdate": {
+  "extensionNotificationExtensionUpdate": {
     "message": "Bilibili Helper just auto updated to v%v!",
     "description": "Notification: Extension Update"
   },

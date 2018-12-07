@@ -114,7 +114,7 @@ class VideoSubtitleDownload extends React.Component {
         chrome.runtime.sendMessage({
             commend: 'downloadSubtitle',
             subtitleObject,
-            filename: $('#viewbox_report h1, .header-info h1').attr('title'),
+            filename: document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title'),
         });
     };
 
@@ -153,9 +153,11 @@ export class VideoSubtitleDownloadUI extends UI {
 
     load = ([container]) => {
         return new Promise(resolve => {
-            const wrapper = $('<div style="order: 2;"/>').attr('class', 'bilibili-helper-subtitle-download-wrapper');
-            container.append(wrapper);
-            wrapper[0] && ReactDOM.render(<VideoSubtitleDownload/>, wrapper[0], resolve);
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('class', 'bilibili-helper-subtitle-download-wrapper');
+            wrapper.setAttribute('style', 'order: 2;');
+            container.appendChild(wrapper);
+            ReactDOM.render(<VideoSubtitleDownload/>, wrapper, resolve);
         });
     };
 }

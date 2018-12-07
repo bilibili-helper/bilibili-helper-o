@@ -4,14 +4,12 @@
  * Description: 设置页面
  */
 
-import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {consoleLogo} from 'Utils';
-import {version} from 'Utils';
-import {Button, Icon, Radio} from 'Components';
+import {consoleLogo, version} from 'Utils';
+import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
     Body,
@@ -39,17 +37,6 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   overflow: auto;
 `;
 
-//const Cat = styled.div`
-//  width: 32px;
-//  height: 30px;
-//  display: inline-block;
-//  vertical-align: sub;
-//  background-image: url(${getURL('/statics/imgs/cat.svg')});
-//  background-repeat: no-repeat;
-//  background-size: auto 100%;
-//  user-select: none;
-//  pointer-events: none;
-//`;
 const Figure = styled.figure`
   position: absolute;
   left: calc(50% + 380px);
@@ -64,9 +51,12 @@ const Alipay = styled.img`
 `;
 
 const Header = styled.div`
+  position: relative;
+  flex-shrink: 0;
   padding: 50px 0;
   background-color: ${color('bilibili-pink')};
   color: #fff;
+  overflow: hidden;
   & > * {
     display: block;
     margin: 0 auto;
@@ -74,6 +64,17 @@ const Header = styled.div`
     max-width: 800px;
   }
 `;
+
+/*const Cat = styled(Icon)`
+  position: absolute;
+  margin: 0 auto;
+  top: 56px;
+  left: calc(50% + 190px);
+  font-size: 200px!important;
+  color: #f2f3f5;
+  user-select: none;
+  pointer-events: none;
+`*/
 
 const Footer = styled.div`
   position: relative;
@@ -250,7 +251,8 @@ class PageConfig extends React.Component {
 
                     const handleOpenSubPage = () => this.handleSetSubPage({parent: this[`${kind}Ref`], settings});
                     const onClick = subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
-                    const operation = subPage ? <Button icon="arrowRight"/> : <Radio disable={!toggleMode} on={on}/>;
+                    const operation = subPage ? <Button icon="arrowRight"/> : <CheckBoxButton disable={!toggleMode}
+                                                                                              on={on}/>;
 
                     let errorDescription = [];
                     const permissionList = _.map(permissions, (name) => {
@@ -346,7 +348,7 @@ class PageConfig extends React.Component {
                 return <ListItem
                     toggle={toggle}
                     onClick={() => this.handleSetSetting({kind, featureName})}
-                    operation={<Radio on={on}/>}
+                    operation={<CheckBoxButton on={on}/>}
                     twoLine={twoLine}
                     first={twoLine ? subPage.title : ''}
                     second={twoLine ? subPage.description : ''}
@@ -379,10 +381,10 @@ class PageConfig extends React.Component {
     render() {
         const {
             // modal state
-            //modalOn,
-            //modalTitle,
-            //modalBody,
-            //modalButtons,
+            modalOn,
+            modalTitle,
+            modalBody,
+            modalButtons,
             // sub page state
             subPageOn,
             subPageTitle,
@@ -396,8 +398,8 @@ class PageConfig extends React.Component {
             <ConfigBody>
                 <Header>
                     <h1>BILIBILI HELPER</h1>
-                    <sub>{`Version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
-                    {/*<Cat/>*/}
+                    <sub>{`version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
+                    {/*<Cat iconfont="cat"/>*/}
                 </Header>
                 <Broadcast>
                     {broadcast}<br/>
@@ -414,7 +416,7 @@ class PageConfig extends React.Component {
                 {this.createSettingDOM()}
                 <List title="关于" ref={i => this.aboutRef = i}>
                     <ListItem
-                        icon={<Icon icon="catSvg" image/>}
+                        icon={<Icon iconfont="cat" image/>}
                         twoLine
                         first={chrome.i18n.getMessage('extensionName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
@@ -452,16 +454,14 @@ class PageConfig extends React.Component {
                     </Figure>
                 </Footer>
             </ConfigBody>
-            {/*<Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>*/}
+            <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
         </React.Fragment>;
     }
 }
 
-$(document).ready(() => {
-    ReactDOM.render(
-        <PageConfig/>,
-        document.getElementById('root'),
-        consoleLogo,
-    );
-});
+ReactDOM.render(
+    <PageConfig/>,
+    document.getElementById('root'),
+    consoleLogo,
+);
 

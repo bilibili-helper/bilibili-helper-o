@@ -365,8 +365,9 @@ export class Danmu extends React.Component {
     };
 
     handleDownloadClick = (type) => {
-        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
-        const title = $('#viewbox_report h1, .header-info h1').attr('title');
+        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
+        const partName = partDOM ? partDOM.innerHTML : '';
+        const title = document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title');
         chrome.runtime.sendMessage({
             commend: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
             cid: this.state.currentCid,

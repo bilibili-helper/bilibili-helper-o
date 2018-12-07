@@ -6,7 +6,7 @@
 // 然后再加载子类
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
-import {DoSign, DoSignUI} from './doSign';
+import {DoSign} from './doSign';
 import {Treasure, TreasureUI} from './treasure';
 import {GoogleAnalytics} from './googleAnalytics';
 import {Debug} from './debug';
@@ -57,5 +57,4 @@ export const UIs = {
     VideoWidenUI,
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
-    DoSignUI,
 };

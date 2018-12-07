@@ -1,16 +1,14 @@
-import $ from 'jquery';
-import _ from 'lodash';
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/7
  * Description:
  */
-
+import _ from 'lodash';
 export class UI {
     constructor({name, dependencies = []}) {
         this.name = name;
         this.dependencies = dependencies;
+        this.outputDOM = null;
     }
 
     init = () => {
@@ -28,12 +26,16 @@ export class UI {
     };
 
     getContainer = (selectors) => {
-        const get = (name) => $(name).length > 0 ? $(name) : false;
+        const get = (name) => {
+            const queryRes = document.querySelectorAll(name);
+            return queryRes.length > 0 ? queryRes : false;
+        };
         if (typeof selectors === 'string') {
-            return get(selectors);
+            const res = get(selectors);
+            return res && res.length > 0 ? res[0]: false;
         } else if (selectors instanceof Array) {
             const t = _.compact(selectors.map((name) => get(name)));
-            if (t.length >= 1) return _.compact(selectors.map((name) => get(name)))[0];
+            if (t.length > 0) return _.compact(selectors.map((name) => get(name)))[0];
             else console.error(`No target of name: ${selectors}!`);
         }
     };

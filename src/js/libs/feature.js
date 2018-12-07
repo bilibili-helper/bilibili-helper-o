@@ -54,6 +54,7 @@ export class Feature {
     };
 
     setPermission = (name, value) => {
+        this.permissionMap[name] = value;
         const f = this[`permissionHandle${_.upperFirst(name)}`];
         if (typeof f === 'function') f(value);
     };

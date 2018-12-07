@@ -22,7 +22,7 @@ const View = styled.div`
   filter: grayscale(${({theme = {}}) => theme.toggle !== false ? 0 : 1});
 `;
 const Bar = styled.div`
-  width: 32px;
+  width: 36px;
   height: 16px;
   border-radius: 2px;
   background-color: ${color('google-grey-400')};
@@ -38,16 +38,14 @@ const Knob = styled.span.attrs({className: 'checkbox-knob'})`
   display: block;
   width: 14px;
   height: 14px;
-  
   border-radius: 2px;
-  //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
   background-color: white;
-  border: 1px solid ${color('google-grey-400')};
+  border: 1px solid transparent;
   transition: transform linear 80ms, background-color linear 80ms;
   z-index: 1;
   .checked & {
-    transform: translate3d(16px, 0, 0);
-    border-color: ${color('bilibili-pink')};
+    transform: translate3d(20px, 0, 0);
   }
 `;
 

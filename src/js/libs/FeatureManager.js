@@ -13,19 +13,22 @@ export class FeatureManager {
         this.features = {};
         this.waitQueue = [];
         this.addListener();
+        this.permissionManager = new PermissionManager();
         this.instantiateFeatures().then(this.loadFeatures);
         this.retryMax = _.keys(Features).length;
         this.retryTime = 0;
-        this.permissionManager = new PermissionManager();
     }
 
     // 实例化所有Feature，not include init function
-    instantiateFeatures = async () => {
-        _.each(Features, (FeatureClass, featureName) => {
-            if (!this.features[featureName]) {
-                if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
-                else this.features[featureName] = new FeatureClass();
-            } else throw `Feature ${featureName} has instantiated!`;
+    instantiateFeatures = () => {
+        return new Promise(resolve => {
+            _.each(Features, (FeatureClass, featureName) => {
+                if (!this.features[featureName]) {
+                    if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
+                    else this.features[featureName] = new FeatureClass();
+                } else throw `Feature ${featureName} has instantiated!`;
+            });
+            resolve();
         });
     };
 

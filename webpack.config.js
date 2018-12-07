@@ -1,4 +1,4 @@
-/* global require */
+/* global require, module */
 /**
  * Author: Ruo
  * Create: 2018-05-30
@@ -12,7 +12,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const srcPath = path.resolve('src');
 const buildPath = path.resolve('build');
@@ -55,9 +55,9 @@ module.exports = {
             cacheGroups: {
                 vendors: {
                     name: 'vendors',
-                    test: /[\\/](node_modules|src\/js\/libs|src\/js\/utils|src\/_locales|src\/js\/components)[\\/]/,
+                    test: /[\\/](node_modules|src\/js\/libs|src\/js\/utils|src\/_locales|src\/js)[\\/]/,
                     chunks: 'all',
-                    priority: 1,
+                    minChunks: 2,
                 },
             },
         },
@@ -93,7 +93,7 @@ module.exports = {
             {
                 enforce: 'pre',
                 test: /\.js$/,
-                exclude: /node_modules/,
+                exclude: /node_modules|modules\.js/,
                 loader: 'eslint-loader',
                 options: {
                     emitError: true,
@@ -136,6 +136,6 @@ module.exports = {
             debug: true,
             output: {groupBy: localesGroup},
         }),
-        //new BundleAnalyzerPlugin(),
+        new BundleAnalyzerPlugin(),
     ],
 };

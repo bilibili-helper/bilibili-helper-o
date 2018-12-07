@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import {createTab} from 'Utils';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
-  padding: 8px 0 8px 10px;
+  padding: 9px 0 9px 10px;
   max-height: 270px;
   overflow: auto;
 `;

@@ -4,7 +4,6 @@
  * Description:
  */
 
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {ToolBtn} from './ToolBtn';
@@ -25,20 +24,21 @@ export class VideoAnchorUI extends UI {
                 //'.video-info .video-title',
                 '#arc_toolbar_report',
             ];
-            const newPage = $('.video-data');
+            const newPage = document.querySelector('.video-data');
             const addUI = (container) => {
-                if ($('.bilibili-helper').length > 0) return;
-                const helperDOM = $('<span class="bilibili-helper"/>');
-                container.append(helperDOM);
-                ReactDOM.render(<ToolBtn/>, container.find('.bilibili-helper')[0], () => {
-                    $(window).on('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
+                if (document.querySelector('.bilibili-helper')) return;
+                const helperDOM = document.createElement('span');
+                helperDOM.setAttribute('class', 'bilibili-helper');
+                container.appendChild(helperDOM);
+                ReactDOM.render(<ToolBtn/>, document.querySelector('.bilibili-helper'), () => {
+                    window.addEventListener('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
                         chrome.runtime.sendMessage({commend: 'tabUnload'}, () => true);
                     });
-                    const helperContentDOM = helperDOM.find('.bilibili-helper-content');
+                    const helperContentDOM = document.querySelector('.bilibili-helper-content');
                     resolve(helperContentDOM);
                 });
             };
-            if (newPage.length > 0) { // 新页面要先判断b站代码是否跑完
+            if (newPage) { // 新页面要先判断b站代码是否跑完
                 const retryMax = 10;
                 let retryTime = 0;
                 let timer = setInterval(() => {
@@ -46,27 +46,29 @@ export class VideoAnchorUI extends UI {
                         clearInterval(timer);
                         return console.error(`title for view has not changed!`);
                     }
-                    const title = newPage.find('.view').attr('title');
+                    const title = document.querySelector('.view').getAttribute('title');
                     if (title !== '总播放数--') {
                         clearInterval(timer);
-                        const container = $('#arc_toolbar_report .ops');
-                        addUI(container);
+                        addUI(document.querySelector('#arc_toolbar_report .ops'));
                     } else ++retryTime;
                 }, 1000);
             } else { // 老的番剧页面
-                this.interval(containerSelectors).then((container) => {
+                this.interval(containerSelectors).then(() => {
                     const retryMax = 10;
                     let retryTime = 0;
                     let timer = setInterval(() => {
                         if (retryTime > retryMax) {
                             clearInterval(timer);
-                            return console.error(`title for view has not changed!`);
+                            return console.error(`Title for view has not changed or unknow page!`);
                         }
-                        const favNum = container.find('.fav-box .num').text();
-                        const coinNum = container.find('.coin-box .num').text();
-                        if (favNum !== 0 && coinNum !== '--') {
+                        const favDOM = document.querySelector('.fav-box .num');
+                        const bangumiDOM = document.querySelector('#bangumi_detail .func-module');
+                        const favNum = favDOM ? favDOM.innerText : false;
+                        if (favNum) {
                             clearInterval(timer);
-                            addUI($('#arc_toolbar_report, #bangumi_detail .func-module'));
+                            addUI(document.querySelector('#arc_toolbar_report, #bangumi_detail .func-module'));
+                        } else if (bangumiDOM) {
+                            addUI(bangumiDOM);
                         } else ++retryTime;
                     }, 1000);
                 });

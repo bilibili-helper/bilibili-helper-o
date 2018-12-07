@@ -3,7 +3,6 @@
  * Create: 2018/11/7
  * Description:
  */
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -25,18 +24,19 @@ export class PopupAnchorUI extends UI {
 
     load = () => {
         return new Promise(resolve => {
-            $(document).ready(() => {
-                chrome.runtime.sendMessage({
-                    commend: 'setGAEvent',
-                    action: 'click',
-                    category: 'popup',
-                });
-                ReactDOM.render(
-                    <Main innerRef={i => this.container = i}/>,
-                    document.getElementById('root'),
-                    () => resolve($(this.container)[0]),
-                );
-            });
+            ReactDOM.render(
+                <Main innerRef={i => this.container = i}/>,
+                document.getElementById('root'),
+                () => {
+                    chrome.runtime.sendMessage({
+                        commend: 'setGAEvent',
+                        action: 'click',
+                        category: 'popup',
+                    });
+                    resolve(this.container);
+                }
+            );
+
         });
     };
 }

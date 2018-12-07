@@ -3,7 +3,6 @@
  * Create: 2018/11/22
  * Description:
  */
-import $ from 'jquery';
 import {UI} from 'Libs/UI';
 import _ from 'lodash';
 
@@ -24,7 +23,7 @@ export class VideoHideDanmuUI extends UI {
                         this.hide(settings.on);
                     }
                 });
-            }).observe($('#bofqi')[0], {
+            }).observe(document.querySelector('#bofqi'), {
                 attributeOldValue: true,
                 subtree: true,
             });
@@ -34,13 +33,13 @@ export class VideoHideDanmuUI extends UI {
 
     hide = (on) => {
         if (on) {
-            const btn1 = $('.bilibili-player-video-control .bilibili-player-iconfont.bilibili-player-iconfont-danmaku');
-            const btn2 = $('.bilibili-player-video-danmaku-switch input[type=checkbox]');
-            if (btn1.length === 1 && !btn1.attr('bibili-helper-data')) {
-                btn1.attr({'bibili-helper-data': true});
+            const btn1 = document.querySelector('.bilibili-player-video-control .bilibili-player-iconfont.bilibili-player-iconfont-danmaku');
+            const btn2 = document.querySelector('.bilibili-player-video-danmaku-switch input[type=checkbox]');
+            if (btn1 && !btn1.getAttribute('bibili-helper-data')) {
+                btn1.setAttribute('bibili-helper-data', true);
                 btn1.click();
-            } else if (btn2.length === 1 && !btn2.attr('bibili-helper-data')) {
-                btn2.attr({'bibili-helper-data': true});
+            } else if (btn2 && !btn2.getAttribute('bibili-helper-data')) {
+                btn2.setAttribute('bibili-helper-data', true);
                 btn2.click();
             }
         }

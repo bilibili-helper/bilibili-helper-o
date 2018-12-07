@@ -21,7 +21,7 @@ chrome.runtime.onInstalled.addListener(function(details) { // 安装完成后事
             type: 'basic',
             iconUrl: '../statics/imgs/icon-256.png',
             title: __('extensionNotificationTitle'),
-            message: __('notificationExtensionUpdate').replace('%v', version),
+            message: __('extensionNotificationExtensionUpdate').replace('%v', version),
         });
     }
 });

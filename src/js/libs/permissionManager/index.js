@@ -33,6 +33,7 @@ export class PermissionManager {
         this.permissionMap = {};
         this.features = {};
         this.addListener();
+        this.typeMap = {};
     }
 
     load = (feature) => {
@@ -48,6 +49,8 @@ export class PermissionManager {
                 if (!(permissionName in PERMISSION_STATUS)) { // 未定义权限类型
                     return {pass: false, msg: `Undefined permission: ${permissionName}`};
                 }
+                if (!this.typeMap[permissionName]) this.typeMap[permissionName] = [];
+                this.typeMap[permissionName].push(feature);
                 switch (permissionName) {
                     case 'login':
                         return this.hasLogin();
@@ -66,25 +69,24 @@ export class PermissionManager {
         });
     };
 
-    updatePermission = (permissionName, value) => {
-        if (this.permissionMap[permissionName] === undefined) this.permissionMap[permissionName] = value;
-        else if (this.permissionMap[permissionName] !== value) {
-            this.permissionMap[permissionName] = value;
-            this.triggerListener(permissionName, value);
+    updatePermission = (name, value) => {
+        if (this.permissionMap[name] !== value) {
+            this.permissionMap[name] = value;
+            chrome.runtime.sendMessage({
+                commend: 'permissionUpdate',
+                permission: name,
+                value,
+            });
         }
+        this.triggerListener(name, value);
     };
 
     // 当权限系统检测到变化时进行通知
     triggerListener = (permission, value) => {
-        _.each(this.features, (feature) => {
-            if (permission in feature.permissionMap) {
+        _.each(this.typeMap[permission], (feature) => {
+            if (feature.permissionMap[permission] !== value) {
                 feature.setPermission(permission, value);
             }
-        });
-        chrome.runtime.sendMessage({
-            commend: 'permissionUpdate',
-            permission,
-            value,
         });
     };
 
@@ -113,8 +115,8 @@ export class PermissionManager {
         });
     };
     downloads = () => {
-        return Promise.resolve({pass: true, msg: PERMISSION_STATUS.downloads.errorMsg})
-    }
+        return Promise.resolve({pass: true, msg: PERMISSION_STATUS.downloads.errorMsg});
+    };
 
     checkNotification = () => {
         return new Promise(resolve => {

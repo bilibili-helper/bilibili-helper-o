@@ -4,7 +4,6 @@
  * Description:
  */
 import _ from 'lodash';
-import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -38,20 +37,20 @@ class PIP extends React.Component {
     }
 
     componentDidMount() {
-        this.video = $('#bofqi video')[0];
+        this.video = document.querySelector('#bofqi video');
         this.addListener(this.video);
         new MutationObserver((mutationList) => {
             _.map(mutationList, (mutation) => {
                 if (mutation.oldValue) {
                     if (this.state.inPIP) {
-                        $(document)[0].exitPictureInPicture();
+                        document.exitPictureInPicture();
                         this.setState({inPIP: false});
                     }
-                    this.video = $('#bofqi video')[0];
+                    this.video = document.querySelector('#bofqi video');
                     this.addListener(this.video);
                 }
             });
-        }).observe($('#bofqi')[0], {
+        }).observe(document.querySelector('#bofqi'), {
             attributeFilter: ['src'],
             attributes: true,
             attributeOldValue: true,
@@ -83,7 +82,7 @@ class PIP extends React.Component {
     // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
     handleOnClick = () => {
         if (!this.video) {
-            this.video = $('#bofqi video')[0];
+            this.video = document.querySelector('#bofqi video');
             this.addListener(this.video);
         }
         if (!this.video.requestPictureInPicture) return;
@@ -92,7 +91,7 @@ class PIP extends React.Component {
                 this.setState({inPIP: true});
             });
         } else if (this.state.inPIP) {
-            $(document)[0].exitPictureInPicture().then(() => {
+            document.exitPictureInPicture().then(() => {
                 this.setState({inPIP: false});
                 this.play();
             }).catch(e => {
@@ -128,12 +127,11 @@ export class PictureInPictureUI extends UI {
 
     load = ([container], settings) => {
         return new Promise(resolve => {
-            const pipWrapper = $('<div />')
-            .attr('class', 'bilibili-helper-pip-wrapper')
-            .css({position: 'static', margin: 0});
-            container.append(pipWrapper);
-            pipWrapper[0] && ReactDOM.render(<PIP settings={settings}/>, pipWrapper[0], resolve);
-            resolve();
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('class', 'bilibili-helper-pip-wrapper');
+            wrapper.setAttribute('style', 'position: static; margin: 0;');
+            container.appendChild(wrapper);
+            ReactDOM.render(<PIP settings={settings}/>, wrapper, resolve);
         });
     };
 }

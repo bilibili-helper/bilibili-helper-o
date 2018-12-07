@@ -20,6 +20,7 @@ export class ChatFilter extends Feature {
                 subPage: {
                     type: 'checkbox',
                     title: '开启聊天过滤',
+                    description: '请注意b站自带的"关闭礼物特效"功能',
                     options: [
                         {key: 'chat', title: '聊天内容', on: false},
                         {key: 'small', title: '小型标志', on: true, description: '如：老爷标志，舰长等'},

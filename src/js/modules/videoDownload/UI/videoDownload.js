@@ -83,8 +83,7 @@ export class VideoDownload extends React.Component {
         _.map(document.scripts, (o) => {
             if (/^window.__playinfo__=/.test(o.innerHTML)) {
                 const playInfo = JSON.parse(o.innerHTML.slice(20));
-                let i = playInfo.data || playInfo;
-                if (i.durl) this.originVideoData = i;
+                this.originVideoData = playInfo.data || playInfo;
             }
         });
     }
@@ -132,8 +131,8 @@ export class VideoDownload extends React.Component {
             } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
-                    const {accept_quality, accept_description, durl, quality} = this.originVideoData;
-                    const currentData = {accept_quality, accept_description, durl};
+                    const {quality} = this.originVideoData;
+                    const currentData = {...this.originVideoData};
                     const cidData = videoData[message.cid] || {};
                     cidData[quality] = currentData;
                     videoData[message.cid] = cidData;
@@ -145,18 +144,20 @@ export class VideoDownload extends React.Component {
     };
 
     handleOnClickDownload = (downloadUrl) => {
-        const partName = $('#v_multipage a.on, #multi_page .cur-list li.on a').text() || '';
+        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
+        const partName = partDOM ? partDOM.innerHTML : '';
+        const title = document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title');
         chrome.runtime.sendMessage({
             commend: 'sendVideoFilename',
             url: downloadUrl.split('?')[0],
             cid: this.state.currentCid,
-            filename: `${$('#viewbox_report h1, .header-info h1').attr('title')}${partName ? `_${partName}` : ''}`,
+            filename: `${title}${partName ? `_${partName}` : ''}`,
         });
     };
 
     render() {
         const {videoData, currentCid} = this.state;
-        let notSupported = true;
+        let oldType = false;
         let morePart = false;
         return (
             <React.Fragment>
@@ -165,9 +166,9 @@ export class VideoDownload extends React.Component {
                 <Container>
                     {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
                         const {accept_quality, accept_description, durl} = part;
-                        if (durl) notSupported = false;
+                        if (durl) oldType = true;
                         if (durl && durl.length > 3) morePart = true;
-                        return (durl && !notSupported ? <LinkGroup key={quality}>
+                        return (oldType ? <LinkGroup key={quality}>
                             {_.map(durl, (o, i) => {
                                 const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
                                 return (
@@ -186,7 +187,7 @@ export class VideoDownload extends React.Component {
                             })}
                         </LinkGroup> : null);
                     })}
-                    {notSupported && videoData[currentCid] ? <LinkGroupTitle><p>未支持的视频数据</p></LinkGroupTitle> : null}
+                    {!oldType && videoData[currentCid] ? <LinkGroupTitle><p>未支持的视频数据</p></LinkGroupTitle> : null}
                     {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>

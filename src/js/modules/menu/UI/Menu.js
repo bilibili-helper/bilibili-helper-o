@@ -4,7 +4,6 @@
  * Description:
  */
 
-import $ from 'jquery';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
@@ -171,7 +170,7 @@ export class Menu extends React.Component {
     };
 
     link = () => {
-        const value = $('.bilibili-helper-menu-linker-input').val();
+        const value = document.querySelector('.bilibili-helper-menu-linker-input').value;
         if (value) {
             const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
             let url = '';
