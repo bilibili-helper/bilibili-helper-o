@@ -106,9 +106,10 @@ export class Feature {
         const tempObject = {};
         _.each(originObject, (value, key) => {
             if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
-                tempObject[key] = _.map(value, (object) => {
-                    const local = _.find(localObject[key], (o) => o.key === object.key);
-                    if (local) return this.mergeSetting(object, local);
+                tempObject[key] = _.map(value, (object) => { // 以程序版本为模板
+                    const local = _.find(localObject[key], (o) => o.key === object.key); // 查询在本地是否已有相关配置
+                    if (local) return this.mergeSetting(object, local); // 查到则进行合并
+                    else return object; // 查不到则以程序版本为准
                 });
             } else if (_.isPlainObject(value)) {
                 tempObject[key] = this.mergeSetting(value, localObject[key]);

@@ -26,7 +26,6 @@ export class VideoDownload extends Feature {
         });
         this.store = new MessageStore('videoDownloadDOMInitialized');
         this.downloadFilenames = {};
-        this.onceRequestList = {};
     }
 
     launch = () => {};

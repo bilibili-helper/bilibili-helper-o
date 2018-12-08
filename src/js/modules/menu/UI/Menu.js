@@ -8,8 +8,8 @@ import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
-import {Button} from 'Components/common/Button';
-import {createTab, getLink, version, __} from 'Utils';
+import {Button, Icon} from 'Components';
+import {createTab, getLink, __, version} from 'Utils';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -19,6 +19,7 @@ const MenuView = styled.div.attrs({className: 'bilibili-helper-menu-view'})`
   position: relative;
   padding: 8px 10px 20px;
   flex-direction: column;
+  align-items: flex-end;
   transition: all 0.3s;
   &.extend {
     margin-bottom: 0;
@@ -60,10 +61,23 @@ const MenuButton = styled(Button)`
   }
 `;
 
+const IconBtn = styled(MenuButton)`
+  width: auto;
+  button {
+    display: block;
+    padding: 0;
+    min-width: 60px;
+    text-indent: 0;
+  }
+  .bilibili-helper-iconfont {
+    line-height: 22px;
+  }
+`;
+
 const Title = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 152px;
+  width:${({showIcon}) => showIcon ? '60px' : '152px'};
   font-size: 12px;
   position: absolute;
   bottom: 3px;
@@ -75,7 +89,7 @@ const LinkerWrapper = styled.div`
 `;
 const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input'})`
   display: block;
-  width: 110px;
+  width: ${({showIcon}) => showIcon ? '63px' : '110px'};
   height: 36px;
   margin-bottom: 6px;
   position: relative;
@@ -89,7 +103,7 @@ const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input
   color: ${color('google-grey-700')};
   &:focus {
     border-color: #009cd6;
-    color: #000000;
+    color: #000;
   }
 `;
 
@@ -112,6 +126,7 @@ export class Menu extends React.Component {
             linkerError: false,
             lastSearch: store.get('lastSearch') || '',
             permissionMap: {},
+            options: [],
         };
         this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au|ep)?(\d+)$/);
     }
@@ -149,6 +164,7 @@ export class Menu extends React.Component {
             this.setState({
                 newWatchPageLink: link,
                 menuOptions: menuOptions,
+                options: settings.options,
             });
         });
 
@@ -156,7 +172,7 @@ export class Menu extends React.Component {
             commend: 'getPermissionMap',
         }, (permissionMap) => {
             this.setState({permissionMap});
-        })
+        });
     }
 
     handleOnClick = (type, link) => {
@@ -252,20 +268,40 @@ export class Menu extends React.Component {
     };
 
     render() {
-        const {newWatchPageLink, debug, menuOptions, linkerError, lastSearch, permissionMap} = this.state;
+        const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options, debug} = this.state;
         const {video, live, dynamic, favourite, linker} = menuOptions;
+        const showIconOption = options ? _.find(options, (o) => o.key === 'showIcon') : {};
+        const showIcon = showIconOption ? showIconOption.on : false;
         return (
             <MenuView>
-                {video &&
-                <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>{__('goBili')}</MenuButton>}
-                {live &&
-                <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>{__('goBiliLive')}</MenuButton>}
+                {video && (showIcon ? <IconBtn
+                    title={__('goBili')}
+                    onClick={() => this.handleOnClick('video', getLink('video'))}>
+                    <Icon size={20} iconfont="tv"/>
+                </IconBtn> : <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>
+                     {__('goBili')}
+                 </MenuButton>)}
+                {live && (showIcon ? <IconBtn
+                    title={__('goBiliLive')}
+                    onClick={() => this.handleOnClick('live', getLink('live'))}>
+                    <Icon size={20} iconfont="live"/>
+                </IconBtn> : <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>
+                     {__('goBiliLive')}
+                 </MenuButton>)}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
                 {permissionMap.login ? <React.Fragment>
-                    {dynamic && <MenuButton
-                        onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>}
-                    {favourite && <MenuButton
-                        onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>}
+                    {dynamic && (showIcon ? <IconBtn
+                        title={__('goDynamic')}
+                        onClick={() => this.handleOnClick('watch', newWatchPageLink)}>
+                        <Icon size={20} iconfont="like"/>
+                    </IconBtn> : <MenuButton
+                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>)}
+                    {favourite && (showIcon ? <IconBtn
+                        title={__('goFavourite')}
+                        onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>
+                        <Icon size={20} iconfont="favourite"/>
+                    </IconBtn> : <MenuButton
+                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>)}
                 </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                 {linker && <LinkerWrapper>
                     <Linker
@@ -273,14 +309,22 @@ export class Menu extends React.Component {
                         error={linkerError}
                         onKeyUp={this.handleKeyUp}
                         onFocus={this.handleFocusIn}
-                        placeholder="请输入各种ID"
+                        onFocusOut={this.handleFocusIn}
+                        placeholder="请输入ID"
                         defaultValue={lastSearch}
+                        showIcon={showIcon}
                     />
-                    <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>
+                    {!showIcon && <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>}
                 </LinkerWrapper>}
-                <MenuButton
-                    onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>
-                <Title><span>Bilibili Helper</span><span>{debug === true ? 'Beta.' : ''}{version}</span></Title>
+                {showIcon ? <IconBtn
+                    title={__('goOption')}
+                    onClick={() => this.handleOnClick('config', getLink('config'))}
+                ><Icon size={20} iconfont="option"/></IconBtn> : <MenuButton
+                     onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>}
+                <Title showIcon={showIcon}>
+                    <span>{showIcon ? 'ver' : 'version'}</span>
+                    <span>{debug === true ? 'Beta.' : ''}{version}</span>
+                </Title>
             </MenuView>
         );
     }

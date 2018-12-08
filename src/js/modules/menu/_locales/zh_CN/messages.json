@@ -26,5 +26,9 @@
     "notLogin": {
         "message": "未登录",
         "description": "Popup Button: not login"
+    },
+    "goBiliShort": {
+        "message": "主站",
+        "description": "Popup Button: go_bili"
     }
 }

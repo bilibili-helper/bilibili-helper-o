@@ -90,43 +90,51 @@ export class VideoDownload extends React.Component {
 
     componentDidMount() {
         this.inited = true;
-        chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
+        chrome.runtime.sendMessage({commend: 'videoDownloadDOMInitialized'});
     }
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            console.warn(message);
             if (message.commend === 'videoDownloadSendVideoRequest') {
                 const {data, url, method, type} = message;
                 //const res = /\/av([\d]+)\//.exec(location.pathname); // 新的视频播放页面会同时加载多个不同视频的playUrl
                 //console.log(res, avid);
                 //if (type === 'old') {
+                const {videoData} = this.state;
                 const currentCid = data.cid;
-                $.ajax({
-                    method,
-                    url,
-                    data,
-                    headers: {
-                        'From': 'bilibili-helper',
-                    },
-                    contentType: 'video/mp4',
-                    success: (res) => {
-                        if (res.code === 10005) return console.error(res);
-                        let downloadData;
-                        if (type === 'new' && res.code === 0) {
-                            downloadData = res.data;
-                        } else if (type === 'old') {
-                            downloadData = res;
-                        }
+                const quality = data.quality;
+                console.warn(videoData, currentCid);
+                if (videoData[currentCid] && videoData[currentCid][quality]) {
+                    this.setState({currentCid});
+                } else {
+                    $.ajax({
+                        method,
+                        url,
+                        data,
+                        headers: {
+                            'From': 'bilibili-helper',
+                        },
+                        contentType: 'video/mp4',
+                        success: (res) => {
+                            if (res.code === 10005) return console.error(res);
+                            let downloadData;
+                            if (type === 'new' && res.code === 0) {
+                                downloadData = res.data;
+                            } else if (type === 'old') {
+                                downloadData = res;
+                            }
 
-                        const {accept_quality, accept_description, durl, quality} = downloadData;
-                        const currentData = {accept_quality, accept_description, durl};
-                        const {videoData} = this.state;
-                        const cidData = videoData[currentCid] || {};
-                        cidData[quality] = currentData;
-                        videoData[currentCid] = cidData;
-                        this.setState({videoData, currentCid});
-                    },
-                });
+                            const {accept_quality, accept_description, durl, quality} = downloadData;
+                            const currentData = {accept_quality, accept_description, durl};
+
+                            videoData[currentCid] = {[quality]: currentData};
+
+                            this.setState({videoData, currentCid});
+                        },
+                    });
+                }
+
                 sendResponse(true);
             } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
                 const {videoData} = this.state;
@@ -172,15 +180,16 @@ export class VideoDownload extends React.Component {
                             {_.map(durl, (o, i) => {
                                 const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
                                 return (
-                                    <React.Fragment key={`${quality}${i}`}>
+                                    <React.Fragment key={i}>
                                         {durl.length > 1 && i === 0 ? <LinkGroupTitle
                                             key={`title-${quality}-${i}`}
                                         >{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
                                         <a
-                                            key={`${quality}${i}`}
+                                            key={i}
                                             referrerPolicy="unsafe-url"
                                             href={o.url}
                                             onClick={() => this.handleOnClickDownload(o.url)}
+                                            download
                                         >{title}</a>
                                     </React.Fragment>
                                 );

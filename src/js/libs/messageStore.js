@@ -42,11 +42,14 @@ export class MessageStore {
      */
     createData = (id) => {
         if (this.store[id]) return this.store[id];
-        else return this.store[id] = {
-            state: 0, // 初始状态 0 等待前端信号
-            queue: [], // 任务队列
-            data: {id}, // 数据对象 存储如cid之类的数据
-        };
+        else {
+            console.warn(`Create MessageStore on Tab ${id}`);
+            return this.store[id] = {
+                state: 0, // 初始状态 0 等待前端信号
+                queue: [], // 任务队列
+                data: {id}, // 数据对象 存储如cid之类的数据
+            };
+        }
     };
 
     has = (id) => !!this.store[id];
@@ -59,16 +62,16 @@ export class MessageStore {
     dealWith = (id) => {
         const doIt = (id, taskData) => {
             if (!taskData) return Promise.resolve();
-            const {commend} = taskData;
             return new Promise((resolve, reject) => {
                 chrome.tabs.sendMessage(id, taskData, (res) => {
-                    res !== undefined ? resolve() : reject(`No result from tab[${id}] - commend[${commend}]`);
+                    res !== undefined ? resolve() : reject(`No result from tab[${id}] - commend[${taskData.commend}]`);
                 });
             });
         };
+        if (this.has[id] === false) return console.error(`Invalid tab id ${id}`);
         const {state, queue} = this.store[id];
         state && queue.length > 0 && doIt(id, queue.shift()).then(() => {
-            queue.length > 0 && this.dealWith(id, this.store[id]); // 如果队列不为空
+            queue.length > 0 && this.dealWith(id); // 如果队列不为空
         }, (error) => console.error(error));
     };
 }

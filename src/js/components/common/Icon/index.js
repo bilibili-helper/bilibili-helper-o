@@ -14,7 +14,6 @@ const iconList = {
     arrowDown: chrome.extension.getURL('statics/imgs/arrow_down.svg'),
     arrowUp: chrome.extension.getURL('statics/imgs/arrow_up.svg'),
     arrowLeft: chrome.extension.getURL('statics/imgs/arrow_left.svg'),
-    options: chrome.extension.getURL('statics/imgs/options.svg'),
 };
 
 const IconView = styled.div.attrs({
