@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {consoleLogo, version} from 'Utils';
+import {consoleLogo} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
@@ -153,6 +153,8 @@ class PageConfig extends React.Component {
             permissionMap: {},
 
             checkingVersion: false,
+
+            version: null,
         };
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
@@ -185,6 +187,9 @@ class PageConfig extends React.Component {
         });
         chrome.runtime.sendMessage({commend: 'getPermissionMap'}, (permissionMap) => {
             this.setState({permissionMap});
+        });
+        chrome.runtime.sendMessage({commend: 'getFeatureStore', feature: 'versionManager'}, (featureStore) => {
+            this.setState({version: featureStore.version});
         });
     }
 
@@ -406,6 +411,8 @@ class PageConfig extends React.Component {
             debug,
             broadcast,
             checkingVersion,
+
+            version,
         } = this.state;
         return <React.Fragment>
             {/*<Header title="设置"/>*/}

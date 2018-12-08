@@ -9,10 +9,10 @@ import {Feature} from 'Libs/feature';
 import {__, getURL, version} from 'Utils';
 import apis from './apis';
 
-export class CheckVersion extends Feature {
+export class VersionManager extends Feature {
     constructor() {
         super({
-            name: 'checkVersion',
+            name: 'versionManager',
             kind: 'other',
             permissions: ['notifications'],
             settings: {
@@ -26,11 +26,11 @@ export class CheckVersion extends Feature {
             },
         });
         if (!this.store) {
-            this.settings.version = {
-                number: version,
+            this.version = {
+                version,
                 day: new Date().getDate(),
             };
-            this.store = this.settings.version;
+            this.store = this.version;
         }
     }
 
@@ -48,30 +48,30 @@ export class CheckVersion extends Feature {
 
     setVersion = ({version, update_time: updateTime}) => {
         if (!this.store) {
-            this.settings.version = {
-                number: version,
+            this.version = {
+                version,
                 day: new Date().getDate(),
             };
         } else {
-            if (version) this.settings.version.number = version;
-            if (updateTime) this.settings.version.updateTime = updateTime;
-            this.settings.version.day = new Date().getDate();
+            if (version) this.version.version = version;
+            if (updateTime) this.version.updateTime = updateTime;
+            this.version.day = new Date().getDate();
         }
-        this.store = this.settings.version;
+        this.store = this.version;
     };
 
     getVersion = () => {
         const v = this.store;
         if (v === undefined) {
-            this.settings.version = {
-                number: null,
+            this.version = {
+                version: null,
                 updateTime: null,
                 day: null,
             };
         } else {
-            this.settings.version = v;
+            this.version = v;
         }
-        return this.settings.version;
+        return this.version;
     };
 
     request = (ignore = false) => {
@@ -91,7 +91,7 @@ export class CheckVersion extends Feature {
                             title: __('extensionNotificationTitle'),
                             message: __('checkVersionNewVersion') + res.version,
                         });
-                    } else if (ignore) {
+                    } else if (notifyOn) {
                         this.setVersion({});
                         chrome.notifications.create(notifyId, {
                             type: 'basic',

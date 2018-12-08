@@ -9,7 +9,7 @@ import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
 import {Button, Icon} from 'Components';
-import {createTab, getLink, __, version} from 'Utils';
+import {createTab, getLink, __} from 'Utils';
 import {theme} from 'Styles';
 
 const {color} = theme;
@@ -127,6 +127,7 @@ export class Menu extends React.Component {
             lastSearch: store.get('lastSearch') || '',
             permissionMap: {},
             options: [],
+            version: null,
         };
         this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au|ep)?(\d+)$/);
     }
@@ -172,6 +173,10 @@ export class Menu extends React.Component {
             commend: 'getPermissionMap',
         }, (permissionMap) => {
             this.setState({permissionMap});
+        });
+
+        chrome.runtime.sendMessage({commend: 'getFeatureStore', feature: 'versionManager'}, (featureStore) => {
+            this.setState({version: featureStore.version});
         });
     }
 
@@ -268,7 +273,7 @@ export class Menu extends React.Component {
     };
 
     render() {
-        const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options, debug} = this.state;
+        const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options, debug, version} = this.state;
         const {video, live, dynamic, favourite, linker} = menuOptions;
         const showIconOption = options ? _.find(options, (o) => o.key === 'showIcon') : {};
         const showIcon = showIconOption ? showIconOption.on : false;
@@ -279,15 +284,15 @@ export class Menu extends React.Component {
                     onClick={() => this.handleOnClick('video', getLink('video'))}>
                     <Icon size={20} iconfont="tv"/>
                 </IconBtn> : <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>
-                     {__('goBili')}
-                 </MenuButton>)}
+                               {__('goBili')}
+                           </MenuButton>)}
                 {live && (showIcon ? <IconBtn
                     title={__('goBiliLive')}
                     onClick={() => this.handleOnClick('live', getLink('live'))}>
                     <Icon size={20} iconfont="live"/>
                 </IconBtn> : <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>
-                     {__('goBiliLive')}
-                 </MenuButton>)}
+                              {__('goBiliLive')}
+                          </MenuButton>)}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
                 {permissionMap.login ? <React.Fragment>
                     {dynamic && (showIcon ? <IconBtn
@@ -295,13 +300,13 @@ export class Menu extends React.Component {
                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>
                         <Icon size={20} iconfont="like"/>
                     </IconBtn> : <MenuButton
-                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>)}
+                                     onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>)}
                     {favourite && (showIcon ? <IconBtn
                         title={__('goFavourite')}
                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>
                         <Icon size={20} iconfont="favourite"/>
                     </IconBtn> : <MenuButton
-                         onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>)}
+                                       onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>)}
                 </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                 {linker && <LinkerWrapper>
                     <Linker

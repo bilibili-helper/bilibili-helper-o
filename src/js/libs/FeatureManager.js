@@ -175,6 +175,12 @@ export class FeatureManager {
                     }
                     break;
                 }
+                case 'getFeatureStore': {
+                    const {feature: featureName} = message;
+                    const feature = this.features[_.upperFirst(featureName)];
+                    if (feature) sendResponse(feature.store);
+                    break;
+                }
             }
         });
     };

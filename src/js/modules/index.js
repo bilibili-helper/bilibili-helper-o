@@ -4,6 +4,7 @@
  * Description: 功能点打包入口
  */
 // 然后再加载子类
+import {Background} from './background';
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
 import {DoSign} from './doSign';
@@ -18,12 +19,13 @@ import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
 import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
-import {CheckVersion} from 'Modules/checkVersion';
+import {VersionManager} from 'Modules/versionManager';
 import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 
 export const Features = {
+    Background,
     Debug,
     PopupAnchor,
     Treasure,
@@ -38,7 +40,7 @@ export const Features = {
     PictureInPicture,
     VideoWiden,
     VideoSubtitleDownload,
-    CheckVersion,
+    VersionManager,
     Silver2coin,
     QuickSearch,
     VideoHideDanmu,
