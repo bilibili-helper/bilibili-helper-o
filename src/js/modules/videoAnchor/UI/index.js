@@ -35,7 +35,6 @@ export class VideoAnchorUI extends UI {
                      * !!! 注释掉是因为点击视频下载链接后浏览器会触发beforeunload事件
                      */
                     /*window.addEventListener('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
-                        console.warn('beforeunload');
                         chrome.runtime.sendMessage({commend: 'tabUnload'}, () => true);
                     });*/
                     const helperContentDOM = document.querySelector('.bilibili-helper-content');

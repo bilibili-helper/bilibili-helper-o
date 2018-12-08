@@ -6,5 +6,9 @@
     "checkVersionNewVersion": {
         "message": "New version detected:",
         "description": "Notification: new version detected"
+    },
+    "checkVersionNoNewVersion": {
+        "message": "This is newest version",
+        "description": "Notification: no new version detected"
     }
 }

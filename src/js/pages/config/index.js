@@ -151,6 +151,8 @@ class PageConfig extends React.Component {
             broadcast: this.defaultBroadcast, // header下的通知条
 
             permissionMap: {},
+
+            checkingVersion: false,
         };
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
@@ -378,6 +380,17 @@ class PageConfig extends React.Component {
         });
     };
 
+    handleCheckVersion = () => {
+        const {checkingVersion} = this.state;
+        if (checkingVersion) return;
+        else this.setState({checkingVersion: true});
+        chrome.runtime.sendMessage({
+            commend: 'checkVersion',
+        }, () => {
+            setTimeout(() => this.setState({checkingVersion: false}), 500);
+        });
+    };
+
     render() {
         const {
             // modal state
@@ -392,6 +405,7 @@ class PageConfig extends React.Component {
             pageType,
             debug,
             broadcast,
+            checkingVersion,
         } = this.state;
         return <React.Fragment>
             {/*<Header title="设置"/>*/}
@@ -420,8 +434,10 @@ class PageConfig extends React.Component {
                         twoLine
                         first={chrome.i18n.getMessage('extensionName')}
                         second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
-                        //separator
-                        //operation={<Button disable normal>检查更新</Button>}
+                        separator
+                        operation={
+                            <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>检查更新</Button>
+                        }
                     />
                     {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                     <ListItem

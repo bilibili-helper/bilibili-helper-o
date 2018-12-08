@@ -23,7 +23,7 @@ export class VideoSubtitleDownload extends Feature {
                 title: '外挂字幕下载',
             },
         });
-        this.store = new MessageStore('videoSubtitleDownloadDOMInitialized');
+        this.messageStore = new MessageStore('videoSubtitleDownloadDOMInitialized');
     }
 
     addListener = () => {
@@ -37,23 +37,23 @@ export class VideoSubtitleDownload extends Feature {
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
 
-            const tabData = this.store.createData(tabId);
+            const tabData = this.messageStore.createData(tabId);
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
             if (pathname === '/x/player.so') {
                 tabData.data.cid = query.id.slice(4);
-                const storeObject = this.store.createData(tabId);
+                const storeObject = this.messageStore.createData(tabId);
                 const {queue} = storeObject;
                 queue.push({
                     commend: 'loadSubtitle',
                     url: details.url,
                 });
-                this.store.dealWith(tabId);
+                this.messageStore.dealWith(tabId);
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadSubtitle' && message.subtitleObject) {
-                const tabData = this.store.createData(sender.tab.id);
+                const tabData = this.messageStore.createData(sender.tab.id);
                 if (tabData) {
                     const {lan, subtitle_url} = message.subtitleObject;
                     const {cid} = tabData.data;

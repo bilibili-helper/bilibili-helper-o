@@ -28,7 +28,7 @@ export class DoSign extends Feature {
     }
 
     launch = () => {
-        chrome.alarms.create('doSign', {periodInMinutes: 5});
+        chrome.alarms.create('doSign', {periodInMinutes: 1});
     };
 
     pause = () => {
@@ -51,21 +51,26 @@ export class DoSign extends Feature {
 
     request = (hasLogin = this.permissionMap.login) => {
         if (chrome.extension.inIncognitoContext) return; // 隐身模式
-        this.settings.on && hasLogin && $.ajax({
-            method: 'get',
-            url: apis.doSign,
-            success: (res) => {
-                const notificationState = _.find(this.settings.options, {key: 'notification'});
-                if (res.code === 0 && notificationState && notificationState.on) {
-                    chrome.notifications.create('bilibili-helper-doSign', {
-                        type: 'basic',
-                        iconUrl: getURL('/statics/imgs/cat.svg'),
-                        title: __('extensionNotificationTitle'),
-                        message: '自动签到成功！',
-                        buttons: [],
-                    });
-                }
-            },
-        });
+        const today = (new Date().getDate());
+        let {day} = this.store || {};
+        if (day !== today) {
+            this.settings.on && hasLogin && $.ajax({
+                method: 'get',
+                url: apis.doSign,
+                success: (res) => {
+                    this.store = {day: today};
+                    if (res.code === 0) {
+                        const notificationState = _.find(this.settings.options, {key: 'notification'});
+                        notificationState && notificationState.on && chrome.notifications.create('bilibili-helper-doSign', {
+                            type: 'basic',
+                            iconUrl: getURL('/statics/imgs/cat.svg'),
+                            title: __('extensionNotificationTitle'),
+                            message: '自动签到成功！',
+                            buttons: [],
+                        });
+                    }
+                },
+            });
+        }
     };
 }

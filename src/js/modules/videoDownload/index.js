@@ -24,7 +24,7 @@ export class VideoDownload extends Feature {
                 description: '不支持新页面，但有时候会成功，建议不使用"自动"清晰度',
             },
         });
-        this.store = new MessageStore('videoDownloadDOMInitialized');
+        this.messageStore = new MessageStore('videoDownloadDOMInitialized');
         this.downloadFilenames = {};
     }
 
@@ -54,7 +54,7 @@ export class VideoDownload extends Feature {
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
             const url = new URL(details.url, '', true);
             const {pathname, query: data} = url;
-            const tabData = this.store.createData(tabId);
+            const tabData = this.messageStore.createData(tabId);
             if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
@@ -62,7 +62,7 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
-                this.store.dealWith(tabId); // 处理queue
+                this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl') {
                 //console.log(details, data);
                 tabData.queue.push({
@@ -71,13 +71,13 @@ export class VideoDownload extends Feature {
                     data,
                     url: url.origin + url.pathname,
                 });
-                this.store.dealWith(tabId); // 处理queue
+                this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
                 tabData.queue.push({
                     commend: 'videoDownloadCid',
                     cid: +data.id.slice(4),
                 });
-                this.store.dealWith(tabId); // 处理queue
+                this.messageStore.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message) => {

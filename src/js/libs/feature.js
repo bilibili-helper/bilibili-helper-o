@@ -37,6 +37,19 @@ export class Feature {
         ];
     }
 
+    get store() {
+        const res = store.get(`in-module-${this.name}`);
+        if (res) return res;
+        else {
+            store.set(`in-module-${this.name}`, undefined);
+            return undefined;
+        }
+    }
+
+    set store(v) {
+        store.set(`in-module-${this.name}`, v);
+    }
+
     /**
      * 初始化 - 位于装载过程之前
      * 1.检查(启动)配置
@@ -140,4 +153,5 @@ export class Feature {
         });
         return tempObject;
     };
+
 }

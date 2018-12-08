@@ -25,7 +25,7 @@ export class Danmu extends Feature {
                 description: '查询弹幕发送者，支持历史弹幕，分P，视频切换等场景',
             },
         });
-        this.store = new MessageStore('danmuDOMInitialized');
+        this.messageStore = new MessageStore('danmuDOMInitialized');
     }
 
     addListener = () => {
@@ -46,21 +46,21 @@ export class Danmu extends Feature {
             const {pathname, query} = url;
             // 收到前端页面请求
             if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
-                const tabData = this.store.createData(tabId);
+                const tabData = this.messageStore.createData(tabId);
                 tabData.data.cid = query.id.slice(4);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     commend: 'loadCurrentDanmu',
                     cid: tabData.data.cid,
                 });
-                this.store.dealWith(tabId); // 处理queue
+                this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
-                const tabData = this.store.createData(tabId);
+                const tabData = this.messageStore.createData(tabId);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     commend: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: query.date,
                 });
-                this.store.dealWith(tabId); // 处理queue
+                this.messageStore.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
@@ -92,14 +92,14 @@ export class Danmu extends Feature {
                     filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
                 });
             } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
-                const tabData = this.store.createData(sender.tab.id);
+                const tabData = this.messageStore.createData(sender.tab.id);
                 const url = new URLParse(message.url, '', true);
                 tabData.queue.push({
                     commend: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: url.query.date,
                 });
-                this.store.dealWith(sender.tab.id);
+                this.messageStore.dealWith(sender.tab.id);
             }
         });
     };

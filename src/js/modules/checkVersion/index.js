@@ -5,7 +5,6 @@
  */
 import $ from 'jquery';
 import _ from 'lodash';
-import store from 'store';
 import {Feature} from 'Libs/feature';
 import {__, getURL, version} from 'Utils';
 import apis from './apis';
@@ -19,77 +18,100 @@ export class CheckVersion extends Feature {
             settings: {
                 on: true,
                 title: '自动检测更新',
+                description: '仅仅进行检测而并不进行更新操作',
                 type: 'checkbox',
                 options: [
                     {key: 'notification', title: '推送通知', on: false},
                 ],
             },
         });
-        if (!store.get('version')) {
+        if (!this.store) {
             this.settings.version = {
                 number: version,
                 day: new Date().getDate(),
             };
-            store.set('version', this.settings.version);
+            this.store = this.settings.version;
         }
     }
 
     launch = () => {
-        $.ajax({
-            method: 'get',
-            url: apis.version,
-            success: (res) => {
-                const {day, updateTime} = this.getVersion();
-                if ((this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) && day !== new Date().getDate()) { // 比较今天是否有检测过
-                    this.setVersion(res);
-                    const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
-                    notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
-                        type: 'basic',
-                        iconUrl: getURL('/statics/imgs/cat.svg'),
-                        title: __('extensionNotificationTitle'),
-                        message: __('checkVersionNewVersion') + res.version,
-                    });
-                }
-            },
-            error: (e) => {
-                const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on;
-                notifyOn && chrome.notifications.create(`bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`, {
-                    type: 'basic',
-                    iconUrl: getURL('/statics/imgs/cat.svg'),
-                    title: __('extensionNotificationTitle'),
-                    message: __('checkVersionGetUpdateError'),
-                });
-                console.error('Failed to check version', e);
-            },
+        this.request();
+    };
+
+    addListener = () => {
+        chrome.runtime.onMessage.addListener((message) => {
+            if (message.commend === 'checkVersion') {
+                this.request(true);
+            }
         });
     };
 
     setVersion = ({version, update_time: updateTime}) => {
-        if (!store.get('version')) {
+        if (!this.store) {
             this.settings.version = {
                 number: version,
                 day: new Date().getDate(),
             };
         } else {
-            this.settings.version.number = version;
-            this.settings.version.updateTime = updateTime;
+            if (version) this.settings.version.number = version;
+            if (updateTime) this.settings.version.updateTime = updateTime;
             this.settings.version.day = new Date().getDate();
         }
-        store.set('version', this.settings.version);
+        this.store = this.settings.version;
     };
 
     getVersion = () => {
-        const v = store.get('version');
+        const v = this.store;
         if (v === undefined) {
             this.settings.version = {
                 number: null,
                 updateTime: null,
-                date: null,
+                day: null,
             };
         } else {
             this.settings.version = v;
         }
         return this.settings.version;
+    };
+
+    request = (ignore = false) => {
+        const {day, updateTime} = this.getVersion();
+        if (day !== new Date().getDate() || ignore) {
+            const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
+            const notifyId = `bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`;
+            $.ajax({
+                method: 'get',
+                url: apis.version,
+                success: (res) => {
+                    if (this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) { // 比较今天是否有检测过
+                        this.setVersion(res);
+                        notifyOn && chrome.notifications.create(notifyId, {
+                            type: 'basic',
+                            iconUrl: getURL('/statics/imgs/cat.svg'),
+                            title: __('extensionNotificationTitle'),
+                            message: __('checkVersionNewVersion') + res.version,
+                        });
+                    } else if (ignore) {
+                        this.setVersion({});
+                        chrome.notifications.create(notifyId, {
+                            type: 'basic',
+                            iconUrl: getURL('/statics/imgs/cat.svg'),
+                            title: __('extensionNotificationTitle'),
+                            message: __('checkVersionNoNewVersion'),
+                        });
+                    } else this.setVersion({});
+                },
+                error: (e) => {
+                    notifyOn && chrome.notifications.create(notifyId, {
+                        type: 'basic',
+                        iconUrl: getURL('/statics/imgs/cat.svg'),
+                        title: __('extensionNotificationTitle'),
+                        message: __('checkVersionGetUpdateError'),
+                    });
+                    console.error('Failed to check version', e);
+                },
+            });
+        }
     };
 
     compareVersion = (a, b) => {
