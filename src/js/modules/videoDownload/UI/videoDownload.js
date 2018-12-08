@@ -95,7 +95,6 @@ export class VideoDownload extends React.Component {
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            console.warn(message);
             if (message.commend === 'videoDownloadSendVideoRequest') {
                 const {data, url, method, type} = message;
                 //const res = /\/av([\d]+)\//.exec(location.pathname); // 新的视频播放页面会同时加载多个不同视频的playUrl
@@ -104,7 +103,6 @@ export class VideoDownload extends React.Component {
                 const {videoData} = this.state;
                 const currentCid = data.cid;
                 const quality = data.quality;
-                console.warn(videoData, currentCid);
                 if (videoData[currentCid] && videoData[currentCid][quality]) {
                     this.setState({currentCid});
                 } else {

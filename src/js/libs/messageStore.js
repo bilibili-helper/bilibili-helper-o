@@ -43,7 +43,7 @@ export class MessageStore {
     createData = (id) => {
         if (this.store[id]) return this.store[id];
         else {
-            console.warn(`Create MessageStore on Tab ${id}`);
+            //console.warn(`Create MessageStore on Tab ${id}`);
             return this.store[id] = {
                 state: 0, // 初始状态 0 等待前端信号
                 queue: [], // 任务队列
