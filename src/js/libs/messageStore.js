@@ -18,19 +18,28 @@ export class MessageStore {
              * 监听前端dom的初始化结果推送
              * 然后初始化后端每个对应的store
              */
-            if (message.commend === this.initializedName && sender.tab.id) {
-                const id = sender.tab.id;
+            const id = sender.tab.id;
+            if (message.commend === this.initializedName) {
                 // 发现没有创建过相关tabStore，说明dom初始化在原始页面发送请求前完成，按理说概率不大/不会发生
-                let data = this.has(id) ? this.store[id] : this.createData(id);
+                let data = this.createData(id);
                 if (data.state === 0) {
                     data.state = 1;
-                    // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
-                    this.dealWith(id);
                 } else {
                     console.warn(`This store is already in state:`, data.state);
                 }
-            } else if (message.commend === 'tabUnload' && this.has(sender.tab.id)) {
-                this.delete(sender.tab.id);
+                // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
+                this.dealWith(id);
+            }
+        });
+        chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+            this.has(tabId) && removeInfo.isWindowClosing && this.delete(tabId);
+        });
+        chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+            const {status, url} = changeInfo;
+            // 切换分P时url!==undefined，不需要清除
+            if (this.has(tabId) && status === 'loading' && url === undefined) this.delete(tabId);
+            else if (this.has(tabId) && status === 'complete') {
+                this.createData(tabId);
             }
         });
     };
@@ -41,7 +50,7 @@ export class MessageStore {
      * @return {{state, queue, data}}
      */
     createData = (id) => {
-        if (this.store[id]) return this.store[id];
+        if (this.has(id)) return this.store[id];
         else {
             //console.warn(`Create MessageStore on Tab ${id}`);
             return this.store[id] = {

@@ -31,12 +31,6 @@ export class VideoAnchorUI extends UI {
                 helperDOM.setAttribute('class', 'bilibili-helper');
                 container.appendChild(helperDOM);
                 ReactDOM.render(<ToolBtn/>, document.querySelector('.bilibili-helper'), () => {
-                    /**
-                     * !!! 注释掉是因为点击视频下载链接后浏览器会触发beforeunload事件
-                     */
-                    /*window.addEventListener('beforeunload', function() { // 页面关闭的时候删除后端存储的tabStore
-                        chrome.runtime.sendMessage({commend: 'tabUnload'}, () => true);
-                    });*/
                     const helperContentDOM = document.querySelector('.bilibili-helper-content');
                     resolve(helperContentDOM);
                 });

@@ -20,6 +20,10 @@ https://bilihelper.guguke.net
 
 https://github.com/zacyu/bilibili-helper/wiki
 
+## Document
+
+[Document link](./docs/main.md)
+
 ## Release (发行)
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
@@ -33,7 +37,3 @@ https://github.com/zacyu/bilibili-helper/wiki
 ## Terms of Service & Privacy Policy (隐私协议)
 
 http://addons-privacy.com/
-
-## Document 
-
-[doc link](./doc/main.md)

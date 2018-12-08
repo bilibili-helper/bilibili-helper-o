@@ -21,7 +21,8 @@ export class Feature {
      */
     constructor({name, kind, permissions = [], settings = {}, dependencies = []}) {
         this.name = _.upperFirst(name);
-        this.storeName = `bilibili-helper-${this.name}`;
+        this.optionStoreName = `bilibili-helper-${this.name}`;
+        this.dataStoreName = `in-module-${this.name}`;
         this.kind = kind;
         this.initialed = false;
         this.dependencies = dependencies;
@@ -38,7 +39,7 @@ export class Feature {
     }
 
     get store() {
-        const res = store.get(`in-module-${this.name}`);
+        const res = store.get(this.dataStoreName);
         if (res) return res;
         else {
             store.set(`in-module-${this.name}`, undefined);
@@ -47,7 +48,7 @@ export class Feature {
     }
 
     set store(v) {
-        store.set(`in-module-${this.name}`, v);
+        store.set(this.dataStoreName, v);
     }
 
     /**
@@ -75,9 +76,9 @@ export class Feature {
     // 初始化配置
     initSetting = (sets) => {
         return new Promise(resolve => {
-            const settings = sets || store.get(this.storeName) || {}; // 缓存配置
+            const settings = sets || store.get(this.optionStoreName) || {}; // 缓存配置
             this.settings = this.mergeSetting(this.settings, settings);
-            store.set(this.storeName, this.simplifySetting(this.settings));
+            store.set(this.optionStoreName, this.simplifySetting(this.settings));
             resolve(this);
         });
     };
@@ -94,7 +95,7 @@ export class Feature {
     // 设置配置
     setSetting = (settings) => {
         this.settings = settings;
-        store.set(this.storeName, this.simplifySetting(settings));
+        store.set(this.optionStoreName, this.simplifySetting(settings));
         this.afterSetSetting(settings);
     };
 

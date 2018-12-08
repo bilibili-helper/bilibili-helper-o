@@ -24,6 +24,23 @@ moduleName
 2. `moduleName/UI/index.js`文件必须导出继承自UI的类。类名必须为xxxUI，其中xxx为模块名。如：模块videoAnchor的UI类为VideoAnchorUI。
 3. `moduleName/_locales/zh_CN`目录名必须为`localesSupportList.json`中存在的名称，且目录下只能有json文件，文件名命名规则不作约定。
 
+## Properties
+
+| Type                            | Name            | Description                                      |
+| ------------------------------- | --------------- | ------------------------------------------------ |
+| String                          | name            | 首字母大写，驼峰命名的Feature名称                |
+| String                          | optionStoreName | 配置仓库名，格式：`bilibili-helper-${this.name}` |
+| String                          | dataStoreName   | 数据仓库名，格式：`in-module-${this.name}`       |
+| String                          | kind            | 分类名                                           |
+| Boolean                         | initialed       | 初始化状态                                       |
+| String of Array                 | dependencies    | 依赖配置                                         |
+| String of Array                 | permissions     | 权限配置                                         |
+| [SettingObject](#SettingObject) | settings        | 设置对象                                         |
+| Object                          | permissionMap   | 当前权限状态                                     |
+| Any                             | store           | 模块本地数据仓库，非配置仓库                     |
+
+
+
 ## OptionType
 
 规定功能子选项的功能类型
