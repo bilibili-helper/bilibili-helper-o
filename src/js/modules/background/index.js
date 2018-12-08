@@ -27,7 +27,7 @@ export class Background extends Feature {
             } else if (reason === 'update' && !hasNewVersion(previousVersion)) {
                 chrome.notifications.create('bilibili-helper-update', {
                     type: 'basic',
-                    iconUrl: '../statics/imgs/icon-256.png',
+                    iconUrl: '../statics/imgs/cat.svg',
                     title: __('extensionNotificationTitle'),
                     message: __('extensionNotificationExtensionUpdate').replace('%v', version),
                 });

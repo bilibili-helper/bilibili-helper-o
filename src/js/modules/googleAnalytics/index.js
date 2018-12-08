@@ -4,7 +4,6 @@
  * Description:
  */
 
-import store from 'store';
 import {Feature} from 'Libs/feature';
 import {version} from 'Utils';
 
@@ -75,11 +74,11 @@ export class GoogleAnalytics extends Feature {
     insertGAScriptTag = (UA = 'UA-39765420-2') => {
         return new Promise(resolve => {
             if (document.getElementsByClassName('ga-script').length === 0) {
-                const userID = store.get('userID');
+                let {userID} = this.store || {};
                 if (!userID) {
-                    this.gaKey = String(Math.random()).slice(2);
-                    store.set('userID', this.gaKey);
-                } else this.userID = userID;
+                    userID= String(Math.random()).slice(2);
+                    this.store = {userID: userID};
+                }
                 const script = `https://www.google-analytics.com/analytics.js`;
                 //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
                 window['GoogleAnalyticsObject'] = 'ga';
@@ -94,7 +93,7 @@ export class GoogleAnalytics extends Feature {
                 document.head.appendChild(scriptTag);
                 window.ga('create', UA, 'auto');
                 window.ga('set', 'checkProtocolTask');
-                window.ga('set', 'userId', this.userID);
+                window.ga('set', 'userId', userID);
                 resolve();
             } else resolve();
         });
