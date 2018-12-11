@@ -20,7 +20,7 @@ https://bilihelper.guguke.net
 
 https://github.com/zacyu/bilibili-helper/wiki
 
-## Documentations (for contribuers)
+## Documentations (for contributors)
 
 [Docs](./docs/main.md)
 
