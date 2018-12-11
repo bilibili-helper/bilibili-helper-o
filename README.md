@@ -20,15 +20,15 @@ https://bilihelper.guguke.net
 
 https://github.com/zacyu/bilibili-helper/wiki
 
-## Document
+## Documentations (for contribuers)
 
-[Document link](./docs/main.md)
+[Docs](./docs/main.md)
 
 ## Release (发行)
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
 
-[Download at Github ](https://github.com/zacyu/bilibili-helper/releases)
+[Download at Github](https://github.com/zacyu/bilibili-helper/releases)
 
 ## License (许可)
 
