@@ -102,15 +102,3 @@ Enum: `login` or `notifications`
 | Array of [OptionObject](#OptionObject) | options     | 规定功能在设置页面的一级页面中显示的子选项。                 |
 | String                                 | value       | 如果type配置为radio，则设置该项目表示子选项单选组的默认值。  |
 | [SubPageObject](#SubPageObject)        | subPage     | 规定功能在设置页面的二级页面中显示的子选项。                 |
-
-
-
-## Properties
-
-| Type                                        | Name                      | Description                                                  |
-| ------------------------------------------- | ------------------------- | ------------------------------------------------------------ |
-| String                                      | name                      | 首字母小写，驼峰式命名规则，表示功能的名称。                 |
-| String                                      | <div id="kind">kind</div> | 代表功能产生作用的页面。<br />在设置页面中根据此项进行分类。<br />目前只有video、popup、live和other这四种。 |
-| enum in [PermissionsType](#PermissionsType) | permissions               | 规定该功能需要进行的权限校验项目。                           |
-| Array of String                             | dependencies              | 表示该功能依赖的模块。<br />在所有依赖模块初始化完毕后才会加载本模块。 |
-| [SettingObject](#SettingObject)             | settings                  | 规定功能的配置，以及在设置页面中的显示方式。                 |

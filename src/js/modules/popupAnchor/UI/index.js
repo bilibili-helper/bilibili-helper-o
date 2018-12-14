@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
+import styled, {createGlobalStyle} from 'styled-components';
 import {UI} from 'Libs/UI';
 
 export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
@@ -13,6 +13,13 @@ export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
   flex-direction: row-reverse;
   background-color: rgb(250,250,250);
   max-height: 290px;
+`;
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 export class PopupAnchorUI extends UI {
@@ -25,7 +32,9 @@ export class PopupAnchorUI extends UI {
     load = () => {
         return new Promise(resolve => {
             ReactDOM.render(
-                <Main innerRef={i => this.container = i}/>,
+                <Main>
+                    <GlobalStyle/>
+                </Main>,
                 document.getElementById('root'),
                 () => {
                     chrome.runtime.sendMessage({
@@ -33,8 +42,8 @@ export class PopupAnchorUI extends UI {
                         action: 'click',
                         category: 'popup',
                     });
-                    resolve(this.container);
-                }
+                    resolve(document.querySelector('.bilibili-helper-popup-main'));
+                },
             );
 
         });

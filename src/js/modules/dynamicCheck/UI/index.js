@@ -26,7 +26,7 @@ export class DynamicCheckUI extends UI {
                 wrapper.setAttribute('class', 'bilibili-helper-dynamic-check-container');
                 popupDOM.appendChild(wrapper);
                 ReactDOM.render(
-                    <DynamicBox innerRef={i => this.container = i}/>,
+                    <DynamicBox ref={i => this.container = i}/>,
                     wrapper,
                     () => resolve(this.container),
                 );

@@ -18,7 +18,7 @@ export class MessageStore {
              * 监听前端dom的初始化结果推送
              * 然后初始化后端每个对应的store
              */
-            const id = sender.tab.id;
+            const id = (sender.tab && sender.tab.id) || sender.id;
             if (message.commend === this.initializedName) {
                 // 发现没有创建过相关tabStore，说明dom初始化在原始页面发送请求前完成，按理说概率不大/不会发生
                 let data = this.createData(id);

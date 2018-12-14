@@ -24,7 +24,7 @@ export class VideoDownloadUI extends UI {
 
             container.appendChild(wrapper);
             ReactDOM.render(
-                <VideoDownload innerRef={i => this.container = i} setting={setting}/>,
+                <VideoDownload ref={i => this.container = i} setting={setting}/>,
                 wrapper,
                 () => resolve(this.container),
             );

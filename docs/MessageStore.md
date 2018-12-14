@@ -54,7 +54,7 @@ tabUnload
 
 messageStore拥有几个使用的方法，用于管理监听到的事件和数据
 
-### createData(tabId)
+### createData(tabId): [StoreObject](#StoreObject)
 
 返回的是 [StoreObject](#StoreObject) 结构的对象，默认state为0.
 
@@ -72,7 +72,7 @@ messageStore拥有几个使用的方法，用于管理监听到的事件和数�
 
 删除指定tabId的StoreObject
 
-### dealWith(tabId)
+### dealWith(tabId): void
 
 异步处理指定tabId的store的queue。
 

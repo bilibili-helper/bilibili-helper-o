@@ -92,7 +92,7 @@ export class Radio extends React.Component {
             <RadioView className={on ? 'checked' : ''} onClick={onClick}>
                 <Bar/>
                 <Knob
-                    innerRef={i => this.btn = i}
+                    ref={i => this.btn = i}
                     onMouseDown={!disable ? this.handleOnMouseDown : null}
                     onMouseUp={!disable ? this.handleOnMouseUp : null}
                     onMouseLeave={!disable ? this.handleOnMouseUp : null}

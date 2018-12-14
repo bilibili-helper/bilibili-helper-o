@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import store from 'store';
 import {Icon, CheckBoxButton} from 'Components';
 
-const ChatFilterPanel = styled.div.attrs({className: 'chat-helper-panel ctrl-panel'})`
+const ChatFilterPanel = styled.div.attrs({className: 'chat-helper-panel ctrl-panel bilibili-chat-filter-panel'})`
   position: absolute;
   bottom: 30px;
   left: 0;
@@ -100,10 +100,10 @@ export class ChatFilter extends React.Component {
     }
 
     handleOnClick = () => {
-        const panel = $(this.panel);
-        if (panel.css('display') === 'none') {
-            panel.fadeIn(200);
-        } else panel.fadeOut(200);
+        const panel = document.querySelector('.bilibili-chat-filter-panel');
+        if (panel.style['display'] === 'none' || !panel.style['display']) {
+            $(panel).fadeIn(200);
+        } else $(panel).fadeOut(200);
     };
 
     handleOnClickRadio = (key, on) => {
@@ -130,7 +130,7 @@ export class ChatFilter extends React.Component {
             <React.Fragment>
                 <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_894803_t8pireix5fq.css"/>
                 <ChatFilterIcon iconfont="ban" size={22} onClick={this.handleOnClick}/>
-                <ChatFilterPanel innerRef={i => this.panel = i}>
+                <ChatFilterPanel ref={i => this.panel = i}>
                     <FilterTitle>屏蔽列表</FilterTitle>
                     {_.map(options, (option) => {
                         const {key, title, on} = option;

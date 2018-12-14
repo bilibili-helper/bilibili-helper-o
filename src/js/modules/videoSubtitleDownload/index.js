@@ -53,7 +53,7 @@ export class VideoSubtitleDownload extends Feature {
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.commend === 'downloadSubtitle' && message.subtitleObject) {
-                const tabData = this.messageStore.createData(sender.tab.id);
+                const tabData = this.messageStore.createData(sender.id);
                 if (tabData) {
                     const {lan, subtitle_url} = message.subtitleObject;
                     const {cid} = tabData.data;

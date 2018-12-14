@@ -310,7 +310,7 @@ export class Menu extends React.Component {
                 </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                 {linker && <LinkerWrapper>
                     <Linker
-                        innerRef={i => this.linkerRef = i}
+                        ref={i => this.linkerRef = i}
                         error={linkerError}
                         onKeyUp={this.handleKeyUp}
                         onFocus={this.handleFocusIn}

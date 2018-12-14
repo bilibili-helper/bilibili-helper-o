@@ -371,9 +371,9 @@ export class Treasure extends React.Component {
         return (
             <React.Fragment>
                 <Box open={counterComplete} onClick={!!times ? this.handleOnClickTreasure : null}>
-                    <Counter innerRef={i => this.counterDOM = i}>{permissionMap.login ? '载入中' : '未登录'}</Counter>
+                    <Counter ref={i => this.counterDOM = i}>{permissionMap.login ? '载入中' : '未登录'}</Counter>
                 </Box>
-                <PanelView innerRef={i => this.panel = i}>
+                <PanelView ref={i => this.panel = i}>
                     <Title>宝箱 - 第{times}/{max_times}轮 - 第{minute / 3}次</Title>
                     <img ref={i => this.imgDOM = i} onLoad={this.handleOnLoadImg}/>
                     <canvas ref={i => this.canvasDOM = i}/>

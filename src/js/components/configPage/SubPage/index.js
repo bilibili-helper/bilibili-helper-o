@@ -191,7 +191,7 @@ export class SubPage extends React.Component {
         return (
             <ThemeProvider theme={{...theme, on, top, left, height, width}}>
                 <Wrapper>
-                    <Container innerRef={i => this.containerRef = i}>
+                    <Container ref={i => this.containerRef = i}>
                         <div>
                             <Header>
                                 <Button icon="arrowLeft" onClick={onClose}/>

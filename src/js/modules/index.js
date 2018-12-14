@@ -3,7 +3,6 @@
  * Create: 2018-06-12
  * Description: 功能点打包入口
  */
-// 然后再加载子类
 import {Background} from './background';
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
@@ -23,6 +22,7 @@ import {VersionManager} from 'Modules/versionManager';
 import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
+import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
 
 export const Features = {
     Background,
@@ -44,6 +44,7 @@ export const Features = {
     Silver2coin,
     QuickSearch,
     VideoHideDanmu,
+    LiveChatMode,
 };
 
 export const UIs = {
@@ -59,4 +60,5 @@ export const UIs = {
     VideoWidenUI,
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
+    LiveChatModeUI,
 };

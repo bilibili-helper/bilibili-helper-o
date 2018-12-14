@@ -92,14 +92,14 @@ export class Danmu extends Feature {
                     filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
                 });
             } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
-                const tabData = this.messageStore.createData(sender.tab.id);
+                const tabData = this.messageStore.createData(sender.id);
                 const url = new URLParse(message.url, '', true);
                 tabData.queue.push({
                     commend: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: url.query.date,
                 });
-                this.messageStore.dealWith(sender.tab.id);
+                this.messageStore.dealWith(sender.id);
             }
         });
     };

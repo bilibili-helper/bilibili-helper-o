@@ -101,7 +101,7 @@ export class List extends React.Component {
         const {children, title, theme, hidden} = this.props;
         return (
             <ThemeProvider theme={{...theme}}>
-                <ListWrapper innerRef={i => this.ListWrapper = i} hidden={hidden}>
+                <ListWrapper ref={i => this.ListWrapper = i} hidden={hidden}>
                     {title && <ListHeader>{title}</ListHeader>}
                     <ListBody>{children}</ListBody>
                 </ListWrapper>

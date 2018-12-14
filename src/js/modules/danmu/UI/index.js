@@ -24,7 +24,7 @@ export class DanmuUI extends UI {
             wrapper.setAttribute('style', 'order: 3;');
             container.appendChild(wrapper);
             ReactDOM.render(
-                <Danmu innerRef={i => this.container = i} settings={settings}/>,
+                <Danmu ref={i => this.container = i} settings={settings}/>,
                 wrapper,
                 () => resolve(this.container),
             );

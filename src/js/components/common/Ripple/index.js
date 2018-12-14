@@ -69,7 +69,7 @@ class RippleClass extends React.Component {
     }
 
     render() {
-        return <RippleView innerRef={i => !this.state.box && this.setState({box: i})}></RippleView>;
+        return <RippleView ref={i => !this.state.box && this.setState({box: i})}></RippleView>;
     }
 }
 

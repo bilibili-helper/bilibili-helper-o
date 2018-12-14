@@ -207,7 +207,7 @@ export class ListItem extends React.Component {
                                 maxHeight: (!extend && subList.hide) || (extend && hideSubList === true) ? '0' : maxHeight || '',
                                 transitionDuration: `${Math.min(Math.sqrt(subList.children.length) / 10 + (hideSubList ? 0.1 : 0.5), 1.2)}s`,
                             }}
-                            innerRef={i => this.subListRef = i}
+                            ref={i => this.subListRef = i}
                         >{subList.children}</SubList>
                     </ThemeProvider>}
                 </ListItemView>

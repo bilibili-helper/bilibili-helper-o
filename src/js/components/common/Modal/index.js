@@ -81,7 +81,7 @@ export class Modal extends React.Component {
         title: PropTypes.string,
         body: PropTypes.any,
         buttons: PropTypes.any,
-    }
+    };
 
     constructor() {
         super();
@@ -89,8 +89,10 @@ export class Modal extends React.Component {
     }
 
     componentDidUpdate() {
-        const height = this.container.getBoundingClientRect().height;
-        this.container.style.top = `calc(50% - ${height / 2}px)`;
+        if (this.container) {
+            const height = this.container.getBoundingClientRect().height;
+            this.container.style.top = `calc(50% - ${height / 2}px)`;
+        }
     }
 
     handleMaskClick(e) {
@@ -103,7 +105,7 @@ export class Modal extends React.Component {
     render() {
         const {on, title, body, buttons} = this.props;
         return <Wrapper on={on} onMouseDown={this.handleMaskClick}>
-            <Container innerRef={i => this.container = i}>
+            <Container ref={i => this.container = i}>
                 {title && <Title>{title}</Title>}
                 <Body>{body}</Body>
                 <ButtonContainer>{buttons}</ButtonContainer>

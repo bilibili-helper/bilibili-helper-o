@@ -22,7 +22,7 @@ export class MenuUI extends UI {
             wrapper.setAttribute('class', 'bilibili-helper-menu-container');
             popupDOM.appendChild(wrapper);
             ReactDOM.render(
-                <Menu settings={settings} innerRef={i => this.container = i}/>,
+                <Menu settings={settings} ref={i => this.container = i}/>,
                 wrapper,
                 () => resolve(this.container),
             );
