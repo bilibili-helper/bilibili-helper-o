@@ -69,9 +69,10 @@ export class VersionManager extends Feature {
                 day: null,
             };
         } else {
-            this.version = v;
+            this.store = v;
         }
-        return this.version;
+        this.store = this.version;
+        return this.store;
     };
 
     request = (ignore = false) => {

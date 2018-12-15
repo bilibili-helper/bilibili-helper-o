@@ -57,26 +57,32 @@ const stylesheet = css`
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel::-webkit-scrollbar,
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .rank-list-section,
   .hide-aside-area #penury-gift-msg,
-  .hide-aside-area #chat-control-panel-vm .bottom-actions{
+  .hide-aside-area #chat-control-panel-vm .bottom-actions,
+  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item:before {
     display: none;
+  }
+  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item {
+    margin: 0;
+    padding: 0 5px;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item,
   .hide-aside-area .control-panel-icon-row {
     pointer-events: none;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item .user-name {
-    font-size: 120%;
-    text-shadow: 0px 0px 3px #000;
+    //font-size: 120%;
+    text-shadow: 0px 1px 1px #000;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item .danmaku-content {
     color: #eee;
-    font-size: 120%;
-    text-shadow: 0px 0px 3px #000;
+    //font-size: 120%;
+    text-shadow: 0px 1px 1px #000;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item span,
   .hide-aside-area #chat-popup-area-vm,
   .hide-aside-area .chat-small-icon-box,
-  .hide-aside-area .control-panel-icon-row > * {
+  .hide-aside-area .control-panel-icon-row > *,
+  .hide-aside-area .danmaku-menu {
     pointer-events: auto;
   }
   .hide-aside-area #chat-control-panel-vm{
