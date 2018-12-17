@@ -44,7 +44,7 @@ const stylesheet = css`
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel {
     position: fixed;
     left: 0;
-    bottom: 70px;
+    bottom: 80px;
     width: 100%;
     height: calc(50% - 20px);
     pointer-events: none;
@@ -58,7 +58,8 @@ const stylesheet = css`
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .rank-list-section,
   .hide-aside-area #penury-gift-msg,
   .hide-aside-area #chat-control-panel-vm .bottom-actions,
-  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item:before {
+  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item:before,
+  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item.guard-danmaku:after{
     display: none;
   }
   .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item {
@@ -69,38 +70,43 @@ const stylesheet = css`
   .hide-aside-area .control-panel-icon-row {
     pointer-events: none;
   }
+  .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item {
+    margin-left: 6px;
+  }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item .user-name {
-    //font-size: 120%;
     text-shadow: 0px 1px 1px #000;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item .danmaku-content {
     color: #eee;
-    //font-size: 120%;
     text-shadow: 0px 1px 1px #000;
   }
   .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item span,
   .hide-aside-area #chat-popup-area-vm,
   .hide-aside-area .chat-small-icon-box,
   .hide-aside-area .control-panel-icon-row > *,
-  .hide-aside-area .danmaku-menu {
+  .hide-aside-area .danmaku-menu,
+  .hide-aside-area .z-chat-control-panel-dialog.dialog-ctnr {
     pointer-events: auto;
   }
+  .hide-aside-area .z-chat-control-panel-dialog.dialog-ctnr .yan-ctnr {
+    width: 300px;
+  }
   .hide-aside-area #chat-control-panel-vm{
-    pointer-events: auto;
     position: fixed;
     left: 0;
     bottom: 0;
+    margin-bottom: 3px;
     width: 100%;
     height: auto;
-    pointer-events: none;
     z-index: 1;
+    pointer-events: none;
   }
   .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
     height: auto;
     padding: 0 3px;
     pointer-events: none;
-    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 5%, transparent 25%);
   }
+  .hide-aside-area #chat-control-panel-vm .chat-input,
   .hide-aside-area #chat-control-panel-vm textarea {
     height: 36px;
     background-color: #1b1b1b;
@@ -115,7 +121,7 @@ const stylesheet = css`
     bottom: 35px;
   }
   .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
-    padding: 0 130px 0 70px;
+    padding: 0 130px 0 80px;
   }
 `;
 

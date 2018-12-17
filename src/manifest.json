@@ -1,5 +1,5 @@
 {
-    "version": "1.1.9",
+    "version": "1.1.8",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
@@ -29,10 +29,11 @@
             "all_frames": false,
             "js": [
                 "video.js",
-                "vendors.bundle.js"
+                "vendors.bundle.js",
+                "features.bundle.js"
             ],
             "css": [
-                "styles/video.css"
+                "styles/vendors.css"
             ],
             "matches": [
                 "*://*.bilibili.com/bangumi/play/ss*",
@@ -45,7 +46,8 @@
             "js": [
                 "vendors.bundle.js",
                 "live.js",
-                "libs/ocrad.min.js"
+                "statics/js/ocrad.min.js",
+                "features.bundle.js"
             ],
             "matches": ["*://live.bilibili.com/*"],
             "run_at": "document_end"

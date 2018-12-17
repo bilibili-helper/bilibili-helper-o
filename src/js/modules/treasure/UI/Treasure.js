@@ -158,7 +158,6 @@ export class Treasure extends React.Component {
         panel.css({'display': 'block'}).addClass('v-enter-active', 'v-enter-to');
         setTimeout(() => {
             panel.removeClass('v-enter-active', 'v-enter-to');
-
         }, 300);
     };
 

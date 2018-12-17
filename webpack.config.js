@@ -27,7 +27,7 @@ const localesGroup = localesSupportList.map((name) => ({
 
 module.exports = {
     watch: true,
-    mode: 'development',
+    mode: 'production',
     node: {
         global: false,
     },
@@ -50,26 +50,35 @@ module.exports = {
         chunkFilename: '[name].bundle.js',
     },
     optimization: {
+        minimize: true,
         splitChunks: {
             minChunks: 2,
             cacheGroups: {
                 vendors: {
                     name: 'vendors',
-                    test: /[\\/](node_modules|src\/js\/libs|src\/js\/utils|src\/_locales|src\/js)[\\/]/,
+                    test: /[\\/](node_modules|src\/js\/libs|src\/js\/utils|src\/_locales|src\/js\/libs|src\/js\/components|src\/styles)[\\/]/,
                     chunks: 'all',
-                    minChunks: 2,
+                    minChunks: 1,
+                },
+                features: {
+                    name: 'features',
+                    test: /[\\/](src\/js\/modules)[\\/]/,
+                    chunks: 'all',
+                    minChunks: 1,
                 },
             },
         },
         minimizer: [
             new UglifyJsPlugin({
                 cache: true,
-                parallel: true,
-                sourceMap: true, // set to true if you want JS source maps
+                sourceMap: false, // set to true if you want JS source maps
                 uglifyOptions: {
-                    compress: false,
+                    compress: true,
                     ecma: 6,
                     mangle: true,
+                    output: {
+                        beautify: false,
+                    },
                 },
             }),
             new OptimizeCSSAssetsPlugin({}),
@@ -123,13 +132,15 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: path.join('styles', '[name].css'),
-            chunkFilename: path.join('styles', '[id].css'),
+            chunkFilename: path.join('styles', '[name].css'),
         }),
         new CopyWebpackPlugin([
             {from: 'src/html/*.html', to: '', flatten: true},
-            {from: 'src/*.json', to: '', flatten: true},
-            {from: 'src/statics', to: 'statics'},
-            {from: 'src/js/libs', to: 'libs'},
+            //{from: 'src/*.json', to: '', flatten: true},
+            {from: 'src/statics/fonts', to: 'statics/fonts'},
+            {from: 'src/statics/imgs', to: 'statics/imgs'},
+            {from: 'src/statics/js', to: 'statics/js'},
+            //{from: 'src/js/libs', to: 'libs'},
             // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
         ]),
         new MergeJsonWebpackPlugin({
