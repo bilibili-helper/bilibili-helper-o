@@ -75,6 +75,7 @@ class VideoSubtitleDownload extends React.Component {
     }
 
     componentDidMount() {
+        chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'loadSubtitle' && message.url) {
                 $.ajax({

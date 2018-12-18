@@ -85,21 +85,21 @@ export class VersionManager extends Feature {
                 success: (res) => {
                     if (this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) { // 比较今天是否有检测过
                         this.setVersion(res);
-                        this.sendNotification(__('checkVersionNewVersion') + res.version);
+                        this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
                     } else if (notifyOn) {
                         this.setVersion();
-                        this.sendNotification(__('checkVersionNoNewVersion'));
+                        this.sendNotification(__('checkVersionNoNewVersion'), ignore);
                     } else this.setVersion();
                 },
                 error: (e) => {
-                    this.sendNotification(__('checkVersionGetUpdateError'));
+                    this.sendNotification(__('checkVersionGetUpdateError'), ignore);
                     console.error('Failed to check version', e);
                 },
             });
         }
     };
 
-    sendNotification = (message) => {
+    sendNotification = (message, ignore) => {
         const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
         const notifyId = `bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`;
         const iconUrl = getURL('/statics/imgs/cat.svg');
