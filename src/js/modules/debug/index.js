@@ -12,8 +12,8 @@ export class Debug extends Feature {
             name: 'debug',
             kind: 'other',
             settings: {
-                on: false,
-                toggle: true,
+                on: true,
+                toggle: false,
                 title: '调试模式',
                 description: '测试版中该选项无法关闭。开启后会在控制台输出更多信息，并执行更多用于测试的代码',
             },

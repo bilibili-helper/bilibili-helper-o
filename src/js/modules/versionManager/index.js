@@ -30,8 +30,8 @@ export class VersionManager extends Feature {
                 version,
                 day: new Date().getDate(),
             };
-            this.store = this.version;
         }
+        this.version = this.store;
     }
 
     launch = () => {
@@ -87,9 +87,9 @@ export class VersionManager extends Feature {
                         this.setVersion(res);
                         this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
                     } else if (notifyOn) {
-                        this.setVersion();
+                        this.setVersion({version, ...res});
                         this.sendNotification(__('checkVersionNoNewVersion'), ignore);
-                    } else this.setVersion();
+                    } else this.setVersion({version, ...res});
                 },
                 error: (e) => {
                     this.sendNotification(__('checkVersionGetUpdateError'), ignore);
