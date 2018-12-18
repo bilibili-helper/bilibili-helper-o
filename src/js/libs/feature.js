@@ -155,4 +155,14 @@ export class Feature {
         return tempObject;
     };
 
+    /**
+     * 获取当天日期，返回x号
+     * 这里对时区问题进行特殊处理
+     */
+    getTodayDate = () => {
+        const thisTime = new Date();
+        const currentZone = thisTime.getTimezoneOffset() / 60;
+        const offset = currentZone + 8; // 需要调整的偏移量
+        return new Date(thisTime.getTime() + offset * 1000 * 60).getDate();
+    };
 }

@@ -77,7 +77,7 @@ export class VersionManager extends Feature {
 
     request = (ignore = false) => {
         const {day, updateTime} = this.getVersion() || {};
-        if (day !== new Date().getDate() || ignore) {
+        if (day !== this.getTodayDate() || ignore) {
             const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
             $.ajax({
                 method: 'get',
