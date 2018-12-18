@@ -50,7 +50,7 @@ export class Silver2coin extends Feature {
 
     request = (hasLogin = this.permissionMap.login) => {
         if (chrome.extension.inIncognitoContext) return; // 隐身模式
-        const today = (new Date().getDate());
+        const today = this.getTodayDate();
         let {day} = this.store || {};
         if (day !== today) {
             this.settings.on && hasLogin && chrome.cookies.get({

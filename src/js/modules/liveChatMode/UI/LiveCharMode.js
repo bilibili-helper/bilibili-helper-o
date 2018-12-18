@@ -114,6 +114,10 @@ const stylesheet = css`
     color: #eee;
     pointer-events: auto;
   }
+  .hide-aside-area #chat-control-panel-vm .input-limit-hint {
+    bottom: 10px;
+    right: 12px;
+  }
   .hide-aside-area .bilibili-live-player-video video {
     height: calc(100% - 40px);
   }
@@ -138,8 +142,8 @@ const stylesheet = css`
   body.fullscreen-fix div#sidebar-vm,
   body.fullscreen-fix div.aside-area,
   body.fullscreen-fix section#sections-vm {
-    display: block !important;*/
-  }
+    display: block !important;
+  }*/
 `;
 
 export class LiveCharMode extends React.Component {
