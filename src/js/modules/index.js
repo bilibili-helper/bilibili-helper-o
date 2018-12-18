@@ -23,6 +23,7 @@ import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
+import {VideoUnblock} from './videoUnblock';
 
 export const Features = {
     Background,
@@ -45,6 +46,7 @@ export const Features = {
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
+    VideoUnblock,
 };
 
 export const UIs = {

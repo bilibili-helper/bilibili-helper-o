@@ -42,7 +42,7 @@ const Figure = styled.figure`
   position: absolute;
   left: calc(50% + 380px);
   bottom: 4px;
-  z-index: -1;
+  z-index: 0;
   figcaption {
     text-align: center;
   }
