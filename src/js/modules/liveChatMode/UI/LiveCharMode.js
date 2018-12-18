@@ -118,10 +118,27 @@ const stylesheet = css`
     height: calc(100% - 40px);
   }
   .hide-aside-area .bilibili-live-player-video-controller {
-    bottom: 35px;
+    bottom: 38px;
   }
   .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
     padding: 0 130px 0 80px;
+  }
+  /*body.fullscreen-fix div#background-manage-vm,
+  body.fullscreen-fix div#ema-wishing-vm,
+  body.fullscreen-fix div#enter-failure,
+  body.fullscreen-fix div#gift-control-vm,
+  body.fullscreen-fix div#gold-store-vm,
+  body.fullscreen-fix div#guard-store-vm,
+  body.fullscreen-fix div#head-info-vm.head-info-section,
+  body.fullscreen-fix div#link-footer-vm,
+  body.fullscreen-fix div#link-navbar-vm,
+  body.fullscreen-fix div#my-dear-haruna-vm,
+  body.fullscreen-fix div#player-effect-vm,
+  body.fullscreen-fix div#room-background-vm,
+  body.fullscreen-fix div#sidebar-vm,
+  body.fullscreen-fix div.aside-area,
+  body.fullscreen-fix section#sections-vm {
+    display: block !important;*/
   }
 `;
 
@@ -146,18 +163,16 @@ export class LiveCharMode extends React.Component {
         const classList = this.bodyDOM.classList;
         new MutationObserver(() => {
             const {on, currentState} = this.state;
-            switch (currentState) {
-                case 0: // 普通模式
-                    this.setState({currentState: 1});
-                    if (on && !classList.contains('hide-aside-area')) {
-                        document.querySelector('.aside-area-toggle-btn button').click();
-                        const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
-                        if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
-                    }
-                    break;
-                case 1: // 网页全屏
-                    if (!classList.contains('player-full-win')) this.setState({currentState: 0});
-                    break;
+            if ((classList.contains('player-full-win') && currentState !== 1) ||
+                (classList.contains('fullscreen-fix') && currentState !== 2)) { // 当前是网页全屏/全屏 且之前并不是该状态
+                this.setState({currentState: 1});
+                if (on && !classList.contains('hide-aside-area')) {
+                    document.querySelector('.aside-area-toggle-btn button').click();
+                    const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
+                    if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
+                }
+            } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) { // 当前是全屏 且之前不能不是全屏
+                this.setState({currentState: 0});
             }
             //if (classList.contains('fullscreen-fix')) this.setState({currentState: 2});
         }).observe(this.bodyDOM, {

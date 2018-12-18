@@ -81,7 +81,7 @@
     },
     "scripts": {
         "grunt": "grunt",
-        "watch": "webpack --watch --progress",
+        "watch": "webpack --config=webpack.config.development.js --watch --progress",
         "build": "webpack --production --progress"
     },
     "author": "zacyu & ruo",

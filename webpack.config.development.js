@@ -7,10 +7,10 @@
 
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+//const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -27,7 +27,7 @@ const localesGroup = localesSupportList.map((name) => ({
 
 module.exports = {
     watch: true,
-    mode: 'production',
+    mode: 'development',
     node: {
         global: false,
     },
@@ -68,21 +68,6 @@ module.exports = {
                 },
             },
         },
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                sourceMap: true, // set to true if you want JS source maps
-                uglifyOptions: {
-                    compress: true,
-                    ecma: 6,
-                    mangle: true,
-                    output: {
-                        beautify: true,
-                    },
-                },
-            }),
-            new OptimizeCSSAssetsPlugin({}),
-        ],
         nodeEnv: 'production',
     },
     resolve: {
@@ -103,7 +88,7 @@ module.exports = {
             {
                 enforce: 'pre',
                 test: /\.js$/,
-                exclude: /(node_modules|modules|libs\/jquery)/,
+                exclude: /(\/node_modules\/|\/modules\/|\.min\.js)/,
                 loader: 'eslint-loader',
                 options: {
                     emitError: true,
@@ -113,7 +98,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                exclude: /libs\/jquery/,
+                exclude: /\.min\.js/,
                 loaders: [
                     'babel-loader',
                 ],

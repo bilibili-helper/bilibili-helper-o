@@ -46,7 +46,7 @@ export class VersionManager extends Feature {
         });
     };
 
-    setVersion = ({version, update_time: updateTime}) => {
+    setVersion = ({version, update_time: updateTime} = {}) => {
         if (!this.store) {
             this.version = {
                 version,
@@ -76,43 +76,36 @@ export class VersionManager extends Feature {
     };
 
     request = (ignore = false) => {
-        const {day, updateTime} = this.getVersion();
+        const {day, updateTime} = this.getVersion() || {};
         if (day !== new Date().getDate() || ignore) {
             const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
-            const notifyId = `bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`;
             $.ajax({
                 method: 'get',
                 url: apis.version,
                 success: (res) => {
                     if (this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) { // 比较今天是否有检测过
                         this.setVersion(res);
-                        notifyOn && chrome.notifications.create(notifyId, {
-                            type: 'basic',
-                            iconUrl: getURL('/statics/imgs/cat.svg'),
-                            title: __('extensionNotificationTitle'),
-                            message: __('checkVersionNewVersion') + res.version,
-                        });
+                        this.sendNotification(__('checkVersionNewVersion') + res.version);
                     } else if (notifyOn) {
-                        this.setVersion({});
-                        chrome.notifications.create(notifyId, {
-                            type: 'basic',
-                            iconUrl: getURL('/statics/imgs/cat.svg'),
-                            title: __('extensionNotificationTitle'),
-                            message: __('checkVersionNoNewVersion'),
-                        });
-                    } else this.setVersion({});
+                        this.setVersion();
+                        this.sendNotification(__('checkVersionNoNewVersion'));
+                    } else this.setVersion();
                 },
                 error: (e) => {
-                    notifyOn && chrome.notifications.create(notifyId, {
-                        type: 'basic',
-                        iconUrl: getURL('/statics/imgs/cat.svg'),
-                        title: __('extensionNotificationTitle'),
-                        message: __('checkVersionGetUpdateError'),
-                    });
+                    this.sendNotification(__('checkVersionGetUpdateError'));
                     console.error('Failed to check version', e);
                 },
             });
         }
+    };
+
+    sendNotification = (message) => {
+        const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
+        const notifyId = `bh-${this.name}-${(Math.random() * 1000).toFixed(0)}`;
+        const iconUrl = getURL('/statics/imgs/cat.svg');
+        const title = __('extensionNotificationTitle');
+        const type = 'basic';
+        notifyOn && chrome.notifications.create(notifyId, {type, iconUrl, title, message});
     };
 
     compareVersion = (a, b) => {

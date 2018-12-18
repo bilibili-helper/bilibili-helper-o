@@ -35,6 +35,7 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   bottom: 0;
   left: 0;
   overflow: auto;
+  background-color: #f2f3f5;
 `;
 
 const Figure = styled.figure`

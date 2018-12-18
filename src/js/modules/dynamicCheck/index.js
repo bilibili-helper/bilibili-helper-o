@@ -71,26 +71,34 @@ export class DynamicCheck extends Feature {
 
     // 检查未读推送
     checkUnread = () => {
-        return $.get(apis.unread, {}, (unreadRes) => {
-            if (unreadRes.code === 0 && unreadRes.data.all > 0) {
-                chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                this.getFeed().then(this.sendNotification);
-            }
+        return $.ajax({
+            type: 'get',
+            url: apis.unread,
+            success: (unreadRes) => {
+                if (unreadRes.code === 0 && unreadRes.data.all > 0) {
+                    chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+                    this.getFeed().then(this.sendNotification);
+                }
+            },
         });
     };
 
     // 获取并存储推送数据 - 不缓存到本地(￣.￣)
     getFeed = async () => {
-        return $.get(apis.feed, {}, (feedRes) => {
-            const {code, data} = feedRes;
-            if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
-                this.lastCheckTime = Date.now();
-                this.newFeedList = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
-                this.feedList = this.newFeedList.concat(this.feedList).slice(0, 9);
-            } else { // 请求出问题了！
-                console.error(feedRes);
-                chrome.browserAction.setBadgeText({text: 'error'});
-            }
+        return $.ajax({
+            type: 'get',
+            url: apis.feed,
+            success: (feedRes) => {
+                const {code, data} = feedRes;
+                if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
+                    this.lastCheckTime = Date.now();
+                    this.newFeedList = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
+                    this.feedList = this.newFeedList.concat(this.feedList).slice(0, 9);
+                } else { // 请求出问题了！
+                    console.error(feedRes);
+                    chrome.browserAction.setBadgeText({text: 'error'});
+                }
+            },
         });
     };
 
