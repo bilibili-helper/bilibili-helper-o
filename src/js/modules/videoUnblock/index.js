@@ -9,8 +9,10 @@ export class VideoUnblock extends Feature {
     constructor() {
         super({
             name: 'videoUnblock',
+            kined: 'video',
             settings: {
                 on: true,
+                description: '部分视频只能在部分地区观看，该功能将解除这些限制'
             },
         });
     }
