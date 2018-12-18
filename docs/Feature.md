@@ -12,7 +12,7 @@ moduleName
     UI
         index.js
         ...
-    _locales 
+    _locales
         zh_CN
             messages.json
             ...
@@ -28,13 +28,13 @@ moduleName
 
 | Type                            | Name            | Description                                      |
 | ------------------------------- | --------------- | ------------------------------------------------ |
-| String                          | name            | 首字母大写，驼峰命名的Feature名称                |
+| String                          | name            | 首字母小写，驼峰命名的Feature名称                |
 | String                          | optionStoreName | 配置仓库名，格式：`bilibili-helper-${this.name}` |
 | String                          | dataStoreName   | 数据仓库名，格式：`in-module-${this.name}`       |
 | String                          | kind            | 分类名                                           |
 | Boolean                         | initialed       | 初始化状态                                       |
-| String of Array                 | dependencies    | 依赖配置                                         |
-| String of Array                 | permissions     | 权限配置                                         |
+| Array of String                 | dependencies    | 依赖配置                                         |
+| Array of String                 | permissions     | 权限配置                                         |
 | [SettingObject](#SettingObject) | settings        | 设置对象                                         |
 | Object                          | permissionMap   | 当前权限状态                                     |
 | Any                             | store           | 模块本地数据仓库，非配置仓库                     |
@@ -64,6 +64,8 @@ Enum: `login` or `notifications`
 | ------------- | ------------------------------------- |
 | login         | 表示功能需要登录BILIBILI账号。        |
 | notifications | 表示功能需要获得`notifications`权限。 |
+| pip | 表示用户所使用的浏览器支持画中画功能。 |
+| downloads | 表示功能需要获取文件下载和管理功能。 |
 
 
 
@@ -84,7 +86,7 @@ Enum: `login` or `notifications`
 | String                                 | decsription | 在设置页面二级页面中作为设置描述进行显示。<br />可以和[SettingObject](#SettingObject)中的description不同。 |
 | enum in [OptionType](#OptionType)      | type        | 表示该功能的二级页面中子选项的功能类型。                     |
 | Array of [OptionObject](#OptionObject) | options     | 规定功能在设置页面的二级页面中显示的子选项。                 |
-| String                                 | value       | 如果type配置为radio，则设置该项目二级页面中表示子选项单选组的默认值。 |
+| [OptionObject](#OptionObject)'s key    | value       | 如果type配置为radio，则设置该项目二级页面中表示子选项单选组的默认值。 |
 
 
 
@@ -101,4 +103,4 @@ Enum: `login` or `notifications`
 | enum in [OptionType](#OptionType)      | type        | 表示该功能的一级页面中子选项的功能类型。                     |
 | Array of [OptionObject](#OptionObject) | options     | 规定功能在设置页面的一级页面中显示的子选项。                 |
 | String                                 | value       | 如果type配置为radio，则设置该项目表示子选项单选组的默认值。  |
-| [SubPageObject](#SubPageObject)        | subPage     | 规定功能在设置页面的二级页面中显示的子选项。                 |
+| [SubPageObject](#SubPageObject)        | subPage     | 规定功能在设置页面的二级页面中显示的子选项                   |

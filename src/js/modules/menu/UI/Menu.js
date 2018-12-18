@@ -17,7 +17,7 @@ const {color} = theme;
 const MenuView = styled.div.attrs({className: 'bilibili-helper-menu-view'})`
   display: flex;
   position: relative;
-  padding: 8px 10px 20px;
+  padding: 8px 10px;
   flex-direction: column;
   align-items: flex-end;
   transition: all 0.3s;
@@ -74,15 +74,15 @@ const IconBtn = styled(MenuButton)`
   }
 `;
 
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width:${({showIcon}) => showIcon ? '60px' : '152px'};
-  font-size: 12px;
-  position: absolute;
-  bottom: 3px;
-  color: ${color('google-grey-300')};
-`;
+//const Title = styled.div`
+//  display: flex;
+//  justify-content: space-between;
+//  width:${({showIcon}) => showIcon ? '60px' : '152px'};
+//  font-size: 12px;
+//  position: absolute;
+//  bottom: 3px;
+//  color: ${color('google-grey-300')};
+//`;
 
 const LinkerWrapper = styled.div`
   display: flex;
@@ -140,20 +140,20 @@ export class Menu extends React.Component {
                 this.setState({debug: message.value});
             } else if (message.commend === 'permissionUpdate') {
                 const permissionMap = {...this.state.permissionMap};
-                permissionMap[message.permission] = message.value;
+                permissionMap[message.permission] = {pass: message.value, msg: message.msg};
                 this.setState({permissionMap});
             }
         }));
         // 获取调试模式
         chrome.runtime.sendMessage({
             commend: 'getSetting',
-            feature: 'Debug',
+            feature: 'debug',
         }, (options) => {
             this.setState({debug: options.on});
         });
         chrome.runtime.sendMessage({
             commend: 'getSetting',
-            feature: 'Menu',
+            feature: 'menu',
         }, (settings) => {
             const oldWatchPage = _.find(settings.options, {key: 'oldWatchPage'}).on;
             const link = !oldWatchPage ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
@@ -185,7 +185,7 @@ export class Menu extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'menu',
-            label: type,
+            label: `menu ${type}`,
         });
         createTab(link);
     };
@@ -238,7 +238,7 @@ export class Menu extends React.Component {
                         commend: 'setGAEvent',
                         action: 'click',
                         category: 'menu',
-                        label: 'linker ' + res[1],
+                        label: 'linker ' + (res[1] || 'av'),
                     });
                 });
 
@@ -294,7 +294,7 @@ export class Menu extends React.Component {
                               {__('goBiliLive')}
                           </MenuButton>)}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
-                {permissionMap.login ? <React.Fragment>
+                {permissionMap.login && permissionMap.login.pass ? <React.Fragment>
                     {dynamic && (showIcon ? <IconBtn
                         title={__('goDynamic')}
                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>
@@ -326,10 +326,6 @@ export class Menu extends React.Component {
                     onClick={() => this.handleOnClick('config', getLink('config'))}
                 ><Icon size={20} iconfont="option"/></IconBtn> : <MenuButton
                      onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>}
-                <Title showIcon={showIcon}>
-                    <span>{showIcon ? 'ver' : 'version'}</span>
-                    <span>{debug === true ? 'Beta.' : ''}{version}</span>
-                </Title>
             </MenuView>
         );
     }

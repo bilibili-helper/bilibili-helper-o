@@ -15,12 +15,12 @@ export class Feature {
     /**
      * @param name {string} 配置的名称
      * @param kind {string} 配置的列表划分，在渲染设置页面时根据该值在相对应的列表中自动渲染，如：主站，直播，其他等
-     * @param permissions {Object}
-     * @param settings {object} 特性的额外配置选项，如过滤列表的配置信息
+     * @param permissions {array}
      * @param dependencies {array}
+     * @param settings {object} 特性的额外配置选项，如过滤列表的配置信息
      */
-    constructor({name, kind, permissions = [], settings = {}, dependencies = []}) {
-        this.name = _.upperFirst(name);
+    constructor({name, kind, permissions = [], dependencies = [], settings = {}}) {
+        this.name = name;
         this.optionStoreName = `bilibili-helper-${this.name}`;
         this.dataStoreName = `in-module-${this.name}`;
         this.kind = kind;
@@ -76,7 +76,8 @@ export class Feature {
     // 初始化配置
     initSetting = (sets) => {
         return new Promise(resolve => {
-            const settings = sets || store.get(this.optionStoreName) || {}; // 缓存配置
+            const localOptions = this.settings.toggle ? {} : store.get(this.optionStoreName);
+            const settings = sets || localOptions || {}; // 缓存配置
             this.settings = this.mergeSetting(this.settings, settings);
             store.set(this.optionStoreName, this.simplifySetting(this.settings));
             resolve(this);
@@ -87,8 +88,7 @@ export class Feature {
     getSetting = (featureName) => {
         if (featureName === this.name || !featureName) return this.settings;
         else {
-            const name = _.upperFirst(featureName);
-            return chrome.extension.getBackgroundPage().FeatureManager.features[name].getSetting();
+            return chrome.extension.getBackgroundPage().FeatureManager.features[featureName].getSetting();
         }
     };
 
@@ -155,4 +155,20 @@ export class Feature {
         return tempObject;
     };
 
+    /**
+     * 获取当天日期，返回x号
+     * 这里对时区问题进行特殊处理
+     */
+    getTodayDate = () => {
+        const thisTime = new Date();
+        const currentZone = thisTime.getTimezoneOffset() / 60;
+        const offset = currentZone + 8; // 需要调整的偏移量
+        return new Date(thisTime.getTime() + offset * 1000 * 60).getDate();
+    };
+
+    permissionHandleLogin = () => {};
+
+    permissionHandleNotifications = () => {};
+
+    permissionHandleDownloads = () => {};
 }

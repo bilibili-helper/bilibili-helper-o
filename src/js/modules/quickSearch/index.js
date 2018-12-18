@@ -28,6 +28,7 @@ export class QuickSearch extends Feature {
                     commend: 'setGAEvent',
                     action: 'click',
                     category: 'quickSearch',
+                    label: 'quickSearch',
                 });
                 createTab(`https://search.bilibili.com/all?keyword=${encodeURIComponent(info.selectionText)}`);
             },

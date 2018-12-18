@@ -163,8 +163,6 @@ export class ListItem extends React.Component {
     render() {
         let {
             operation = null, // 右侧操作DOM，可能是按钮，单选按钮或者面板折叠按钮
-        } = this.props;
-        let {
             icon, // 显示在最左侧的ICON
             children,
             separator = false, // 右侧操作DOM是否要添加分割线

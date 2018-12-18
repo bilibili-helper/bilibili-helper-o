@@ -72,7 +72,7 @@ export class Danmu extends Feature {
                 chrome.downloads.download({
                     saveAs: true,
                     url,
-                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
+                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
             } else if (message.commend === 'downloadDanmuASS' && message.cid) {
                 const parser = new DOMParser();
@@ -89,7 +89,7 @@ export class Danmu extends Feature {
                 chrome.downloads.download({
                     saveAs: true,
                     url,
-                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s]/g, '_'),
+                    filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
             } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
                 const tabData = this.messageStore.createData(sender.id);

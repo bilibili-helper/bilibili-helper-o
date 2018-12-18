@@ -23,9 +23,9 @@ export class FeatureManager {
     instantiateFeatures = () => {
         return new Promise(resolve => {
             _.each(Features, (FeatureClass, featureName) => {
-                if (!this.features[featureName]) {
+                if (!this.features[_.lowerFirst(featureName)]) {
                     if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
-                    else this.features[featureName] = new FeatureClass();
+                    else this.features[_.lowerFirst(featureName)] = new FeatureClass();
                 } else throw `Feature ${featureName} has instantiated!`;
             });
             resolve();
@@ -104,9 +104,8 @@ export class FeatureManager {
         }
         let counter = requireList.length;
         _.map(requireList, (requireName) => {
-            const name = _.upperFirst(requireName);
-            if (this.features[name]) {
-                this.features[name].initialed && --counter;
+            if (this.features[requireName]) {
+                this.features[requireName].initialed && --counter;
             } else {
                 console.error(`Invalid Feature: ${requireName}`);
             }
@@ -155,13 +154,12 @@ export class FeatureManager {
                 case 'setSetting':
                 case 'getSetting': {
                     const {feature: featureName, settings} = message;
-                    const name = _.upperFirst(featureName);
-                    const feature = this.features[name];
+                    const feature = this.features[featureName];
                     if (!feature) {
-                        console.error(`Error feature name: ${name}`);
+                        console.error(`Error feature name: ${featureName}`);
                         return sendResponse(false);
                     }
-                    if (commend === 'setSetting' && name === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
+                    if (commend === 'setSetting' && featureName === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
                         feature.setSetting(settings);
                         if (!feature.initialed && settings.on === true) feature.init();  // 没有初始化过
                         if (feature.initialed && settings.on !== feature.settings.on) { // 总启动状态发生变化时
@@ -170,14 +168,14 @@ export class FeatureManager {
                             } else feature.pause();
                         }
                         sendResponse(true);
-                    } else if (commend === 'getSetting' && name === feature.name) { // 获取单个功能的配置
+                    } else if (commend === 'getSetting' && featureName === feature.name) { // 获取单个功能的配置
                         sendResponse(feature.settings);
                     }
                     break;
                 }
                 case 'getFeatureStore': {
                     const {feature: featureName} = message;
-                    const feature = this.features[_.upperFirst(featureName)];
+                    const feature = this.features[featureName];
                     if (feature) sendResponse(feature.store);
                     break;
                 }

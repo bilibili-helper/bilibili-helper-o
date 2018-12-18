@@ -4,6 +4,7 @@
  * Description:
  */
 import _ from 'lodash';
+
 export class UI {
     constructor({name, dependencies = []}) {
         this.name = name;
@@ -32,7 +33,7 @@ export class UI {
         };
         if (typeof selectors === 'string') {
             const res = get(selectors);
-            return res && res.length > 0 ? res[0]: false;
+            return res && res.length > 0 ? res[0] : false;
         } else if (selectors instanceof Array) {
             const t = _.compact(selectors.map((name) => get(name)));
             if (t.length > 0) return _.compact(selectors.map((name) => get(name)))[0];
@@ -82,6 +83,7 @@ export class UI {
                 } else if (retryTime < retryMax) {
                     ++retryTime;
                 } else {
+                    clearInterval(timer);
                     console.warn(`Not find container ${containerSelectors}`);
                     resolve();
                 }

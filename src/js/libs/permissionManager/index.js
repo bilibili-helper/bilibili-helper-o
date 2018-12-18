@@ -34,6 +34,7 @@ export class PermissionManager {
         this.features = {};
         this.addListener();
         this.typeMap = {};
+        this.hasCheckAll = false;
     }
 
     load = (feature) => {
@@ -41,7 +42,34 @@ export class PermissionManager {
         return this.check(feature);
     };
 
-    check = (feature) => {
+    checkAll = () => {
+        const promiseArray = _.map(PERMISSION_STATUS, (value, permissionName) => {
+            return new Promise((resolve) => {
+                switch (permissionName) {
+                    case 'login':
+                        resolve(this.hasLogin());
+                        break;
+                    case 'notifications':
+                        resolve(this.checkNotification());
+                        break;
+                    case 'pip':
+                        resolve(this.pip());
+                        break;
+                    case 'downloads':
+                        resolve(this.downloads());
+                        break;
+                }
+                resolve({pass: false, msg: `Invalid permission: ${permissionName}`});
+            }).then((res) => {
+                this.permissionMap[permissionName] = res;
+            });
+        });
+        return Promise.all(promiseArray, () => {
+            this.hasCheckAll = true;
+        });
+    };
+
+    checkOne = (feature) => {
         return new Promise(resolve => {
             let [pass, msg] = [true, '']; // 通过状态
             if (_.isEmpty(feature.permissions)) resolve({pass, msg});// 没有设置需要检查的权限，则无条件通过
@@ -51,16 +79,8 @@ export class PermissionManager {
                 }
                 if (!this.typeMap[permissionName]) this.typeMap[permissionName] = [];
                 this.typeMap[permissionName].push(feature);
-                switch (permissionName) {
-                    case 'login':
-                        return this.hasLogin();
-                    case 'notifications':
-                        return this.checkNotification();
-                    case 'pip':
-                        return this.pip();
-                    case 'downloads':
-                        return this.downloads();
-                }
+
+                return this.permissionMap[permissionName];
             })).then(checkResults => {
                 const res = _.filter(checkResults, ({pass}) => !pass);
                 if (res.length > 0) resolve({pass: false, data: res});
@@ -69,13 +89,21 @@ export class PermissionManager {
         });
     };
 
-    updatePermission = (name, value) => {
-        if (this.permissionMap[name] !== value) {
-            this.permissionMap[name] = value;
+    check = (feature) => {
+        if (!this.hasCheckAll) {
+            return this.checkAll().then(() => this.checkOne(feature));
+        } else return this.checkOne(feature);
+    };
+
+    updatePermission = (name, value, msg) => {
+        if (this.permissionMap[name] === undefined) this.permissionMap[name] = {};
+        if (this.permissionMap[name].pass !== value) {
+            this.permissionMap[name].pass = value;
             chrome.runtime.sendMessage({
                 commend: 'permissionUpdate',
                 permission: name,
                 value,
+                msg,
             });
         }
         this.triggerListener(name, value);
@@ -102,7 +130,7 @@ export class PermissionManager {
                 if (cookie && cookie.expirationDate > thisSecond) [pass, msg] = [true, ''];
                 else [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg];
 
-                this.updatePermission('login', pass);
+                this.updatePermission('login', pass, msg);
                 resolve({pass, msg});
             });
         });
@@ -110,20 +138,27 @@ export class PermissionManager {
 
     pip = () => {
         return new Promise(resolve => {
-            const enabled = document.pictureInPictureEnabled;
-            resolve({pass: enabled, msg: PERMISSION_STATUS.pip.errorMsg});
+            const enabled = !!document.pictureInPictureEnabled;
+            const [pass, msg] = enabled ? [true, ''] : [false, PERMISSION_STATUS.pip.errorMsg];
+            this.updatePermission('pip', pass, msg);
+            resolve({pass, msg});
         });
     };
     downloads = () => {
-        return Promise.resolve({pass: true, msg: PERMISSION_STATUS.downloads.errorMsg});
+        return new Promise(resolve => {
+            chrome.permissions.contains({permissions: ['downloads']}, (res) => {
+                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.downloads.errorMsg]
+                this.updatePermission('downloads', pass, msg);
+                resolve({pass, msg});
+            });
+        });
     };
 
     checkNotification = () => {
         return new Promise(resolve => {
-            chrome.notifications.getPermissionLevel((level) => {
-                const pass = level === 'granted' ? true : false;
-                const msg = !pass ? PERMISSION_STATUS['notifications'].errorMsg : '';
-                this.updatePermission('notifications', pass);
+            chrome.permissions.contains({permissions: ['notifications']}, (res) => {
+                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.notifications.errorMsg]
+                this.updatePermission('notifications', pass, msg);
                 resolve({pass, msg});
             });
         });
@@ -143,6 +178,23 @@ export class PermissionManager {
             if (name === 'bili_jct' && domain === '.bilibili.com') {
                 this.hasLogin();
             }
+        });
+
+        // ff 下不兼容
+        chrome.permissions.onAdded && chrome.permissions.onAdded.addListener((permissions) => {
+            permissions.map((permissionName) => {
+                switch (permissionName) {
+                    case 'login':
+                        this.hasLogin();
+                        break;
+                    case 'notifications':
+                        this.checkNotification();
+                        break;
+                    case 'downloads':
+                        this.downloads();
+                        break;
+                }
+            });
         });
     };
 }

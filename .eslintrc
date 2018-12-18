@@ -17,7 +17,10 @@
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 6,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "rules": {
         "comma-dangle": [1, "always-multiline"],
@@ -42,5 +45,10 @@
         "space-in-parens": 1,
         "space-infix-ops": 1,
         "valid-jsdo": 0
+    },
+    "settings": {
+        "react": {
+            "version": "16.4.1"
+        }
     }
 }

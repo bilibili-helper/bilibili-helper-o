@@ -103,6 +103,7 @@ class PIP extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'PIP',
+            label: 'PIP',
         });
     };
 

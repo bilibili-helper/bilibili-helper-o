@@ -43,7 +43,7 @@ const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
 
 const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
   display: block;
-  width: -webkit-fill-available;
+  width: 418px;
   margin-left: 4px;
   padding: 4px 6px;
   box-sizing: border-box;
@@ -385,17 +385,17 @@ export class Danmu extends React.Component {
             <React.Fragment>
                 <Title>
                     <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
-                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={() => this.handleDownloadClick('xml')}>ASS</DownloadBtn>
-                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>XML</DownloadBtn>
+                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>ASS</DownloadBtn>
+                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('xml')}>XML</DownloadBtn>
                 </Title>
                 <DanmuList>
-                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
-                        const {danmu, authorHash, time} = danmuData;
+                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData) => {
+                        const {danmu, authorHash, time, rowId} = danmuData;
                         const uids = authorHashMap[authorHash];
                         let authorNames = _.map(uids, (uid) => this.userMap[uid] ? this.userMap[uid].name : '');
                         return (
                             <DanmuListLine
-                                key={index}
+                                key={`${rowId}`}
                                 title={`[${time}] ${danmu} ${authorNames ? `by:${authorNames.join(',')}` : ''}`}
                                 onClick={() => uids ? this.handleAuthorClick(uids) : this.handleDanmuLineClick(authorHash)}
                                 hasQueried={!_.isEmpty(authorNames)}

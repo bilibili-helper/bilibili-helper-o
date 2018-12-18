@@ -27,6 +27,7 @@ const RippleView = styled.div.attrs({
   left: 0;
   user-select: none;
   pointer-events: none;
+  z-index: 1;
   .ripple-item {
     user-select: none;
     position: absolute;

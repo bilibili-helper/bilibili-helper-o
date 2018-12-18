@@ -7,7 +7,7 @@
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
+import styled, {createGlobalStyle} from 'styled-components';
 import {consoleLogo} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
@@ -28,6 +28,13 @@ import feedJson from 'Statics/json/feed.json';
 
 const {color} = theme;
 
+const GlobalStyleSheet = createGlobalStyle`
+  body{
+    font-family: system-ui, "PingFang SC", STHeiti, sans-serif;
+    font-size: 75%;
+  }
+`;
+
 const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   position: absolute;
   top: ${theme.headerHeight}px;
@@ -42,13 +49,14 @@ const Figure = styled.figure`
   position: absolute;
   left: calc(50% + 380px);
   bottom: 4px;
-  z-index: -1;
+  z-index: 0;
   figcaption {
     text-align: center;
+    font-size: 12px;
   }
 `;
 const Alipay = styled.img`
-  width: 60px;
+  width: 100px;
 `;
 
 const Header = styled.div`
@@ -81,8 +89,8 @@ const Footer = styled.div`
   position: relative;
   max-width: 800px;
   width: 100%;
-  margin: 20px auto;
-  padding: 0 10px;
+  margin: 0 auto;
+  padding: 20px 10px;
   box-sizing: border-box;
   color: #8c8c8c;
   & a {
@@ -108,10 +116,10 @@ const Broadcast = styled.p`
 const PermissionTag = styled.span.attrs({
     title: ({title}) => title,
 })`
-  margin: 0 4px;
-  padding: 0 3px;
-  border-radius: 4px;
-  font-size: 10px;
+  margin-left: 4px;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-size: 12px;
   background-color: ${color('bilibili-blue')};
   color: #fff;
 `;
@@ -133,7 +141,7 @@ class PageConfig extends React.Component {
             popup: {title: '菜单栏', map: {}},
             other: {title: '其他', map: {}},
         };
-        this.defaultBroadcast = '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装';
+        this.defaultBroadcast = '';
         this.state = {
             modalTitle: null,
             modalBody: null,
@@ -170,12 +178,12 @@ class PageConfig extends React.Component {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
                 const {kind, name} = setting;
-                this.settings[kind].map[_.upperFirst(name)] = setting;
+                this.settings[kind].map[name] = setting;
             });
             this.setState(this.settings);
         });
         // 获取调试模式
-        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'Debug'}, (setting) => {
+        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'debug'}, (setting) => {
             this.setState({debug: setting.on});
         });
 
@@ -198,10 +206,9 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
-        const name = _.upperFirst(featureName);
         const thisKindOfFeatures = this.state[kind];
-        if (!!thisKindOfFeatures.map[name]) { // find it (*≧∪≦)
-            const settingObject = thisKindOfFeatures.map[name]; // one feature in this kind of list
+        if (!!thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
+            const settingObject = thisKindOfFeatures.map[featureName]; // one feature in this kind of list
             if (!settingName && !on) { // 一级开关
                 settingObject.on = !settingObject.on;
             } else if (settingName && settingObject.type && !subPage) { // 二级开关
@@ -230,7 +237,7 @@ class PageConfig extends React.Component {
             }
             chrome.runtime.sendMessage({
                 commend: 'setSetting',
-                feature: name,
+                feature: featureName,
                 settings: settingObject,
             }, (res) => {
                 if (res) {
@@ -240,7 +247,7 @@ class PageConfig extends React.Component {
                         category: 'config',
                         label: `${featureName} ${settingName !== undefined ? `${settingName} ${settingObject.on}` : settingObject.on}`,
                     });
-                    thisKindOfFeatures.map[name] = settingObject;
+                    thisKindOfFeatures.map[featureName] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});
                 }
             });
@@ -264,7 +271,7 @@ class PageConfig extends React.Component {
 
                     let errorDescription = [];
                     const permissionList = _.map(permissions, (name) => {
-                        if (name in permissionMap && !permissionMap[name]) {
+                        if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
                             errorDescription.push(
                                 <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
                             );
@@ -274,6 +281,11 @@ class PageConfig extends React.Component {
                         </PermissionTag> : null;
                     });
                     const twoLine = description !== undefined || errorDescription.length > 0;
+                    let second = '';
+                    if (twoLine) {
+                        if (errorDescription.length > 0) second = errorDescription;
+                        else second = description;
+                    }
                     return <ListItem
                         key={featureName}
                         toggle={toggleMode}
@@ -285,7 +297,7 @@ class PageConfig extends React.Component {
                         } : null}
                         twoLine={twoLine}
                         first={twoLine ? <React.Fragment>{title}{permissionList}</React.Fragment> : ''}
-                        second={twoLine ? errorDescription.length > 0 ? errorDescription : description : ''}
+                        second={second}
                     >{twoLine ? null : title}{permissionList}</ListItem>;
                 })}
             </List> : null;
@@ -416,6 +428,7 @@ class PageConfig extends React.Component {
             version,
         } = this.state;
         return <React.Fragment>
+            <GlobalStyleSheet/>
             {/*<Header title="设置"/>*/}
             <ConfigBody>
                 <Header>
@@ -423,10 +436,11 @@ class PageConfig extends React.Component {
                     <sub>{`version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
-                <Broadcast>
+                {(!debug || broadcast) && <Broadcast>
+                    {!debug && '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装'}<br/>
                     {broadcast}<br/>
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
-                </Broadcast>
+                </Broadcast>}
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}

@@ -11,7 +11,7 @@ import {createTab} from 'Utils';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
   padding: 9px 0 9px 10px;
-  max-height: 270px;
+  max-height: 258px;
   overflow: auto;
 `;
 const FeedBox = styled.div.attrs({className: 'feed-box'})`
@@ -93,6 +93,7 @@ export class DynamicBox extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'dynamicCheck',
+            label: 'dynamicCheck',
         });
         createTab(link);
     };
