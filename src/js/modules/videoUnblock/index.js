@@ -12,7 +12,7 @@ export class VideoUnblock extends Feature {
             kind: 'video',
             settings: {
                 on: true,
-                title: '跨区域解锁功能',
+                title: '跨区域解锁',
                 description: '部分视频只能在部分地区观看，该功能将解除这些限制',
             },
         });

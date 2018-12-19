@@ -7,7 +7,7 @@
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
+import styled, {createGlobalStyle} from 'styled-components';
 import {consoleLogo} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
@@ -28,6 +28,13 @@ import feedJson from 'Statics/json/feed.json';
 
 const {color} = theme;
 
+const GlobalStyleSheet = createGlobalStyle`
+  body{
+    font-family: system-ui, "PingFang SC", STHeiti, sans-serif;
+    font-size: 75%;
+  }
+`;
+
 const ConfigBody = styled(Body).attrs({className: 'config-body'})`
   position: absolute;
   top: ${theme.headerHeight}px;
@@ -45,6 +52,7 @@ const Figure = styled.figure`
   z-index: 0;
   figcaption {
     text-align: center;
+    font-size: 12px;
   }
 `;
 const Alipay = styled.img`
@@ -81,8 +89,8 @@ const Footer = styled.div`
   position: relative;
   max-width: 800px;
   width: 100%;
-  margin: 20px auto;
-  padding: 0 10px;
+  margin: 0 auto;
+  padding: 20px 10px;
   box-sizing: border-box;
   color: #8c8c8c;
   & a {
@@ -108,10 +116,10 @@ const Broadcast = styled.p`
 const PermissionTag = styled.span.attrs({
     title: ({title}) => title,
 })`
-  margin: 0 4px;
-  padding: 0 3px;
-  border-radius: 4px;
-  font-size: 10px;
+  margin-left: 4px;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-size: 12px;
   background-color: ${color('bilibili-blue')};
   color: #fff;
 `;
@@ -263,8 +271,9 @@ class PageConfig extends React.Component {
                                                                                               on={on}/>;
 
                     let errorDescription = [];
+                    console.warn(featureName, permissionMap);
                     const permissionList = _.map(permissions, (name) => {
-                        if (name in permissionMap && !permissionMap[name]) {
+                        if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
                             errorDescription.push(
                                 <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
                             );
@@ -274,6 +283,11 @@ class PageConfig extends React.Component {
                         </PermissionTag> : null;
                     });
                     const twoLine = description !== undefined || errorDescription.length > 0;
+                    let second = '';
+                    if (twoLine) {
+                        if (errorDescription.length > 0) second = errorDescription;
+                        else second = description;
+                    }
                     return <ListItem
                         key={featureName}
                         toggle={toggleMode}
@@ -285,7 +299,7 @@ class PageConfig extends React.Component {
                         } : null}
                         twoLine={twoLine}
                         first={twoLine ? <React.Fragment>{title}{permissionList}</React.Fragment> : ''}
-                        second={twoLine ? errorDescription.length > 0 ? errorDescription : description : ''}
+                        second={second}
                     >{twoLine ? null : title}{permissionList}</ListItem>;
                 })}
             </List> : null;
@@ -416,6 +430,7 @@ class PageConfig extends React.Component {
             version,
         } = this.state;
         return <React.Fragment>
+            <GlobalStyleSheet/>
             {/*<Header title="设置"/>*/}
             <ConfigBody>
                 <Header>

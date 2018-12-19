@@ -1,7 +1,7 @@
 /**
  * Author: Ruo
  * Create: 2018-07-29
- * Description: 单选按钮组
+ * Description: 单选按钮组（圆形）
  */
 
 import React from 'react';

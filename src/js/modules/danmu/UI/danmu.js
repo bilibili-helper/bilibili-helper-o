@@ -43,7 +43,7 @@ const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
 
 const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
   display: block;
-  width: -webkit-fill-available;
+  width: 418px;
   margin-left: 4px;
   padding: 4px 6px;
   box-sizing: border-box;
