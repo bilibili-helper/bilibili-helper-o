@@ -1,7 +1,7 @@
 /**
  * Author: Ruo
  * Create: 2018-07-29
- * Description: 单选按钮组
+ * Description: 单选按钮组(方形）
  */
 
 import React from 'react';
@@ -27,9 +27,11 @@ const Bar = styled.div`
   border-radius: 2px;
   background-color: ${color('google-grey-400')};
   transition: background-color linear 80ms;
+  box-shadow: inset 0px 0px 2px hsla(340, 0%, 50%, 1);
   //opacity: 0.5;
   .checked & {
     background-color: ${color('bilibili-pink')};
+    box-shadow: inset 0px 0px 2px hsla(340, 60%, 50%, 1);
     opacity: 1;
   }
 `;
