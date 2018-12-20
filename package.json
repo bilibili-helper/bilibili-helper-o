@@ -53,6 +53,7 @@
         "babel-preset-es2015": "^6.24.1",
         "babel-preset-react": "^6.24.1",
         "clean-webpack-plugin": "^0.1.19",
+        "concurrently": "^4.1.0",
         "copy-webpack-plugin": "^4.5.1",
         "css-loader": "^0.28.11",
         "cssnano": "^4.0.3",
@@ -81,8 +82,9 @@
     },
     "scripts": {
         "grunt": "grunt",
-        "watch": "webpack --config=webpack.config.development.js --watch --progress",
-        "build": "webpack --production --progress"
+        "watch": "webpack --env.DEBUG=true --config=webpack.config.development.js --watch --progress",
+        "build": "webpack --production --progress",
+        "build:test": "webpack --env.DEBUG=true --production --progress"
     },
     "author": "zacyu & ruo",
     "license": "MIT",

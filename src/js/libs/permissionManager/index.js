@@ -43,7 +43,7 @@ export class PermissionManager {
     };
 
     checkAll = () => {
-        const promiseMap = _.map(PERMISSION_STATUS, (value, permissionName) => {
+        const promiseArray = _.map(PERMISSION_STATUS, (value, permissionName) => {
             return new Promise((resolve) => {
                 switch (permissionName) {
                     case 'login':
@@ -64,7 +64,7 @@ export class PermissionManager {
                 this.permissionMap[permissionName] = res;
             });
         });
-        return Promise.all(promiseMap, () => {
+        return Promise.all(promiseArray, () => {
             this.hasCheckAll = true;
         });
     };
@@ -81,7 +81,6 @@ export class PermissionManager {
                 this.typeMap[permissionName].push(feature);
 
                 return this.permissionMap[permissionName];
-                //return this.permissionMap[permissionName]
             })).then(checkResults => {
                 const res = _.filter(checkResults, ({pass}) => !pass);
                 if (res.length > 0) resolve({pass: false, data: res});
