@@ -20,8 +20,8 @@ export class Menu extends Feature {
                 hasUI: true,
                 description: '选择您需要在扩展菜单中显示的常用功能',
                 options: [
-                    {key: 'showIcon', title: '图标按钮', on: false},
-                    {key: 'oldWatchPage', title: '旧关注页面', on: false, description: '开启后菜单按钮将显示为图标'},
+                    {key: 'showIcon', title: '图标按钮', on: false, description: '开启后菜单按钮将显示为图标'},
+                    {key: 'oldWatchPage', title: '旧关注页面', on: false},
                 ],
                 subPage: {
                     title: '启用菜单栏',

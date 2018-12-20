@@ -165,6 +165,8 @@ export class VideoDownload extends React.Component {
         const {videoData, currentCid} = this.state;
         let oldType = false;
         let morePart = false;
+        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
+        const partName = partDOM ? partDOM.innerHTML : '';
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
@@ -187,7 +189,6 @@ export class VideoDownload extends React.Component {
                                             referrerPolicy="unsafe-url"
                                             href={o.url}
                                             onClick={() => this.handleOnClickDownload(o.url)}
-                                            download
                                         >{title}</a>
                                     </React.Fragment>
                                 );

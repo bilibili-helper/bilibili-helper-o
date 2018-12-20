@@ -14,5 +14,3 @@ export {CheckBoxGroup} from './CheckBoxGroup';
 export {UpdateList} from './UpdateList';
 export {SubPage} from './SubPage';
 export {CheckBoxButton} from './CheckBoxButton';
-
-//export {Helper} from './Helper';

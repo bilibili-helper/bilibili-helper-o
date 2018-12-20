@@ -389,13 +389,13 @@ export class Danmu extends React.Component {
                     <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>XML</DownloadBtn>
                 </Title>
                 <DanmuList>
-                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData, index) => {
-                        const {danmu, authorHash, time} = danmuData;
+                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData) => {
+                        const {danmu, authorHash, time, rowId} = danmuData;
                         const uids = authorHashMap[authorHash];
                         let authorNames = _.map(uids, (uid) => this.userMap[uid] ? this.userMap[uid].name : '');
                         return (
                             <DanmuListLine
-                                key={index}
+                                key={`${rowId}`}
                                 title={`[${time}] ${danmu} ${authorNames ? `by:${authorNames.join(',')}` : ''}`}
                                 onClick={() => uids ? this.handleAuthorClick(uids) : this.handleDanmuLineClick(authorHash)}
                                 hasQueried={!_.isEmpty(authorNames)}

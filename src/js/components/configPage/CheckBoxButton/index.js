@@ -6,7 +6,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 import {theme} from 'Styles/theme';
 
 const {color} = theme;
@@ -36,18 +36,20 @@ const Bar = styled.div`
   }
 `;
 
-const Knob = styled.span.attrs({className: 'checkbox-knob'})`
+const Knob = styled.span.attrs({
+    className: `checkbox-knob`
+})`
   display: block;
-  width: 14px;
+  width: ${({theme}) => theme.mouseDown ? '17px' : '14px'};
   height: 14px;
   border-radius: 2px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
   background-color: white;
   border: 1px solid transparent;
-  transition: transform linear 80ms, background-color linear 80ms;
+  transition: transform linear 80ms, background-color linear 80ms, width linear 80ms;
   z-index: 1;
   .checked & {
-    transform: translate3d(20px, 0, 0);
+    transform: translate3d(${({theme}) => theme.mouseDown ? '17px' : '20px'}, 0, 0);
   }
 `;
 
@@ -78,17 +80,19 @@ export class CheckBoxButton extends React.Component {
 
     render() {
         const {on, onClick, disable} = this.props;
-        //const {mouseDown} = this.state;
+        const {mouseDown} = this.state;
         return (
+            <ThemeProvider theme={{mouseDown}}>
             <View className={on ? 'checked' : ''} onClick={onClick}>
-                <Bar>
-                    <Knob
-                        onMouseDown={!disable ? this.handleOnMouseDown : null}
-                        onMouseUp={!disable ? this.handleOnMouseUp : null}
-                        onMouseLeave={!disable ? this.handleOnMouseUp : null}
-                    />
+                <Bar
+                    onMouseDown={!disable ? this.handleOnMouseDown : null}
+                    onMouseUp={!disable ? this.handleOnMouseUp : null}
+                    onMouseLeave={!disable ? this.handleOnMouseUp : null}
+                >
+                    <Knob/>
                 </Bar>
             </View>
+            </ThemeProvider>
         );
     }
 };

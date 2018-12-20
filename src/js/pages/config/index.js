@@ -56,7 +56,7 @@ const Figure = styled.figure`
   }
 `;
 const Alipay = styled.img`
-  width: 60px;
+  width: 100px;
 `;
 
 const Header = styled.div`
@@ -141,7 +141,7 @@ class PageConfig extends React.Component {
             popup: {title: '菜单栏', map: {}},
             other: {title: '其他', map: {}},
         };
-        this.defaultBroadcast = '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装';
+        this.defaultBroadcast = '';
         this.state = {
             modalTitle: null,
             modalBody: null,
@@ -271,7 +271,6 @@ class PageConfig extends React.Component {
                                                                                               on={on}/>;
 
                     let errorDescription = [];
-                    console.warn(featureName, permissionMap);
                     const permissionList = _.map(permissions, (name) => {
                         if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
                             errorDescription.push(
@@ -438,10 +437,11 @@ class PageConfig extends React.Component {
                     <sub>{`version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
-                <Broadcast>
+                {(!debug || broadcast) && <Broadcast>
+                    {!debug && '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装'}<br/>
                     {broadcast}<br/>
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
-                </Broadcast>
+                </Broadcast>}
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}
