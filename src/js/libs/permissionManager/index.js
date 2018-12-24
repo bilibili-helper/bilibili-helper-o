@@ -95,14 +95,15 @@ export class PermissionManager {
         } else return this.checkOne(feature);
     };
 
-    updatePermission = (name, value) => {
+    updatePermission = (name, value, msg) => {
         if (this.permissionMap[name] === undefined) this.permissionMap[name] = {};
         if (this.permissionMap[name].pass !== value) {
             this.permissionMap[name].pass = value;
-            chrome.runtime.sendMessage('permissionUpdate', {
+            chrome.runtime.sendMessage({
                 commend: 'permissionUpdate',
                 permission: name,
                 value,
+                msg,
             });
         }
         this.triggerListener(name, value);
@@ -129,7 +130,7 @@ export class PermissionManager {
                 if (cookie && cookie.expirationDate > thisSecond) [pass, msg] = [true, ''];
                 else [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg];
 
-                this.updatePermission('login', pass);
+                this.updatePermission('login', pass, msg);
                 resolve({pass, msg});
             });
         });
@@ -138,15 +139,17 @@ export class PermissionManager {
     pip = () => {
         return new Promise(resolve => {
             const enabled = !!document.pictureInPictureEnabled;
-            this.updatePermission('pip', enabled);
-            resolve({pass: enabled, msg: enabled ? '' : PERMISSION_STATUS.pip.errorMsg});
+            const [pass, msg] = enabled ? [true, ''] : [false, PERMISSION_STATUS.pip.errorMsg];
+            this.updatePermission('pip', pass, msg);
+            resolve({pass, msg});
         });
     };
     downloads = () => {
         return new Promise(resolve => {
             chrome.permissions.contains({permissions: ['downloads']}, (res) => {
-                this.updatePermission('downloads', res);
-                resolve({pass: res, msg: res ? '' : PERMISSION_STATUS['downloads'].errorMsg});
+                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.downloads.errorMsg]
+                this.updatePermission('downloads', pass, msg);
+                resolve({pass, msg});
             });
         });
     };
@@ -154,8 +157,9 @@ export class PermissionManager {
     checkNotification = () => {
         return new Promise(resolve => {
             chrome.permissions.contains({permissions: ['notifications']}, (res) => {
-                this.updatePermission('notifications', res);
-                resolve({pass: res, msg: res ? '' : PERMISSION_STATUS['notifications'].errorMsg});
+                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.notifications.errorMsg]
+                this.updatePermission('notifications', pass, msg);
+                resolve({pass, msg});
             });
         });
     };
