@@ -140,7 +140,7 @@ export class Menu extends React.Component {
                 this.setState({debug: message.value});
             } else if (message.commend === 'permissionUpdate') {
                 const permissionMap = {...this.state.permissionMap};
-                permissionMap[message.permission] = message.value;
+                permissionMap[message.permission] = {pass: message.value, msg: message.msg};
                 this.setState({permissionMap});
             }
         }));
@@ -294,7 +294,7 @@ export class Menu extends React.Component {
                               {__('goBiliLive')}
                           </MenuButton>)}
                 {/* 登录后显示“我的关注”和“我的收藏” */}
-                {permissionMap.login ? <React.Fragment>
+                {permissionMap.login && permissionMap.login.pass ? <React.Fragment>
                     {dynamic && (showIcon ? <IconBtn
                         title={__('goDynamic')}
                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>

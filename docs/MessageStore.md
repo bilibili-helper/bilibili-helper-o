@@ -28,7 +28,7 @@ tabUnload
 
 | Type                               | Name  | Description                                         |
 | ---------------------------------- | ----- | --------------------------------------------------- |
-| number                             | state | 表示store的初始化状态，0表示为初始化，1表示已初始化 |
+| number                             | state | 表示store的初始化状态，0表示未初始化，1表示已初始化 |
 | array of [TaskObject](#TaskObject) | queue | 存放监听到的未处理的事件                            |
 | object                             | data  | 存放相关数据，如cid等                               |
 

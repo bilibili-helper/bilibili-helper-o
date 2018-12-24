@@ -64,6 +64,8 @@ Enum: `login` or `notifications`
 | ------------- | ------------------------------------- |
 | login         | 表示功能需要登录BILIBILI账号。        |
 | notifications | 表示功能需要获得`notifications`权限。 |
+| pip | 表示用户所使用的浏览器支持画中画功能。 |
+| downloads | 表示功能需要获取文件下载和管理功能。 |
 
 
 
