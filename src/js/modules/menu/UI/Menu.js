@@ -327,8 +327,7 @@ export class Menu extends React.Component {
                 ><Icon size={20} iconfont="option"/></IconBtn> : <MenuButton
                      onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>}
                 <Title showIcon={showIcon}>
-                    <span>{showIcon ? 'ver' : 'version'}</span>
-                    <span>{debug === true ? 'Beta.' : ''}{version}</span>
+                    <span>{debug ? 'Beta.' : ''}{version}</span>
                 </Title>
             </MenuView>
         );
