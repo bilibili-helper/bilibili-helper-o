@@ -178,7 +178,7 @@ class PageConfig extends React.Component {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
                 const {kind, name} = setting;
-                this.settings[kind].map[_.upperFirst(name)] = setting;
+                this.settings[kind].map[name] = setting;
             });
             this.setState(this.settings);
         });
@@ -206,10 +206,9 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
-        const name = _.upperFirst(featureName);
         const thisKindOfFeatures = this.state[kind];
-        if (!!thisKindOfFeatures.map[name]) { // find it (*≧∪≦)
-            const settingObject = thisKindOfFeatures.map[name]; // one feature in this kind of list
+        if (!!thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
+            const settingObject = thisKindOfFeatures.map[featureName]; // one feature in this kind of list
             if (!settingName && !on) { // 一级开关
                 settingObject.on = !settingObject.on;
             } else if (settingName && settingObject.type && !subPage) { // 二级开关
@@ -238,7 +237,7 @@ class PageConfig extends React.Component {
             }
             chrome.runtime.sendMessage({
                 commend: 'setSetting',
-                feature: name,
+                feature: featureName,
                 settings: settingObject,
             }, (res) => {
                 if (res) {
@@ -248,7 +247,7 @@ class PageConfig extends React.Component {
                         category: 'config',
                         label: `${featureName} ${settingName !== undefined ? `${settingName} ${settingObject.on}` : settingObject.on}`,
                     });
-                    thisKindOfFeatures.map[name] = settingObject;
+                    thisKindOfFeatures.map[featureName] = settingObject;
                     this.setState({[kind]: thisKindOfFeatures});
                 }
             });

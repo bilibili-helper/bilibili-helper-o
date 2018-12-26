@@ -99,7 +99,7 @@ const stylesheet = css`
     margin-bottom: 3px;
     width: 100%;
     height: auto;
-    pointer-events: auto;
+    pointer-events: none;
   }
   .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
     height: auto;
@@ -132,7 +132,7 @@ const stylesheet = css`
     position: absolute;
     top: 0;
     width: 100%;
-    height: 6px;
+    height: 8px;
     z-index: 1;
     cursor: pointer;
   }
@@ -144,7 +144,7 @@ const stylesheet = css`
   .hide-aside-area .chat-history-panel:hover .live-chat-mode-bar::after {
     content: '';
     display: block;
-    width: 20px;
+    width: 15px;
     height: 1px;
     background-color: #a8dbf0;
     position: absolute;
@@ -171,22 +171,30 @@ export class LiveChatMode extends React.Component {
 
     componentDidMount() {
         this.bodyDOM = document.querySelector('body');
-        this.addDraggableBar();
+        this.initDraggableBar();
     }
 
-    addDraggableBar = () => {
+    initDraggableBar = () => {
         const that = this;
+        const locationOption = store.get('bilibili-helper-live-chat-mode') || {};
         const appContent = document.querySelector('.app-content');
         const panel = document.querySelector('.chat-history-panel');
         const bar = document.createElement('div');
         bar.setAttribute('class', 'live-chat-mode-bar');
+
+        if (locationOption[this.roomId] !== true) {
+            that.originHeight = locationOption[this.roomId];
+        }
+
         let originY = 0;
         bar.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
             that.mouseDown = true;
             that.originHeight = panel.clientHeight;
             originY = e.clientY;
-        });
+        }, true);
         appContent.addEventListener('mousemove', _.throttle(function(e) {
+            e.stopPropagation();
             if (!that.mouseDown) return false;
             const delta = originY - e.clientY;
             const currentHeight = that.originHeight + delta;
@@ -194,9 +202,12 @@ export class LiveChatMode extends React.Component {
                 panel.style.height = `${currentHeight}px`;
             }
         }, 30), true);
-        appContent.addEventListener('mouseup', function() {
+        appContent.addEventListener('mouseup', function(e) {
+            e.stopPropagation();
             if (that.mouseDown) {
                 that.originHeight = panel.clientHeight;
+                locationOption[that.roomId] = that.originHeight;
+                store.set('bilibili-helper-live-chat-mode', locationOption);
                 that.mouseDown = false;
             }
         }, true);

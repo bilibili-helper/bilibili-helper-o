@@ -36,14 +36,12 @@ export class UIManager {
     };
 
     instantiateUIs = () => {
-        return Promise.all(_.map(this.settings, (option) => new Promise(resolveUI => {
-            const name = _.upperFirst(option.name);
+        return Promise.all(_.map(this.settings, ({name}) => new Promise(resolveUI => {
             const UIClass = UIs[`${name}UI`];
-            //console.log(UIs, name, UIClass);
             if (UIClass) {
                 this.UIMap[name] = new UIClass();
             } else {
-                throw(`Wrong UI class ${option.name}`);
+                throw(`Wrong UI class ${name}`);
             }
             resolveUI();
         })));
@@ -81,7 +79,7 @@ export class UIManager {
             return;
         }
         ++this.retryTime;
-        const originQueue = _.mapKeys(this.waitQueue, (setting) => _.upperFirst(setting.name));
+        const originQueue = _.mapKeys(this.waitQueue, (setting) => setting.name);
         this.waitQueue = [];
 
         Promise.all(_.map(originQueue, this.loadUI)).then(() => {
@@ -100,7 +98,7 @@ export class UIManager {
         let pass = true;
         let dependDOM = [];
         _.each(dependencies, (dependency) => {
-            const UI = this.UIMap[_.upperFirst(dependency)];
+            const UI = this.UIMap[dependency];
             if (!(UI && UI.loaded)) {
                 return pass = false;
             } else {
