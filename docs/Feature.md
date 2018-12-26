@@ -28,7 +28,7 @@ moduleName
 
 | Type                            | Name            | Description                                      |
 | ------------------------------- | --------------- | ------------------------------------------------ |
-| String                          | name            | 首字母大写，驼峰命名的Feature名称                |
+| String                          | name            | 首字母小写，驼峰命名的Feature名称                |
 | String                          | optionStoreName | 配置仓库名，格式：`bilibili-helper-${this.name}` |
 | String                          | dataStoreName   | 数据仓库名，格式：`in-module-${this.name}`       |
 | String                          | kind            | 分类名                                           |
