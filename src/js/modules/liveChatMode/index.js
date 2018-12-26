@@ -12,7 +12,6 @@ export class LiveChatMode extends Feature {
         super({
             name: 'liveChatMode',
             kind: 'live',
-            permissions: ['login'],
             settings: {
                 on: true,
                 title: '版聊模式',
