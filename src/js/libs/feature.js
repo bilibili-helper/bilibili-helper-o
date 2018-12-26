@@ -165,4 +165,10 @@ export class Feature {
         const offset = currentZone + 8; // 需要调整的偏移量
         return new Date(thisTime.getTime() + offset * 1000 * 60).getDate();
     };
+
+    permissionHandleLogin = () => {};
+
+    permissionHandleNotifications = () => {};
+
+    permissionHandleDownloads = () => {};
 }

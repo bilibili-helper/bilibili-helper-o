@@ -37,11 +37,12 @@ export class UIManager {
 
     instantiateUIs = () => {
         return Promise.all(_.map(this.settings, ({name}) => new Promise(resolveUI => {
-            const UIClass = UIs[`${name}UI`];
+            const featureName = _.upperFirst(name);
+            const UIClass = UIs[`${featureName}UI`];
             if (UIClass) {
                 this.UIMap[name] = new UIClass();
             } else {
-                throw(`Wrong UI class ${name}`);
+                throw(`Wrong UI class ${featureName}`);
             }
             resolveUI();
         })));

@@ -14,6 +14,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
+const WriteJsonPlugin = require('write-json-webpack-plugin');
 
 const srcPath = path.resolve('src');
 const buildPath = path.resolve('build');
@@ -27,6 +28,17 @@ const localesGroup = localesSupportList.map((name) => ({
 }));
 
 module.exports =(env) => {
+    // sync version
+    let manifestJSON, packageJSON;
+    if (process.env.npm_config_setversion) {
+        const version = /^([\d.]+)(?:-beta\.)?(\d+)?/.exec(process.env.npm_config_setversion);
+        if (version && version[1]) {
+            packageJSON = require('./package.json');
+            packageJSON.version = process.env.npm_config_setversion;
+            manifestJSON = require('./src/manifest.json');
+            manifestJSON.version = `${version[1]}${version[2] ? '.' + version[2] : ''}`;
+        }
+    }
     return {
         watch: true,
         mode: 'production',
@@ -148,13 +160,24 @@ module.exports =(env) => {
             }),
             new CopyWebpackPlugin([
                 {from: 'src/html/*.html', to: '', flatten: true},
-                {from: 'src/manifest.json', to: '', flatten: true},
+                //{from: 'src/manifest.json', to: '', flatten: true},
                 {from: 'src/statics/fonts', to: 'statics/fonts'},
                 {from: 'src/statics/imgs', to: 'statics/imgs'},
                 {from: 'src/statics/js', to: 'statics/js'},
                 //{from: 'src/js/libs', to: 'libs'},
                 // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
             ]),
+            (manifestJSON && new WriteJsonPlugin({
+                object: manifestJSON,
+                path: '/',
+                filename: 'manifest.json',
+            })),
+            (packageJSON && new WriteJsonPlugin({
+                object: packageJSON,
+                path: '../',
+                filename: 'package.json',
+                pretty: true,
+            })),
             new MergeJsonWebpackPlugin({
                 debug: true,
                 output: {groupBy: localesGroup},

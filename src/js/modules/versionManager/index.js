@@ -87,7 +87,7 @@ export class VersionManager extends Feature {
                         this.setVersion(res);
                         this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
                     } else if (notifyOn) {
-                        this.setVersion({version, ...res});
+                        this.setVersion({...res, version});
                         this.sendNotification(__('checkVersionNoNewVersion'), ignore);
                     } else this.setVersion({version, ...res});
                 },
