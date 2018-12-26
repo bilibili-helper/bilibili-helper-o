@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI';
-import {LiveCharMode} from './LiveCharMode';
+import {LiveChatMode} from './LiveChatMode';
 
 export class LiveChatModeUI extends UI {
     constructor() {
@@ -21,7 +21,7 @@ export class LiveChatModeUI extends UI {
                 const wrapper = document.createElement('div');
                 wrapper.setAttribute('class', 'bilibili-helper-live-chat-mode-wrapper');
                 container && container.appendChild(wrapper);
-                ReactDOM.render(<LiveCharMode settings={settings}/>, wrapper, resolve);
+                ReactDOM.render(<LiveChatMode settings={settings}/>, wrapper, resolve);
             });
         });
     };

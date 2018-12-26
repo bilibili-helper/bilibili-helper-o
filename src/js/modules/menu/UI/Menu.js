@@ -238,7 +238,7 @@ export class Menu extends React.Component {
                         commend: 'setGAEvent',
                         action: 'click',
                         category: 'menu',
-                        label: 'linker ' + res[1],
+                        label: 'linker ' + (res[1] || 'av'),
                     });
                 });
 

@@ -4,6 +4,7 @@
  * Description:
  */
 
+import _ from 'lodash';
 import React from 'react';
 import styled, {css} from 'styled-components';
 import {theme} from 'Styles';
@@ -45,24 +46,24 @@ const stylesheet = css`
     position: fixed;
     left: 0;
     bottom: 80px;
-    width: 100%;
+    display: inline-block;
+    width: auto;
     height: calc(50% - 20px);
-    pointer-events: none;
+    pointer-events: auto;
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 5%, transparent 25%);
   }
-  .hide-aside-area .#chat-history-list {
-    pointer-events: none;
-    height: 100%;
+  .hide-aside-area .chat-history-panel:hover #chat-history-list {
+    outline: 1px solid ${color('bilibili-blue')};
   }
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel::-webkit-scrollbar,
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .rank-list-section,
   .hide-aside-area #penury-gift-msg,
   .hide-aside-area #chat-control-panel-vm .bottom-actions,
-  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item:before,
-  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item.guard-danmaku:after{
+  .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item:before,
+  .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item.guard-danmaku:after{
     display: none;
   }
-  .hide-aside-area .chat-history-panel .chat-history-list .chat-item.danmaku-item {
+  .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item {
     margin: 0;
     padding: 0 5px;
   }
@@ -98,8 +99,7 @@ const stylesheet = css`
     margin-bottom: 3px;
     width: 100%;
     height: auto;
-    z-index: 1;
-    pointer-events: none;
+    pointer-events: auto;
   }
   .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
     height: auto;
@@ -127,26 +127,35 @@ const stylesheet = css`
   .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
     padding: 0 130px 0 80px;
   }
-  /*body.fullscreen-fix div#background-manage-vm,
-  body.fullscreen-fix div#ema-wishing-vm,
-  body.fullscreen-fix div#enter-failure,
-  body.fullscreen-fix div#gift-control-vm,
-  body.fullscreen-fix div#gold-store-vm,
-  body.fullscreen-fix div#guard-store-vm,
-  body.fullscreen-fix div#head-info-vm.head-info-section,
-  body.fullscreen-fix div#link-footer-vm,
-  body.fullscreen-fix div#link-navbar-vm,
-  body.fullscreen-fix div#my-dear-haruna-vm,
-  body.fullscreen-fix div#player-effect-vm,
-  body.fullscreen-fix div#room-background-vm,
-  body.fullscreen-fix div#sidebar-vm,
-  body.fullscreen-fix div.aside-area,
-  body.fullscreen-fix section#sections-vm {
-    display: block !important;
-  }*/
+  
+  .hide-aside-area .live-chat-mode-bar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 6px;
+    z-index: 1;
+    cursor: pointer;
+  }
+  .hide-aside-area .chat-history-panel:hover .live-chat-mode-bar {
+    background-color: ${color('bilibili-blue')};
+    user-select: none;
+  }
+  
+  .hide-aside-area .chat-history-panel:hover .live-chat-mode-bar::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background-color: #a8dbf0;
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    transform: translate(-50%);
+    box-shadow: 0px 2px 0px #a8dbf0, 0px 4px 0px #a8dbf0;
+}
 `;
 
-export class LiveCharMode extends React.Component {
+export class LiveChatMode extends React.Component {
     constructor(props) {
         super(props);
         this.roomId = location.pathname.substr(1);
@@ -156,27 +165,64 @@ export class LiveCharMode extends React.Component {
             currentState: 0, // 0: default, 1: webfullscreen, 2: full
         };
         this.addListener();
+        this.mouseDown = false;
+        this.originHeight = 0;
     }
 
     componentDidMount() {
         this.bodyDOM = document.querySelector('body');
+        this.addDraggableBar();
     }
+
+    addDraggableBar = () => {
+        const that = this;
+        const appContent = document.querySelector('.app-content');
+        const panel = document.querySelector('.chat-history-panel');
+        const bar = document.createElement('div');
+        bar.setAttribute('class', 'live-chat-mode-bar');
+        let originY = 0;
+        bar.addEventListener('mousedown', function(e) {
+            that.mouseDown = true;
+            that.originHeight = panel.clientHeight;
+            originY = e.clientY;
+        });
+        appContent.addEventListener('mousemove', _.throttle(function(e) {
+            if (!that.mouseDown) return false;
+            const delta = originY - e.clientY;
+            const currentHeight = that.originHeight + delta;
+            if (currentHeight > 25 && currentHeight < appContent.clientHeight) {
+                panel.style.height = `${currentHeight}px`;
+            }
+        }, 30), true);
+        appContent.addEventListener('mouseup', function() {
+            if (that.mouseDown) {
+                that.originHeight = panel.clientHeight;
+                that.mouseDown = false;
+            }
+        }, true);
+        panel.appendChild(bar);
+    };
 
     addListener = () => {
         if (!this.bodyDOM) this.bodyDOM = document.querySelector('body');
         const classList = this.bodyDOM.classList;
+        const panel = document.querySelector('.chat-history-panel');
         new MutationObserver(() => {
             const {on, currentState} = this.state;
             if ((classList.contains('player-full-win') && currentState !== 1) ||
                 (classList.contains('fullscreen-fix') && currentState !== 2)) { // 当前是网页全屏/全屏 且之前并不是该状态
-                this.setState({currentState: 1});
+                this.setState({currentState: 1}, () => {
+                    if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
+                });
                 if (on && !classList.contains('hide-aside-area')) {
                     document.querySelector('.aside-area-toggle-btn button').click();
                     const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
                     if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
                 }
-            } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) { // 当前是全屏 且之前不能不是全屏
-                this.setState({currentState: 0});
+            } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) {
+                this.setState({currentState: 0}, () => {
+                    if (panel) panel.style.height = '';
+                });
             }
             //if (classList.contains('fullscreen-fix')) this.setState({currentState: 2});
         }).observe(this.bodyDOM, {
@@ -208,5 +254,4 @@ export class LiveCharMode extends React.Component {
             </React.Fragment>
         );
     }
-
 }
