@@ -50,7 +50,7 @@ const stylesheet = css`
     width: auto;
     height: calc(50% - 20px);
     pointer-events: auto;
-    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 5%, transparent 25%);
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 15%, transparent 75%);
   }
   .hide-aside-area .chat-history-panel:hover #chat-history-list {
     outline: 1px solid ${color('bilibili-blue')};
@@ -201,7 +201,7 @@ export class LiveChatMode extends React.Component {
             if (currentHeight > 25 && currentHeight < appContent.clientHeight) {
                 panel.style.height = `${currentHeight}px`;
             }
-        }, 30), true);
+        }, 30));
         appContent.addEventListener('mouseup', function(e) {
             e.stopPropagation();
             if (that.mouseDown) {
@@ -222,14 +222,14 @@ export class LiveChatMode extends React.Component {
             const {on, currentState} = this.state;
             if ((classList.contains('player-full-win') && currentState !== 1) ||
                 (classList.contains('fullscreen-fix') && currentState !== 2)) { // 当前是网页全屏/全屏 且之前并不是该状态
-                this.setState({currentState: 1}, () => {
-                    if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
-                });
                 if (on && !classList.contains('hide-aside-area')) {
                     document.querySelector('.aside-area-toggle-btn button').click();
                     const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
                     if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
                 }
+                this.setState({currentState: 1}, () => {
+                    if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
+                });
             } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) {
                 this.setState({currentState: 0}, () => {
                     if (panel) panel.style.height = '';

@@ -23,9 +23,9 @@ export class FeatureManager {
     instantiateFeatures = () => {
         return new Promise(resolve => {
             _.each(Features, (FeatureClass, featureName) => {
-                if (!this.features[featureName]) {
+                if (!this.features[_.lowerFirst(featureName)]) {
                     if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
-                    else this.features[featureName] = new FeatureClass();
+                    else this.features[_.lowerFirst(featureName)] = new FeatureClass();
                 } else throw `Feature ${featureName} has instantiated!`;
             });
             resolve();

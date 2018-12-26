@@ -183,7 +183,7 @@ class PageConfig extends React.Component {
             this.setState(this.settings);
         });
         // 获取调试模式
-        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'Debug'}, (setting) => {
+        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'debug'}, (setting) => {
             this.setState({debug: setting.on});
         });
 
