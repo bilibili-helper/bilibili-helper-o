@@ -111,6 +111,7 @@ class VideoSubtitleDownload extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'videoSubtitleDownload',
+            label: 'videoSubtitleDownload',
         });
         chrome.runtime.sendMessage({
             commend: 'downloadSubtitle',

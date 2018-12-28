@@ -93,6 +93,7 @@ export class DynamicBox extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'dynamicCheck',
+            label: 'dynamicCheck',
         });
         createTab(link);
     };
