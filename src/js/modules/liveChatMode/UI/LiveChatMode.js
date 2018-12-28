@@ -60,7 +60,7 @@ const stylesheet = css`
   .hide-aside-area #penury-gift-msg,
   .hide-aside-area #chat-control-panel-vm .bottom-actions,
   .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item:before,
-  .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item.guard-danmaku:after{
+  .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item.guard-danmaku:after {
     display: none;
   }
   .hide-aside-area .chat-history-panel #chat-history-list .chat-item.danmaku-item {
@@ -100,6 +100,7 @@ const stylesheet = css`
     width: 100%;
     height: auto;
     pointer-events: none;
+    z-index: 1;
   }
   .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
     height: auto;
@@ -128,20 +129,33 @@ const stylesheet = css`
     padding: 0 130px 0 80px;
   }
   
-  .hide-aside-area .live-chat-mode-bar {
+  .hide-aside-area .live-chat-mode-height-bar {
     position: absolute;
     top: 0;
-    width: 100%;
+    width: calc(100% - 14px);
     height: 8px;
     z-index: 1;
-    cursor: pointer;
+    cursor: ns-resize;
   }
-  .hide-aside-area .chat-history-panel:hover .live-chat-mode-bar {
+  .hide-aside-area .live-chat-mode-move-bar {
+    display: block;
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 14px;
+    height: 14px;
+    z-index: 2;
+    color: transparent;
+    font-size: 14px;
+    cursor: move;
+  }
+  .hide-aside-area .chat-history-panel:hover .live-chat-mode-height-bar,
+  .hide-aside-area .chat-history-panel:hover .live-chat-mode-move-bar{
     background-color: ${color('bilibili-blue')};
     user-select: none;
   }
   
-  .hide-aside-area .chat-history-panel:hover .live-chat-mode-bar::after {
+  .hide-aside-area .chat-history-panel:hover .live-chat-mode-height-bar::after {
     content: '';
     display: block;
     width: 15px;
@@ -165,7 +179,12 @@ export class LiveChatMode extends React.Component {
             currentState: 0, // 0: default, 1: webfullscreen, 2: full
         };
         this.addListener();
-        this.mouseDown = false;
+        this.heightMouseDown = false;
+        this.moveMouseDown = false;
+        this.originOffectLeft = 0;
+        this.originOffectBottom = 0;
+        this.originX = 0;
+        this.originY = 0;
         this.originHeight = 0;
     }
 
@@ -178,40 +197,71 @@ export class LiveChatMode extends React.Component {
         const that = this;
         const locationOption = store.get('bilibili-helper-live-chat-mode') || {};
         const appContent = document.querySelector('.app-content');
+        const videoArea = document.querySelector('.bilibili-live-player-video-area');
         const panel = document.querySelector('.chat-history-panel');
-        const bar = document.createElement('div');
-        bar.setAttribute('class', 'live-chat-mode-bar');
+        const heightBar = document.createElement('div');
+        const moveBar = document.createElement('div');
+        heightBar.setAttribute('class', 'live-chat-mode-height-bar');
+        moveBar.setAttribute('class', 'live-chat-mode-move-bar');
 
-        if (locationOption[this.roomId] !== true) {
-            that.originHeight = locationOption[this.roomId];
+        if (_.isObject(locationOption[this.roomId])) {
+            that.originHeight = locationOption[this.roomId].height;
+            that.originOffectLeft = locationOption[this.roomId].offsetLeft;
+            that.originOffectBottom = locationOption[this.roomId].offsetBottom;
         }
 
-        let originY = 0;
-        bar.addEventListener('mousedown', function(e) {
+        heightBar.addEventListener('mousedown', function(e) {
             e.stopPropagation();
-            that.mouseDown = true;
+            if (e.button !== 0 && e.buttons !== 1) return; // 确定仅当按下左键时
+            that.heightMouseDown = true;
             that.originHeight = panel.clientHeight;
-            originY = e.clientY;
-        }, true);
+            that.originY = e.clientY;
+        });
+        moveBar.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+            if (e.button !== 0 && e.buttons !== 1) return; // 确定仅当按下左键时
+            that.moveMouseDown = true;
+            that.originOffectLeft = panel.offsetLeft;
+            that.originOffectBottom = videoArea.offsetHeight - panel.offsetTop - panel.offsetHeight;
+            that.originX = e.clientX;
+            that.originY = e.clientY;
+        });
         appContent.addEventListener('mousemove', _.throttle(function(e) {
-            e.stopPropagation();
-            if (!that.mouseDown) return false;
-            const delta = originY - e.clientY;
-            const currentHeight = that.originHeight + delta;
-            if (currentHeight > 25 && currentHeight < appContent.clientHeight) {
-                panel.style.height = `${currentHeight}px`;
+            if (!that.state.on) return;
+            if (that.heightMouseDown) {
+                const deltaHeight = that.originY - e.clientY;
+                const currentHeight = that.originHeight + deltaHeight;
+                if (currentHeight > 25 && currentHeight < videoArea.clientHeight && currentHeight < videoArea.offsetHeight) {
+                    panel.style.height = `${currentHeight}px`;
+                }
+            } else if (that.moveMouseDown) {
+                const deltaX = that.originX - e.clientX;
+                const deltaY = that.originY - e.clientY;
+                let currentLeft = that.originOffectLeft - deltaX;
+                let currentBottom = that.originOffectBottom + deltaY;
+                if (currentLeft < 0) currentLeft = 0;
+                if (currentBottom < 48) currentBottom = 48;
+                panel.style.left = `${currentLeft}px`;
+                panel.style.bottom = `${currentBottom}px`;
             }
-        }, 30));
-        appContent.addEventListener('mouseup', function(e) {
-            e.stopPropagation();
-            if (that.mouseDown) {
+        }, 25), true);
+        appContent.addEventListener('mouseup', function() {
+            if ((that.heightMouseDown || that.moveMouseDown) && that.state.on) {
                 that.originHeight = panel.clientHeight;
-                locationOption[that.roomId] = that.originHeight;
+                that.originOffectLeft = panel.offsetLeft;
+                that.originOffectBottom = videoArea.offsetHeight - panel.offsetTop - panel.offsetHeight;
+                locationOption[that.roomId] = {
+                    height: that.originHeight,
+                    offsetLeft: that.originOffectLeft,
+                    offsetBottom: that.originOffectBottom,
+                };
                 store.set('bilibili-helper-live-chat-mode', locationOption);
-                that.mouseDown = false;
+                that.heightMouseDown = false;
+                that.moveMouseDown = false;
             }
         }, true);
-        panel.appendChild(bar);
+        panel.appendChild(heightBar);
+        panel.appendChild(moveBar);
     };
 
     addListener = () => {
@@ -229,6 +279,8 @@ export class LiveChatMode extends React.Component {
                 }
                 this.setState({currentState: 1}, () => {
                     if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
+                    if (panel && this.originOffectLeft) panel.style.left = `${this.originOffectLeft}px`;
+                    if (panel && this.originOffectBottom) panel.style.bottom = `${this.originOffectBottom}px`;
                 });
             } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) {
                 this.setState({currentState: 0}, () => {
@@ -252,6 +304,12 @@ export class LiveChatMode extends React.Component {
             } else {
                 delete locationOption[this.roomId];
             }
+            chrome.runtime.sendMessage({
+                commend: 'setGAEvent',
+                action: 'click',
+                category: 'liveChatMode',
+                label: `liveChatMode ${newValue}`,
+            });
             store.set('bilibili-helper-live-chat-mode', locationOption);
         });
     };

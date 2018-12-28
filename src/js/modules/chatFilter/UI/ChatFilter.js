@@ -116,9 +116,10 @@ export class ChatFilter extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'chatFilter',
-            label: key
+            label: `chatFilter ${key}`,
         });
         this.store[this.roomId] = localOption;
+        if (_.isEmpty(this.store[this.roomId])) delete this.store[this.roomId];
         this.setState({localOption}, () => store.set(this.storeName, this.store));
     };
 

@@ -36,14 +36,7 @@ export class PopupAnchorUI extends UI {
                     <GlobalStyle/>
                 </Main>,
                 document.getElementById('root'),
-                () => {
-                    chrome.runtime.sendMessage({
-                        commend: 'setGAEvent',
-                        action: 'click',
-                        category: 'popup',
-                    });
-                    resolve(document.querySelector('.bilibili-helper-popup-main'));
-                },
+                () => resolve(document.querySelector('.bilibili-helper-popup-main')),
             );
 
         });

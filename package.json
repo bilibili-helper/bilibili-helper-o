@@ -26,6 +26,7 @@
     "url-parse": "^1.4.3"
   },
   "devDependencies": {
+    "@gfx/zopfli": "^1.0.10",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.4",
@@ -88,5 +89,5 @@
   "author": "zacyu & ruo",
   "license": "MIT",
   "repository": "https://github.com/zacyu/bilibili-helper",
-  "readme": "./README.md"
+  "readme": "/source/README.md"
 }

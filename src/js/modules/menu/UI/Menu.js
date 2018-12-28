@@ -185,7 +185,7 @@ export class Menu extends React.Component {
             commend: 'setGAEvent',
             action: 'click',
             category: 'menu',
-            label: type,
+            label: `menu ${type}`,
         });
         createTab(link);
     };

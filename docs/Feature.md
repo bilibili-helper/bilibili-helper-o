@@ -103,4 +103,4 @@ Enum: `login` or `notifications`
 | enum in [OptionType](#OptionType)      | type        | 表示该功能的一级页面中子选项的功能类型。                     |
 | Array of [OptionObject](#OptionObject) | options     | 规定功能在设置页面的一级页面中显示的子选项。                 |
 | String                                 | value       | 如果type配置为radio，则设置该项目表示子选项单选组的默认值。  |
-| [SubPageObject](#SubPageObject)        | subPage     | 规定功能在设置页面的二级页面中显示的子选项。                 |
+| [SubPageObject](#SubPageObject)        | subPage     | 规定功能在设置页面的二级页面中显示的子选项                   |
