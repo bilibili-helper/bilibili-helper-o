@@ -8,4 +8,4 @@ node_modules/
 package-lock.json
 build/
 *.zip
-modules/videoUnblock/
+videoUnblock/
