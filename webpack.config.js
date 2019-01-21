@@ -5,6 +5,7 @@
  * Description:
  */
 
+const _ = require('lodash');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -27,7 +28,7 @@ const localesGroup = localesSupportList.map((name) => ({
     fileName: `./_locales/${name}/messages.json`,
 }));
 
-module.exports =(env) => {
+module.exports = (env) => {
     // sync version
     let manifestJSON, packageJSON;
     if (process.env.npm_config_setversion) {
@@ -142,7 +143,7 @@ module.exports =(env) => {
                 },
             ],
         },
-        plugins: [
+        plugins: _.compact([
             new webpack.DefinePlugin({
                 'process.env': {
                     DEBUG: env.DEBUG || false,
@@ -183,6 +184,6 @@ module.exports =(env) => {
                 output: {groupBy: localesGroup},
             }),
             //new BundleAnalyzerPlugin(),
-        ],
+        ]),
     }
 };
