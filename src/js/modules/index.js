@@ -1,3 +1,4 @@
+/* global require */
 /**
  * Author: Ruo
  * Create: 2018-06-12
@@ -23,6 +24,10 @@ import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
+let VideoUnblock;
+try {
+    VideoUnblock = require('./videoUnblock').VideoUnblock;
+} catch (e) {``;}
 
 export const Features = {
     Background,
@@ -45,6 +50,7 @@ export const Features = {
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
+    VideoUnblock,
 };
 
 export const UIs = {

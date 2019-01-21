@@ -1,4 +1,4 @@
-/* global require, module */
+/* global require, module, process */
 /**
  * Author: Ruo
  * Create: 2018-05-30
