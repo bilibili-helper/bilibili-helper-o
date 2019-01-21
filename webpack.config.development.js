@@ -5,6 +5,7 @@
  * Description:
  */
 
+const _ = require('lodash');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 //const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -126,7 +127,7 @@ module.exports = (env) => {
                 },
             ],
         },
-        plugins: [
+        plugins: _.compact([
             new webpack.DefinePlugin({
                 'process.env': {
                     DEBUG: env.DEBUG || false,
@@ -167,6 +168,6 @@ module.exports = (env) => {
                 pretty: true,
             })),
             new BundleAnalyzerPlugin(),
-        ],
+        ]),
     };
 };

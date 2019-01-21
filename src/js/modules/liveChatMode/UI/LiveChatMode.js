@@ -166,7 +166,11 @@ const stylesheet = css`
     left: 50%;
     transform: translate(-50%);
     box-shadow: 0px 2px 0px #a8dbf0, 0px 4px 0px #a8dbf0;
-}
+  }
+  .hide-aside-area .chat-item.danmaku-item {
+    font-size: 16px;
+    height: 28px;
+  }
 `;
 
 export class LiveChatMode extends React.Component {
@@ -199,6 +203,7 @@ export class LiveChatMode extends React.Component {
         const appContent = document.querySelector('.app-content');
         const videoArea = document.querySelector('.bilibili-live-player-video-area');
         const panel = document.querySelector('.chat-history-panel');
+        if (!appContent || !videoArea || !panel) return;
         const heightBar = document.createElement('div');
         const moveBar = document.createElement('div');
         heightBar.setAttribute('class', 'live-chat-mode-height-bar');
