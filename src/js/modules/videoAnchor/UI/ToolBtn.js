@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import {ToolContent} from './ToolContent';
 
 const HelperBtn = styled.span`
-  display: block;
+  display: inline-block;
   padding: 0 15px;
   border-radius: 4px;
   transition: all 0.3s;
@@ -22,6 +22,16 @@ const HelperBtn = styled.span`
   }
   &:hover, &.show {
     color: rgb(0, 161, 214);
+  }
+  #toolbar_module & {
+    display: inline-block;
+    vertical-align: top;
+    height: 24px;
+    line-height: 22px;
+    font-size: 14px;
+    color: #505050;
+    margin-left: 26px;
+    cursor: pointer;
   }
 `;
 

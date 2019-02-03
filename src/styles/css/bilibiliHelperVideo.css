@@ -668,3 +668,15 @@ input.b-input.disabled {
 .app-download {
     display: none;
 }
+
+#toolbar_module .bilibili-helper {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	height: 24px;
+	line-height: 22px;
+	font-size: 14px;
+	color: #505050;
+	margin-left: 26px;
+	cursor: pointer;
+}

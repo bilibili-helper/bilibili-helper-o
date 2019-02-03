@@ -31,12 +31,12 @@ const localesGroup = localesSupportList.map((name) => ({
 module.exports = (env) => {
     // sync version
     let manifestJSON, packageJSON;
+    packageJSON = require('./package.json');
+    manifestJSON = require('./src/manifest.json');
     if (process.env.npm_config_setversion) {
         const version = /^([\d.]+)(?:-beta\.)?(\d+)?/.exec(process.env.npm_config_setversion);
         if (version && version[1]) {
-            packageJSON = require('./package.json');
             packageJSON.version = process.env.npm_config_setversion;
-            manifestJSON = require('./src/manifest.json');
             manifestJSON.version = `${version[1]}${version[2] ? '.' + version[2] : ''}`;
         }
     }
@@ -167,7 +167,7 @@ module.exports = (env) => {
                 filename: 'package.json',
                 pretty: true,
             })),
-            new BundleAnalyzerPlugin(),
+            //new BundleAnalyzerPlugin(),
         ]),
     };
 };

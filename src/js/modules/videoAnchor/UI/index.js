@@ -22,9 +22,10 @@ export class VideoAnchorUI extends UI {
                 '#bangumi_detail .func-module',
                 '#arc_toolbar_report .ops',
                 //'.video-info .video-title',
+                '#toolbar_module',
                 '#arc_toolbar_report',
             ];
-            const newPage = document.querySelector('.video-data');
+            const newPage = document.querySelector('.video-data, .stardust-player');
             const addUI = (container) => {
                 if (document.querySelector('.bilibili-helper')) return;
                 const helperDOM = document.createElement('span');
@@ -43,13 +44,23 @@ export class VideoAnchorUI extends UI {
                         clearInterval(timer);
                         return console.error(`title for view has not changed!`);
                     }
-                    const title = document.querySelector('.view').getAttribute('title');
-                    if (title !== '总播放数--') {
-                        clearInterval(timer);
-                        addUI(document.querySelector('#arc_toolbar_report .ops'));
+                    const coin = document.querySelector('.coin-info,.coin');
+                    if (!coin) return;
+                    if ('coin'.indexOf(coin.classList) > -1) {
+                        const title = document.querySelector('.view').getAttribute('title');
+                        if (title !== '总播放数--') {
+                            clearInterval(timer);
+                            addUI(document.querySelector('#arc_toolbar_report .ops'));
+                        } else ++retryTime;
+                    } else if ('coin-info'.indexOf(coin.classList) > -1) { // 新版番剧页面
+                        const coinStr = coin.innerText;
+                        if (coinStr !== '--') {
+                            clearInterval(timer);
+                            addUI(document.querySelector('#toolbar_module'));
+                        } else ++retryTime;
                     } else ++retryTime;
                 }, 1000);
-            } else { // 老的番剧页面
+            } else { // 老页面
                 this.interval(containerSelectors).then(() => {
                     const retryMax = 10;
                     let retryTime = 0;
