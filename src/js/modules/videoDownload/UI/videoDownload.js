@@ -1,3 +1,5 @@
+import {DataBase} from 'Libs/DataBase';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/12
@@ -8,6 +10,7 @@ import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {theme} from 'Styles';
+import {FlvContainer} from 'Libs/FlvContainer';
 
 const {color} = theme;
 
@@ -27,6 +30,7 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 const LinkGroup = styled.div`
+  position: relative;
   display: inline-block;
   margin: 4px;
   padding: 3px;
@@ -35,8 +39,9 @@ const LinkGroup = styled.div`
   font-style: normal;
   letter-spacing: 0.3px;
   background-color: #eaf4ff;
-  cursor: pointer;
   transition: all 0.3s, visibility 0s;
+  cursor: pointer;
+  overflow: hidden;
   &:hover {
     background-color: #d4eaff;
   }
@@ -60,13 +65,22 @@ const LinkGroupTitle = styled.span`
     color: ${color('google-grey-900')};
     font-size: 12px;
   }
+  cursor: pointer;
 `;
-
 const Suggest = styled.p`
   margin-bottom: 6px;
   margin-left: 5px;
   font-size: 10px;
   color: ${color('bilibili-pink')};
+`;
+const Progress = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: ${({percentage}) => percentage + '%'};
+  height: 2px;
+  background-color: ${color('bilibili-blue')};
+  transition: all 0.7s;
 `;
 
 export class VideoDownload extends React.Component {
@@ -78,6 +92,7 @@ export class VideoDownload extends React.Component {
             videoData: {},
             currentCid: NaN,
             originVideoData: {},
+            percentage: 0,
         };
         this.addListener();
         _.map(document.scripts, (o) => {
@@ -86,6 +101,7 @@ export class VideoDownload extends React.Component {
                 this.originVideoData = playInfo.data || playInfo;
             }
         });
+        this.containers = {};
     }
 
     componentDidMount() {
@@ -118,7 +134,7 @@ export class VideoDownload extends React.Component {
                             if (res.code === 10005) return console.error(res);
                             let downloadData;
                             if (type === 'new' && res.code === 0) {
-                                downloadData = res.data;
+                                downloadData = res.data || res.result;
                             } else if (type === 'old') {
                                 downloadData = res;
                             }
@@ -161,8 +177,33 @@ export class VideoDownload extends React.Component {
         });
     };
 
+    handleOnClickDownloadAll = (data) => {
+        console.warn(data);
+        const {currentCid} = this.state;
+        //const db = new DataBase(currentCid);
+        //db.add({name: currentCid, blob: new Blob([1])})
+        let container;
+        if (this.containers[currentCid]) container = this.containers[currentCid];
+        else container = new FlvContainer({...data, cid: currentCid});
+        this.containers[currentCid] = container;
+        container.download((percentage) => {
+            this.setState({percentage});
+        });
+        //$.ajax({
+        //    method: 'get',
+        //    url: 'https' + durl[0].url.slice(4),
+        //    contentType: 'application/octet-stream',
+        //    success: (res) => {
+        //        //console.warn(res);
+        //    },
+        //    error: (e) => {
+        //        console.error(e);
+        //    },
+        //});
+    };
+
     render() {
-        const {videoData, currentCid} = this.state;
+        const {videoData, currentCid, percentage} = this.state;
         let oldType = false;
         let morePart = false;
         const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
@@ -190,9 +231,12 @@ export class VideoDownload extends React.Component {
                                             href={o.url}
                                             onClick={() => this.handleOnClickDownload(o.url)}
                                         >{title}</a>
+                                        {durl.length > 1 && i === durl.length - 1 &&
+                                        <a onClick={() => this.handleOnClickDownloadAll(part)}>合并下载</a>}
                                     </React.Fragment>
                                 );
                             })}
+                            <Progress percentage={percentage}/>
                         </LinkGroup> : null);
                     })}
                     {!oldType && videoData[currentCid] ? <LinkGroupTitle><p>未支持的视频数据</p></LinkGroupTitle> : null}

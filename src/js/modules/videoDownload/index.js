@@ -41,7 +41,8 @@ export class VideoDownload extends Feature {
                 //'*://*.acgvideo.com/upgcxcode*',
 
                 '*://interface.bilibili.com/v2/playurl?cid=*', // 旧版页面必定加载，画质，下载地址
-                '*://bangumi.bilibili.com/player/web_api/v2/playurl?cid=*', // 番剧页面
+                //'*://bangumi.bilibili.com/player/web_api/v2/playurl?cid=*', // 老番剧页面
+                '*://api.bilibili.com/pgc/player/web/playurl?avid=*', // 新番剧页面
                 '*://api.bilibili.com/x/player/playurl?avid=*', // 新版页面切换清晰度时调用，返回字段和上面相同
 
                 '*://interface.bilibili.com/player?id=cid:*',
@@ -63,8 +64,8 @@ export class VideoDownload extends Feature {
                     url: url.origin + url.pathname,
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
-            } else if (pathname === '/x/player/playurl') {
-                //console.log(details, data);
+            } else if (pathname === '/x/player/playurl' || pathname === '/pgc/player/web/playurl') { // 新页面
+                //console.warn(details, data);
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'new',
