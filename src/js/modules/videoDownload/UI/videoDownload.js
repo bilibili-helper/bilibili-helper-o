@@ -1,4 +1,5 @@
 import {DataBase} from 'Libs/DataBase';
+import FLV from 'Libs/flv';
 
 /**
  * Author: DrowsyFlesh
@@ -179,15 +180,27 @@ export class VideoDownload extends React.Component {
 
     handleOnClickDownloadAll = (data) => {
         console.warn(data);
+        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
+        const partName = partDOM ? partDOM.innerHTML : '';
+        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1').getAttribute('title');
+        const filename = `${title}${partName ? `_${partName}` : ''}`;
         const {currentCid} = this.state;
-        //const db = new DataBase(currentCid);
-        //db.add({name: currentCid, blob: new Blob([1])})
         let container;
         if (this.containers[currentCid]) container = this.containers[currentCid];
         else container = new FlvContainer({...data, cid: currentCid});
         this.containers[currentCid] = container;
         container.download((percentage) => {
             this.setState({percentage});
+        }).then(blobs => {
+            const mergeBlob = FLV.mergeBlobs(blobs);
+            const url = (window.URL ? URL : window.webkitURL).createObjectURL(mergeBlob, {
+                type: 'video/x-flv',
+            });
+            chrome.downloads.download({
+                saveAs: true,
+                url,
+                filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
+            });
         });
         //$.ajax({
         //    method: 'get',

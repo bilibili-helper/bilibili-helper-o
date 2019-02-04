@@ -37,7 +37,7 @@ export class DataBase {
             return new Promise((resolve, reject) => {
                 const response = objectStore.get(order + '/0');
                 const onsuccess = (e) => {
-                    if (!e.target.result) resolve(null);
+                    if (!e.target.result) reject(null);
                     const res = e.target.result;
                     chunks.push(res.blob);
                     if (chunks.length === res.chunkCount) resolve(chunks);

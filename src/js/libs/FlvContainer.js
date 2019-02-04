@@ -8,7 +8,7 @@
 import _ from 'lodash';
 import URL from 'url-parse';
 import fetchProgress from 'fetch-progress';
-import {DataBase} from './DataBase.js';
+import {DataBase} from 'Libs/DataBase';
 
 const UPDATE_INTERVAL = 700;
 
@@ -30,22 +30,28 @@ export class FlvFragment {
     }
 
     download = () => {
-        return fetch(this.url.toString(), {
-            method: 'get',
-            mode: 'cors',
-            header: {
-                contentType: 'application/octet-stream',
-            },
-        })
-        .then(fetchProgress({
-            onProgress: _.throttle((progress) => {
-                this.progress = progress;
-                if (progress.percentage === 100) this.downloaded = true;
-            }, UPDATE_INTERVAL),
-        }))
-        .then(response => response.blob())
-        .then((blob) => {
-            this.db.add({order: this.order, quality: this.quality, blob});
+        return new Promise((resolve) => {
+            const res = this.db.get({order: this.order, quality: this.quality});
+            res.then((blob) => resolve(blob), () => {
+                fetch(this.url.toString(), {
+                    method: 'get',
+                    mode: 'cors',
+                    header: {
+                        contentType: 'application/octet-stream',
+                    },
+                })
+                .then(fetchProgress({
+                    onProgress: _.throttle((progress) => {
+                        this.progress = progress;
+                        if (progress.percentage === 100) this.downloaded = true;
+                    }, UPDATE_INTERVAL),
+                }))
+                .then(response => response.blob())
+                .then((blob) => {
+                    this.db.add({order: this.order, quality: this.quality, blob});
+                    resolve(blob);
+                });
+            });
         });
     };
 }
@@ -94,13 +100,16 @@ export class FlvContainer {
     download = (callback = () => {}) => {
         if (this.downloading) return;
         this.downloading = true;
-        this.fragments.forEach((fragment) => {
-            fragment.download();
+        return new Promise((resolve, reject) => {
+            const blobsPromise = new Promise.all(this.fragments.map((fragment) => {
+                return fragment.download();
+            })).catch(e => reject(e));
             const intervalNum = setInterval(() => {
                 if (this.percentage === 100) {
+                    clearInterval(intervalNum);
                     this.downloading = false;
                     this.db.add({order: 'end', quality: this.quality, blob: 1});
-                    clearInterval(intervalNum);
+                    blobsPromise.then(blobs => resolve(blobs));
                 }
                 callback(this.percentage);
             }, UPDATE_INTERVAL);
