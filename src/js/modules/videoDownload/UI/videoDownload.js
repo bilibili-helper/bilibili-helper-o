@@ -179,10 +179,10 @@ export class VideoDownload extends React.Component {
     };
 
     handleOnClickDownloadAll = (data) => {
-        console.warn(data);
         const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
-        const partName = partDOM ? partDOM.innerHTML : '';
-        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1').getAttribute('title');
+        const partName = partDOM ? partDOM.innerText : '';
+        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
+                              .getAttribute('title');
         const filename = `${title}${partName ? `_${partName}` : ''}`;
         const {currentCid} = this.state;
         let container;
@@ -192,14 +192,14 @@ export class VideoDownload extends React.Component {
         container.download((percentage) => {
             this.setState({percentage});
         }).then(blobs => {
-            const mergeBlob = FLV.mergeBlobs(blobs);
-            const url = (window.URL ? URL : window.webkitURL).createObjectURL(mergeBlob, {
-                type: 'video/x-flv',
-            });
-            chrome.downloads.download({
-                saveAs: true,
-                url,
-                filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
+            FLV.mergeBlobs(blobs).then(mergeBlob => {
+                const url = (window.URL ? URL : window.webkitURL).createObjectURL(mergeBlob, {type: 'video/x-flv'});
+                chrome.runtime.sendMessage({
+                    commend: 'downloadMergedFlv',
+                    url,
+                    cid: currentCid,
+                    filename,
+                });
             });
         });
         //$.ajax({

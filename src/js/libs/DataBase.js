@@ -32,12 +32,12 @@ export class DataBase {
 
     get = ({order, quality}) => {
         return this.getDB(quality).then(db => {
-            const objectStore = db.transaction(quality + 'get', 'readwrite').objectStore(quality);
+            const objectStore = db.transaction(quality, 'readwrite').objectStore(quality);
             const chunks = [];
             return new Promise((resolve, reject) => {
                 const response = objectStore.get(order + '/0');
                 const onsuccess = (e) => {
-                    if (!e.target.result) reject(null);
+                    if (!e.target.result) return reject(null);
                     const res = e.target.result;
                     chunks.push(res.blob);
                     if (chunks.length === res.chunkCount) resolve(chunks);
@@ -65,7 +65,7 @@ export class DataBase {
             });
         }
         return this.getDB(quality).then(db => {
-            const objectStore = db.transaction(quality + 'add', 'readwrite').objectStore(quality);
+            const objectStore = db.transaction(quality, 'readwrite').objectStore(quality);
             const addChunk = (resolve, reject) => {
                 if (chunks.length === 0) resolve();
                 const response = objectStore.add(chunks.shift());

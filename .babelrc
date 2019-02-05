@@ -16,7 +16,11 @@
         "syntax-dynamic-import",
         "transform-class-properties",
         "transform-function-bind",
-        "lodash"
+        "lodash",
+        "transform-runtime",
+        ["babel-plugin-transform-builtin-classes", {
+            "globals": ["Array", "Error", "HTMLElement", "DataView"]
+        }]
     ],
     "comments": false
 }

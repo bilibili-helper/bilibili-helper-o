@@ -113,6 +113,7 @@ module.exports = (env) => {
                 {
                     test: /\.js$/,
                     exclude: /\.min\.js/,
+                    include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',
                     ],

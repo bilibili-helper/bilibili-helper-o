@@ -88,6 +88,12 @@ export class VideoDownload extends Feature {
                     filename: message.filename,
                     cid: message.cid,
                 };
+            } else if(message.commend === 'downloadMergedFlv' && message.url && message.filename) {
+                chrome.downloads.download({
+                    saveAs: true,
+                    url: message.url,
+                    filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_') + '.flv',
+                });
             }
         });
         chrome.webRequest.onHeadersReceived.addListener((details) => {

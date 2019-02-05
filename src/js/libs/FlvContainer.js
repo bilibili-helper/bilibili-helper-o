@@ -32,13 +32,15 @@ export class FlvFragment {
     download = () => {
         return new Promise((resolve) => {
             const res = this.db.get({order: this.order, quality: this.quality});
-            res.then((blob) => resolve(blob), () => {
+            res.then((blob) => {
+                this.downloaded = true;
+                this.progress.percentage = 100;
+                this.progress.total = blob.size;
+                resolve(blob);
+            }, () => {
                 fetch(this.url.toString(), {
                     method: 'get',
                     mode: 'cors',
-                    header: {
-                        contentType: 'application/octet-stream',
-                    },
                 })
                 .then(fetchProgress({
                     onProgress: _.throttle((progress) => {
@@ -98,17 +100,16 @@ export class FlvContainer {
     };
 
     download = (callback = () => {}) => {
-        if (this.downloading) return;
+        if (this.downloading) return Promise.reject();
         this.downloading = true;
         return new Promise((resolve, reject) => {
-            const blobsPromise = new Promise.all(this.fragments.map((fragment) => {
+            const blobsPromise = Promise.all(this.fragments.map((fragment) => {
                 return fragment.download();
             })).catch(e => reject(e));
             const intervalNum = setInterval(() => {
                 if (this.percentage === 100) {
                     clearInterval(intervalNum);
                     this.downloading = false;
-                    this.db.add({order: 'end', quality: this.quality, blob: 1});
                     blobsPromise.then(blobs => resolve(blobs));
                 }
                 callback(this.percentage);
