@@ -1,6 +1,6 @@
 {
   "name": "bilibili-helper-master",
-  "version": "1.2.0-beta.2",
+  "version": "1.2.0-beta.3",
   "description": "bilibili-helper",
   "main": "index.js",
   "dependencies": {

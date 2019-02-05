@@ -1,30 +1,45 @@
 /**
  * Author: DrowsyFlesh
- * Create: 2019/2/4
+ * Create: 2019/2/5
  * Description:
  */
-
-/* flv容器，用来处理分段flv下载合并任务 */
 import _ from 'lodash';
 import URL from 'url-parse';
-import fetchProgress from 'fetch-progress';
 import {DataBase} from 'Libs/DataBase';
+import fetchProgress from 'fetch-progress';
 
 const UPDATE_INTERVAL = 700;
 
-export class FlvFragment {
-    constructor(db, cid, quality, {size, length, url, order}) {
-        this.size = size;
-        this.length = length;
-        this.url = new URL(url);
-        this.url.protocol = 'https:';
-        this.order = order;
-        this.quality = quality;
-
+export class Dash {
+    constructor(db, cid, {
+        order, SegmentBase, bandwidth, baseUrl, codecid, codecs,
+        frameRate, height, quality, mimeType, width,
+    }) {
         this.db = db;
         this.cid = cid;
+        this.quality = quality;
+        this.order = order;
+        this.url = new URL(baseUrl);
+        this.url.protocol = 'https:';
+        this.SegmentBase = SegmentBase;
+        this.bandwidth = bandwidth;
+        this.codecid = codecid;
+        this.codecs = codecs;
+        this.frameRate = frameRate;
+        this.height = height;
+        this.mimeType = mimeType;
+        this.width = width;
+
         this.downloaded = false;
         this.progress = {percentage: 0, total: 0, transferred: 0, speed: 0, remaining: 0};
+    }
+
+    get blob() {
+        return this.db.get({order: this.order, quality: this.quality});
+    }
+
+    get size() {
+        return this.blob.then(blob => blob.size);
     }
 
     download = () => {
@@ -36,9 +51,16 @@ export class FlvFragment {
                 this.progress.total = blob.size;
                 resolve(blob);
             }, () => {
+                let range = 'bytes=0-';
                 fetch(this.url.toString(), {
                     method: 'get',
                     mode: 'cors',
+                    referrerPolicy: 'no-referrer-when-downgrade',
+                    headers: {
+                        Range: range,
+                        'Access-Control-Request-Headers': 'range',
+                        'Access-Control-Request-Method': 'GET',
+                    },
                 })
                 .then(fetchProgress({
                     onProgress: _.throttle((progress) => {
@@ -56,29 +78,28 @@ export class FlvFragment {
     };
 }
 
-export class FlvContainer {
-    constructor({durl, format, quality, cid}) {
-        this.durl = durl;
+export class DashContainer {
+    constructor(data) {
+        const {format, quality, cid} = data;
+        this.data = data;
         this.format = format;
         this.quality = quality;
         this.cid = cid;
 
         this.initIndexDataBase();
-        this.initFragment();
+        this.initDash();
     }
 
-    // 返回容器内是否所有片段都下载完毕的状态
     get downloaded() {
-        const downloadedNum = _.compact(this.fragments.map((fragment) => fragment.downloaded)).length;
-        return downloadedNum === this.fragments.length;
+        return this.dash.downloaded;
     }
 
     get percentage() {
-        let sum = 0;
-        this.fragments.forEach((fragment) => {
-            sum = sum + fragment.progress.percentage;
-        });
-        return Math.round(sum / this.fragments.length);
+        return this.dash.progress.percentage;
+    }
+
+    get size() {
+        return Promise.all(this.dashes.map(dash => dash.size)).then(sizeArray => _.sum(sizeArray));
     }
 
     initIndexDataBase = () => {
@@ -86,16 +107,19 @@ export class FlvContainer {
         this.db = new DataBase(this.cid);
     };
 
-    initFragment = () => {
-        this.fragments = this.durl.map((data) => new FlvFragment(this.db, this.cid, this.quality, data));
+    initDash = (quality = parseInt(this.quality)) => {
+        this.dash = [];
+        const currentQualityDash = _.find(this.data.dash.video, {id: quality});
+        currentQualityDash.order = 0;
+        currentQualityDash.quality = quality;
+        this.dash = new Dash(this.db, this.cid, currentQualityDash);
     };
 
     download = (callback = () => {}) => {
         if (this.downloading) return Promise.reject();
         this.downloading = true;
         return new Promise((resolve, reject) => {
-            const blobsPromise = Promise.all(this.fragments.map((fragment) => fragment.download()))
-                                        .catch(e => reject(e));
+            const blobsPromise = this.dash.download().catch(e => reject(e));
             const intervalNum = setInterval(() => {
                 if (this.percentage === 100) {
                     clearInterval(intervalNum);
@@ -105,9 +129,6 @@ export class FlvContainer {
                 callback(this.percentage);
             }, UPDATE_INTERVAL);
         });
-    };
 
-    clear = (quality) => {
-        return this.db.clear(quality);
     };
 }

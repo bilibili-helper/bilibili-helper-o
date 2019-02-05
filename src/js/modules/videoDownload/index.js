@@ -21,7 +21,11 @@ export class VideoDownload extends Feature {
                 on: true,
                 hasUI: true,
                 title: '视频下载',
-                description: '不支持新页面，但有时候会成功，建议不使用"自动"清晰度',
+                description: '支持新播放页面视频下载，分段合并下载，分段单独下载功能',
+                type: 'checkbox',
+                options: [
+                    {key: 'showPiece', title: '显示FLV分段', on: false, description: '如果视频源包含分段，则显示分段下载按钮'},
+                ],
             },
         });
         this.messageStore = new MessageStore('videoDownloadDOMInitialized');
@@ -88,11 +92,11 @@ export class VideoDownload extends Feature {
                     filename: message.filename,
                     cid: message.cid,
                 };
-            } else if(message.commend === 'downloadMergedFlv' && message.url && message.filename) {
+            } else if(message.commend === 'downloadMergedVideo' && message.url && message.filename) {
                 chrome.downloads.download({
                     saveAs: true,
                     url: message.url,
-                    filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_') + '.flv',
+                    filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
             }
         });

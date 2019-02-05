@@ -83,4 +83,18 @@ export class DataBase {
     del = () => {
 
     };
+
+    clear = (objectName) => {
+        return this.getDB(objectName).then(db => {
+            return new Promise((resolve, reject) => {
+                const objectStore = db.transaction(objectName, 'readwrite').objectStore(objectName);
+                if (objectStore) {
+                    const response = objectStore.clear();
+                    response.onsuccess = () => {
+                        resolve();
+                    };
+                } else reject();
+            });
+        });
+    };
 }

@@ -1,3 +1,4 @@
+import {DashContainer} from 'Libs/DashContainer';
 import {DataBase} from 'Libs/DataBase';
 import FLV from 'Libs/flv';
 
@@ -42,6 +43,7 @@ const LinkGroup = styled.div`
   background-color: #eaf4ff;
   transition: all 0.3s, visibility 0s;
   cursor: pointer;
+  word-break: break-all;
   overflow: hidden;
   &:hover {
     background-color: #d4eaff;
@@ -94,6 +96,8 @@ export class VideoDownload extends React.Component {
             currentCid: NaN,
             originVideoData: {},
             percentage: 0,
+            downloading: false,
+            settings: null,
         };
         this.addListener();
         _.map(document.scripts, (o) => {
@@ -108,7 +112,31 @@ export class VideoDownload extends React.Component {
     componentDidMount() {
         this.inited = true;
         chrome.runtime.sendMessage({commend: 'videoDownloadDOMInitialized'});
+        chrome.runtime.sendMessage({
+            commend: 'getSetting',
+            feature: 'videoDownload',
+        }, (settings) => {
+            this.setState({settings});
+        });
     }
+
+    getFilename = () => {
+        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
+        const partName = partDOM ? partDOM.innerText : '';
+        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
+                              .getAttribute('title');
+        return `${title}${partName ? `_${partName}` : ''}`;
+    };
+
+    getContainer = (type, currentCid, data) => {
+        if (this.containers[currentCid]) return this.containers[currentCid];
+        else switch (type) {
+            case 'flv':
+                return this.containers[currentCid] = new FlvContainer({...data, cid: currentCid});
+            case 'mp4':
+                return this.containers[currentCid] = new DashContainer({...data, cid: currentCid});
+        }
+    };
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -140,12 +168,12 @@ export class VideoDownload extends React.Component {
                                 downloadData = res;
                             }
 
-                            const {accept_quality, accept_description, durl, quality} = downloadData;
-                            const currentData = {accept_quality, accept_description, durl};
+                            const {accept_quality, accept_description, durl, quality, dash} = downloadData;
+                            const currentData = {accept_quality, accept_description, durl, dash};
 
                             videoData[currentCid] = {[quality]: currentData};
 
-                            this.setState({videoData, currentCid});
+                            this.setState({videoData, currentCid, percentage: 0});
                         },
                     });
                 }
@@ -166,7 +194,7 @@ export class VideoDownload extends React.Component {
         });
     };
 
-    handleOnClickDownload = (downloadUrl) => {
+    handleOnClickDownloadFLV = (downloadUrl) => {
         const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
         const partName = partDOM ? partDOM.innerHTML : '';
         const title = document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title');
@@ -178,81 +206,118 @@ export class VideoDownload extends React.Component {
         });
     };
 
-    handleOnClickDownloadAll = (data) => {
-        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
-        const partName = partDOM ? partDOM.innerText : '';
-        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
-                              .getAttribute('title');
-        const filename = `${title}${partName ? `_${partName}` : ''}`;
+    handleOnClickDownloadMp4 = (data) => {
         const {currentCid} = this.state;
-        let container;
-        if (this.containers[currentCid]) container = this.containers[currentCid];
-        else container = new FlvContainer({...data, cid: currentCid});
-        this.containers[currentCid] = container;
+        this.setState({downloading: true});
+
+        const container = this.getContainer('mp4', currentCid, data);
+        container.download((percentage) => {
+            this.setState({percentage});
+        }).then((blob) => {
+            this.setState({downloading: false});
+            const url = (window.URL ? URL : window.webkitURL).createObjectURL(blob, {type: 'video/mp4'});
+            chrome.runtime.sendMessage({
+                commend: 'downloadMergedVideo',
+                url,
+                cid: currentCid,
+                filename: this.getFilename() + '.mp4',
+            });
+        }).catch(e => e);
+    };
+
+    handleOnClickDownloadFLVAll = (data) => {
+        const {currentCid} = this.state;
+        this.setState({downloading: true});
+
+        // get quality
+        if (!data.quality) data.quality = parseInt(document.querySelector('.bilibili-player-video-btn-quality > div ul li.bui-select-item-active')
+                                                           .getAttribute('data-value'));
+        // init container
+        const container = this.getContainer('flv', currentCid, data);
+        // start download
         container.download((percentage) => {
             this.setState({percentage});
         }).then(blobs => {
             FLV.mergeBlobs(blobs).then(mergeBlob => {
+                this.setState({downloading: false});
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(mergeBlob, {type: 'video/x-flv'});
                 chrome.runtime.sendMessage({
-                    commend: 'downloadMergedFlv',
+                    commend: 'downloadMergedVideo',
                     url,
                     cid: currentCid,
-                    filename,
+                    filename: this.getFilename() + '.flv',
                 });
             });
-        });
-        //$.ajax({
-        //    method: 'get',
-        //    url: 'https' + durl[0].url.slice(4),
-        //    contentType: 'application/octet-stream',
-        //    success: (res) => {
-        //        //console.warn(res);
-        //    },
-        //    error: (e) => {
-        //        console.error(e);
-        //    },
-        //});
+        }).catch(e => e);
+    };
+
+    /*handleOnClickClearFLVCache = (data) => {
+        const {currentCid} = this.state;
+        const quality = data.quality || parseInt(document.querySelector('.bilibili-player-video-btn-quality > div ul li.bui-select-item-active')
+                                                         .getAttribute('data-value'));
+        if (this.containers[currentCid]) {
+            const container = this.containers[currentCid];
+            container.clear(quality);
+        }
+    };*/
+
+    renderFLV = (videoData) => {
+        const {downloading, settings} = this.state;
+        const showPiece = (settings && _.find(settings.options, {key: 'showPiece'})) || {on: false};
+        const {quality, durl, accept_description, accept_quality, currentCid, percentage} = videoData;
+        if (!showPiece.on) { // 不显示分段
+            const title = accept_description[accept_quality.indexOf(+quality)];
+            return (
+                <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
+                    <a onClick={() => this.handleOnClickDownloadFLVAll(videoData)}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>
+                    <Progress percentage={percentage}/>
+                </LinkGroup>
+            );
+        } else return (
+            <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
+                {_.map(durl, (o, i) => {
+                    const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
+                    return (
+                        <React.Fragment key={i}>
+                            {durl.length > 1 && i === 0 ? <LinkGroupTitle key={`title-${quality}-${i}`}>{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
+
+                            <a key={i} referrerPolicy="unsafe-url" href={o.url} onClick={() => this.handleOnClickDownloadFLV(o.url)}>{title}</a>
+
+                            {durl.length > 1 && i === durl.length - 1 && <a onClick={() => this.handleOnClickDownloadFLVAll(videoData)}>{downloading ? `下载中 (${percentage}%)` : '合并下载'}</a>}
+                            {/*{durl.length > 1 && i === durl.length - 1 && this.containers[currentCid] && this.containers[currentCid].percentage === 100 &&*/}
+                            {/*<a onClick={() => this.handleOnClickClearFLVCache(videoData)}>清理缓存</a>}*/}
+                        </React.Fragment>
+                    );
+                })}
+                <Progress percentage={percentage}/>
+            </LinkGroup>
+        );
+    };
+
+    renderDash = (videoData) => {
+        const {downloading} = this.state;
+        const {quality, accept_description, accept_quality, percentage} = videoData;
+        const title = accept_description[accept_quality.indexOf(+quality)];
+        return (
+            <LinkGroup downloading={downloading} disabled={downloading}>
+                {<a onClick={() => this.handleOnClickDownloadMp4(videoData)}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>}
+                <Progress percentage={percentage}/>
+            </LinkGroup>
+        );
     };
 
     render() {
         const {videoData, currentCid, percentage} = this.state;
-        let oldType = false;
-        let morePart = false;
-        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
-        const partName = partDOM ? partDOM.innerHTML : '';
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
-                {morePart && <Suggest>若分段较多，可以尝试切换清晰度以重新获取下载数据</Suggest>}
                 <Container>
                     {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
-                        const {accept_quality, accept_description, durl} = part;
-                        if (durl) oldType = true;
-                        if (durl && durl.length > 3) morePart = true;
-                        return (oldType ? <LinkGroup key={quality}>
-                            {_.map(durl, (o, i) => {
-                                const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
-                                return (
-                                    <React.Fragment key={i}>
-                                        {durl.length > 1 && i === 0 ? <LinkGroupTitle
-                                            key={`title-${quality}-${i}`}
-                                        >{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
-                                        <a
-                                            key={i}
-                                            referrerPolicy="unsafe-url"
-                                            href={o.url}
-                                            onClick={() => this.handleOnClickDownload(o.url)}
-                                        >{title}</a>
-                                        {durl.length > 1 && i === durl.length - 1 &&
-                                        <a onClick={() => this.handleOnClickDownloadAll(part)}>合并下载</a>}
-                                    </React.Fragment>
-                                );
-                            })}
-                            <Progress percentage={percentage}/>
-                        </LinkGroup> : null);
+                        part.quality = quality;
+                        part.currentCid = currentCid;
+                        part.percentage = percentage;
+                        return (part.durl ? this.renderFLV : this.renderDash)(part);
                     })}
-                    {!oldType && videoData[currentCid] ? <LinkGroupTitle><p>未支持的视频数据</p></LinkGroupTitle> : null}
                     {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>
