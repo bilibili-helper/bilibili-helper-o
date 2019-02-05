@@ -7,5 +7,6 @@
     "第三方引用声明": [
         "本项目中使用的 ASS 格式弹幕转换脚本修改自 tiansh 以 <a href\"http://www.mozilla.org/MPL/2.0/\" target=\"_blank\">Mozilla Public License 2.0</a> 发布的开源项目 <a href=\"https://github.com/tiansh/us-danmaku\" target=\"_blank\">us-danmaku</a>",
         "本项目中使用的本地 CRC32 反查脚本修改自 xmcp 以 <a href=\"https://github.com/xmcp/pakku.js/blob/master/LICENSE.txt\" target=\"_blank\">GPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/xmcp/pakku.js\" target=\"_blank\">pakku.js</a> 中的 CRC32 Cracker"
+        "本项目中使用的本地 FLV 合并功能 来自自 qli5 以 <a href=\"https://github.com/liqi0816/bilitwin/blob/2.0-nightly/LICENSE\" target=\"_blank\">MPL 许可协议</a> 发布的开源项目 <a href=\"https://github.com/liqi0816/bilitwin\" target=\"_blank\">bilitwin</a>"
     ]
 }
