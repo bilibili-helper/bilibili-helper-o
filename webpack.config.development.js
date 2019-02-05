@@ -159,6 +159,11 @@ module.exports = (env) => {
             }),
             (manifestJSON && new WriteJsonPlugin({
                 object: manifestJSON,
+                path: '../src/',
+                filename: 'manifest.json',
+            })),
+            (manifestJSON && new WriteJsonPlugin({
+                object: manifestJSON,
                 path: '/',
                 filename: 'manifest.json',
             })),
