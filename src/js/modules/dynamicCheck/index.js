@@ -85,7 +85,7 @@ export class DynamicCheck extends Feature {
     // 检查未读推送
     checkNew = () => this.userId.then((userId) => $.ajax({
         type: 'get',
-        url: apis.dynamic_new + `?uid=${userId}&type_list=8,64,512`,
+        url: apis.dynamic_new + `?uid=${userId}&type_list=8,512`,
         success: (dynamic) => {
             if (dynamic.code === 0) {
                 if (dynamic.data.new_num > 0) {

@@ -111,7 +111,6 @@ export class DynamicBox extends React.Component {
 
     render() {
         const {feedList} = this.state;
-        console.warn(feedList);
         return (
             feedList && feedList.length > 0 ? <FeedsContainer>
                 {_.map(feedList, ({card}, index) => {
