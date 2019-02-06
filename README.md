@@ -16,6 +16,9 @@ An auxiliary extension for Bilibili (bilibili.com) which allows users to bypass 
 
 https://bilihelper.guguke.net
 
+## Group
+QQ:548321019 - 哔哩哔哩助手养老群 - 发布测试版本
+
 ## Wiki
 
 https://github.com/zacyu/bilibili-helper/wiki
