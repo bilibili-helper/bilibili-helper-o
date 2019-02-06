@@ -87,12 +87,7 @@ export class DynamicCheck extends Feature {
         type: 'get',
         url: apis.dynamic_new + `?uid=${userId}&type_list=8,512`,
         success: (dynamic) => {
-            if (dynamic.code === 0) {
-                if (dynamic.data.new_num > 0) {
-                    chrome.browserAction.setBadgeText({text: String(dynamic.data.new_num)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                }
-                this.getFeed(dynamic.data).then(this.sendNotification);
-            }
+            if (dynamic.code === 0) this.getFeed(dynamic.data).then(this.sendNotification);
         },
     }));
 
@@ -102,12 +97,13 @@ export class DynamicCheck extends Feature {
             this.lastCheckTime = Date.now();
             const newFeedList = _.compact(_.map(data.cards.slice(0, data.new_num), (card) => {
                 if (!~_.findIndex(this.feedList, (o) => o.desc.dynamic_id === card.desc.dynamic_id)) return card;
-                else return;
             }));
             this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
             if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
-            if (newFeedList.length > 0) resolve(newFeedList);
-            else resolve();
+            if (newFeedList.length > 0) {
+                chrome.browserAction.setBadgeText({text: String(data.new_num)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+                resolve(newFeedList);
+            } else resolve();
         });
     };
 
