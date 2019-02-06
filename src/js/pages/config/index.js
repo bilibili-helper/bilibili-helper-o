@@ -48,7 +48,7 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
 const Figure = styled.figure`
   position: absolute;
   left: calc(50% + 380px);
-  bottom: 4px;
+  bottom: 7px;
   z-index: 0;
   figcaption {
     text-align: center;

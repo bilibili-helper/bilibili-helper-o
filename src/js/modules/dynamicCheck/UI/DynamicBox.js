@@ -11,9 +11,12 @@ import moment from 'moment';
 import {createTab} from 'Utils';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
-  padding: 9px 0 9px 10px;
+  margin: 9px 0 9px 10px;
   max-height: 258px;
   overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const FeedBox = styled.div.attrs({className: 'feed-box'})`
   position: relative;
@@ -30,9 +33,6 @@ const FeedBox = styled.div.attrs({className: 'feed-box'})`
   }
   &:last-of-type {
     margin-bottom: 0;
-  }
-  &::-webkit-scrollbar {
-    display: none;
   }
 `;
 
@@ -102,31 +102,84 @@ export class DynamicBox extends React.Component {
     toDuration(seconds) {
         const duration = moment.duration(seconds, 'seconds');
         const hoursStr = duration.hours();
-        const minutesStr = String(duration.minutes()).padStart(2,0)
-        const secondsStr = String(duration.seconds()).padStart(2,0)
+        const minutesStr = String(duration.minutes()).padStart(2, 0);
+        const secondsStr = String(duration.seconds()).padStart(2, 0);
         let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
         if (durationStr[0] === '0') durationStr = durationStr.slice(1);
         return durationStr;
     }
 
+    createLinkByType = (type, data) => {
+        switch(type) {
+            case 8:
+                return 'https://www.bilibili.com/video/av' + data.stat.aid;
+            case 16:
+                return 'https://vc.bilibili.com/video/' + data.item.id;
+            case 64:
+                console.warn(data);
+                return 'https://www.bilibili.com/read/cv' + data.id;
+            case 512:
+                return data.url;
+        }
+    }
+
+    // up投稿
+    renderType8 = ({index, link, owner, title, pic, duration}) => (
+        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedImg style={{backgroundImage: `url(${pic})`}}/>
+            <FeedInfo>
+                <span title={owner.name}>{owner.name}</span>
+                <span>{this.toDuration(duration)}</span>
+            </FeedInfo>
+            <FeedTitle title={title}>{title}</FeedTitle>
+        </FeedBox>
+    );
+
+    // up小视频
+    renderType16 = ({index, link, item, user}) => (
+        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedImg style={{backgroundImage: `url(${item.cover.default})`}}/>
+            <FeedInfo>
+                <span title={user.name}>{user.name}</span>
+                <span>小视频</span>
+            </FeedInfo>
+            <FeedTitle title={item.description}>{item.description}</FeedTitle>
+        </FeedBox>
+    );
+
+    // 专栏
+    renderType64 = ({index, link, author, title, banner_url}) => (
+        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedImg style={{backgroundImage: `url(${banner_url})`}}/>
+            <FeedInfo>
+                <span title={author.name}>{author.name}</span>
+                <span>专栏</span>
+            </FeedInfo>
+            <FeedTitle title={title}>{title}</FeedTitle>
+        </FeedBox>
+    );
+
+    // 番剧
+    renderType512 = ({index, link, new_desc, cover, apiSeasonInfo}) => (
+        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedImg style={{backgroundImage: `url(${cover})`}}/>
+            <FeedInfo>
+                <span title={apiSeasonInfo.title}>{apiSeasonInfo.title}</span>
+                <span>番剧</span>
+            </FeedInfo>
+            <FeedTitle title={new_desc}>{new_desc}</FeedTitle>
+        </FeedBox>
+    );
+
     render() {
         const {feedList} = this.state;
         return (
             feedList && feedList.length > 0 ? <FeedsContainer>
-                {_.map(feedList, ({card}, index) => {
-                    const {owner, jump_url, pic, title, duration: seconds, new_desc, cover, url, apiSeasonInfo} = JSON.parse(card);
-                    const link = jump_url ? 'https' + jump_url.slice(0,8) : url;
-                    const cardTitle = apiSeasonInfo ? `${apiSeasonInfo.title}：${new_desc}`: title;
-                    return (
-                        <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
-                            <FeedImg style={{backgroundImage: `url(${pic || cover})`}}/>
-                            <FeedInfo>
-                                {owner && <span title={owner.name}>{owner.name}</span>}
-                                {seconds && <span>{this.toDuration(seconds)}</span>}
-                            </FeedInfo>
-                            <FeedTitle title={cardTitle}>{cardTitle}</FeedTitle>
-                        </FeedBox>
-                    );
+                {_.map(feedList, (card, index) => {
+                    const typeFunc = this[`renderType${card.desc.type}`];
+                    const cardData = JSON.parse(card.card);
+                    const link = this.createLinkByType(card.desc.type, cardData);
+                    if (typeFunc) return typeFunc({index, link, ...cardData});
                 })}
             </FeedsContainer> : <div/>
         );
