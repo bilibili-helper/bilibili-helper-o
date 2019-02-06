@@ -8,7 +8,7 @@
 import _ from 'lodash';
 import URL from 'url-parse';
 import fetchProgress from 'fetch-progress';
-import {DataBase} from 'Libs/DataBase';
+import {DataBase} from './lib/DataBase';
 
 const UPDATE_INTERVAL = 700;
 

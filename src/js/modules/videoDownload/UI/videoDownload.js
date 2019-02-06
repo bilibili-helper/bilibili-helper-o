@@ -1,7 +1,3 @@
-import {DashContainer} from 'Libs/DashContainer';
-import {DataBase} from 'Libs/DataBase';
-import FLV from 'Libs/flv';
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/12
@@ -12,7 +8,9 @@ import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {theme} from 'Styles';
-import {FlvContainer} from 'Libs/FlvContainer';
+import FLV from '../lib/flv';
+import {FlvContainer} from '../FlvContainer';
+import {DashContainer} from '../DashContainer';
 
 const {color} = theme;
 

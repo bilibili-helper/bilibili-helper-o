@@ -124,18 +124,18 @@ class VideoSubtitleDownload extends React.Component {
         const {subtitleData, permissionMap} = this.state;
         return (
             <React.Fragment>
-                {subtitleData.length !== 0 && <Title>外挂字幕下载</Title>}
+                {!permissionMap.login || subtitleData.length !== 0 && <Title>外挂字幕下载</Title>}
                 <Container>
-                    {permissionMap.login ? <React.Fragment>
-                        {subtitleData.length !== 0 && <LinkGroup>
-                            {subtitleData.map((subtitle) => {
-                                const {id, lan_doc} = subtitle;
-                                return (<LinkGroupTitle key={id} onClick={() => this.handleDownloadSubtitle(subtitle)}>
-                                    <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
-                                </LinkGroupTitle>);
-                            })}
-                        </LinkGroup>}
-                    </React.Fragment> : <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
+                    {!permissionMap.login && <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
+                    {permissionMap.login && subtitleData.length !== 0 &&
+                    <LinkGroup>
+                        {subtitleData.map((subtitle) => {
+                            const {id, lan_doc} = subtitle;
+                            return (<LinkGroupTitle key={id} onClick={() => this.handleDownloadSubtitle(subtitle)}>
+                                <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
+                            </LinkGroupTitle>);
+                        })}
+                    </LinkGroup>}
                 </Container>
             </React.Fragment>
         );

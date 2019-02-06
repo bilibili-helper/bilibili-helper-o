@@ -75,8 +75,8 @@ export class DynamicCheck extends Feature {
             type: 'get',
             url: apis.unread,
             success: (unreadRes) => {
-                if (unreadRes.code === 0 && unreadRes.data.all > 0) {
-                    chrome.browserAction.setBadgeText({text: String(unreadRes.data.all)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+                if (unreadRes.code === 0 && unreadRes.data.count > 0) {
+                    chrome.browserAction.setBadgeText({text: String(unreadRes.data.count)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                     this.getFeed().then(this.sendNotification);
                 }
             },

@@ -83,13 +83,15 @@ export class VersionManager extends Feature {
                 method: 'get',
                 url: apis.version,
                 success: (res) => {
-                    if (this.compareVersion(res.version, version) > 0 || updateTime < res.update_time) { // 比较今天是否有检测过
+                    const compareRes = this.compareVersion(res.version, version);
+                    if (compareRes < 0) res.version = version;
+                    if (updateTime < res.update_time) { // 比较今天是否有检测过
                         this.setVersion(res);
                         this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
                     } else if (notifyOn) {
-                        this.setVersion({...res, version});
+                        this.setVersion(res);
                         this.sendNotification(__('checkVersionNoNewVersion'), ignore);
-                    } else this.setVersion({version, ...res});
+                    }
                 },
                 error: (e) => {
                     this.sendNotification(__('checkVersionGetUpdateError'), ignore);

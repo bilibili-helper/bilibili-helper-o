@@ -5,8 +5,8 @@
  */
 import _ from 'lodash';
 import URL from 'url-parse';
-import {DataBase} from 'Libs/DataBase';
 import fetchProgress from 'fetch-progress';
+import {DataBase} from './lib/DataBase';
 
 const UPDATE_INTERVAL = 700;
 
@@ -129,6 +129,5 @@ export class DashContainer {
                 callback(this.percentage);
             }, UPDATE_INTERVAL);
         });
-
     };
 }
