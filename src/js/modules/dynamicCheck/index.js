@@ -100,9 +100,10 @@ export class DynamicCheck extends Feature {
     getFeed = (data) => {
         return new Promise((resolve) => {
             this.lastCheckTime = Date.now();
-            const newFeedList = _.map(data.cards.slice(0, data.new_num), (card) => {
+            const newFeedList = _.compact(_.map(data.cards.slice(0, data.new_num), (card) => {
                 if (!~_.findIndex(this.feedList, (o) => o.desc.dynamic_id === card.desc.dynamic_id)) return card;
-            });
+                else return;
+            }));
             this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
             if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
             if (newFeedList.length > 0) resolve(newFeedList);
