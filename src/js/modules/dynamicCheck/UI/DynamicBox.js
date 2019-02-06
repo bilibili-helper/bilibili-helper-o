@@ -7,6 +7,7 @@
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import {createTab} from 'Utils';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
@@ -98,17 +99,32 @@ export class DynamicBox extends React.Component {
         createTab(link);
     };
 
+    toDuration(seconds) {
+        const duration = moment.duration(seconds, 'seconds');
+        const hoursStr = duration.hours();
+        const minutesStr = String(duration.minutes()).padStart(2,0)
+        const secondsStr = String(duration.seconds()).padStart(2,0)
+        let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
+        if (durationStr[0] === '0') durationStr = durationStr.slice(1);
+        return durationStr;
+    }
+
     render() {
         const {feedList} = this.state;
         return (
             feedList && feedList.length > 0 ? <FeedsContainer>
-                {_.map(feedList, (feed, index) => {
-                    const {link, pic, title, author, duration} = feed.addition;
+                {_.map(feedList, ({card}, index) => {
+                    const {owner, jump_url, pic, title, duration: seconds, new_desc, cover, url, apiSeasonInfo} = JSON.parse(card);
+                    const link = jump_url ? 'https' + jump_url.slice(0,8) : url;
+                    const cardTitle = apiSeasonInfo ? `${apiSeasonInfo.title}：${new_desc}`: title;
                     return (
                         <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
-                            <FeedImg style={{backgroundImage: `url(${pic})`}}/>
-                            <FeedInfo><span title={author}>{author}</span><span>{duration}</span></FeedInfo>
-                            <FeedTitle title={title}>{title}</FeedTitle>
+                            <FeedImg style={{backgroundImage: `url(${pic || cover})`}}/>
+                            <FeedInfo>
+                                {owner && <span title={owner.name}>{owner.name}</span>}
+                                {seconds && <span>{this.toDuration(seconds)}</span>}
+                            </FeedInfo>
+                            <FeedTitle title={cardTitle}>{cardTitle}</FeedTitle>
                         </FeedBox>
                     );
                 })}

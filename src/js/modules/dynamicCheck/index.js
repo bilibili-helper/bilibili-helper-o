@@ -11,6 +11,8 @@ import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index';
 
+const MAX_LIST_NUMBERS = 10;
+
 export class DynamicCheck extends Feature {
     constructor() {
         super({
@@ -31,12 +33,23 @@ export class DynamicCheck extends Feature {
         });
     }
 
+    get userId() {
+        return new Promise((resolve, reject) => {
+            chrome.cookies.get({
+                url: 'http://www.bilibili.com/',
+                name: 'DedeUserID',
+            }, (cookie) => {
+                if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) resolve(cookie.value);
+                else reject();
+            });
+        });
+    }
+
     launch = () => {
         this.feedList = [];
-        this.newFeedList = [];
         this.lastCheckTime = Date.now();
         chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
-        this.checkUnread();
+        this.checkNew();
     };
 
     pause = () => {
@@ -49,7 +62,7 @@ export class DynamicCheck extends Feature {
         chrome.alarms.onAlarm.addListener((alarm) => {
             switch (alarm.name) {
                 case 'dynamicCheck':
-                    this.checkUnread();
+                    this.checkNew();
                     break;
             }
         });
@@ -70,54 +83,45 @@ export class DynamicCheck extends Feature {
     };
 
     // 检查未读推送
-    checkUnread = () => {
-        return $.ajax({
-            type: 'get',
-            url: apis.unread,
-            success: (unreadRes) => {
-                if (unreadRes.code === 0 && unreadRes.data.count > 0) {
-                    chrome.browserAction.setBadgeText({text: String(unreadRes.data.count)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                    this.getFeed().then(this.sendNotification);
+    checkNew = () => this.userId.then((userId) => $.ajax({
+        type: 'get',
+        url: apis.dynamic_new + `?uid=${userId}&type_list=8,64,512`,
+        success: (dynamic) => {
+            if (dynamic.code === 0) {
+                if (dynamic.data.new_num > 0) {
+                    chrome.browserAction.setBadgeText({text: String(dynamic.data.new_num)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                 }
-            },
-        });
-    };
+                this.getFeed(dynamic.data).then(this.sendNotification);
+            }
+        },
+    }));
 
     // 获取并存储推送数据 - 不缓存到本地(￣.￣)
-    getFeed = async () => {
-        return $.ajax({
-            type: 'get',
-            url: apis.feed,
-            success: (feedRes) => {
-                const {code, data} = feedRes;
-                if (code === 0 && data.feeds instanceof Array) { // 当返回数据正确(￣.￣)
-                    this.lastCheckTime = Date.now();
-                    this.newFeedList = _.filter(data.feeds, v => !~_.findIndex(this.feedList, {id: v.id}));
-                    this.feedList = this.newFeedList.concat(this.feedList).slice(0, 9);
-                } else { // 请求出问题了！
-                    console.error(feedRes);
-                    chrome.browserAction.setBadgeText({text: 'error'});
-                }
-            },
+    getFeed = (data) => {
+        return new Promise((resolve) => {
+            this.lastCheckTime = Date.now();
+            const newFeedList = data.cards.slice(0, data.new_num);
+            this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
+            if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
+            if (newFeedList.length > 0) resolve(newFeedList);
+            else resolve();
         });
     };
 
     // 弹出推送通知窗口
-    sendNotification = () => {
+    sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
-        notificationState && notificationState.on && _.map(this.newFeedList, (feed) => {
-            const {id: aid, addition, ctime} = feed;
-            if (feed && ctime !== this.lastCheckTime) { // 请求到不同时间，有新推送啦(～￣▽￣)～
-                chrome.notifications.create('bilibili-helper-aid' + aid, {
-                    type: 'basic',
-                    iconUrl: addition.pic || getURL('/statics/imgs/cat.svg'),
-                    title: __('extensionNotificationTitle'),
-                    message: `${addition.author}: ${addition.title}`,
-                    buttons: [{title: __('extensionNotificationWatch')}],
-                }, (notificationId) => {
-                    this.feedList[notificationId] = addition.link;
-                });
-            } else return; // 为什么检测过了呢Σ(oﾟдﾟoﾉ)
+        notificationState && notificationState.on && _.map(newFeedList, ({card}) => {
+            const {owner: {name}, jump_url, pic, aid, title} = JSON.parse(card);
+            chrome.notifications.create('bilibili-helper-aid' + aid, {
+                type: 'basic',
+                iconUrl: pic || getURL('/statics/imgs/cat.svg'),
+                title: __('extensionNotificationTitle'),
+                message: `${name}: ${title}`,
+                buttons: [{title: __('extensionNotificationWatch')}],
+            }, (notificationId) => {
+                this.feedList[notificationId] = jump_url;
+            });
         });
     };
 };

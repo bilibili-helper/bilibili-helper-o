@@ -6,4 +6,5 @@
 export default {
     unread: 'https://api.bilibili.com/x/feed/unread/count?type=0',
     feed: 'https://api.bilibili.com/x/feed/pull?ps=1&type=0',
+    dynamic_new: 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new',
 };
