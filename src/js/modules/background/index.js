@@ -3,11 +3,12 @@
  * Create: 2018/12/9
  * Description:
  */
+import $ from 'jquery';
 import {Feature} from 'Libs/feature';
 import {__, createTab, hasNewVersion, version} from 'Utils';
 
 export class Background extends Feature {
-    constructor(){
+    constructor() {
         super({
             name: 'background',
             kind: 'other',
@@ -15,8 +16,8 @@ export class Background extends Feature {
                 on: true,
                 hide: true,
                 toggle: false,
-            }
-        })
+            },
+        });
     }
 
     addListener = () => {
@@ -36,5 +37,5 @@ export class Background extends Feature {
         if (typeof (chrome.runtime.setUninstallURL) === 'function') { // 卸载成功后自动跳到助手官网页面
             chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + version);
         }
-    }
+    };
 }

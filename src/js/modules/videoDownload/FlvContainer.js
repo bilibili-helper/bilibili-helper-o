@@ -74,11 +74,13 @@ export class FlvContainer {
     }
 
     get percentage() {
-        let sum = 0;
+        let total = 0;
+        let transferred = 0;
         this.fragments.forEach((fragment) => {
-            sum = sum + fragment.progress.percentage;
+            total += fragment.size;
+            transferred += fragment.progress.transferred || 0;
         });
-        return Math.round(sum / this.fragments.length);
+        return Math.round(transferred / total * 100);
     }
 
     initIndexDataBase = () => {
