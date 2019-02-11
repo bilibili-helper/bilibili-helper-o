@@ -14,7 +14,7 @@ import FLV from '../lib/flv';
 import {FlvContainer} from '../FlvContainer';
 import {DashContainer} from '../DashContainer';
 
-//const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
+const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 
 const {color} = theme;
 
@@ -221,28 +221,36 @@ export class VideoDownload extends React.Component {
         const container = this.getContainer('mp4', currentCid, videoData);
         container.download((percentage) => {
             this.setState({percentage});
-        }).then(([blobArray, [videoCodec, audioCodec]]) => {
+        }).then(([buffers, [videoCodec, audioCodec]]) => {
             //console.warn(window.URL.createObjectURL(blobArray[0]));
-            const readAdBuffer = (blob) => new Promise(resolve => {
-                const fileReader = new FileReader();
-                fileReader.onload = function(event) {
-                    resolve(event.target.result);
-                };
-                fileReader.readAsArrayBuffer(blob);
+            this.setState({downloading: false});
+            var result = ffmpeg({
+                MEMFS: [{name: 'video.mp4', data: buffers[0]},{name: 'audio.mp4', data: buffers[1]}],
+                arguments: [
+                    '-i', 'video.mp4',
+                    '-i', 'audio.mp4',
+                    '-c:v',
+                    'copy',
+                    '-c:a',
+                    'aac',
+                    '-strict',
+                    'experimental',
+                    'output.mp4'
+                ],
+                // Ignore stdin read requests.
+                stdin: function() {},
             });
-            Promise.all([readAdBuffer(blobArray[0]), readAdBuffer(blobArray[1])])
-                   .then((buffers) => {
-                       this.setState({downloading: false});
-                       /*
-                       * output
-                       * */
-                       /*chrome.runtime.sendMessage({
-                           commend: 'downloadMergedVideo',
-                           url,
-                           cid: currentCid,
-                           filename: this.getFilename() + '.flv',
-                       });*/
-                   });
+            const out = result.MEMFS[0];
+            console.warn(out);
+            /*
+            * output
+            * */
+            /*chrome.runtime.sendMessage({
+                commend: 'downloadMergedVideo',
+                url,
+                cid: currentCid,
+                filename: this.getFilename() + '.flv',
+            });*/
         }).catch(e => console.warn(e));
     };
 

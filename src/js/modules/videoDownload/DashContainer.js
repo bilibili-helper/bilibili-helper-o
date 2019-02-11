@@ -41,6 +41,13 @@ export class Dash {
     get size() {
         return this.blob.then(blob => blob.size);
     }*/
+    readAdBuffer = (blob) => new Promise(resolve => {
+        const fileReader = new FileReader();
+        fileReader.onload = function(event) {
+            resolve(event.target.result);
+        };
+        fileReader.readAsArrayBuffer(blob);
+    });
 
     download = () => {
         return new Promise((resolve) => {
@@ -49,7 +56,7 @@ export class Dash {
                 this.downloaded = true;
                 this.progress.percentage = 100;
                 this.progress.total = blob.size;
-                resolve(blob);
+                resolve(this.readAdBuffer(blob));
             }, () => {
                 let range = 'bytes=0-';
                 fetch(this.url.toString(), {
@@ -71,7 +78,7 @@ export class Dash {
                 .then(response => response.blob())
                 .then((blob) => {
                     this.db.add({order: this.order, quality: this.quality, blob});
-                    resolve(blob);
+                    resolve(this.readAdBuffer(blob));
                 });
             });
         });

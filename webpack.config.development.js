@@ -98,11 +98,12 @@ module.exports = (env) => {
             extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
         },
         module: {
+            noParse: /ffmpeg/,
             rules: [
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js)/,
+                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -112,7 +113,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /\.min\.js/,
+                    exclude: /(\.min\.js|\/ffmpeg\/)/,
                     include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',

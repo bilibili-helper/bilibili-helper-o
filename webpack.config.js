@@ -114,11 +114,12 @@ module.exports = (env) => {
             extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
         },
         module: {
+            noParse: /ffmpeg/,
             rules: [
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(node_modules|modules|libs\/jquery)/,
+                    exclude: /(node_modules|modules|libs\/jquery|\/ffmpeg\/)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -128,7 +129,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /libs\/jquery/,
+                    exclude: /(libs\/jquery|\/ffmpeg\/)/,
                     loaders: [
                         'babel-loader',
                     ],
