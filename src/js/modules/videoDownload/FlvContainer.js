@@ -58,7 +58,6 @@ export class FlvFragment {
 
 export class FlvContainer {
     constructor({durl, format, quality, cid}) {
-        console.warn(durl, format, quality, cid);
         this.durl = durl;
         this.format = format;
         this.quality = quality;
@@ -90,7 +89,6 @@ export class FlvContainer {
     };
 
     initFragment = () => {
-        console.warn(this.durl);
         this.fragments = this.durl.map((data) => new FlvFragment(this.db, this.cid, this.quality, data));
     };
 

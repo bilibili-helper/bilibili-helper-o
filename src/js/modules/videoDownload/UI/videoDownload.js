@@ -173,7 +173,6 @@ export class VideoDownload extends React.Component {
                                 downloadData = res;
                             }
 
-                            console.warn(downloadData);
                             const {accept_quality, accept_description, durl, quality, dash} = downloadData;
                             const currentData = {accept_quality, accept_description, durl, dash};
                             if (!videoData[currentCid]) videoData[currentCid] = {};
@@ -186,7 +185,6 @@ export class VideoDownload extends React.Component {
 
                 sendResponse(true);
             } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
-                console.warn(1);
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
                     const {quality} = this.originVideoData;
@@ -226,12 +224,12 @@ export class VideoDownload extends React.Component {
                 MEMFS: [{name: 'video.mp4', data: buffers[0]}, {name: 'audio.mp4', data: buffers[1]}],
                 arguments: [
                     '-i', 'video.mp4',
-                    '-i', 'audio.mp4',
+                    //'-i', 'audio.mp4',
                     '-c:v', 'copy',
-                    '-c:a', 'aac',
-                    '-strict', 'experimental',
-                    '-map', '0:v:0',
-                    '-map', '1:a:0',
+                    //'-c:a', 'aac',
+                    //'-strict', 'experimental',
+                    //'-map', '0:v:0',
+                    //'-map', '1:a:0',
                     'output.mp4',
                 ],
                 // Ignore stdin read requests.
@@ -344,7 +342,6 @@ export class VideoDownload extends React.Component {
     render() {
         const {videoData, currentCid, percentage, currentQuality} = this.state;
         const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
-        console.warn(loadedVideo);
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>

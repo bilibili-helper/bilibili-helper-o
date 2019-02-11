@@ -69,7 +69,6 @@ export class VideoDownload extends Feature {
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl' || pathname === '/pgc/player/web/playurl') { // 新页面
-                //console.warn(details, data);
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'new',

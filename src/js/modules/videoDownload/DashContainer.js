@@ -77,7 +77,6 @@ export class Dash {
                 }))
                 .then(response => response.blob())
                 .then((blob) => {
-                    console.warn(this.quality);
                     this.db.add({order: this.order, quality: this.quality, blob});
                     resolve(this.readAsBuffer(blob));
                 });

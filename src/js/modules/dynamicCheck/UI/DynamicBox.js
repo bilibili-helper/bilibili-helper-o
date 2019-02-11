@@ -116,7 +116,6 @@ export class DynamicBox extends React.Component {
             case 16:
                 return 'https://vc.bilibili.com/video/' + data.item.id;
             case 64:
-                console.warn(data);
                 return 'https://www.bilibili.com/read/cv' + data.id;
             case 512:
                 return data.url;

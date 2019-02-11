@@ -11,7 +11,7 @@ import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index';
 
-const MAX_LIST_NUMBERS = 12;
+const MAX_LIST_NUMBERS = 10;
 
 export class DynamicCheck extends Feature {
     constructor() {
@@ -45,6 +45,7 @@ export class DynamicCheck extends Feature {
                 },
             },
         });
+        this.lastDynamicID = null;
     }
 
     get userId() {
@@ -100,36 +101,39 @@ export class DynamicCheck extends Feature {
     checkNew = () => this.userId.then((userId) => {
         const options = this.settings.subPage.options;
         const typeList = _.compact(options.map((option) => option.on ? option.value : null));
+        const dynamic_id = this.lastDynamicID ? `&update_num_dy_id=${this.lastDynamicID}` : '';
         if (typeList.length > 0) return $.ajax({
             type: 'get',
-            url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList.join(',')}`,
-            success: (dynamic) => {
-                if (dynamic.code === 0) this.getFeed(dynamic.data).then(this.sendNotification);
+            url: apis.dynamic_num + `?uid=${userId}&type_list=${typeList.join(',')}` + dynamic_id,
+            success: ({code, data: {new_num}, message}) => {
+                if (code === 0) {
+                    if (!this.lastDynamicID) this.getFeed(typeList);
+                    else if (new_num > 0) this.getFeed(typeList, new_num).then(this.sendNotification);
+                } else console.error(message);
             },
         });
     });
 
     // 处理推送数据 - 不缓存到本地(￣.￣)
-    getFeed = (data) => {
-        return new Promise((resolve) => {
-            this.lastCheckTime = Date.now();
-            let newFeedList = _.compact(_.map(data.cards.slice(0, data.new_num), (card) => {
-                if (!~_.findIndex(this.feedList, (o) => o.desc.dynamic_id === card.desc.dynamic_id)) {
-                    try {
-                        card.card = JSON.parse(card.card);
-                        return card;
-                    } catch (e) {
-                        console.warn(e);
+    getFeed = (typeList, newNum = 0) => {
+        return new Promise(resolve => this.userId.then((userId) => {
+            $.ajax({
+                type: 'get',
+                url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList}`,
+                success: ({code, data}) => {
+                    if (code === 0) {
+                        let newFeedList = _.map(data.cards.slice(0, newNum));
+                        this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
+                        if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
+                        this.lastDynamicID = newFeedList.length > 0 ? newFeedList[0].desc.dynamic_id_str : this.feedList[0].desc.dynamic_id_str;
+                        if (newFeedList.length > 0 && newNum > 0) {
+                            chrome.browserAction.setBadgeText({text: String(newFeedList.length)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+                            resolve(newFeedList);
+                        } else resolve();
                     }
-                }
-            }));
-            this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
-            if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
-            if (newFeedList.length > 0) {
-                chrome.browserAction.setBadgeText({text: String(data.new_num)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                resolve(newFeedList);
-            } else resolve();
-        });
+                },
+            });
+        }));
     };
 
     createLinkByType = (type, data) => {
@@ -149,8 +153,7 @@ export class DynamicCheck extends Feature {
     sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
         notificationState && notificationState.on && _.map(newFeedList, ({card, desc}) => {
-            const cardData = (typeof card.card === 'string' ? JSON.parse(card.card) : card.card) || card;
-            console.warn(card, cardData);
+            const cardData = JSON.parse(card);
             const picture = cardData.pic || (cardData.item && cardData.item.cover.default) || cardData.banner_url || cardData.cover;
             const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
             const topic = cardData.title || (cardData.item && cardData.item.description) || cardData.new_desc || '';

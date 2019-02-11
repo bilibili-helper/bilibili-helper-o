@@ -68,7 +68,6 @@ export class DataBase {
             });
         }
         return this.getDB(quality).then(db => {
-            console.warn(db);
             const objectStore = db.transaction(quality, 'readwrite').objectStore(quality);
             const addChunk = (resolve, reject) => {
                 if (chunks.length === 0) resolve();
