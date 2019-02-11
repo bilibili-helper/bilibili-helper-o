@@ -131,13 +131,15 @@ export class VideoDownload extends React.Component {
         return `${title}${partName ? `_${partName}` : ''}`;
     };
 
-    getContainer = (type, currentCid, data) => {
-        if (this.containers[currentCid]) return this.containers[currentCid];
-        else switch (type) {
+    getContainer = (type, currentCid, currentQuality, data) => {
+        if (!this.containers[currentCid]) this.containers[currentCid] = {};
+        if (this.containers[currentCid][currentQuality]) {
+            return this.containers[currentCid][currentQuality];
+        } else switch (type) {
             case 'flv':
-                return this.containers[currentCid] = new FlvContainer({...data, cid: currentCid});
+                return this.containers[currentCid][currentQuality] = new FlvContainer({...data, cid: currentCid});
             case 'mp4':
-                return this.containers[currentCid] = new DashContainer({...data, cid: currentCid});
+                return this.containers[currentCid][currentQuality] = new DashContainer({...data, cid: currentCid});
         }
     };
 
@@ -171,6 +173,7 @@ export class VideoDownload extends React.Component {
                                 downloadData = res;
                             }
 
+                            console.warn(downloadData);
                             const {accept_quality, accept_description, durl, quality, dash} = downloadData;
                             const currentData = {accept_quality, accept_description, durl, dash};
                             if (!videoData[currentCid]) videoData[currentCid] = {};
@@ -183,6 +186,7 @@ export class VideoDownload extends React.Component {
 
                 sendResponse(true);
             } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
+                console.warn(1);
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
                     const {quality} = this.originVideoData;
@@ -212,57 +216,48 @@ export class VideoDownload extends React.Component {
     handleOnClickDownloadMp4 = (videoData) => {
         const {currentCid, currentQuality} = this.state;
         this.setState({downloading: true});
-        const _appendBuffer = function(buffer1, buffer2) {
-            const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
-            tmp.set(new Uint8Array(buffer1), 0);
-            tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
-            return tmp.buffer;
-        };
-        const container = this.getContainer('mp4', currentCid, videoData);
+        const container = this.getContainer('mp4', currentCid, currentQuality, videoData);
         container.download((percentage) => {
             this.setState({percentage});
-        }).then(([buffers, [videoCodec, audioCodec]]) => {
-            //console.warn(window.URL.createObjectURL(blobArray[0]));
+        }).then((downloadData) => {
+            const [buffers, [videoCodec, audioCodec]] = downloadData;
             this.setState({downloading: false});
-            var result = ffmpeg({
-                MEMFS: [{name: 'video.mp4', data: buffers[0]},{name: 'audio.mp4', data: buffers[1]}],
+            let o = ffmpeg({
+                MEMFS: [{name: 'video.mp4', data: buffers[0]}, {name: 'audio.mp4', data: buffers[1]}],
                 arguments: [
                     '-i', 'video.mp4',
                     '-i', 'audio.mp4',
-                    '-c:v',
-                    'copy',
-                    '-c:a',
-                    'aac',
-                    '-strict',
-                    'experimental',
-                    'output.mp4'
+                    '-c:v', 'copy',
+                    '-c:a', 'aac',
+                    '-strict', 'experimental',
+                    '-map', '0:v:0',
+                    '-map', '1:a:0',
+                    'output.mp4',
                 ],
                 // Ignore stdin read requests.
                 stdin: function() {},
             });
-            const out = result.MEMFS[0];
-            console.warn(out);
-            /*
-            * output
-            * */
-            /*chrome.runtime.sendMessage({
+            const out = [...o.MEMFS[0].data];
+            o = null;
+            const url = window.URL.createObjectURL(new Blob([out], {type: `video/mp4; codecs="${videoCodec}, ${audioCodec}"`}));
+            chrome.runtime.sendMessage({
                 commend: 'downloadMergedVideo',
                 url,
                 cid: currentCid,
-                filename: this.getFilename() + '.flv',
-            });*/
+                filename: this.getFilename() + '.mp4',
+            });
         }).catch(e => console.warn(e));
     };
 
     handleOnClickDownloadFLVAll = (data) => {
-        const {currentCid} = this.state;
+        const {currentCid, currentQuality} = this.state;
         this.setState({downloading: true});
 
         // get quality
         if (!data.quality) data.quality = parseInt(document.querySelector('.bilibili-player-video-btn-quality > div ul li.bui-select-item-active')
                                                            .getAttribute('data-value'));
         // init container
-        const container = this.getContainer('flv', currentCid, data);
+        const container = this.getContainer('flv', currentCid, currentQuality, data);
         // start download
         container.download((percentage) => {
             this.setState({percentage});
@@ -349,11 +344,12 @@ export class VideoDownload extends React.Component {
     render() {
         const {videoData, currentCid, percentage, currentQuality} = this.state;
         const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
+        console.warn(loadedVideo);
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
                 <Container>
-                    {!_.isEmpty(loadedVideo) && (loadedVideo.durl ? this.renderFLV : this.renderDash)(percentage)}
+                    {!_.isEmpty(loadedVideo) && (!_.isEmpty(loadedVideo.durl) ? this.renderFLV : this.renderDash)(percentage)}
                     {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>

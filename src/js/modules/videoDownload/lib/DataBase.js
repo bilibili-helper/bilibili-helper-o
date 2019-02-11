@@ -11,8 +11,7 @@ export class DataBase {
     }
 
     getDB = (objectName) => {
-        if (this.db) return Promise.resolve(this.db);
-        else return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.dbRequest = window.indexedDB.open(this.dbName);
             this.dbRequest.onsuccess = (event) => {
                 this.db = event.target.result;
@@ -23,8 +22,12 @@ export class DataBase {
             };
             this.dbRequest.onupgradeneeded = (event) => {
                 const db = event.target.result;
-                if (!db.objectStoreNames.contains(this.dbName)) {
-                    db.createObjectStore(objectName, {keyPath: 'order'});
+                if (!db.objectStoreNames.contains(objectName)) {
+                    db.createObjectStore(112, {keyPath: 'order'});
+                    db.createObjectStore(80, {keyPath: 'order'});
+                    db.createObjectStore(64, {keyPath: 'order'});
+                    db.createObjectStore(32, {keyPath: 'order'});
+                    db.createObjectStore(16, {keyPath: 'order'});
                 }
             };
         });
@@ -65,6 +68,7 @@ export class DataBase {
             });
         }
         return this.getDB(quality).then(db => {
+            console.warn(db);
             const objectStore = db.transaction(quality, 'readwrite').objectStore(quality);
             const addChunk = (resolve, reject) => {
                 if (chunks.length === 0) resolve();
