@@ -110,7 +110,7 @@ export class DynamicBox extends React.Component {
     }
 
     createLinkByType = (type, data) => {
-        switch(type) {
+        switch (type) {
             case 8:
                 return 'https://www.bilibili.com/video/av' + data.stat.aid;
             case 16:
@@ -121,7 +121,7 @@ export class DynamicBox extends React.Component {
             case 512:
                 return data.url;
         }
-    }
+    };
 
     // up投稿
     renderType8 = ({index, link, owner, title, pic, duration}) => (
@@ -177,7 +177,7 @@ export class DynamicBox extends React.Component {
             feedList && feedList.length > 0 ? <FeedsContainer>
                 {_.map(feedList, (card, index) => {
                     const typeFunc = this[`renderType${card.desc.type}`];
-                    const cardData = JSON.parse(card.card);
+                    const cardData = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
                     const link = this.createLinkByType(card.desc.type, cardData);
                     if (typeFunc) return typeFunc({index, link, ...cardData});
                 })}

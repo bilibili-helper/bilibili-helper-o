@@ -1,3 +1,4 @@
+/* global require */
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/12
@@ -8,9 +9,12 @@ import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {theme} from 'Styles';
+import URL from 'url-parse';
 import FLV from '../lib/flv';
 import {FlvContainer} from '../FlvContainer';
 import {DashContainer} from '../DashContainer';
+
+//const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 
 const {color} = theme;
 
@@ -96,6 +100,7 @@ export class VideoDownload extends React.Component {
             percentage: 0,
             downloading: false,
             settings: null,
+            currentQuality: null,
         };
         this.addListener();
         _.map(document.scripts, (o) => {
@@ -168,10 +173,10 @@ export class VideoDownload extends React.Component {
 
                             const {accept_quality, accept_description, durl, quality, dash} = downloadData;
                             const currentData = {accept_quality, accept_description, durl, dash};
+                            if (!videoData[currentCid]) videoData[currentCid] = {};
+                            videoData[currentCid][quality] = currentData;
 
-                            videoData[currentCid] = {[quality]: currentData};
-
-                            this.setState({videoData, currentCid, percentage: 0});
+                            this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
                         },
                     });
                 }
@@ -185,7 +190,7 @@ export class VideoDownload extends React.Component {
                     const cidData = videoData[message.cid] || {};
                     cidData[quality] = currentData;
                     videoData[message.cid] = cidData;
-                    this.setState({currentCid: message.cid, videoData});
+                    this.setState({currentCid: message.cid, videoData, currentQuality: quality});
                 }
                 sendResponse(true);
             }
@@ -204,23 +209,41 @@ export class VideoDownload extends React.Component {
         });
     };
 
-    handleOnClickDownloadMp4 = (data) => {
-        const {currentCid} = this.state;
+    handleOnClickDownloadMp4 = (videoData) => {
+        const {currentCid, currentQuality} = this.state;
         this.setState({downloading: true});
-
-        const container = this.getContainer('mp4', currentCid, data);
+        const _appendBuffer = function(buffer1, buffer2) {
+            const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+            tmp.set(new Uint8Array(buffer1), 0);
+            tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+            return tmp.buffer;
+        };
+        const container = this.getContainer('mp4', currentCid, videoData);
         container.download((percentage) => {
             this.setState({percentage});
-        }).then((blob) => {
-            this.setState({downloading: false});
-            const url = (window.URL ? URL : window.webkitURL).createObjectURL(blob, {type: 'video/mp4'});
-            chrome.runtime.sendMessage({
-                commend: 'downloadMergedVideo',
-                url,
-                cid: currentCid,
-                filename: this.getFilename() + '.mp4',
+        }).then(([blobArray, [videoCodec, audioCodec]]) => {
+            //console.warn(window.URL.createObjectURL(blobArray[0]));
+            const readAdBuffer = (blob) => new Promise(resolve => {
+                const fileReader = new FileReader();
+                fileReader.onload = function(event) {
+                    resolve(event.target.result);
+                };
+                fileReader.readAsArrayBuffer(blob);
             });
-        }).catch(e => e);
+            Promise.all([readAdBuffer(blobArray[0]), readAdBuffer(blobArray[1])])
+                   .then((buffers) => {
+                       this.setState({downloading: false});
+                       /*
+                       * output
+                       * */
+                       /*chrome.runtime.sendMessage({
+                           commend: 'downloadMergedVideo',
+                           url,
+                           cid: currentCid,
+                           filename: this.getFilename() + '.flv',
+                       });*/
+                   });
+        }).catch(e => console.warn(e));
     };
 
     handleOnClickDownloadFLVAll = (data) => {
@@ -259,10 +282,10 @@ export class VideoDownload extends React.Component {
         }
     };*/
 
-    renderFLV = (videoData) => {
-        const {downloading, settings} = this.state;
+    renderFLV = (percentage) => {
+        const {downloading, settings, videoData, currentQuality: quality = null, currentCid} = this.state;
         const showPiece = (settings && _.find(settings.options, {key: 'showPiece'})) || {on: false};
-        const {quality, durl, accept_description, accept_quality, currentCid, percentage} = videoData;
+        const {durl, accept_description, accept_quality} = videoData[currentCid][quality];
         if (!showPiece.on) { // 不显示分段
             const title = accept_description[accept_quality.indexOf(+quality)];
             return (
@@ -277,13 +300,22 @@ export class VideoDownload extends React.Component {
                     const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
                     return (
                         <React.Fragment key={i}>
-                            {durl.length > 1 && i === 0 ? <LinkGroupTitle key={`title-${quality}-${i}`}>{accept_description[accept_quality.indexOf(+quality)]}</LinkGroupTitle> : null}
+                            {durl.length > 1 && i === 0 ?
+                             <LinkGroupTitle key={`title-${quality}-${i}`}>
+                                 {accept_description[accept_quality.indexOf(+quality)]}
+                             </LinkGroupTitle> : null}
 
-                            <a key={i} referrerPolicy="unsafe-url" href={o.url} onClick={() => this.handleOnClickDownloadFLV(o.url)}>{title}</a>
+                            <a
+                                key={i}
+                                href={o.url}
+                                referrerPolicy="unsafe-url"
+                                onClick={() => this.handleOnClickDownloadFLV(o.url)}
+                            >{title}</a>
 
-                            {durl.length > 1 && i === durl.length - 1 && <a onClick={() => this.handleOnClickDownloadFLVAll(videoData)}>{downloading ? `下载中 (${percentage}%)` : '合并下载'}</a>}
-                            {/*{durl.length > 1 && i === durl.length - 1 && this.containers[currentCid] && this.containers[currentCid].percentage === 100 &&*/}
-                            {/*<a onClick={() => this.handleOnClickClearFLVCache(videoData)}>清理缓存</a>}*/}
+                            {durl.length > 1 && i === durl.length - 1 &&
+                            <a onClick={() => this.handleOnClickDownloadFLVAll(videoData[currentCid][quality])}>
+                                {downloading ? `下载中 ${percentage ? `(${percentage}%)` : ''}` : '合并下载'}
+                            </a>}
                         </React.Fragment>
                     );
                 })}
@@ -292,30 +324,28 @@ export class VideoDownload extends React.Component {
         );
     };
 
-    renderDash = (videoData) => {
-        const {downloading} = this.state;
-        const {quality, accept_description, accept_quality, percentage} = videoData;
+    renderDash = (percentage) => {
+        const {downloading, currentQuality: quality, videoData, currentCid} = this.state;
+        const {accept_description, accept_quality} = videoData[currentCid][quality];
         const title = accept_description[accept_quality.indexOf(+quality)];
         return (
             <LinkGroup downloading={downloading} disabled={downloading}>
-                {<a onClick={() => this.handleOnClickDownloadMp4(videoData)}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>}
+                {<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>
+                    {title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}
+                </a>}
                 <Progress percentage={percentage}/>
             </LinkGroup>
         );
     };
 
     render() {
-        const {videoData, currentCid, percentage} = this.state;
+        const {videoData, currentCid, percentage, currentQuality} = this.state;
+        const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
                 <Container>
-                    {videoData[currentCid] && _.map(videoData[currentCid], (part, quality) => {
-                        part.quality = quality;
-                        part.currentCid = currentCid;
-                        part.percentage = percentage;
-                        return (part.durl ? this.renderFLV : this.renderDash)(part);
-                    })}
+                    {!_.isEmpty(loadedVideo) && (loadedVideo.durl ? this.renderFLV : this.renderDash)(percentage)}
                     {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>

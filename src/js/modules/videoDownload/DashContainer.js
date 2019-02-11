@@ -21,11 +21,11 @@ export class Dash {
         this.order = order;
         this.url = new URL(baseUrl);
         this.url.protocol = 'https:';
-        this.SegmentBase = SegmentBase;
-        this.bandwidth = bandwidth;
-        this.codecid = codecid;
+        //this.SegmentBase = SegmentBase;
+        //this.bandwidth = bandwidth;
+        //this.codecid = codecid;
         this.codecs = codecs;
-        this.frameRate = frameRate;
+        //this.frameRate = frameRate;
         this.height = height;
         this.mimeType = mimeType;
         this.width = width;
@@ -34,13 +34,13 @@ export class Dash {
         this.progress = {percentage: 0, total: 0, transferred: 0, speed: 0, remaining: 0};
     }
 
-    get blob() {
+    /*get blob() {
         return this.db.get({order: this.order, quality: this.quality});
     }
 
     get size() {
         return this.blob.then(blob => blob.size);
-    }
+    }*/
 
     download = () => {
         return new Promise((resolve) => {
@@ -70,7 +70,7 @@ export class Dash {
                 }))
                 .then(response => response.blob())
                 .then((blob) => {
-                    //this.db.add({order: this.order, quality: this.quality, blob});
+                    this.db.add({order: this.order, quality: this.quality, blob});
                     resolve(blob);
                 });
             });
@@ -80,54 +80,87 @@ export class Dash {
 
 export class DashContainer {
     constructor(data) {
-        const {format, quality, cid} = data;
+        const {format, quality, cid, timelength} = data;
         this.data = data;
         this.format = format;
         this.quality = quality;
         this.cid = cid;
 
         this.initIndexDataBase();
-        this.initDash();
+        this.initDashAudio();
+        this.initDashVideo();
+
+        // 以下为创建track需要的参数
+        this.timescale = 1000;
+
     }
 
-    get downloaded() {
-        return this.dash.downloaded;
-    }
+    //get downloaded() {
+    //    return this.dash.downloaded;
+    //}
 
     get percentage() {
-        return this.dash.progress.percentage;
+        return this.video.progress.percentage;
     }
 
-    get size() {
-        return Promise.all(this.dashes.map(dash => dash.size)).then(sizeArray => _.sum(sizeArray));
-    }
+    //get size() {
+    //    return Promise.all(this.dashes.map(dash => dash.size)).then(sizeArray => _.sum(sizeArray));
+    //}
 
     initIndexDataBase = () => {
         if (!window.indexedDB) console.error('Your browser is not support feature: indexedDB');
         this.db = new DataBase(this.cid);
     };
 
-    initDash = (quality = parseInt(this.quality)) => {
-        this.dash = [];
-        const currentQualityDash = _.find(this.data.dash.video, {id: quality});
-        currentQualityDash.order = 0;
+    initDashAudio = (quality = parseInt(this.quality)) => {
+        const currentQualityDash = _.find(this.data.dash.audio, {id: 30280});
         currentQualityDash.quality = quality;
-        this.dash = new Dash(this.db, this.cid, currentQualityDash);
+        currentQualityDash.order = 'audio';
+        //const meta = {
+        //    id: this.quality,
+        //    duration: this.data.timelength,
+        //    presentWidth: currentQualityDash.width,
+        //    presentHeight: currentQualityDash.height,
+        //    type: 'video',
+        //}
+        this.audio = new Dash(this.db, this.cid, currentQualityDash);
+    };
+
+    initDashVideo = (quality = parseInt(this.quality)) => {
+        const currentQualityDash = _.find(this.data.dash.video, {id: quality});
+        currentQualityDash.quality = quality;
+        currentQualityDash.order = 'video';
+        //const meta = {
+        //    id: this.quality,
+        //    duration: this.data.timelength,
+        //    presentWidth: currentQualityDash.width,
+        //    presentHeight: currentQualityDash.height,
+        //    type: 'video',
+        //}
+        this.video = new Dash(this.db, this.cid, currentQualityDash);
     };
 
     download = (callback = () => {}) => {
         if (this.downloading) return Promise.reject();
         this.downloading = true;
         return new Promise((resolve, reject) => {
-            const blobsPromise = this.dash.download().catch(e => reject(e));
+            const videoBlobsPromise = this.video.download().catch(e => reject(e));
+            const audioBlobsPromise = this.audio.download().catch(e => reject(e));
             const intervalNum = setInterval(() => {
                 if (this.percentage === 100) {
                     clearInterval(intervalNum);
                     this.downloading = false;
-                    blobsPromise.then(blobs => resolve(blobs));
+                    Promise.all([videoBlobsPromise, audioBlobsPromise]).then(blobArray => {
+                        //const mimeCodec = `video/mp4; codecs="${this.video.codecs}, ${this.audio.codecs}"`;
+                        resolve([blobArray, [this.video.codecs, this.audio.codecs]]);
+                    });
                 }
                 callback(this.percentage);
             }, UPDATE_INTERVAL);
         });
     };
+
+    installVideo() {
+
+    }
 }

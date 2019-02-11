@@ -1,10 +1,11 @@
 {
   "name": "bilibili-helper-master",
-  "version": "1.2.0-beta.4",
+  "version": "1.2.0-beta.5",
   "description": "bilibili-helper",
   "main": "index.js",
   "dependencies": {
     "color": "^3.0.0",
+    "ffmpeg.js": "^3.1.9001",
     "history": "^4.7.2",
     "jquery": "^3.3.1",
     "lodash": "^4.17.10",

@@ -113,10 +113,14 @@ export class DynamicCheck extends Feature {
     getFeed = (data) => {
         return new Promise((resolve) => {
             this.lastCheckTime = Date.now();
-            const newFeedList = _.compact(_.map(data.cards.slice(0, data.new_num), (card) => {
+            let newFeedList = _.compact(_.map(data.cards.slice(0, data.new_num), (card) => {
                 if (!~_.findIndex(this.feedList, (o) => o.desc.dynamic_id === card.desc.dynamic_id)) {
-                    card.card = JSON.parse(card);
-                    return card;
+                    try {
+                        card.card = JSON.parse(card.card);
+                        return card;
+                    } catch (e) {
+                        console.warn(e);
+                    }
                 }
             }));
             this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
@@ -129,27 +133,27 @@ export class DynamicCheck extends Feature {
     };
 
     createLinkByType = (type, data) => {
-        switch(type) {
+        switch (type) {
             case 8:
                 return 'https://www.bilibili.com/video/av' + data.stat.aid;
             case 16:
-                return 'https://vc.bilibili.com/video/' + data.id;
+                return 'https://vc.bilibili.com/video/' + data.item.id;
             case 64:
                 return 'https://www.bilibili.com/read/cv' + data.id;
             case 512:
                 return data.url;
         }
-    }
+    };
 
     // 弹出推送通知窗口
     sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
         notificationState && notificationState.on && _.map(newFeedList, ({card, desc}) => {
-            const cardData = JSON.parse(card);
-            const {owner, pic, title, item, banner_url, cover, user, author, new_desc} = cardData;
-            const picture = pic || (item && item.cover.default) || banner_url || cover;
-            const name = (owner && owner.name) || (user && user.name) || (author && author.name);
-            const topic = title || (item && item.description) || new_desc || '';
+            const cardData = (typeof card.card === 'string' ? JSON.parse(card.card) : card.card) || card;
+            console.warn(card, cardData);
+            const picture = cardData.pic || (cardData.item && cardData.item.cover.default) || cardData.banner_url || cardData.cover;
+            const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
+            const topic = cardData.title || (cardData.item && cardData.item.description) || cardData.new_desc || '';
             const link = this.createLinkByType(desc.type, cardData);
             chrome.notifications.create('bilibili-helper-aid' + Math.random(), {
                 type: 'basic',
