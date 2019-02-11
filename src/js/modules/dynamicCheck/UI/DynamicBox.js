@@ -176,11 +176,10 @@ export class DynamicBox extends React.Component {
             feedList && feedList.length > 0 ? <FeedsContainer>
                 {_.map(feedList, (card, index) => {
                     const typeFunc = this[`renderType${card.desc.type}`];
-                    const cardData = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
-                    const link = this.createLinkByType(card.desc.type, cardData);
-                    if (typeFunc) return typeFunc({index, link, ...cardData});
+                    const link = this.createLinkByType(card.desc.type, card.card);
+                    if (typeFunc) return typeFunc({index, link, ...card.card});
                 })}
-            </FeedsContainer> : <div/>
+            </FeedsContainer> : null
         );
     }
 }

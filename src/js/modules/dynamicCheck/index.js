@@ -115,14 +115,21 @@ export class DynamicCheck extends Feature {
     });
 
     // 处理推送数据 - 不缓存到本地(￣.￣)
-    getFeed = (typeList, newNum = 0) => {
+    getFeed = (typeList, newNum = MAX_LIST_NUMBERS) => {
         return new Promise(resolve => this.userId.then((userId) => {
             $.ajax({
                 type: 'get',
                 url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList}`,
                 success: ({code, data}) => {
                     if (code === 0) {
-                        let newFeedList = _.map(data.cards.slice(0, newNum));
+                        let newFeedList = _.map(data.cards.slice(0, newNum), (card) => {
+                            try {
+                                card.card =  typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
+                                return card;
+                            } catch (e) {
+                                console.warn(card);
+                            }
+                        });
                         this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
                         if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
                         this.lastDynamicID = newFeedList.length > 0 ? newFeedList[0].desc.dynamic_id_str : this.feedList[0].desc.dynamic_id_str;
@@ -153,7 +160,7 @@ export class DynamicCheck extends Feature {
     sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
         notificationState && notificationState.on && _.map(newFeedList, ({card, desc}) => {
-            const cardData = JSON.parse(card);
+            const cardData = card;
             const picture = cardData.pic || (cardData.item && cardData.item.cover.default) || cardData.banner_url || cardData.cover;
             const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
             const topic = cardData.title || (cardData.item && cardData.item.description) || cardData.new_desc || '';
