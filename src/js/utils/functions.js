@@ -5,6 +5,8 @@
  */
 /* global chrome */
 
+import moment from 'moment';
+
 /**
  * @param command {string}
  * @param key {string}
@@ -106,3 +108,13 @@ export const consoleLogo = () => {
 -... .. .-.. .. -... .. .-.. ..    .... . .-.. .--. . .-.                    version: ${version}
 `, 'color: #00a1d6');
 };
+
+export const toDuration = (seconds) => {
+    const duration = moment.duration(seconds, 'seconds');
+    const hoursStr = duration.hours();
+    const minutesStr = String(duration.minutes()).padStart(2, 0);
+    const secondsStr = String(duration.seconds()).padStart(2, 0);
+    let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
+    if (durationStr[0] === '0') durationStr = durationStr.slice(1);
+    return durationStr;
+}

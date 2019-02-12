@@ -98,7 +98,6 @@ module.exports = (env) => {
             extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
         },
         module: {
-            noParse: /ffmpeg/,
             rules: [
                 {
                     enforce: 'pre',

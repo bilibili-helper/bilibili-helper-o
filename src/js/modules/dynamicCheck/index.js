@@ -6,7 +6,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {getURL, __} from 'Utils';
+import {getURL, __, toDuration} from 'Utils';
 import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index';
@@ -115,19 +115,20 @@ export class DynamicCheck extends Feature {
     });
 
     // 处理推送数据 - 不缓存到本地(￣.￣)
-    getFeed = (typeList, newNum = MAX_LIST_NUMBERS) => {
+    getFeed = (typeList, newNum) => {
         return new Promise(resolve => this.userId.then((userId) => {
             $.ajax({
                 type: 'get',
                 url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList}`,
                 success: ({code, data}) => {
                     if (code === 0) {
-                        let newFeedList = _.map(data.cards.slice(0, newNum), (card) => {
+                        let newFeedList = _.map(data.cards.slice(0, newNum || MAX_LIST_NUMBERS), (card) => {
                             try {
-                                card.card =  typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
+                                card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
+                                if (card.card.duration) card.card.duration = toDuration(card.card.duration);
                                 return card;
                             } catch (e) {
-                                console.warn(card);
+                                console.warn(e, card);
                             }
                         });
                         this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);

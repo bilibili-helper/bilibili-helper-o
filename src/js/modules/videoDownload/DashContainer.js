@@ -160,6 +160,8 @@ export class DashContainer {
                     Promise.all([videoBlobsPromise, audioBlobsPromise]).then(blobArray => {
                         //const mimeCodec = `video/mp4; codecs="${this.video.codecs}, ${this.audio.codecs}"`;
                         resolve([blobArray, [this.video.codecs, this.audio.codecs]]);
+                        this.video = null;
+                        this.audio = null;
                     });
                 }
                 callback(this.percentage);

@@ -13,8 +13,7 @@ import URL from 'url-parse';
 import FLV from '../lib/flv';
 import {FlvContainer} from '../FlvContainer';
 import {DashContainer} from '../DashContainer';
-
-const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
+//const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 
 const {color} = theme;
 
@@ -218,32 +217,43 @@ export class VideoDownload extends React.Component {
         container.download((percentage) => {
             this.setState({percentage});
         }).then((downloadData) => {
-            const [buffers, [videoCodec, audioCodec]] = downloadData;
+            let [buffers, [videoCodec, audioCodec]] = downloadData;
             this.setState({downloading: false});
-            let o = ffmpeg({
-                MEMFS: [{name: 'video.mp4', data: buffers[0]}, {name: 'audio.mp4', data: buffers[1]}],
-                arguments: [
-                    '-i', 'video.mp4',
-                    //'-i', 'audio.mp4',
-                    '-c:v', 'copy',
-                    //'-c:a', 'aac',
-                    //'-strict', 'experimental',
-                    //'-map', '0:v:0',
-                    //'-map', '1:a:0',
-                    'output.mp4',
-                ],
-                // Ignore stdin read requests.
-                stdin: function() {},
-            });
-            const out = [...o.MEMFS[0].data];
-            o = null;
-            const url = window.URL.createObjectURL(new Blob([out], {type: `video/mp4; codecs="${videoCodec}, ${audioCodec}"`}));
-            chrome.runtime.sendMessage({
-                commend: 'downloadMergedVideo',
-                url,
-                cid: currentCid,
-                filename: this.getFilename() + '.mp4',
-            });
+            //const {MP4Box} = require('mp4box');
+            //const mp4 = new MP4Box(true);
+            //buffers[0].fileStart = 0;
+            //mp4.appendBuffer(buffers[0]);
+            //mp4.flush();
+            //console.warn(mp4, mp4.processSamples());
+            //console.warn(buffers);
+            //const url = window.URL.createObjectURL(new Blob([buffers[0]], {type: `video/mp4; codecs="${videoCodec}"`}));
+            //console.warn(url);
+            //let o = ffmpeg({
+            //    MEMFS: [{name: 'video.mp4', data: buffers[0]}, {name: 'audio.mp4', data: buffers[1]}],
+            //    arguments: [
+            //        '-i', 'video.mp4',
+            //        '-i', 'audio.mp4',
+            //        '-c', 'copy',
+            //        '-shortest',
+            //        //'-c:a', 'aac',
+            //        //'-strict', 'experimental',
+            //        '-map', '0:v',
+            //        '-map', '1:a',
+            //        'output.mp4',
+            //    ],
+            //    // Ignore stdin read requests.
+            //    stdin: function() {},
+            //});
+            //const out = [...o.MEMFS[0].data];
+            //o = null;
+            //buffers = null;
+            //const url = window.URL.createObjectURL(new Blob([out], {type: `video/mp4; codecs="${videoCodec}, ${audioCodec}"`}));
+            //chrome.runtime.sendMessage({
+            //    commend: 'downloadMergedVideo',
+            //    url,
+            //    cid: currentCid,
+            //    filename: this.getFilename() + '.mp4',
+            //});
         }).catch(e => console.warn(e));
     };
 
@@ -331,9 +341,10 @@ export class VideoDownload extends React.Component {
         const title = accept_description[accept_quality.indexOf(+quality)];
         return (
             <LinkGroup downloading={downloading} disabled={downloading}>
-                {<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>
-                    {title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}
-                </a>}
+                {/*{<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>*/}
+                    {/*{title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}*/}
+                {/*</a>}*/}
+                MP4下载功能存在没有声音的问题，暂时下架
                 <Progress percentage={percentage}/>
             </LinkGroup>
         );

@@ -31,12 +31,12 @@ const localesGroup = localesSupportList.map((name) => ({
 module.exports = (env) => {
     // sync version
     let manifestJSON, packageJSON;
+    packageJSON = require('./package.json');
+    manifestJSON = require('./src/manifest.json');
     if (process.env.npm_config_setversion) {
         const version = /^([\d.]+)(?:-beta\.)?(\d+)?/.exec(process.env.npm_config_setversion);
         if (version && version[1]) {
-            packageJSON = require('./package.json');
             packageJSON.version = process.env.npm_config_setversion;
-            manifestJSON = require('./src/manifest.json');
             manifestJSON.version = `${version[1]}${version[2] ? '.' + version[2] : ''}`;
         }
     }
@@ -114,12 +114,11 @@ module.exports = (env) => {
             extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
         },
         module: {
-            noParse: /ffmpeg/,
             rules: [
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(node_modules|modules|libs\/jquery|\/ffmpeg\/)/,
+                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -129,7 +128,8 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /(libs\/jquery|\/ffmpeg\/)/,
+                    exclude: /(\.min\.js|\/ffmpeg\/)/,
+                    include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',
                     ],
@@ -186,5 +186,5 @@ module.exports = (env) => {
             }),
             //new BundleAnalyzerPlugin(),
         ]),
-    }
+    };
 };

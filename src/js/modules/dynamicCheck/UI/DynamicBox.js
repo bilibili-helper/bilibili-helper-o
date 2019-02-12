@@ -99,16 +99,6 @@ export class DynamicBox extends React.Component {
         createTab(link);
     };
 
-    toDuration(seconds) {
-        const duration = moment.duration(seconds, 'seconds');
-        const hoursStr = duration.hours();
-        const minutesStr = String(duration.minutes()).padStart(2, 0);
-        const secondsStr = String(duration.seconds()).padStart(2, 0);
-        let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
-        if (durationStr[0] === '0') durationStr = durationStr.slice(1);
-        return durationStr;
-    }
-
     createLinkByType = (type, data) => {
         switch (type) {
             case 8:
@@ -128,7 +118,7 @@ export class DynamicBox extends React.Component {
             <FeedImg style={{backgroundImage: `url(${pic})`}}/>
             <FeedInfo>
                 <span title={owner.name}>{owner.name}</span>
-                <span>{this.toDuration(duration)}</span>
+                <span>{duration}</span>
             </FeedInfo>
             <FeedTitle title={title}>{title}</FeedTitle>
         </FeedBox>
