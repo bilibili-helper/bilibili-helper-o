@@ -117,11 +117,15 @@ export class DynamicCheck extends Feature {
     // 处理推送数据 - 不缓存到本地(￣.￣)
     getFeed = (typeList, newNum) => {
         return new Promise(resolve => this.userId.then((userId) => {
-            $.ajax({
+            return $.ajax({
                 type: 'get',
                 url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList}`,
                 success: ({code, data}) => {
                     if (code === 0) {
+                        if (data.cards.length > 0) {
+                            const res = _.find(this.feedList, (feed) => feed.desc.dynamic_id_str === data.cards[0].desc.dynamic_id_str);
+                            if (res) return;
+                        }
                         let newFeedList = _.map(data.cards.slice(0, newNum || MAX_LIST_NUMBERS), (card) => {
                             try {
                                 card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;

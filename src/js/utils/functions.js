@@ -109,6 +109,11 @@ export const consoleLogo = () => {
 `, 'color: #00a1d6');
 };
 
+/**
+ * 将秒数转为00:00:00格式
+ * @param seconds
+ * @return {string}
+ */
 export const toDuration = (seconds) => {
     const duration = moment.duration(seconds, 'seconds');
     const hoursStr = duration.hours();

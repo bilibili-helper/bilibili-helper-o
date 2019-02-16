@@ -24,6 +24,8 @@ import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
+import {DarkMode, DarkModeUI} from 'Modules/darkMode';
+
 let VideoUnblock;
 try {
     VideoUnblock = require('./videoUnblock').VideoUnblock;
@@ -51,6 +53,7 @@ export const Features = {
     VideoHideDanmu,
     LiveChatMode,
     VideoUnblock,
+    DarkMode,
 };
 
 export const UIs = {
@@ -67,4 +70,5 @@ export const UIs = {
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
     LiveChatModeUI,
+    DarkModeUI,
 };

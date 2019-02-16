@@ -65,7 +65,7 @@ export class UIManager {
                 UI.init().load(dependDOM, this.settings[name]).then((outputDOM = []) => {
                     UI.loaded = true;
                     UI.outputDOM = outputDOM;
-                    //console.log(`UI loaded: ${UI.name}`);
+                    //console.warn(`UI loaded: ${UI.name}`);
                     resolve(true);
                 });
             } else {

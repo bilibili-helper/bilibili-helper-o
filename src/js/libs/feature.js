@@ -62,6 +62,7 @@ export class Feature {
         return new Promise((resolve) => {
             this.addListener();
             this.initialed = true;
+            //console.warn(`模块初始化完毕：${this.name}`)
             this.settings.on && this.launch();
             resolve(this);
         });
