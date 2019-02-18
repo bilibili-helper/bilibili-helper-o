@@ -219,6 +219,7 @@ const DarkModeStyle = createGlobalStyle`
       .sp-right .sp-msg {
         color: var(--dark-font-1)!important;
         border-color: var(--dark-1)!important;
+        background-color: var(--dark-1)!important;
       }
     }
   }
@@ -227,7 +228,7 @@ const DarkModeStyle = createGlobalStyle`
   #comment .b-head span{
     color: var(--dark-font-1);
   }
-  #comment_module {
+  #comment_module, #comment {
     border-color: var(--dark-1)!important;
     .b-head span{
       color: var(--dark-font-1);
