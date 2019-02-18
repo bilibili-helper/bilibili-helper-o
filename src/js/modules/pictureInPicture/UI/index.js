@@ -11,7 +11,9 @@ import {UI} from 'Libs/UI';
 import {Button} from 'Components/common/Button';
 import {__} from 'Utils';
 
-const PipButton = styled(Button)`
+const PipButton = styled(Button).attrs({
+    class: `bilibili-helper-pip-btn`,
+})`
   position: absolute;
   right: 20px;
   top: 14px;
@@ -37,24 +39,17 @@ class PIP extends React.Component {
     }
 
     componentDidMount() {
-        this.video = document.querySelector('#bofqi video');
+        const that = this;
+        this.video = document.querySelector('#bofqi .bilibili-player-video video');
         this.addListener(this.video);
-        new MutationObserver((mutationList) => {
-            _.map(mutationList, (mutation) => {
-                if (mutation.oldValue) {
-                    if (this.state.inPIP) {
-                        document.exitPictureInPicture();
-                        this.setState({inPIP: false});
-                    }
-                    this.video = document.querySelector('#bofqi video');
-                    this.addListener(this.video);
-                }
-            });
-        }).observe(document.querySelector('#bofqi'), {
-            attributeFilter: ['src'],
-            attributes: true,
-            attributeOldValue: true,
-            subtree: true,
+        document.querySelector('#bofqi').addEventListener('DOMNodeInserted', function(e) {
+            if (e.target.localName === 'video' && that.video !== e.target) {
+                that.video = e.target;
+                that.addListener(that.video);
+                setTimeout(() => {
+                    document.querySelector('.bilibili-helper-pip-btn').click();
+                }, 1000);
+            }
         });
     }
 
@@ -63,37 +58,34 @@ class PIP extends React.Component {
         const that = this;
         videoDOM.removeEventListener('enterpictureinpicture', null);
         videoDOM.removeEventListener('leavepictureinpicture', null);
+        videoDOM.addEventListener('ended', function() {
+            document.exitPictureInPicture();
+        });
+        videoDOM.addEventListener('loadedmetadata', function() {
+            that.state.inPIP && that.handleOnClick(true);
+        });
         videoDOM.addEventListener('enterpictureinpicture', function() {
             that.setState({inPIP: true});
         });
         videoDOM.addEventListener('leavepictureinpicture', function() {
             that.setState({inPIP: false});
-            this.play();
         });
-    };
-
-    play = () => {
-        if (!window.player) return;
-        if (window.player.getDuration() !== window.player.getCurrentTime() && window.player.getState() !== 'PAUSED') {
-            window.player.play();
-        }
     };
 
     // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
     handleOnClick = () => {
         if (!this.video) {
-            this.video = document.querySelector('#bofqi video');
+            this.video = document.querySelector('#bofqi .bilibili-player-video video');
             this.addListener(this.video);
         }
-        if (!this.video.requestPictureInPicture) return;
+        if (!this.video || !this.video.requestPictureInPicture) return;
         if (!this.state.inPIP) {
             this.video.requestPictureInPicture().then(() => {
-                this.setState({inPIP: true});
+                this.setState({inPIP: true}, () => this.video.play());
             });
         } else if (this.state.inPIP) {
             document.exitPictureInPicture().then(() => {
                 this.setState({inPIP: false});
-                this.play();
             }).catch(e => {
                 console.error(e);
                 this.setState({inPIP: false});
@@ -110,7 +102,7 @@ class PIP extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <PipButton on={this.state.inPIP} title="点击进入画中画" onClick={this.handleOnClick}>
+                <PipButton title="点击进入画中画" onClick={() => this.handleOnClick()} on={this.state.inPIP}>
                     {__('pictureInPictureTitle')}
                 </PipButton>
             </React.Fragment>
