@@ -11,7 +11,7 @@ import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index';
 
-const MAX_LIST_NUMBERS = 10;
+const MAX_LIST_NUMBERS = 100;
 
 export class DynamicCheck extends Feature {
     constructor() {
@@ -132,7 +132,7 @@ export class DynamicCheck extends Feature {
                                 if (card.card.duration) card.card.duration = toDuration(card.card.duration);
                                 return card;
                             } catch (e) {
-                                console.warn(e, card);
+                                console.warn(e);
                             }
                         });
                         this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);

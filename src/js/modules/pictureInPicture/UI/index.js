@@ -15,7 +15,7 @@ const PipButton = styled(Button).attrs({
     class: `bilibili-helper-pip-btn`,
 })`
   position: absolute;
-  right: 20px;
+  right: 10px;
   top: 14px;
   border-radius: 4px;
   button {
@@ -46,9 +46,6 @@ class PIP extends React.Component {
             if (e.target.localName === 'video' && that.video !== e.target) {
                 that.video = e.target;
                 that.addListener(that.video);
-                setTimeout(() => {
-                    document.querySelector('.bilibili-helper-pip-btn').click();
-                }, 1000);
             }
         });
     }

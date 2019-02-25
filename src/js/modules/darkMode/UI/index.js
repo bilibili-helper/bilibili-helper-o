@@ -40,7 +40,9 @@ const DarkModeStyle = createGlobalStyle`
   .nav-wrapper .nav-con ul li a {
     color: var(--dark-font-1)!important;
   }
-  #viewbox_report .video-title .tit, .media-wrapper > h1, .media-right a, .media-right span {
+  #viewbox_report .video-title .tit, .media-wrapper > h1,
+   .media-right > *:not(.media-tool-bar),
+  .media-right > *:not(.media-tool-bar) a, .media-right > *:not(.media-tool-bar) span {
     color: var(--dark-font-0)!important;
   }
   #bilibiliPlayer {
@@ -175,12 +177,10 @@ const DarkModeStyle = createGlobalStyle`
       }
     }
   }
-  #media_module {
-    .media-tool-bar {
-      .btn-rating {
-        background-color: var(--dark-1);
-        border-color: var(--dark-1);
-      }
+  .media-tool-bar {
+    .btn-rating {
+      background-color: var(--dark-1);
+      border-color: var(--dark-1);
     }
   }
   

@@ -9,6 +9,21 @@ import ReactDOM from 'react-dom';
 import {ToolBtn} from './ToolBtn';
 import {UI} from 'Libs/UI.js';
 
+const createOldBtn = () => {
+    const oldBtn = document.createElement('span');
+    oldBtn.innerText = '哔哩哔哩助手已移动到屏幕右侧';
+    oldBtn.setAttribute('style', `
+        display: inline-block;
+        vertical-align: top;
+        height: 24px;
+        line-height: 24px;
+        font-size: 14px;
+        color: #505050;
+        margin-left: 20px;
+    `)
+    return oldBtn;
+}
+
 export class VideoAnchorUI extends UI {
     constructor() {
         super({
@@ -20,19 +35,20 @@ export class VideoAnchorUI extends UI {
         return new Promise(resolve => {
             const containerSelectors = [
                 '#bangumi_detail .func-module',
-                '#arc_toolbar_report .ops',
+                '#entryOld',
                 //'.video-info .video-title',
-                '#toolbar_module',
+                '.entry-old',
                 '#arc_toolbar_report',
             ];
             const newPage = document.querySelector('.video-data, .stardust-player');
-            const addUI = (container) => {
+            const addUI = (container, callback) => {
                 if (document.querySelector('.bilibili-helper')) return;
                 const helperDOM = document.createElement('span');
                 helperDOM.setAttribute('class', 'bilibili-helper');
                 container.appendChild(helperDOM);
                 ReactDOM.render(<ToolBtn/>, document.querySelector('.bilibili-helper'), () => {
                     const helperContentDOM = document.querySelector('.bilibili-helper-content');
+                    if (typeof callback === 'function') callback(container);
                     resolve(helperContentDOM);
                 });
             };
@@ -50,13 +66,19 @@ export class VideoAnchorUI extends UI {
                         const title = document.querySelector('.view').getAttribute('title');
                         if (title !== '总播放数--') {
                             clearInterval(timer);
-                            addUI(document.querySelector('#arc_toolbar_report .ops'));
+                            addUI(document.querySelector('#entryOld'), () => {
+                                const container = document.querySelector('#arc_toolbar_report .ops');
+                                container.appendChild(createOldBtn());
+                            });
                         } else ++retryTime;
                     } else if ('coin-info'.indexOf(coin.classList) > -1) { // 新版番剧页面
                         const coinStr = coin.innerText;
                         if (coinStr !== '--') {
                             clearInterval(timer);
-                            addUI(document.querySelector('#toolbar_module'));
+                            addUI(document.querySelector('.entry-old'), () => {
+                                const container = document.querySelector('#toolbar_module');
+                                container.appendChild(createOldBtn());
+                            });
                         } else ++retryTime;
                     } else ++retryTime;
                 }, 1000);

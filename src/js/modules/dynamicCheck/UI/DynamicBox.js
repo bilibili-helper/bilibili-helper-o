@@ -7,8 +7,9 @@
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
+import {List} from 'react-virtualized';
 import {createTab} from 'Utils';
+import 'react-virtualized/styles.css';
 
 const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
   margin: 9px 0 9px 10px;
@@ -18,21 +19,23 @@ const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
     display: none;
   }
 `;
+const FeedBoxWrapper = styled.div`
+  & > * {
+    margin-bottom: 1px;
+  }
+  &:last-of-type > * {
+    margin-bottom: 0;
+  }
+`;
+
 const FeedBox = styled.div.attrs({className: 'feed-box'})`
   position: relative;
-  margin-bottom: 1px;
   cursor: pointer;
   &:hover {
     .feed-img {
       filter: grayscale(0) brightness(0.8);
       background-size: 100% auto;
     }
-    .feed-info {
-      //opacity: 0;
-    }
-  }
-  &:last-of-type {
-    margin-bottom: 0;
   }
 `;
 
@@ -160,15 +163,34 @@ export class DynamicBox extends React.Component {
         </FeedBox>
     );
 
+    renderLine = ({index, style}) => {
+        const card = this.state.feedList[index];
+        const typeFunc = this[`renderType${card.desc.type}`];
+        const link = this.createLinkByType(card.desc.type, card.card);
+        return typeFunc ? (
+            <FeedBoxWrapper style={style}>
+                {typeFunc({index, link, ...card.card})}
+            </FeedBoxWrapper>) : null;
+    };
+
+    renderList = () => {
+        return (
+            <List
+                width={200}
+                height={255}
+                rowCount={this.state.feedList.length}
+                rowHeight={86}
+                rowRenderer={this.renderLine}
+                overscanRowCount={1}
+            />
+        );
+    };
+
     render() {
         const {feedList} = this.state;
         return (
             feedList && feedList.length > 0 ? <FeedsContainer>
-                {_.map(feedList, (card, index) => {
-                    const typeFunc = this[`renderType${card.desc.type}`];
-                    const link = this.createLinkByType(card.desc.type, card.card);
-                    if (typeFunc) return typeFunc({index, link, ...card.card});
-                })}
+                {this.renderList()}
             </FeedsContainer> : null
         );
     }

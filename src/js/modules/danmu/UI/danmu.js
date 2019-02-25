@@ -1,5 +1,3 @@
-
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/22
@@ -8,13 +6,15 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {Button} from 'Components/common/Button';
 import {parseTime} from 'Utils';
 import {theme} from 'Styles';
 import {Crc32Engine} from 'Libs/crc32';
 import apis from '../apis.js';
+import {List} from 'react-virtualized';
+import 'react-virtualized/styles.css';
 
 const {color} = theme;
 const crcEngine = new Crc32Engine();
@@ -30,14 +30,15 @@ const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
   }
 `;
 
-const DanmuList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
-  height: 150px;
+const DanmuList = styled(List).attrs({className: 'bilibili-helper-danmu-list'})`
+  position: relative;
+  height: 200px;
   margin-left: 4px;
   padding: 1px;
   border: 1px solid #eee;
   border-radius: 4px 4px 0 0;
   font-size: 12px;
-  overflow: auto;
+  overflow: hidden;
   & .no-data {}
 `;
 
@@ -118,7 +119,7 @@ const LoadingMask = styled.div`
 const DownloadBtn = styled(Button)`
   float: right;
   border-radius: 4px;
-  margin-left: 4px;
+  margin-left: 10px;
   button {
     padding: 0;
     min-width: 35px;
@@ -133,25 +134,11 @@ const DownloadBtn = styled(Button)`
 export class Danmu extends React.Component {
     propTypes = {
         settings: PropTypes.object,
-    }
+    };
 
     constructor(props) {
         super(props);
-        this.state = {
-            loaded: false,
-            loading: false,
-            loadingText: null,
-            danmuJSON: {},
-            filterText: '',
-            /**
-             * 需要一个字段用于通知react重新渲染组件
-             * 这里选择使用较为简单的authorHashMap
-             */
-            authorHashMap: {}, // authorHash -> uid
-            queryUserMode: null, // 用户UID查询模式
 
-            currentCid: NaN,
-        };
         this.orderedJSON = {}; // 经过弹幕发送时间排序的数据
         this.userMap = {}; // uid -> data
         this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
@@ -159,6 +146,27 @@ export class Danmu extends React.Component {
         const today = new Date();
         this.danmuDate = `${today.getMonth() + 1}-${today.getDate()}`; // 当前弹幕日期
         this.addListener();
+
+        this.danmuListRef = null;
+
+        this.currentRowIndex = 0;
+
+        this.authorHashMap = {}; // authorHash -> uid
+
+        this.state = {
+            loaded: false,
+            loading: false,
+            loadingText: null,
+            danmuJSON: {list: []},
+            filterText: '',
+            /**
+             * 需要一个字段用于通知react重新渲染组件
+             * 这里选择使用较为简单的authorHashMap
+             */
+            queryUserMode: null, // 用户UID查询模式
+
+            currentCid: NaN,
+        };
     }
 
     componentDidMount() {
@@ -294,6 +302,19 @@ export class Danmu extends React.Component {
         };
     };
 
+    /**
+     * 等级行号动态获取行高
+     * 当查询发送者后，可能会出现多解导致显示多行从而改变行高
+     * @param index
+     * @return {number}
+     */
+    getRowHeight = ({index}) => {
+        const {danmuJSON} = this.state;
+        const danmuData = danmuJSON.list[index];
+        const uidArray = this.authorHashMap[danmuData.authorHash];
+        return (uidArray && uidArray.length * 20) || 20;
+    };
+
     // 搜索框编辑事件
     handleInputChange = (e) => {
         const value = e.target.value;
@@ -329,23 +350,25 @@ export class Danmu extends React.Component {
             loading: true,
             loadingText: '努力查询中~(๑•̀ㅂ•́)و',
         });
-        const {authorHashMap} = this.state;
         let thisHashMap = [];
         Promise.all(uids.map((uid) => this.getUserInfoByUid(uid))).then((res) => {
             thisHashMap = thisHashMap.concat(_.compact(res));
         }).then(() => {
-            if (thisHashMap.length > 0) authorHashMap[authorHash] = thisHashMap;
-            this.setState({loading: false, authorHashMap});
+            if (thisHashMap.length > 0) this.authorHashMap[authorHash] = thisHashMap;
+            this.setState({loading: false}, () => {
+                this.danmuListRef.recomputeRowHeights();
+                this.danmuListRef.forceUpdate();
+            });
         });
     };
 
     // 当点击查询过用户名的弹幕行时
-    handleAuthorClick = (uids) => {
+    handleAuthorClick = (index, uids) => {
         if (!this.state.queryUserMode) {
             const queryList = [];
             this.queryUserModeTemplateMap = {...this.state.danmuJSON}; // 保存当前查询列表
             _.each(uids, (uid) => {
-                const authorHash = _.findKey(this.state.authorHashMap, (id) => !!~id.indexOf(uid));
+                const authorHash = _.findKey(this.authorHashMap, (id) => !!~id.indexOf(uid));
                 _.each(this.orderedJSON.list, (data) => {
                     if (data.authorHash === authorHash) {
                         queryList.push({...data}); // 这里一定要复制一份，不然会修改原数据
@@ -355,11 +378,15 @@ export class Danmu extends React.Component {
             this.setState({
                 queryUserMode: true,
                 danmuJSON: {cid: this.orderedJSON.cid, count: queryList.length, list: queryList},
+            }, () => {
+                this.currentRowIndex = index;
             });
         } else {
             this.setState({
                 queryUserMode: false,
                 danmuJSON: this.queryUserModeTemplateMap,
+            }, () => {
+                this.danmuListRef.scrollToRow(this.currentRowIndex);
             });
         }
     };
@@ -378,41 +405,57 @@ export class Danmu extends React.Component {
         });
     };
 
+    renderHeader = (danmuJSON = this.state.danmuJSON) => (
+        <Title>
+            <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
+            <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>ASS</DownloadBtn>
+            <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('xml')}>XML</DownloadBtn>
+        </Title>
+    );
+
+    renderLine = ({index, style}) => {
+        const {danmuJSON} = this.state;
+        const danmuData = danmuJSON.list[index];
+        const {rowId, danmu, authorHash, time} = danmuData;
+        const uidArray = this.authorHashMap[authorHash];
+        let authorNames = _.map(uidArray, (uid) => this.userMap[uid] ? this.userMap[uid].name : '');
+        return (
+            <DanmuListLine
+                key={rowId}
+                title={`[${time}] ${danmu} ${authorNames ? `by:${authorNames.join(',')}` : ''}`}
+                onClick={() => uidArray ? this.handleAuthorClick(index, uidArray) : this.handleDanmuLineClick(authorHash)}
+                hasQueried={!_.isEmpty(authorNames)}
+                style={style}
+            >
+                <span className="time">{time}</span>
+                <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
+                <span className="author">
+                    {authorNames.map((name, index) => (
+                        <div key={name} data-usercard-mid={uidArray[index]}>{name}</div>))}
+                </span>
+            </DanmuListLine>
+        );
+    };
+
+    renderList = () => <DanmuList
+        ref={i => this.danmuListRef = i}
+        width={414}
+        height={200}
+        rowCount={this.state.danmuJSON.list.length}
+        rowHeight={this.getRowHeight}
+        rowRenderer={this.renderLine}
+        noRowsRenderer={() => (<DanmuListLine>无数据</DanmuListLine>)}
+        scrollToAlignment={'center'}
+    />;
+
     render() {
         const {on} = this.props.settings;
-        const {loaded, danmuJSON, authorHashMap, loading, loadingText} = this.state;
         return on ? (
             <React.Fragment>
-                <Title>
-                    <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
-                    <DownloadBtn title="下载 ASS 格式弹幕文件" onClick={() => this.handleDownloadClick('ass')}>ASS</DownloadBtn>
-                    <DownloadBtn title="下载 XML 格式弹幕文件" onClick={() => this.handleDownloadClick('xml')}>XML</DownloadBtn>
-                </Title>
-                <DanmuList>
-                    {loaded && danmuJSON.count > 0 ? _.map(danmuJSON.list, (danmuData) => {
-                        const {danmu, authorHash, time, rowId} = danmuData;
-                        const uids = authorHashMap[authorHash];
-                        let authorNames = _.map(uids, (uid) => this.userMap[uid] ? this.userMap[uid].name : '');
-                        return (
-                            <DanmuListLine
-                                key={`${rowId}`}
-                                title={`[${time}] ${danmu} ${authorNames ? `by:${authorNames.join(',')}` : ''}`}
-                                onClick={() => uids ? this.handleAuthorClick(uids) : this.handleDanmuLineClick(authorHash)}
-                                hasQueried={!_.isEmpty(authorNames)}
-                            >
-                                <span className="time">{time}</span>
-                                <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
-                                <span className="author">
-                                    {_.map(authorNames, (name, index) => {
-                                        return <div data-usercard-mid={uids[index]}>{name}</div>;
-                                    })}
-                                </span>
-                            </DanmuListLine>
-                        );
-                    }) : <DanmuListLine>无数据</DanmuListLine>}
-                </DanmuList>
+                {this.renderHeader()}
+                {this.renderList()}
                 <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
-                {loading && <LoadingMask>{loadingText}</LoadingMask>}
+                {this.state.loading && <LoadingMask>{this.state.loadingText}</LoadingMask>}
             </React.Fragment>
         ) : null;
     }

@@ -219,7 +219,7 @@ export class VideoDownload extends React.Component {
         }).then((downloadData) => {
             let [buffers, [videoCodec, audioCodec]] = downloadData;
             this.setState({downloading: false});
-            console.warn(window.ffmpeg_run);
+            //console.warn(window.ffmpeg_run);
             //const {MP4Box} = require('mp4box');
             //const mp4 = new MP4Box(true);
             //buffers[0].fileStart = 0;
