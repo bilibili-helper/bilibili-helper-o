@@ -3,7 +3,6 @@
  * Create: 2018/11/16
  * Description:
  */
-import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -70,13 +69,13 @@ class PIP extends React.Component {
     };
 
     // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
-    handleOnClick = () => {
+    handleOnClick = (next = false) => {
         if (!this.video) {
             this.video = document.querySelector('#bofqi .bilibili-player-video video');
             this.addListener(this.video);
         }
         if (!this.video || !this.video.requestPictureInPicture) return;
-        if (!this.state.inPIP) {
+        if (!this.state.inPIP || next) {
             this.video.requestPictureInPicture().then(() => {
                 this.setState({inPIP: true}, () => this.video.play());
             });

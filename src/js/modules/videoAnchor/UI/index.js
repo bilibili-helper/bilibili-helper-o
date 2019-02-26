@@ -11,7 +11,7 @@ import {UI} from 'Libs/UI.js';
 
 const createOldBtn = () => {
     const oldBtn = document.createElement('span');
-    oldBtn.innerText = '哔哩哔哩助手已移动到屏幕右侧';
+    oldBtn.innerText = '助手已移动到页面右侧边缘';
     oldBtn.setAttribute('style', `
         display: inline-block;
         vertical-align: top;

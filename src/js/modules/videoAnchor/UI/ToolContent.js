@@ -13,7 +13,7 @@ const Content = styled.div.attrs({
 })`
   position: absolute;
   right: 55px;
-  top: 42px;
+  top: 26px;
   display: flex;
   visibility: hidden;
   flex-direction: column;

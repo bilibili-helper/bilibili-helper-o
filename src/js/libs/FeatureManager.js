@@ -137,7 +137,7 @@ export class FeatureManager {
                         features = this.features;
                     }
                     if (checkHide) features = _.filter(features, f => !f.settings.hide); // 返回不在设置页面隐藏配置项的feature的配置
-                    if (hasUI) features = _.filter(features, ({settings}) => settings.hasUI && settings.on); // 返回带有UI的feature的配置
+                    if (hasUI) features = _.filter(features, ({settings}) => settings.hasUI); // 返回带有UI的feature的配置
 
                     const settings = {};
                     _.each(features, (feature) => {

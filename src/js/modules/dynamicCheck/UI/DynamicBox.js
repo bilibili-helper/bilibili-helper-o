@@ -181,7 +181,6 @@ export class DynamicBox extends React.Component {
                 rowCount={this.state.feedList.length}
                 rowHeight={86}
                 rowRenderer={this.renderLine}
-                overscanRowCount={1}
             />
         );
     };

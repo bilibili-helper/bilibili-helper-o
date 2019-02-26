@@ -5,13 +5,14 @@
  */
 
 import {Feature} from 'Libs/feature';
-export {DarkModeUI} from './UI/index';
+export {VideoDarkModeUI} from './UI/index';
 
-export class DarkMode extends Feature {
+export class VideoDarkMode extends Feature {
     constructor() {
         super({
-            name: 'darkMode',
+            name: 'videoDarkMode',
             kind: 'video',
+            dependencies: ['videoAnchor'],
             settings: {
                 on: false,
                 hasUI: true,

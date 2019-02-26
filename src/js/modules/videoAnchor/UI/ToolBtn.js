@@ -75,7 +75,7 @@ export class ToolBtn extends React.Component {
         return (
             <React.Fragment>
                 <link href="//at.alicdn.com/t/font_862696_227xf8jklcw.css" type="text/css" rel="stylesheet"/>
-                <HelperBtn onClick={this.handleClick} title="哔哩哔哩助手">哔哩<br/>助手</HelperBtn>
+                <HelperBtn onClick={this.handleClick} title="哔哩哔哩助手">助手</HelperBtn>
                 <ToolContent/>
             </React.Fragment>
         );

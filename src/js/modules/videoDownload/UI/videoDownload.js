@@ -345,7 +345,8 @@ export class VideoDownload extends React.Component {
                 {/*{<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>*/}
                     {/*{title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}*/}
                 {/*</a>}*/}
-                MP4下载功能存在没有声音的问题，暂时下架
+                MP4下载功能存在没有声音的问题，暂时下架<br/>
+                可切换到旧版播放页面下载flv，目前已支持合FLV合并下载
                 <Progress percentage={percentage}/>
             </LinkGroup>
         );

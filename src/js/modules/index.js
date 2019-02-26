@@ -24,7 +24,7 @@ import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
-import {DarkMode, DarkModeUI} from 'Modules/darkMode';
+import {VideoDarkMode, VideoDarkModeUI} from 'Modules/videoDarkMode';
 
 let VideoUnblock;
 try {
@@ -53,7 +53,7 @@ export const Features = {
     VideoHideDanmu,
     LiveChatMode,
     VideoUnblock,
-    DarkMode,
+    VideoDarkMode,
 };
 
 export const UIs = {
@@ -70,5 +70,5 @@ export const UIs = {
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
     LiveChatModeUI,
-    DarkModeUI,
+    VideoDarkModeUI,
 };

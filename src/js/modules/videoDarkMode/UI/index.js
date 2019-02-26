@@ -4,12 +4,32 @@
  * Description:
  */
 
+import {Button} from 'Components/common/Button';
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import styled from 'styled-components';
 import {createGlobalStyle} from 'styled-components';
 
-const DarkModeStyle = createGlobalStyle`
+const VideoDarkModeButton = styled(Button).attrs({
+    class: `bilibili-helper-video-dark-mode-btn`,
+})`
+  position: absolute;
+  right: 66px;
+  top: 14px;
+  border-radius: 4px;
+  button {
+    padding: 0 4px;
+    min-width: unset;
+    font-size: 12px;
+    border: 1px solid #fb7299;
+    border-radius: 4px;
+    color: ${({on}) => on ? '#fff' : '#fb7299'};
+    background-color: ${({on}) => on ? '#fb7299' : '#fff'};
+  }
+`;
+
+const VideoDarkModeStyle = createGlobalStyle`
   html {
     --dark-1: #0c0c0c;
     --dark-2: #131313;
@@ -352,22 +372,56 @@ const DarkModeStyle = createGlobalStyle`
   }
 `;
 
-export class DarkModeUI extends UI {
+class VideoDarkMode extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            on: props.on,
+        };
+    }
+
+    handleOnClick = () => {
+        const {on} = this.state;
+        this.setState({on: !on});
+        chrome.runtime.sendMessage({
+            commend: 'setSetting',
+            feature: 'videoDarkMode',
+            settings: {on: !on},
+        });
+        chrome.runtime.sendMessage({
+            commend: 'setGAEvent',
+            action: 'click',
+            category: 'videoDarkMode',
+            label: 'videoDarkMode',
+        });
+    };
+
+    render() {
+        const {on} = this.state;
+        return (
+            <React.Fragment>
+                <VideoDarkModeButton onClick={this.handleOnClick} on={on}>夜间模式</VideoDarkModeButton>
+                {on && <VideoDarkModeStyle/>}
+            </React.Fragment>
+        );
+    }
+}
+
+export class VideoDarkModeUI extends UI {
     constructor() {
         super({
-            name: 'darkMode',
+            name: 'videoDarkMode',
+            dependencies: ['videoAnchor'],
         });
     }
 
-    load = (containers, {on}) => {
+    load = ([container], {on}) => {
         return new Promise((resolve) => {
             const wrapper = document.createElement('div');
-            wrapper.setAttribute('class', 'bilibili-helper-dark-mode');
-            wrapper.setAttribute('style', 'margin: 0;');
-            document.querySelector('body').append(wrapper);
-            ReactDOM.render(<React.Fragment>
-                {on && <DarkModeStyle/>}
-            </React.Fragment>, wrapper, () => resolve(wrapper));
+            wrapper.setAttribute('class', 'bilibili-helper-video-dark-mode');
+            wrapper.setAttribute('style', 'position: static; margin: 0;');
+            container.append(wrapper);
+            ReactDOM.render(<VideoDarkMode on={on}/>, wrapper, () => resolve(wrapper));
         });
     };
 }
