@@ -48,7 +48,7 @@ export class FlvFragment {
                 }))
                 .then(response => response.blob())
                 .then((blob) => {
-                    this.db.add({order: this.order, quality: this.quality, blob});
+                    //this.db.add({order: this.order, quality: this.quality, blob});
                     resolve(blob);
                 });
             });
