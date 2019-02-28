@@ -39,6 +39,7 @@ const DanmuList = styled(List).attrs({className: 'bilibili-helper-danmu-list'})`
   border-radius: 4px 4px 0 0;
   font-size: 12px;
   overflow: hidden;
+  outline: none;
   & .no-data {}
 `;
 

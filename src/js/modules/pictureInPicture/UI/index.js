@@ -35,6 +35,7 @@ class PIP extends React.Component {
             inPIP: false,
         };
         this.video = null;
+        this.isEnd = false;
     }
 
     componentDidMount() {
@@ -45,6 +46,7 @@ class PIP extends React.Component {
             if (e.target.localName === 'video' && that.video !== e.target) {
                 that.video = e.target;
                 that.addListener(that.video);
+                that.isEnd = false;
             }
         });
     }
@@ -56,6 +58,7 @@ class PIP extends React.Component {
         videoDOM.removeEventListener('leavepictureinpicture', null);
         videoDOM.addEventListener('ended', function() {
             document.exitPictureInPicture();
+            that.isEnd = true;
         });
         videoDOM.addEventListener('loadedmetadata', function() {
             that.state.inPIP && that.handleOnClick(true);
@@ -64,7 +67,9 @@ class PIP extends React.Component {
             that.setState({inPIP: true});
         });
         videoDOM.addEventListener('leavepictureinpicture', function() {
-            that.setState({inPIP: false});
+            that.setState({inPIP: false},() => {
+                if (!that.isEnd) this.play();
+            });
         });
     };
 
@@ -81,7 +86,7 @@ class PIP extends React.Component {
             });
         } else if (this.state.inPIP) {
             document.exitPictureInPicture().then(() => {
-                this.setState({inPIP: false});
+                this.setState({inPIP: false}, () => this.video.play());
             }).catch(e => {
                 console.error(e);
                 this.setState({inPIP: false});

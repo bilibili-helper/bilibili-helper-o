@@ -3,7 +3,6 @@
  * Create: 2018/12/9
  * Description:
  */
-import $ from 'jquery';
 import {Feature} from 'Libs/feature';
 import {__, createTab, hasNewVersion, version} from 'Utils';
 

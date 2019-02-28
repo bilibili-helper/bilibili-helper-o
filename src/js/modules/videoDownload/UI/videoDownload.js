@@ -134,11 +134,18 @@ export class VideoDownload extends React.Component {
         if (!this.containers[currentCid]) this.containers[currentCid] = {};
         if (this.containers[currentCid][currentQuality]) {
             return this.containers[currentCid][currentQuality];
-        } else switch (type) {
-            case 'flv':
-                return this.containers[currentCid][currentQuality] = new FlvContainer({...data, cid: currentCid});
-            case 'mp4':
-                return this.containers[currentCid][currentQuality] = new DashContainer({...data, cid: currentCid});
+        } else {
+            const videoData = data[currentCid][currentQuality];
+            switch (type) {
+                case 'flv':
+                    return this.containers[currentCid][currentQuality] = new FlvContainer({
+                        ...videoData, cid: currentCid,
+                    });
+                case 'mp4':
+                    return this.containers[currentCid][currentQuality] = new DashContainer({
+                        ...videoData, cid: currentCid,
+                    });
+            }
         }
     };
 
@@ -273,7 +280,7 @@ export class VideoDownload extends React.Component {
         }).then(blobs => {
             FLV.mergeBlobs(blobs).then(mergeBlob => {
                 this.setState({downloading: false});
-                const url = (window.URL ? URL : window.webkitURL).createObjectURL(mergeBlob, {type: 'video/x-flv'});
+                const url = window.URL.createObjectURL(mergeBlob, {type: 'video/x-flv'});
                 chrome.runtime.sendMessage({
                     commend: 'downloadMergedVideo',
                     url,
@@ -343,7 +350,7 @@ export class VideoDownload extends React.Component {
         return (
             <LinkGroup downloading={downloading} disabled={downloading}>
                 {/*{<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>*/}
-                    {/*{title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}*/}
+                {/*{title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}*/}
                 {/*</a>}*/}
                 MP4下载功能存在没有声音的问题，暂时下架<br/>
                 可切换到旧版播放页面下载flv，目前已支持合FLV合并下载

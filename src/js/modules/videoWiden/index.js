@@ -23,7 +23,7 @@ export class VideoWiden extends Feature {
                     options: [
                         {key: 'default', title: '默认'},
                         {key: 'wide', title: '宽屏'},
-                        {key: 'web', title: '网页宽屏'},
+                        {key: 'web', title: '网页全屏'},
                     ],
                     value: 'default',
                 },

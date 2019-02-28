@@ -51,6 +51,7 @@ const stylesheet = css`
     height: calc(50% - 20px);
     pointer-events: auto;
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 15%, transparent 75%);
+    background-color: unset;
   }
   .hide-aside-area .chat-history-panel:hover #chat-history-list {
     outline: 1px solid ${color('bilibili-blue')};
@@ -99,6 +100,7 @@ const stylesheet = css`
     margin-bottom: 3px;
     width: 100%;
     height: auto;
+    background-color: unset;
     pointer-events: none;
     z-index: 1;
   }

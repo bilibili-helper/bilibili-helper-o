@@ -25,6 +25,7 @@ import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
 import {VideoDarkMode, VideoDarkModeUI} from 'Modules/videoDarkMode';
+import {ProxyForWebsite} from 'Modules/proxyForWebsite';
 
 let VideoUnblock;
 try {
@@ -54,6 +55,7 @@ export const Features = {
     LiveChatMode,
     VideoUnblock,
     VideoDarkMode,
+    ProxyForWebsite,
 };
 
 export const UIs = {

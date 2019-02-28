@@ -48,7 +48,7 @@ export class FlvFragment {
                 }))
                 .then(response => response.blob())
                 .then((blob) => {
-                    //this.db.add({order: this.order, quality: this.quality, blob});
+                    this.db.add({order: this.order, quality: this.quality, blob});
                     resolve(blob);
                 });
             });
@@ -78,7 +78,7 @@ export class FlvContainer {
         let transferred = 0;
         this.fragments.forEach((fragment) => {
             total += fragment.size;
-            transferred += fragment.progress.transferred || 0;
+            transferred += fragment.progress.transferred || (fragment.size * fragment.progress.percentage / 100) || 0;
         });
         return Math.round(transferred / total * 100);
     }

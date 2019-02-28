@@ -4,7 +4,6 @@
  * Description:
  */
 
-import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 import {List} from 'react-virtualized';

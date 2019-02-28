@@ -376,17 +376,26 @@ class VideoDarkMode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            on: props.on,
+            settings: {},
         };
     }
 
+    componentDidMount() {
+        chrome.runtime.sendMessage({
+            commend: 'getSetting',
+            feature: 'videoDarkMode',
+        }, (settings) => {
+            this.setState({settings});
+        });
+    }
+
     handleOnClick = () => {
-        const {on} = this.state;
-        this.setState({on: !on});
+        const {on} = this.state.settings;
+        this.setState({settings: {...this.state.settings, on: !on}});
         chrome.runtime.sendMessage({
             commend: 'setSetting',
             feature: 'videoDarkMode',
-            settings: {on: !on},
+            settings: {...this.state.settings, on: !on},
         });
         chrome.runtime.sendMessage({
             commend: 'setGAEvent',
@@ -397,7 +406,7 @@ class VideoDarkMode extends React.Component {
     };
 
     render() {
-        const {on} = this.state;
+        const {on} = this.state.settings;
         return (
             <React.Fragment>
                 <VideoDarkModeButton onClick={this.handleOnClick} on={on}>夜间模式</VideoDarkModeButton>
