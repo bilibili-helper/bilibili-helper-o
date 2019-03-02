@@ -56,6 +56,9 @@ const stylesheet = css`
   .hide-aside-area .chat-history-panel:hover #chat-history-list {
     outline: 1px solid ${color('bilibili-blue')};
   }
+  .hide-aside-area .chat-history-panel:hover #chat-history-list::-webkit-scrollbar {
+    display: none;
+  }
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel::-webkit-scrollbar,
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .rank-list-section,
   .hide-aside-area #penury-gift-msg,

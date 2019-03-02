@@ -6,3 +6,4 @@
 
 export {fetchImage} from './fetchImage';
 export {fetchJSON} from './fetchJSON';
+export {fetchPOST} from './fetchPOST';

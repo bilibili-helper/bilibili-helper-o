@@ -134,6 +134,7 @@ module.exports = (env) => {
                 'process.env': {
                     DEBUG: env.DEBUG || false,
                 },
+                TARGET_ORIGIN: "'http://localhost:8000'",
             }),
             new webpack.EnvironmentPlugin({
                 'DEBUG': false,
