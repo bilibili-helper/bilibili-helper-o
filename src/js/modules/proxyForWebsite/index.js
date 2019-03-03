@@ -5,6 +5,8 @@
  */
 import {Feature} from 'Libs/feature';
 import {fetchJSON, fetchImage, fetchPOST} from './fetch';
+import {connect} from './connect';
+import {cookie} from './cookie';
 
 export class ProxyForWebsite extends Feature {
     constructor() {
@@ -23,8 +25,11 @@ export class ProxyForWebsite extends Feature {
         chrome.runtime.onConnect.addListener((port) => {
             port.onMessage.addListener((message, websitePort) => {
                 const {commend, data} = message;
-                console.warn(message);
                 switch (commend) {
+                    case 'connect': {
+                        connect(websitePort, data);
+                        break;
+                    }
                     case 'fetch': {
                         const {type, ...options} = data;
                         if (type === 'json') void fetchJSON(websitePort, options);
@@ -33,17 +38,7 @@ export class ProxyForWebsite extends Feature {
                         break;
                     }
                     case 'cookie': {
-                        const {detail, model, sign} = data;
-                        if (!model) throw(`fetch from Model ${model}`);
-                        chrome.cookies.get(detail, (cookie) => {
-                            websitePort.postMessage({
-                                commend: 'returnCookie',
-                                data: cookie.value,
-                                from: 'helperProxy',
-                                model,
-                                sign,
-                            });
-                        });
+                        cookie(websitePort, data);
                         break;
                     }
                 }

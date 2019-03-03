@@ -4,8 +4,6 @@
  * Create: 2019/2/27
  * Description:
  */
-
-//const TARGET_ORIGIN = 'http://localhost:8000';
 const HelperID = 'kpbnombpnpcffllnianjibmpadjolanh';
 let HelperPort = chrome.runtime.connect(HelperID);
 // 接收来自proxy for website 模块的message并转发给website

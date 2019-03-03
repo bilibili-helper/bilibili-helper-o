@@ -150,7 +150,7 @@ module.exports = (env) => {
                 'process.env': {
                     DEBUG: env.DEBUG || false,
                 },
-                TARGET_ORIGIN: 'http://helper.drowsyflesh.com/',
+                TARGET_ORIGIN: "'http://helper.drowsyflesh.com/'",
             }),
             new webpack.EnvironmentPlugin({
                 'DEBUG': false,
