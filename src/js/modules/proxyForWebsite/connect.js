@@ -9,7 +9,9 @@ export const connect = (websitePort, {model, sign}) => {
     websitePort.postMessage({
         commend: 'returnApp',
         data: {
-            code: 0, data: {
+            code: 0,
+            data: {
+                connected: true,
                 version,
             },
         },
