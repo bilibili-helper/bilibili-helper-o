@@ -38,6 +38,9 @@ const Content = styled.div.attrs({
       //margin-bottom: 0;
     }
   }
+  .player-mode-webfullscreen & {
+    z-index: 100;
+  }
 `;
 
 export class ToolContent extends React.Component {

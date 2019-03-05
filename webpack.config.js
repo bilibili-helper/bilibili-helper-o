@@ -148,7 +148,7 @@ module.exports = (env) => {
         plugins: _.compact([
             new webpack.DefinePlugin({
                 'process.env': {
-                    DEBUG: env.DEBUG || false,
+                    DEBUG: (env && env.DEBUG) || false,
                 },
                 TARGET_ORIGIN: "'http://helper.drowsyflesh.com/'",
             }),

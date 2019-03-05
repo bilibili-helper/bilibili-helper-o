@@ -1,6 +1,9 @@
 body {
 	background-color: white;
 }
+.player-module #bofqi.stardust-player {
+	z-index: auto!important;
+}
 #toolbar_module .bilibili-helper {
 	position: relative;
 }
