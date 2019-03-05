@@ -36,13 +36,13 @@ export class UI {
             return res && res.length > 0 ? res[0] : false;
         } else if (selectors instanceof Array) {
             const t = _.compact(selectors.map((name) => get(name)));
-            if (t.length > 0) return _.compact(selectors.map((name) => get(name)))[0];
-            else console.error(`No target of name: ${selectors}!`);
+            if (t.length > 0) { return _.compact(selectors.map((name) => get(name)))[0]; }
+            else { console.error(`No target of name: ${selectors}!`); }
         }
     };
 
     observer = (containerSelectors, interval = 500) => {
-        if (!containerSelectors) throw(`Wrong containerSelectors in ${this.name}: ${containerSelectors}`);
+        if (!containerSelectors) { throw (`Wrong containerSelectors in ${this.name}: ${containerSelectors}`); }
         return new Promise(resolve => {
             const container = this.getContainer(containerSelectors);
             if (!container) {
@@ -56,8 +56,8 @@ export class UI {
                 resolve(container);
             }, interval);
             new MutationObserver(function(mutationList, observer) {
-                if (timeout) observer.disconnect(); // container在第一个interval间隔内没有变化
-                if (!!timer) clearTimeout(timer);
+                if (timeout) { observer.disconnect(); } // container在第一个interval间隔内没有变化
+                if (timer) { clearTimeout(timer); }
                 timer = setTimeout(() => {
                     observer.disconnect();
                     resolve(container);

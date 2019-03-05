@@ -3,7 +3,7 @@
  * Create: 2018-07-29
  * Description: 图标
  */
-
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -33,6 +33,11 @@ const IconView = styled.div.attrs({
 `;
 
 export class Icon extends React.Component {
+    propTypes = {
+        icon: PropTypes.any,
+        image: PropTypes.bool,
+        size: PropTypes.number,
+    }
     render() {
         const {icon, image = false, size = 36, ...rest} = this.props;
         return <IconView icon={icon} image={image} size={size} {...rest}></IconView>;

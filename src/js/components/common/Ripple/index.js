@@ -5,6 +5,7 @@
  */
 
 import $ from 'jquery';
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled, {withTheme, keyframes} from 'styled-components';
 
@@ -46,6 +47,12 @@ const RippleView = styled.div.attrs({
 `;
 
 class RippleClass extends React.Component {
+    propTypes = {
+        active: PropTypes.bool,
+        x: PropTypes.number,
+        y: PropTypes.number,
+        theme: PropTypes.object,
+    }
     constructor() {
         super();
         this.state = {
@@ -58,7 +65,7 @@ class RippleClass extends React.Component {
         const {active, x, y, theme} = props;
         const {radius = 15, size = 1} = theme;
         let style = `width:${2 * radius * size}px;height:${2 * radius * size}px;margin: -${radius * size}px;`;
-        if (x !== undefined && y !== undefined) style += `top:${y}px;left:${x}px;`;
+        if (x !== undefined && y !== undefined) { style += `top:${y}px;left:${x}px;`; }
         if (active) {
             const currentRipple = $(`<div class="ripple-item" style="${style}"/>`);
             $(state.box).prepend(currentRipple);

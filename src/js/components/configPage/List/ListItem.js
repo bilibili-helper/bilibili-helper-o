@@ -5,6 +5,7 @@
  */
 
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import {Button} from 'Components';
@@ -143,6 +144,22 @@ const Separator = styled.div.attrs({
 `;
 
 export class ListItem extends React.Component {
+    propTypes = {
+        subList: PropTypes.object,
+        operation: PropTypes.any,
+        children: PropTypes.any,
+        icon: PropTypes.any,
+        separator: PropTypes.bool,
+        twoLine: PropTypes.bool,
+        noBorder: PropTypes.bool,
+        extend: PropTypes.bool,
+        toggle: PropTypes.bool,
+        first: PropTypes.any,
+        second: PropTypes.any,
+        middle: PropTypes.any,
+        onClick: PropTypes.func,
+    };
+
     constructor(props) {
         super();
         const {subList} = props;

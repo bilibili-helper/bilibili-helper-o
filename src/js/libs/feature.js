@@ -40,7 +40,7 @@ export class Feature {
 
     get store() {
         const res = store.get(this.dataStoreName);
-        if (res) return res;
+        if (res) { return res; }
         else {
             store.set(`in-module-${this.name}`, undefined);
             return undefined;
@@ -71,7 +71,7 @@ export class Feature {
     setPermission = (name, value) => {
         this.permissionMap[name] = value;
         const f = this[`permissionHandle${_.upperFirst(name)}`];
-        if (typeof f === 'function') f(value);
+        if (typeof f === 'function') { f(value); }
     };
 
     // 初始化配置
@@ -87,7 +87,7 @@ export class Feature {
 
     // 获取配置
     getSetting = (featureName) => {
-        if (featureName === this.name || !featureName) return this.settings;
+        if (featureName === this.name || !featureName) { return this.settings; }
         else {
             return chrome.extension.getBackgroundPage().FeatureManager.features[featureName].getSetting();
         }
@@ -123,8 +123,8 @@ export class Feature {
             if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
                 tempObject[key] = _.map(value, (object) => { // 以程序版本为模板
                     const local = _.find(localObject[key], (o) => o.key === object.key); // 查询在本地是否已有相关配置
-                    if (local) return this.mergeSetting(object, local); // 查到则进行合并
-                    else return object; // 查不到则以程序版本为准
+                    if (local) { return this.mergeSetting(object, local); } // 查到则进行合并
+                    else { return object; } // 查不到则以程序版本为准
                 });
             } else if (_.isPlainObject(value)) {
                 tempObject[key] = this.mergeSetting(value, localObject[key]);
@@ -144,7 +144,7 @@ export class Feature {
     simplifySetting = (setting) => {
         const tempObject = {};
         _.each(setting, (value, key) => {
-            if (this.simplifyFilterList.indexOf(key) > -1) return true;
+            if (this.simplifyFilterList.indexOf(key) > -1) { return true; }
             if (_.isArray(value) && value.length > 0) {
                 tempObject[key] = _.map(value, (o) => this.simplifySetting(o));
             } else if (_.isPlainObject(value)) {

@@ -207,7 +207,7 @@ class PageConfig extends React.Component {
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
         const thisKindOfFeatures = this.state[kind];
-        if (!!thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
+        if (thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
             const settingObject = thisKindOfFeatures.map[featureName]; // one feature in this kind of list
             if (!settingName && !on) { // 一级开关
                 settingObject.on = !settingObject.on;
@@ -251,7 +251,7 @@ class PageConfig extends React.Component {
                     this.setState({[kind]: thisKindOfFeatures});
                 }
             });
-        } else console.error(`Not find kind[${kind}]'s setting (*ﾟДﾟ*)!`);
+        } else { console.error(`Not find kind[${kind}]'s setting (*ﾟДﾟ*)!`); }
     };
 
     createSettingDOM = () => {
@@ -283,8 +283,8 @@ class PageConfig extends React.Component {
                     const twoLine = description !== undefined || errorDescription.length > 0;
                     let second = '';
                     if (twoLine) {
-                        if (errorDescription.length > 0) second = errorDescription;
-                        else second = description;
+                        if (errorDescription.length > 0) { second = errorDescription; }
+                        else { second = description; }
                     }
                     return <ListItem
                         key={featureName}
@@ -400,8 +400,8 @@ class PageConfig extends React.Component {
 
     handleCheckVersion = () => {
         const {checkingVersion} = this.state;
-        if (checkingVersion) return;
-        else this.setState({checkingVersion: true});
+        if (checkingVersion) { return; }
+        else { this.setState({checkingVersion: true}); }
         chrome.runtime.sendMessage({
             commend: 'checkVersion',
         }, () => {

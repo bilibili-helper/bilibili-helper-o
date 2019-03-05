@@ -24,9 +24,9 @@ export class FeatureManager {
         return new Promise(resolve => {
             _.each(Features, (FeatureClass, featureName) => {
                 if (!this.features[_.lowerFirst(featureName)]) {
-                    if (!FeatureClass) throw `Feature ${featureName}'s feature class is not defined!`;
-                    else this.features[_.lowerFirst(featureName)] = new FeatureClass();
-                } else throw `Feature ${featureName} has instantiated!`;
+                    if (!FeatureClass) { throw `Feature ${featureName}'s feature class is not defined!`; }
+                    else { this.features[_.lowerFirst(featureName)] = new FeatureClass(); }
+                } else { throw `Feature ${featureName} has instantiated!`; }
             });
             resolve();
         });
@@ -136,8 +136,8 @@ export class FeatureManager {
                     } else {
                         features = this.features;
                     }
-                    if (checkHide) features = _.filter(features, f => !f.settings.hide); // 返回不在设置页面隐藏配置项的feature的配置
-                    if (hasUI) features = _.filter(features, ({settings}) => settings.hasUI); // 返回带有UI的feature的配置
+                    if (checkHide) { features = _.filter(features, f => !f.settings.hide); } // 返回不在设置页面隐藏配置项的feature的配置
+                    if (hasUI) { features = _.filter(features, ({settings}) => settings.hasUI); } // 返回带有UI的feature的配置
 
                     const settings = {};
                     _.each(features, (feature) => {
@@ -161,11 +161,11 @@ export class FeatureManager {
                     }
                     if (commend === 'setSetting' && featureName === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
                         feature.setSetting(settings);
-                        if (!feature.initialed && settings.on === true) feature.init();  // 没有初始化过
+                        if (!feature.initialed && settings.on === true) { feature.init(); }  // 没有初始化过
                         if (feature.initialed && settings.on !== feature.settings.on) { // 总启动状态发生变化时
                             if (settings.on === true) {
                                 feature.launch();
-                            } else feature.pause();
+                            } else { feature.pause(); }
                         }
                         sendResponse(true);
                     } else if (commend === 'getSetting' && featureName === feature.name) { // 获取单个功能的配置
@@ -176,7 +176,7 @@ export class FeatureManager {
                 case 'getFeatureStore': {
                     const {feature: featureName} = message;
                     const feature = this.features[featureName];
-                    if (feature) sendResponse(feature.store);
+                    if (feature) { sendResponse(feature.store); }
                     break;
                 }
             }

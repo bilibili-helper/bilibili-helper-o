@@ -72,19 +72,19 @@ export class PermissionManager {
     checkOne = (feature) => {
         return new Promise(resolve => {
             let [pass, msg] = [true, '']; // 通过状态
-            if (_.isEmpty(feature.permissions)) resolve({pass, msg});// 没有设置需要检查的权限，则无条件通过
+            if (_.isEmpty(feature.permissions)) { resolve({pass, msg}); }// 没有设置需要检查的权限，则无条件通过
             Promise.all(_.map(feature.permissions, async (permissionName) => {
                 if (!(permissionName in PERMISSION_STATUS)) { // 未定义权限类型
                     return {pass: false, msg: `Undefined permission: ${permissionName}`};
                 }
-                if (!this.typeMap[permissionName]) this.typeMap[permissionName] = [];
+                if (!this.typeMap[permissionName]) { this.typeMap[permissionName] = []; }
                 this.typeMap[permissionName].push(feature);
 
                 return this.permissionMap[permissionName];
             })).then(checkResults => {
                 const res = _.filter(checkResults, ({pass}) => !pass);
-                if (res.length > 0) resolve({pass: false, data: res});
-                else resolve({pass: true, msg: ''});
+                if (res.length > 0) { resolve({pass: false, data: res}); }
+                else { resolve({pass: true, msg: ''}); }
             });
         });
     };
@@ -92,11 +92,11 @@ export class PermissionManager {
     check = (feature) => {
         if (!this.hasCheckAll) {
             return this.checkAll().then(() => this.checkOne(feature));
-        } else return this.checkOne(feature);
+        } else { return this.checkOne(feature); }
     };
 
     updatePermission = (name, value, msg) => {
-        if (this.permissionMap[name] === undefined) this.permissionMap[name] = {};
+        if (this.permissionMap[name] === undefined) { this.permissionMap[name] = {}; }
         if (this.permissionMap[name].pass !== value) {
             this.permissionMap[name].pass = value;
             chrome.runtime.sendMessage({
@@ -127,8 +127,8 @@ export class PermissionManager {
                 const thisSecond = (new Date()).getTime() / 1000;
                 let [pass, msg] = [false, ''];
                 // expirationDate 是秒数
-                if (cookie && cookie.expirationDate > thisSecond) [pass, msg] = [true, ''];
-                else [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg];
+                if (cookie && cookie.expirationDate > thisSecond) { [pass, msg] = [true, '']; }
+                else { [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg]; }
 
                 this.updatePermission('login', pass, msg);
                 resolve({pass, msg});

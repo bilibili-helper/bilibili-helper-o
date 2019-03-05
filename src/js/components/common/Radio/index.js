@@ -104,4 +104,4 @@ export class Radio extends React.Component {
             </RadioView>
         );
     }
-};
+}

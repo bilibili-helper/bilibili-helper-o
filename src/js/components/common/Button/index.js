@@ -3,7 +3,7 @@
  * Create: 2018-07-26
  * Description:
  */
-
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled, {
     css,
@@ -55,6 +55,16 @@ const ButtonView = styled.button.attrs({
 `;
 
 export class Button extends React.Component {
+    propTypes = {
+        icon: PropTypes.any,
+        loading: PropTypes.bool,
+        children: PropTypes.any,
+        className: PropTypes.any,
+        theme: PropTypes.object,
+        normal: PropTypes.bool,
+        onClick: PropTypes.func,
+        disable: PropTypes.bool,
+    }
     constructor() {
         super();
         this.handleOnMouseDown = ::this.handleOnMouseDown;

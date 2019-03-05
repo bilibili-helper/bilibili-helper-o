@@ -37,7 +37,7 @@ const Bar = styled.div`
 `;
 
 const Knob = styled.span.attrs({
-    className: `checkbox-knob`
+    className: `checkbox-knob`,
 })`
   display: block;
   width: ${({theme}) => theme.mouseDown ? '17px' : '14px'};
@@ -95,4 +95,4 @@ export class CheckBoxButton extends React.Component {
             </ThemeProvider>
         );
     }
-};
+}

@@ -42,7 +42,7 @@ export class UIManager {
             if (UIClass) {
                 this.UIMap[name] = new UIClass();
             } else {
-                throw(`Wrong UI class ${featureName}`);
+                throw (`Wrong UI class ${featureName}`);
             }
             resolveUI();
         })));

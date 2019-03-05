@@ -160,6 +160,7 @@ export class SubPage extends React.Component {
         children: PropTypes.any,
         onClose: PropTypes.func,
         theme: PropTypes.object,
+        parent: PropTypes.node,
     };
 
     constructor() {

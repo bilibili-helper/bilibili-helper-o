@@ -37,7 +37,7 @@ export class MessageStore {
         chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
             const {status, url} = changeInfo;
             // 切换分P时url!==undefined，不需要清除
-            if (this.has(tabId) && status === 'loading' && url === undefined) this.delete(tabId);
+            if (this.has(tabId) && status === 'loading' && url === undefined) { this.delete(tabId); }
             else if (this.has(tabId) && status === 'complete') {
                 this.createData(tabId);
             }
@@ -50,7 +50,7 @@ export class MessageStore {
      * @return {{state, queue, data}}
      */
     createData = (id) => {
-        if (this.has(id)) return this.store[id];
+        if (this.has(id)) { return this.store[id]; }
         else {
             //console.warn(`Create MessageStore on Tab ${id}`);
             return this.store[id] = {
@@ -70,14 +70,14 @@ export class MessageStore {
     // 处理任务队列
     dealWith = (id) => {
         const doIt = (id, taskData) => {
-            if (!taskData) return Promise.resolve();
+            if (!taskData) { return Promise.resolve(); }
             return new Promise((resolve, reject) => {
                 chrome.tabs.sendMessage(id, taskData, (res) => {
                     res !== undefined ? resolve() : reject(`No result from tab[${id}] - commend[${taskData.commend}]`);
                 });
             });
         };
-        if (this.has[id] === false) return console.error(`Invalid tab id ${id}`);
+        if (this.has[id] === false) { return console.error(`Invalid tab id ${id}`); }
         const {state, queue} = this.store[id];
         state && queue.length > 0 && doIt(id, queue.shift()).then(() => {
             queue.length > 0 && this.dealWith(id); // 如果队列不为空

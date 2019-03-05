@@ -120,6 +120,6 @@ export const toDuration = (seconds) => {
     const minutesStr = String(duration.minutes()).padStart(2, 0);
     const secondsStr = String(duration.seconds()).padStart(2, 0);
     let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
-    if (durationStr[0] === '0') durationStr = durationStr.slice(1);
+    if (durationStr[0] === '0') { durationStr = durationStr.slice(1); }
     return durationStr;
 }

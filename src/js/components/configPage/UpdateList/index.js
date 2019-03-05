@@ -6,6 +6,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {ListItem} from '../List';
 import {theme} from 'Styles';
@@ -43,6 +44,11 @@ const UpdateListItem = styled.div.attrs({className: 'update-list-item'})`
 `;
 
 export class UpdateList extends React.Component {
+    propTypes = {
+        data: PropTypes.any,
+        title: PropTypes.string,
+        hide: PropTypes.bool,
+    }
     render() {
         const {data, title, hide = true, ...rest} = this.props;
         return <ListItem
