@@ -46,14 +46,14 @@ export class VersionManager extends Feature {
         });
     };
 
-    setVersion = ({version} = {}) => {
+    setVersion = ({lastVersion} = {}) => {
         if (!this.store) {
             this.version = {
                 version,
                 day: new Date().getDate(),
             };
         } else {
-            if (version) this.version.version = version;
+            if (version) this.version.version = lastVersion;
             this.version.day = new Date().getDate();
         }
         this.store = this.version;
@@ -83,7 +83,8 @@ export class VersionManager extends Feature {
                 success: (res) => {
                     const compareRes = this.isBiggerThan(res.lastVersion, version);
                     if (compareRes <= 0) { // 本地版本比较新
-                        res.version = version;
+                        res.lastVersion = version;
+                        this.setVersion(res);
                         this.sendNotification(__('checkVersionNoNewVersion'), ignore);
                     } else if (compareRes > 0) { // 有新版本
                         this.setVersion(res);
