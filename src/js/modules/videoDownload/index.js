@@ -3,10 +3,11 @@
  * Create: 2018/11/11
  * Description:
  */
-import URL from 'url-parse';
+import Url from 'url-parse';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
+import {flvDownloadURL} from 'Modules/videoDownload/api';
 
 export {VideoDownloadUI} from './UI';
 
@@ -57,7 +58,7 @@ export class VideoDownload extends Feature {
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
-            const url = new URL(details.url, '', true);
+            const url = new Url(details.url, '', true);
             const {pathname, query: data} = url;
             const tabData = this.messageStore.createData(tabId);
             if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
@@ -69,11 +70,14 @@ export class VideoDownload extends Feature {
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/player/playurl' || pathname === '/pgc/player/web/playurl') { // 新页面
+                //const newUrl = new Url(flvDownloadURL);
+                //const {cid, avid, qn = ''} = data;
+                //newUrl.set('query', {cid, avid, otype: 'json', qn});
                 tabData.queue.push({
                     commend: 'videoDownloadSendVideoRequest',
                     type: 'new',
                     data,
-                    url: url.origin + url.pathname,
+                    //url: newUrl.toString(),
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
@@ -86,7 +90,7 @@ export class VideoDownload extends Feature {
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message) => {
             if (message.commend === 'sendVideoFilename' && message.cid) {
-                const url = new URL(message.url, '', true);
+                const url = new Url(message.url, '', true);
                 this.downloadFilenames[url.pathname] = {
                     filename: message.filename,
                     cid: message.cid,
@@ -102,7 +106,7 @@ export class VideoDownload extends Feature {
         chrome.webRequest.onHeadersReceived.addListener((details) => {
             const {responseHeaders, initiator, url} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
-            const urlObject = new URL(url, '', true);
+            const urlObject = new Url(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
                 const {filename: originFilename, cid} = filenameObject;

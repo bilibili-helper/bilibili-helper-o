@@ -9,10 +9,11 @@ import $ from 'jquery';
 import React from 'react';
 import styled from 'styled-components';
 import {theme} from 'Styles';
-import URL from 'url-parse';
+import Url from 'url-parse';
 import FLV from '../lib/flv';
 import {FlvContainer} from '../FlvContainer';
 import {DashContainer} from '../DashContainer';
+import {normalFlvDownloadURL, bangumiFlvDownloadURL} from '../api';
 //const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 
 const {color} = theme;
@@ -152,38 +153,46 @@ export class VideoDownload extends React.Component {
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'videoDownloadSendVideoRequest') {
-                const {data, url, method, type} = message;
+                let {data, url, method, type} = message;
+                const {cid, avid, qn = ''} = data;
+                if (type === 'new') {
+                    if (location.href.indexOf('bangumi') >= 0) {
+                        url = new Url(bangumiFlvDownloadURL);
+                    } else {
+                        url = new Url(normalFlvDownloadURL);
+                    }
+                    url.set('query', {cid, avid, qn, otype: 'json'});
+                    url = url.toString();
+                }
                 //const res = /\/av([\d]+)\//.exec(location.pathname); // 新的视频播放页面会同时加载多个不同视频的playUrl
                 //console.log(res, avid);
                 //if (type === 'old') {
                 const {videoData} = this.state;
                 const currentCid = data.cid;
-                const quality = data.quality;
+                const quality = data.quality || data.qn;
                 if (videoData[currentCid] && videoData[currentCid][quality]) {
                     this.setState({currentCid});
                 } else {
                     $.ajax({
                         method,
                         url,
-                        data,
+                        //data,
                         headers: {
                             'From': 'bilibili-helper',
                         },
-                        contentType: 'video/mp4',
                         success: (res) => {
                             if (res.code === 10005) return console.error(res);
                             let downloadData;
                             if (type === 'new' && res.code === 0) {
-                                downloadData = res.data || res.result;
+                                downloadData = res.data || res.result || res;
                             } else if (type === 'old') {
-                                downloadData = res;
+                                downloadData = res.result || res.data || res;
                             }
 
                             const {accept_quality, accept_description, durl, quality, dash} = downloadData;
-                            const currentData = {accept_quality, accept_description, durl, dash};
+                            const currentData = {accept_quality, accept_description, durl, dash, quality};
                             if (!videoData[currentCid]) videoData[currentCid] = {};
                             videoData[currentCid][quality] = currentData;
-
                             this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
                         },
                     });
@@ -266,14 +275,14 @@ export class VideoDownload extends React.Component {
     };
 
     handleOnClickDownloadFLVAll = (data) => {
-        const {currentCid, currentQuality} = this.state;
+        const {currentCid, currentQuality, videoData} = this.state;
         this.setState({downloading: true});
 
         // get quality
         if (!data.quality) data.quality = parseInt(document.querySelector('.bilibili-player-video-btn-quality > div ul li.bui-select-item-active')
                                                            .getAttribute('data-value'));
         // init container
-        const container = this.getContainer('flv', currentCid, currentQuality, data);
+        const container = this.getContainer('flv', currentCid, currentQuality, videoData);
         // start download
         container.download((percentage) => {
             this.setState({percentage});
@@ -301,15 +310,15 @@ export class VideoDownload extends React.Component {
         }
     };*/
 
-    renderFLV = (percentage) => {
-        const {downloading, settings, videoData, currentQuality: quality = null, currentCid} = this.state;
+    renderFLV = () => {
+        const {downloading, settings, videoData, currentQuality: quality = null, currentCid, percentage} = this.state;
         const showPiece = (settings && _.find(settings.options, {key: 'showPiece'})) || {on: false};
         const {durl, accept_description, accept_quality} = videoData[currentCid][quality];
         if (!showPiece.on) { // 不显示分段
             const title = accept_description[accept_quality.indexOf(+quality)];
             return (
                 <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
-                    <a onClick={() => this.handleOnClickDownloadFLVAll(videoData)}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>
+                    <a onClick={() => this.handleOnClickDownloadFLVAll(videoData[currentCid][quality])}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>
                     <Progress percentage={percentage}/>
                 </LinkGroup>
             );
@@ -343,15 +352,15 @@ export class VideoDownload extends React.Component {
         );
     };
 
-    renderDash = (percentage) => {
-        const {downloading, currentQuality: quality, videoData, currentCid} = this.state;
+    renderDash = () => {
+        const {downloading, currentQuality: quality, videoData, currentCid, percentage} = this.state;
         const {accept_description, accept_quality} = videoData[currentCid][quality];
         const title = accept_description[accept_quality.indexOf(+quality)];
         return (
             <LinkGroup downloading={downloading} disabled={downloading}>
-                {/*{<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>*/}
-                {/*{title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}*/}
-                {/*</a>}*/}
+                {<a onClick={() => this.handleOnClickDownloadMp4(videoData[currentCid][quality])}>
+                    {title}{downloading ? ` 下载中 ${percentage ? `(${percentage}%)` : ''}` : ''}
+                </a>}
                 MP4下载功能存在没有声音的问题，暂时下架<br/>
                 可切换到旧版播放页面下载flv，目前已支持合FLV合并下载
                 <Progress percentage={percentage}/>
@@ -366,7 +375,7 @@ export class VideoDownload extends React.Component {
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
                 <Container>
-                    {!_.isEmpty(loadedVideo) && (!_.isEmpty(loadedVideo.durl) ? this.renderFLV : this.renderDash)(percentage)}
+                    {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
                     {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>
