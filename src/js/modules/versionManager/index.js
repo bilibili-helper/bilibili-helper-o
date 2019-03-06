@@ -46,7 +46,7 @@ export class VersionManager extends Feature {
         });
     };
 
-    setVersion = ({version, update_time: updateTime} = {}) => {
+    setVersion = ({version} = {}) => {
         if (!this.store) {
             this.version = {
                 version,
@@ -54,7 +54,6 @@ export class VersionManager extends Feature {
             };
         } else {
             if (version) this.version.version = version;
-            if (updateTime) this.version.updateTime = updateTime;
             this.version.day = new Date().getDate();
         }
         this.store = this.version;
@@ -65,7 +64,6 @@ export class VersionManager extends Feature {
         if (v === undefined) {
             this.version = {
                 version: null,
-                updateTime: null,
                 day: null,
             };
         } else {
@@ -76,23 +74,20 @@ export class VersionManager extends Feature {
     };
 
     request = (ignore = false) => {
-        const {day, updateTime} = this.getVersion() || {};
+        const {day} = this.getVersion() || {};
         if (day !== this.getTodayDate() || ignore) {
-            const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
+            //const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
             $.ajax({
                 method: 'get',
                 url: apis.version,
                 success: (res) => {
-                    const compareRes = this.compareVersion(res.version, version);
-                    if (compareRes < 0) {
+                    const compareRes = this.isBiggerThan(res.lastVersion, version);
+                    if (compareRes <= 0) { // 本地版本比较新
                         res.version = version;
-                        this.setVersion(res);
-                    } else if (updateTime < res.update_time || compareRes < 0) { // 比较今天是否有检测过
+                        this.sendNotification(__('checkVersionNoNewVersion'), ignore);
+                    } else if (compareRes > 0) { // 有新版本
                         this.setVersion(res);
                         this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
-                    } else if (notifyOn) {
-                        this.setVersion(res);
-                        this.sendNotification(__('checkVersionNoNewVersion'), ignore);
                     }
                 },
                 error: (e) => {
@@ -112,7 +107,7 @@ export class VersionManager extends Feature {
         notifyOn && chrome.notifications.create(notifyId, {type, iconUrl, title, message});
     };
 
-    compareVersion = (a, b) => {
+    isBiggerThan = (a, b) => {
         if (a === b) {
             return 0;
         }
@@ -125,12 +120,12 @@ export class VersionManager extends Feature {
         // loop while the components are equal
         for (let i = 0; i < len; i++) {
             // A bigger than B
-            if (parseInt(a_components[i]) > parseInt(b_components[i])) {
+            if (parseInt(a_components[i] || 0) > parseInt(b_components[i] || 0)) {
                 return 1;
             }
 
             // B bigger than A
-            if (parseInt(a_components[i]) < parseInt(b_components[i])) {
+            if (parseInt(a_components[i] || 0) < parseInt(b_components[i] || 0)) {
                 return -1;
             }
         }

@@ -4,5 +4,5 @@
  * Description:
  */
 export default {
-    version: 'https://bilihelper.guguke.net/version.json',
+    version: 'https://bilibili-helper.github.io/static/json/config.json',
 };

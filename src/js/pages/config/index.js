@@ -108,10 +108,13 @@ const Broadcast = styled.p`
   width: 100%;
   line-height: 30px;
   max-width: 800px;
-  margin: 16px auto;
+  margin: 16px auto 0;
   padding: 0px 10px;
   text-align: left;
   color: ${color('bilibili-pink')};
+  a {
+    color: #00aeeb;
+  }
 `;
 const PermissionTag = styled.span.attrs({
     title: ({title}) => title,
@@ -254,56 +257,6 @@ class PageConfig extends React.Component {
         } else { console.error(`Not find kind[${kind}]'s setting (*ﾟДﾟ*)!`); }
     };
 
-    createSettingDOM = () => {
-        const {permissionMap, debug} = this.state;
-        return _.map(this.settings, (e, kind) => {
-            const list = this.state[kind];
-            return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
-                {_.map(list.map, (settings, featureName) => {
-                    const {on, description, title, subPage, toggle, permissions} = settings;
-                    const SubListChildren = this.createSubListComponent({kind, featureName, settings});
-                    const toggleMode = toggle === undefined || subPage ? true : toggle;
-
-                    const handleOpenSubPage = () => this.handleSetSubPage({parent: this[`${kind}Ref`], settings});
-                    const onClick = subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
-                    const operation = subPage ? <Button icon="arrowRight"/> : <CheckBoxButton disable={!toggleMode}
-                                                                                              on={on}/>;
-
-                    let errorDescription = [];
-                    const permissionList = _.map(permissions, (name) => {
-                        if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
-                            errorDescription.push(
-                                <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
-                            );
-                        }
-                        return debug ? <PermissionTag title={PERMISSION_STATUS[name].description}>
-                            {_.upperFirst(name)}
-                        </PermissionTag> : null;
-                    });
-                    const twoLine = description !== undefined || errorDescription.length > 0;
-                    let second = '';
-                    if (twoLine) {
-                        if (errorDescription.length > 0) { second = errorDescription; }
-                        else { second = description; }
-                    }
-                    return <ListItem
-                        key={featureName}
-                        toggle={toggleMode}
-                        onClick={on !== undefined && toggleMode !== false ? onClick : null}
-                        operation={on !== undefined ? operation : null}
-                        subList={SubListChildren ? {
-                            hide: on === undefined ? false : !on,
-                            children: SubListChildren,
-                        } : null}
-                        twoLine={twoLine}
-                        first={twoLine ? <React.Fragment>{title}{permissionList}</React.Fragment> : ''}
-                        second={second}
-                    >{twoLine ? null : title}{permissionList}</ListItem>;
-                })}
-            </List> : null;
-        });
-    };
-
     createSubListComponent = ({kind = '', featureName = '', settings = {}, subPage = false}) => {
         let SubListChildren = null;
         const {options, type, value} = settings;
@@ -408,6 +361,88 @@ class PageConfig extends React.Component {
             setTimeout(() => this.setState({checkingVersion: false}), 500);
         });
     };
+    renderSettingDOM = () => {
+        const {permissionMap, debug} = this.state;
+        return _.map(this.settings, (e, kind) => {
+            const list = this.state[kind];
+            return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
+                {_.map(list.map, (settings, featureName) => {
+                    const {on, description, title, subPage, toggle, permissions} = settings;
+                    const SubListChildren = this.createSubListComponent({kind, featureName, settings});
+                    const toggleMode = toggle === undefined || subPage ? true : toggle;
+
+                    const handleOpenSubPage = () => this.handleSetSubPage({parent: this[`${kind}Ref`], settings});
+                    const onClick = subPage ? handleOpenSubPage : () => this.handleSetSetting({kind, featureName});
+                    const operation = subPage ? <Button icon="arrowRight"/> : <CheckBoxButton disable={!toggleMode}
+                                                                                              on={on}/>;
+
+                    let errorDescription = [];
+                    const permissionList = _.map(permissions, (name) => {
+                        if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
+                            errorDescription.push(
+                                <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
+                            );
+                        }
+                        return debug ? <PermissionTag title={PERMISSION_STATUS[name].description}>
+                            {_.upperFirst(name)}
+                        </PermissionTag> : null;
+                    });
+                    const twoLine = description !== undefined || errorDescription.length > 0;
+                    let second = '';
+                    if (twoLine) {
+                        if (errorDescription.length > 0) { second = errorDescription; }
+                        else { second = description; }
+                    }
+                    return <ListItem
+                        key={featureName}
+                        toggle={toggleMode}
+                        onClick={on !== undefined && toggleMode !== false ? onClick : null}
+                        operation={on !== undefined ? operation : null}
+                        subList={SubListChildren ? {
+                            hide: on === undefined ? false : !on,
+                            children: SubListChildren,
+                        } : null}
+                        twoLine={twoLine}
+                        first={twoLine ? <React.Fragment>{title}{permissionList}</React.Fragment> : ''}
+                        second={second}
+                    >{twoLine ? null : title}{permissionList}</ListItem>;
+                })}
+            </List> : null;
+        });
+    };
+
+    renderAboutList = () => {
+        const {checkingVersion, version, debug} = this.state;
+        return (
+            <List title="关于" ref={i => this.aboutRef = i}>
+                <ListItem
+                    icon={<Icon iconfont="cat" image/>}
+                    twoLine
+                    first={chrome.i18n.getMessage('extensionName')}
+                    second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
+                    separator
+                    operation={
+                        <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>检查更新</Button>
+                    }
+                />
+                {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
+                <ListItem
+                    twoLine={true}
+                    first="更新日志"
+                    second={`包含 ${Object.keys(updateList).length} 次更新`}
+                    onClick={this.handleOpenUpdateList}
+                    operation={<Button icon="arrowRight"></Button>}
+                ></ListItem>
+                <ListItem
+                    twoLine={true}
+                    first={`投喂列表 - ${feedJson.length}条`}
+                    second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
+                    onClick={this.handleOpenFeedList}
+                    operation={<Button icon="arrowRight"></Button>}
+                />
+            </List>
+        );
+    };
 
     render() {
         const {
@@ -423,8 +458,6 @@ class PageConfig extends React.Component {
             pageType,
             debug,
             broadcast,
-            checkingVersion,
-
             version,
         } = this.state;
         return <React.Fragment>
@@ -436,11 +469,12 @@ class PageConfig extends React.Component {
                     <sub>{`version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
-                {(!debug || broadcast) && <Broadcast>
-                    {!debug && <React.Fragment>如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装<br/></React.Fragment>}
+                <Broadcast>
+                    <div>如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装</div>
+                    <p>哔哩哔哩助手官网已经更新为：<a href="https://bilibili-helper.github.io/" target="_blank" rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
                     {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
-                </Broadcast>}
+                </Broadcast>
                 <SubPage
                     on={subPageOn}
                     title={subPageTitle}
@@ -449,37 +483,11 @@ class PageConfig extends React.Component {
                 >
                     <List>{subPageOn && this.createSubPage(pageType)}</List>
                 </SubPage>
-                {this.createSettingDOM()}
-                <List title="关于" ref={i => this.aboutRef = i}>
-                    <ListItem
-                        icon={<Icon iconfont="cat" image/>}
-                        twoLine
-                        first={chrome.i18n.getMessage('extensionName')}
-                        second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
-                        separator
-                        operation={
-                            <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>检查更新</Button>
-                        }
-                    />
-                    {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
-                    <ListItem
-                        twoLine={true}
-                        first="更新日志"
-                        second={`包含 ${Object.keys(updateList).length} 次更新`}
-                        onClick={this.handleOpenUpdateList}
-                        operation={<Button icon="arrowRight"></Button>}
-                    ></ListItem>
-                    <ListItem
-                        twoLine={true}
-                        first={`投喂列表 - ${feedJson.length}条`}
-                        second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
-                        onClick={this.handleOpenFeedList}
-                        operation={<Button icon="arrowRight"></Button>}
-                    />
-                </List>
+                {this.renderSettingDOM()}
+                {this.renderAboutList()}
                 <Footer>
                     <a href="https://github.com/zacyu/bilibili-helper">Github</a>
-                    <a href="https://bilihelper.guguke.net">Website</a>
+                    <a href="https://bilibili-helper.github.io/">Website</a>
                     <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome
                         WebStore</a>
                     <span>
