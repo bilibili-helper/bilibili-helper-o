@@ -84,8 +84,10 @@ export class VersionManager extends Feature {
                 url: apis.version,
                 success: (res) => {
                     const compareRes = this.compareVersion(res.version, version);
-                    if (compareRes < 0) res.version = version;
-                    if (updateTime < res.update_time || compareRes < 0) { // 比较今天是否有检测过
+                    if (compareRes < 0) {
+                        res.version = version;
+                        this.setVersion(res);
+                    } else if (updateTime < res.update_time || compareRes < 0) { // 比较今天是否有检测过
                         this.setVersion(res);
                         this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
                     } else if (notifyOn) {
