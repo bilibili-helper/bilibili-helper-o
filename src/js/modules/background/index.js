@@ -34,7 +34,7 @@ export class Background extends Feature {
             }
         });
         if (typeof (chrome.runtime.setUninstallURL) === 'function') { // 卸载成功后自动跳到助手官网页面
-            chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + version);
+            //chrome.runtime.setUninstallURL('https://extlabs.io/analytics/uninstall/?uid=178&pid=264&finish_url=https%3A%2F%2Fbilihelper.guguke.net%2F%3Funinstall%26version%3D' + version);
         }
     };
 }

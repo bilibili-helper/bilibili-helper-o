@@ -437,8 +437,8 @@ class PageConfig extends React.Component {
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
                 {(!debug || broadcast) && <Broadcast>
-                    {!debug && '如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装'}<br/>
-                    {broadcast}<br/>
+                    {!debug && <React.Fragment>如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装<br/></React.Fragment>}
+                    {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
                 </Broadcast>}
                 <SubPage
