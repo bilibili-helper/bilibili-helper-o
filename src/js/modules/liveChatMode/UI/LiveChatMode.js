@@ -56,7 +56,7 @@ const stylesheet = css`
   .hide-aside-area .chat-history-panel:hover #chat-history-list {
     outline: 1px solid ${color('bilibili-blue')};
   }
-  .hide-aside-area .chat-history-panel:hover #chat-history-list::-webkit-scrollbar {
+  .hide-aside-area .chat-history-panel #chat-history-list::-webkit-scrollbar {
     display: none;
   }
   .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel::-webkit-scrollbar,

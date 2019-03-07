@@ -170,32 +170,10 @@ export class VideoDownload extends React.Component {
                 const {videoData} = this.state;
                 const currentCid = data.cid;
                 const quality = data.quality || data.qn;
-                if (videoData[currentCid] && videoData[currentCid][quality]) {
+                if (videoData[currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
                     this.setState({currentCid});
                 } else {
-                    $.ajax({
-                        method,
-                        url,
-                        //data,
-                        headers: {
-                            'From': 'bilibili-helper',
-                        },
-                        success: (res) => {
-                            if (res.code === 10005) return console.error(res);
-                            let downloadData;
-                            if (type === 'new' && res.code === 0) {
-                                downloadData = res.data || res.result || res;
-                            } else if (type === 'old') {
-                                downloadData = res.result || res.data || res;
-                            }
-
-                            const {accept_quality, accept_description, durl, quality, dash} = downloadData;
-                            const currentData = {accept_quality, accept_description, durl, dash, quality};
-                            if (!videoData[currentCid]) videoData[currentCid] = {};
-                            videoData[currentCid][quality] = currentData;
-                            this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
-                        },
-                    });
+                    this.getFlvResponse(method, url);
                 }
 
                 sendResponse(true);
@@ -203,14 +181,53 @@ export class VideoDownload extends React.Component {
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
                     const {quality} = this.originVideoData;
-                    const currentData = {...this.originVideoData};
-                    const cidData = videoData[message.cid] || {};
-                    cidData[quality] = currentData;
-                    videoData[message.cid] = cidData;
-                    this.setState({currentCid: message.cid, videoData, currentQuality: quality});
+                    if (this.originVideoData.dash) {
+
+                        let url = null;
+                        if (location.href.indexOf('bangumi') >= 0) {
+                            url = new Url(bangumiFlvDownloadURL);
+                        } else {
+                            url = new Url(normalFlvDownloadURL);
+                        }
+                        url.set('query', {cid: message.cid, avid: message.avid, qn: quality, otype: 'json'});
+                        this.getFlvResponse('get', url.toString());
+                    } else {
+                        const currentData = {...this.originVideoData};
+                        const cidData = videoData[message.cid] || {};
+                        cidData[quality] = currentData;
+                        videoData[message.cid] = cidData;
+                        this.setState({currentCid: message.cid, videoData, currentQuality: quality});
+                    }
                 }
                 sendResponse(true);
             }
+        });
+    };
+
+    getFlvResponse = (method, url, type = 'old') => {
+        const {videoData, currentCid} = this.state;
+        $.ajax({
+            method,
+            url,
+            //data,
+            headers: {
+                'From': 'bilibili-helper',
+            },
+            success: (res) => {
+                if (res.code === 10005) return console.error(res);
+                let downloadData;
+                if (type === 'new' && res.code === 0) {
+                    downloadData = res.data || res.result || res;
+                } else if (type === 'old') {
+                    downloadData = res.result || res.data || res;
+                }
+
+                const {accept_quality, accept_description, durl, quality, dash} = downloadData;
+                const currentData = {accept_quality, accept_description, durl, dash, quality};
+                if (!videoData[currentCid]) videoData[currentCid] = {};
+                videoData[currentCid][quality] = currentData;
+                this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
+            },
         });
     };
 

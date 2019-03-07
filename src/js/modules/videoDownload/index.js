@@ -81,9 +81,11 @@ export class VideoDownload extends Feature {
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
+                console.warn(data);
                 tabData.queue.push({
                     commend: 'videoDownloadCid',
                     cid: +data.id.slice(4),
+                    avid: data.aid,
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             }
