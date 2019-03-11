@@ -263,7 +263,7 @@ const VideoDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-1);
     }
     .emoji-box {
-      background: var(--dark-1);
+      //background: var(--dark-1);
       border: 1px solid var(--dark-1);
       .emoji-wrap {
         
