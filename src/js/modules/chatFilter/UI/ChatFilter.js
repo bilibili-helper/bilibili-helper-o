@@ -66,19 +66,19 @@ const FilterRadio = styled(CheckBoxButton)`
 export class ChatFilter extends React.Component {
     propTypes = {
         settings: PropTypes.object,
-    }
+    };
 
     constructor(props) {
         super(props);
         this.styleList = {
-            chat: '.chat-item.danmaku-item{display:none;}',
-            small: '.chat-item:not(.system-msg) > a, .chat-item .guard-icon{display:none !important;}',
-            gift: '.chat-item.gift-item,.bilibili-live-player-video-area > .bilibili-live-player-video-gift{display:none !important;}',
-            enterMsg: '.chat-item.welcome-msg,.chat-item.welcome-guard{display: none !important;}',
-            medal: '.chat-item .fans-medal-item-ctnr{display:none !important;}',
-            achievement: '.chat-item .title-label{display:none !important;}',
-            level: '.chat-item .user-level-icon{display:none !important;}',
-            announcement: '.chat-item.system-msg{display:none !important;}',
+            chat: '.chat-item:not(.hover).danmaku-item{display:none;}',
+            small: '.chat-item:not(.hover):not(.system-msg) > a, .chat-item .guard-icon{display:none !important;}',
+            gift: '.chat-item:not(.hover).gift-item,.bilibili-live-player-video-area > .bilibili-live-player-video-gift{display:none !important;}',
+            enterMsg: '.chat-item:not(.hover).welcome-msg,.chat-item.welcome-guard{display: none !important;}',
+            medal: '.chat-item:not(.hover) .fans-medal-item-ctnr{display:none !important;}',
+            achievement: '.chat-item:not(.hover) .title-label{display:none !important;}',
+            level: '.chat-item:not(.hover) .user-level-icon{display:none !important;}',
+            announcement: '.chat-item:not(.hover).system-msg{display:none !important;}',
         };
         this.roomId = location.pathname.slice(1);
         this.storeName = 'bilibili-helper-chat-filter';
@@ -96,6 +96,12 @@ export class ChatFilter extends React.Component {
             if (target.parents('#bilibili-helper-chat-filter').length <= 0 && $(that.panel).css('display') !== 'none') {
                 $(that.panel).fadeOut(200);
             }
+        });
+        $(document).on('mouseenter', '.chat-item', function() {
+            $(this).addClass('hover');
+        });
+        $(document).on('mouseleave', '.chat-item', function() {
+            $(this).removeClass('hover');
         });
     }
 

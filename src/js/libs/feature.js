@@ -77,7 +77,7 @@ export class Feature {
     // 初始化配置
     initSetting = (sets) => {
         return new Promise(resolve => {
-            const localOptions = this.settings.toggle ? {} : store.get(this.optionStoreName);
+            const localOptions = store.get(this.optionStoreName);
             const settings = sets || localOptions || {}; // 缓存配置
             this.settings = this.mergeSetting(this.settings, settings);
             store.set(this.optionStoreName, this.simplifySetting(this.settings));

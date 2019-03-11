@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
-import {consoleLogo} from 'Utils';
+import {consoleLogo, createTab} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
@@ -21,10 +21,8 @@ import {
     UpdateList,
 } from 'Components/configPage';
 import {theme} from 'Styles';
-import updateList from 'Statics/json/update.json';
 import announcementList from 'Statics/json/announcement.json';
 import 'Styles/scss/config.scss';
-import feedJson from 'Statics/json/feed.json';
 
 const {color} = theme;
 
@@ -48,7 +46,7 @@ const ConfigBody = styled(Body).attrs({className: 'config-body'})`
 const Figure = styled.figure`
   position: absolute;
   left: calc(50% + 380px);
-  bottom: 7px;
+  bottom: 22px;
   z-index: 0;
   figcaption {
     text-align: center;
@@ -334,22 +332,27 @@ class PageConfig extends React.Component {
         }
     };
 
-    handleOpenFeedList = () => {
-        this.handleSetSubPage({
-            parent: this.aboutRef,
-            subPageList: feedJson,
-            subPageTitle: '用户投喂列表',
-            pageType: 'feed',
-        });
-    };
-    handleOpenUpdateList = () => {
-        this.handleSetSubPage({
-            parent: this.aboutRef,
-            subPageList: updateList,
-            subPageTitle: '版本更新日志',
-            pageType: 'update',
-        });
-    };
+    //handleOpenFeedList = () => {
+    //    this.handleSetSubPage({
+    //        parent: this.aboutRef,
+    //        subPageList: feedJson,
+    //        subPageTitle: '用户投喂列表',
+    //        pageType: 'feed',
+    //    });
+    //};
+
+    //handleOpenUpdateList = () => {
+        //this.handleSetSubPage({
+        //    parent: this.aboutRef,
+        //    subPageList: updateList,
+        //    subPageTitle: '版本更新日志',
+        //    pageType: 'update',
+        //});
+    //};
+
+    handleOpenWebsite = () => {
+        createTab('https://bilibili-helper.github.io/');
+    }
 
     handleCheckVersion = () => {
         const {checkingVersion} = this.state;
@@ -427,19 +430,9 @@ class PageConfig extends React.Component {
                 />
                 {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 <ListItem
-                    twoLine={true}
-                    first="更新日志"
-                    second={`包含 ${Object.keys(updateList).length} 次更新`}
-                    onClick={this.handleOpenUpdateList}
+                    onClick={this.handleOpenWebsite}
                     operation={<Button icon="arrowRight"></Button>}
-                ></ListItem>
-                <ListItem
-                    twoLine={true}
-                    first={`投喂列表 - ${feedJson.length}条`}
-                    second="手动更新，仅为肉肉收到的投喂，可能包含生活中的非投喂信息"
-                    onClick={this.handleOpenFeedList}
-                    operation={<Button icon="arrowRight"></Button>}
-                />
+                >前往官网查看更新日志 和 投喂记录</ListItem>
             </List>
         );
     };

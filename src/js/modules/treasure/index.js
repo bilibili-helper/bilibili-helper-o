@@ -19,7 +19,6 @@ export class Treasure extends Feature {
             permissions: ['login', 'notifications'],
             settings: {
                 on: true,
-                toggle: true,
                 hasUI: true,
                 title: '自动领瓜子',
                 description: '打开直播间就会自动领瓜子',

@@ -17,6 +17,7 @@ export class ChatFilterUI extends UI {
     }
 
     load = (containers, settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             this.interval('.aside-area .control-panel-icon-row', 1000).then((container) => {
                 if (container) {
