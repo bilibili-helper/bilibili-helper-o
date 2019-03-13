@@ -60,7 +60,7 @@ const DanmuListLine = styled.div`
   display: flex;
   margin-bottom: 1px;
   padding: 0 8px 1px;
-  line-height: 18px;
+  line-height: 20px;
   border-radius: 2px;
   background-color: ${({hasQueried}) => hasQueried ? '#d6e8f5' : 'white'};
   cursor: pointer;
@@ -217,9 +217,9 @@ export class Danmu extends React.Component {
             }
             n = setTimeout(() => {
                 that.removeCardSign = true;
-            }, 600);
+            }, 300);
         });
-        $(document).on('mouseleave', '[helper-data-usercard-mid], #helper-card', function() {
+        $(document).on('mouseleave', '[helper-data-usercard-mid], #helper-card, .bilibili-helper-danmu-wrapper', function() {
             setTimeout(() => {
                 const dom = document.querySelector('#helper-card');
                 if (that.removeCardSign && dom) dom.style.display = 'none';
@@ -522,6 +522,7 @@ export class Danmu extends React.Component {
         const {height, top, left} = targetDOM.getBoundingClientRect();
         const {height: cardHeight} = cardDOM.getBoundingClientRect();
         if (cardHeight) this.lastHeight = cardHeight;
+        console.warn(height, top, left, cardHeight);
         if (top >= cardHeight) {
             cardDOM.style.top = `${top - this.lastHeight - 2}px`;
         } else {
