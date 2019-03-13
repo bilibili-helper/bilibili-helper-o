@@ -438,7 +438,6 @@ export class Danmu extends React.Component {
     };
 
     createCardDOM = (data) => {
-        const that = this;
         if (!data) {
             return console.error('no user data to create card');
         }
@@ -522,7 +521,6 @@ export class Danmu extends React.Component {
         const {height, top, left} = targetDOM.getBoundingClientRect();
         const {height: cardHeight} = cardDOM.getBoundingClientRect();
         if (cardHeight) this.lastHeight = cardHeight;
-        console.warn(height, top, left, cardHeight);
         if (top >= cardHeight) {
             cardDOM.style.top = `${top - this.lastHeight - 2}px`;
         } else {
