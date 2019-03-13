@@ -6,15 +6,16 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import React from 'react';
-import styled from 'styled-components';
-import {theme} from 'Styles';
-import Url from 'url-parse';
-import FLV from '../lib/flv';
-import {FlvContainer} from '../FlvContainer';
-import {DashContainer} from '../DashContainer';
-import {normalFlvDownloadURL, bangumiFlvDownloadURL} from '../api';
 //const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
+import FLV from '../lib/flv';
+import React from 'react';
+import Url from 'url-parse';
+import styled from 'styled-components';
+import {DashContainer} from '../DashContainer';
+import {FlvContainer} from '../FlvContainer';
+import {getFilename} from 'Utils';
+import {normalFlvDownloadURL, bangumiFlvDownloadURL} from '../api';
+import {theme} from 'Styles';
 
 const {color} = theme;
 
@@ -123,14 +124,6 @@ export class VideoDownload extends React.Component {
         });
     }
 
-    getFilename = () => {
-        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
-        const partName = partDOM ? partDOM.innerText : '';
-        const title = document.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
-                              .getAttribute('title');
-        return `${title}${partName ? `_${partName}` : ''}`;
-    };
-
     getContainer = (type, currentCid, currentQuality, data) => {
         if (!this.containers[currentCid]) this.containers[currentCid] = {};
         if (this.containers[currentCid][currentQuality]) {
@@ -232,14 +225,11 @@ export class VideoDownload extends React.Component {
     };
 
     handleOnClickDownloadFLV = (downloadUrl) => {
-        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
-        const partName = partDOM ? partDOM.innerHTML : '';
-        const title = document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title');
         chrome.runtime.sendMessage({
             commend: 'sendVideoFilename',
             url: downloadUrl.split('?')[0],
             cid: this.state.currentCid,
-            filename: `${title}${partName ? `_${partName}` : ''}`,
+            filename: getFilename(document),
         });
     };
 
@@ -286,7 +276,7 @@ export class VideoDownload extends React.Component {
             //    commend: 'downloadMergedVideo',
             //    url,
             //    cid: currentCid,
-            //    filename: this.getFilename() + '.mp4',
+            //    filename: getFilename(document) + '.mp4',
             //});
         }).catch(e => console.warn(e));
     };
@@ -311,7 +301,7 @@ export class VideoDownload extends React.Component {
                     commend: 'downloadMergedVideo',
                     url,
                     cid: currentCid,
-                    filename: this.getFilename() + '.flv',
+                    filename: getFilename(document) + '.flv',
                 });
             });
         }).catch(e => e);

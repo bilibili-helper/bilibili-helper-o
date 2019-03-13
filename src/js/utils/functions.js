@@ -82,6 +82,19 @@ export const getLink = (url_name) => {
 };
 
 /**
+ * Get semantic file name (without extension) from video playback page.
+ * @param doc
+ * @return {string}
+ */
+export const getFilename = (doc) => {
+    const partDOM = doc.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
+    const partName = partDOM ? partDOM.innerText : '';
+    const title = doc.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
+                          .getAttribute('title');
+    return `${title}${partName ? `_${partName}` : ''}`;
+};
+
+/**
  * 将毫秒数转化为XX:XX格式的字符串
  * @param time
  * @return {string}
@@ -98,11 +111,11 @@ export const inLiveRoom = () => /^\/(\d+)$/.exec(window.location.pathname) ? tru
 export const consoleLogo = () => {
     // eslint-disable-next-line no-console
     console.log(`%c
- ____ _____ _      _____ ____ _____ _      _____ _    _ ______ _      _____  ______ _____  
-|  _ |_   _| |    |_   _|  _ |_   _| |    |_   _| |  | |  ____| |    |  __ \\|  ____|  __ \\ 
+ ____ _____ _      _____ ____ _____ _      _____ _    _ ______ _      _____  ______ _____
+|  _ |_   _| |    |_   _|  _ |_   _| |    |_   _| |  | |  ____| |    |  __ \\|  ____|  __ \\
 | |_) || | | |      | | | |_) || | | |      | | | |__| | |__  | |    | |__) | |__  | |__) |
-|  _ < | | | |      | | |  _ < | | | |      | | |  __  |  __| | |    |  ___/|  __| |  _  / 
-| |_) _| |_| |____ _| |_| |_) _| |_| |____ _| |_| |  | | |____| |____| |    | |____| | \\ \\ 
+|  _ < | | | |      | | |  _ < | | | |      | | |  __  |  __| | |    |  ___/|  __| |  _  /
+| |_) _| |_| |____ _| |_| |_) _| |_| |____ _| |_| |  | | |____| |____| |    | |____| | \\ \\
 |____|_____|______|_____|____|_____|______|_____|_|  |_|______|______|_|    |______|_|  \\_\\
 
 -... .. .-.. .. -... .. .-.. ..    .... . .-.. .--. . .-.                    version: ${version}
