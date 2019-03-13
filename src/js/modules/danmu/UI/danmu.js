@@ -15,6 +15,7 @@ import {Crc32Engine} from 'Libs/crc32';
 import apis from '../apis.js';
 import {List} from 'react-virtualized';
 import 'react-virtualized/styles.css';
+import './styles.scss';
 
 const {color} = theme;
 const crcEngine = new Crc32Engine();
@@ -142,6 +143,7 @@ export class Danmu extends React.Component {
 
         this.orderedJSON = {}; // 经过弹幕发送时间排序的数据
         this.userMap = {}; // uid -> data
+        this.userCardMap = {}; // uid -> cardData
         this.queryUserModeTemplateMap = {}; // 切换到用户UID查询模式前，将之前的查询结果被分到该map中
         this.danmuDocumentStr = null;
         const today = new Date();
@@ -153,6 +155,9 @@ export class Danmu extends React.Component {
         this.currentRowIndex = 0;
 
         this.authorHashMap = {}; // authorHash -> uid
+
+        this.removeCardSign = null;
+        this.lasetHeight = null;
 
         this.state = {
             loaded: false,
@@ -175,6 +180,7 @@ export class Danmu extends React.Component {
     }
 
     addListener = () => {
+        const that = this;
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                 if (message.date) {
@@ -191,6 +197,33 @@ export class Danmu extends React.Component {
             if (e.data.type === 'pakku_ajax_request' && /x\/v2\/dm\/history/.test(e.data.arg)) {
                 chrome.runtime.sendMessage({commend: 'pakkuGetHistoryDanmu', url: e.data.arg});
             }
+        });
+        let n, m;
+        $(document).on('mouseenter', '[helper-data-usercard-mid]', function() {
+            that.createCard(this, $(this).attr('helper-data-usercard-mid'));
+        });
+        $(document).on('mouseenter', '[helper-data-usercard-mid], #helper-card', function() {
+            that.removeCardSign = false;
+            if (m) {
+                clearTimeout(m);
+                m = null;
+            }
+            m = setTimeout(() => {
+                if (document.querySelector('#helper-card')) document.querySelector('#helper-card').style.display = 'block';
+            }, 300);
+            if (n) {
+                clearTimeout(n);
+                n = null;
+            }
+            n = setTimeout(() => {
+                that.removeCardSign = true;
+            }, 600);
+        });
+        $(document).on('mouseleave', '[helper-data-usercard-mid], #helper-card', function() {
+            setTimeout(() => {
+                const dom = document.querySelector('#helper-card');
+                if (that.removeCardSign && dom) dom.style.display = 'none';
+            }, 200);
         });
     };
 
@@ -242,29 +275,27 @@ export class Danmu extends React.Component {
     // 通过uid获取用户信息
     getUserInfoByUid = (uid) => {
         return new Promise((resolve) => {
-            if (this.userMap[uid]) resolve(this.userMap[uid]);
-            else {
-                uid && $.ajax({
-                    method: 'get',
-                    url: apis.card,
-                    data: {
-                        mid: uid,
-                        photo: 0,
-                    },
-                    success: ({code, data}) => {
-                        if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
-                            this.userMap[uid] = {...data.card};
-                            resolve(uid);
-                        } else resolve(false);
-                    },
-                    error: (res) => {
-                        console.error(res);
-                        this.setState({loadingText: '查询失败!'}, () => { // 查询失败3秒后关闭错误信息
-                            setTimeout(() => this.setState({loading: false}), 3000);
-                        });
-                    },
-                });
-            }
+            uid && $.ajax({
+                method: 'get',
+                url: apis.card,
+                data: {
+                    mid: uid,
+                    photo: 1,
+                },
+                success: ({code, data}) => {
+                    if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
+                        const {card, space, follower, following} = data;
+                        this.userMap[uid] = {...card, ...space, follower, following};
+                        resolve(uid);
+                    } else resolve(false);
+                },
+                error: (res) => {
+                    console.error(res);
+                    this.setState({loadingText: '查询失败!'}, () => { // 查询失败3秒后关闭错误信息
+                        setTimeout(() => this.setState({loading: false}), 3000);
+                    });
+                },
+            });
         });
     };
 
@@ -406,6 +437,100 @@ export class Danmu extends React.Component {
         });
     };
 
+    createCardDOM = (data) => {
+        const that = this;
+        if (!data) {
+            return console.error('no user data to create card');
+        }
+        const {mid, face, s_img, name, sign, sex, level_info, following} = data;
+        let card, header, container, faceBlock, userBlock, nameBlock, signBlock, levelBlock, sexBlock, btnBlock, likeBtn, messageBtn;
+
+        header = document.querySelector('.helper-card-header') || document.createElement('div');
+        container = document.querySelector('.helper-card-container') || document.createElement('div');
+        faceBlock = document.querySelector('.helper-card-face') || document.createElement('img');
+        userBlock = document.querySelector('.helper-card-user') || document.createElement('p');
+        nameBlock = document.querySelector('.helper-card-name') || document.createElement('a');
+        signBlock = document.querySelector('.helper-card-sign') || document.createElement('p');
+        levelBlock = document.querySelector('.helper-card-level') || document.createElement('a');
+        sexBlock = document.querySelector('.helper-card-sex') || document.createElement('i');
+        btnBlock = document.querySelector('.helper-card-feed') || document.createElement('div');
+        likeBtn = document.querySelector('.helper-card-like-btn') || document.createElement('a');
+        messageBtn = document.querySelector('.helper-card-like-btn') || document.createElement('a');
+        card = document.querySelector('#helper-card');
+        if (!card) {
+            card = document.createElement('div');
+            header.setAttribute('class', 'helper-card-header bg');
+            container.setAttribute('class', 'helper-card-container info');
+            faceBlock.setAttribute('class', 'helper-card-face face');
+            userBlock.setAttribute('class', 'helper-card-user user');
+            nameBlock.setAttribute('class', 'helper-card-name name');
+            signBlock.setAttribute('class', 'helper-card-sign sign');
+            btnBlock.setAttribute('class', 'helper-card-btn btn-box');
+            card.setAttribute('id', 'helper-card');
+            card.setAttribute('class', 'user-card');
+            levelBlock.setAttribute('href', '//www.bilibili.com/html/help.html#k_2');
+            levelBlock.setAttribute('target', '_blank');
+            likeBtn.setAttribute('class', 'like');
+            likeBtn.innerHTML = '<span class="hover-text">取消关注</span><span class="default-text">+关注</span>';
+            messageBtn.setAttribute('class', 'message');
+            messageBtn.setAttribute('target', '_blank');
+            messageBtn.innerText = '发消息';
+            userBlock.appendChild(nameBlock);
+            userBlock.appendChild(sexBlock);
+            userBlock.appendChild(levelBlock);
+            container.appendChild(userBlock);
+            container.appendChild(signBlock);
+            btnBlock.appendChild(likeBtn);
+            btnBlock.appendChild(messageBtn);
+            card.appendChild(header);
+            card.appendChild(faceBlock);
+            card.appendChild(container);
+            card.appendChild(btnBlock);
+        }
+        header.setAttribute('style', `background-image: url(${s_img});`);
+        faceBlock.setAttribute('src', face);
+        if (sex === '男') sexBlock.setAttribute('class', 'sex man');
+        else if (sex === '女') sexBlock.setAttribute('class', 'sex woman');
+        const levelInner = document.createElement('i');
+        levelInner.setAttribute('class', `level l${level_info.current_level}`);
+        levelBlock.innerHTML = '';
+        levelBlock.appendChild(levelInner);
+        likeBtn.setAttribute('mid', mid);
+        likeBtn.setAttribute('uname', name);
+        likeBtn.onclick = function() {
+            if (following) this.userMap[mid].following = false;
+            else this.userMap[mid].following = true;
+        };
+        if (following) likeBtn.setAttribute('class', 'like liked');
+
+        messageBtn.setAttribute('href', '//message.bilibili.com/#whisper/mid' + mid);
+        nameBlock.innerText = name;
+        nameBlock.setAttribute('href', 'https://space.bilibili.com/' + mid);
+        signBlock.innerText = sign;
+        return card;
+    };
+
+    createCard = (target, mid) => {
+        const userData = this.userMap[mid];
+        const cardDOM = this.createCardDOM(userData);
+        if (!document.querySelector('#helper-card')) document.querySelector('body').appendChild(cardDOM);
+
+        this.setTargetPosition(target, cardDOM);
+    };
+
+    setTargetPosition = (targetDOM, cardDOM) => {
+        const {height, top, left} = targetDOM.getBoundingClientRect();
+        const {height: cardHeight} = cardDOM.getBoundingClientRect();
+        if (cardHeight) this.lastHeight = cardHeight;
+        if (top >= cardHeight) {
+            cardDOM.style.top = `${top - this.lastHeight - 2}px`;
+        } else {
+            cardDOM.style.top = `${top + height + 2}px`;
+        }
+        if (left + 377 <= window.innerWidth) cardDOM.style.left = `${left}px`;
+        else cardDOM.style.left = `${window.innerWidth - 377}px`;
+    };
+
     renderHeader = (danmuJSON = this.state.danmuJSON) => (
         <Title>
             <span>弹幕发送者查询{danmuJSON.count ? <span className="count">{danmuJSON.count} 条</span> : null}</span>
@@ -432,7 +557,7 @@ export class Danmu extends React.Component {
                 <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
                 <span className="author">
                     {authorNames.map((name, index) => (
-                        <div key={name} data-usercard-mid={uidArray[index]}>{name}</div>))}
+                        <div key={name} helper-data-usercard-mid={uidArray[index]}>{name}</div>))}
                 </span>
             </DanmuListLine>
         );

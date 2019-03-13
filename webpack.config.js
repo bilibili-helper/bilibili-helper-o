@@ -86,8 +86,7 @@ module.exports = (env) => {
             },
             minimizer: [
                 new UglifyJsPlugin({
-                    cache: true,
-                    sourceMap: true, // set to true if you want JS source maps
+                    sourceMap: false, // set to true if you want JS source maps
                     uglifyOptions: {
                         compress: true,
                         ecma: 6,
