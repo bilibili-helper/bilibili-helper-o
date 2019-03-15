@@ -5,17 +5,18 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import apis from '../apis.js';
 import styled from 'styled-components';
 import {Button} from 'Components/common/Button';
+import {Crc32Engine} from 'Libs/crc32';
+import {List} from 'react-virtualized';
+import {getFilename} from 'Utils';
 import {parseTime} from 'Utils';
 import {theme} from 'Styles';
-import {Crc32Engine} from 'Libs/crc32';
-import apis from '../apis.js';
-import {List} from 'react-virtualized';
-import 'react-virtualized/styles.css';
 import './styles.scss';
+import 'react-virtualized/styles.css';
 
 const {color} = theme;
 const crcEngine = new Crc32Engine();
@@ -424,15 +425,12 @@ export class Danmu extends React.Component {
     };
 
     handleDownloadClick = (type) => {
-        const partDOM = document.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a');
-        const partName = partDOM ? partDOM.innerHTML : '';
-        const title = document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title');
         chrome.runtime.sendMessage({
             commend: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,
-            filename: `${title}${partName ? `_${partName}` : ''}`,
+            filename: getFilename(document),
             origin: type === 'ass' ? document.location.href : null,
         });
     };
