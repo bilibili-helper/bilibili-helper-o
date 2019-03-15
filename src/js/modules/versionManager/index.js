@@ -74,8 +74,9 @@ export class VersionManager extends Feature {
     };
 
     request = (ignore = false) => {
-        const {day} = this.getVersion() || {};
-        if (day !== this.getTodayDate() || ignore) {
+        const {day, version: localVersion} = this.getVersion() || {};
+        const compareRes = this.isBiggerThan(localVersion, version);
+        if (day !== this.getTodayDate() || compareRes < 0 || ignore || true) {
             //const notifyOn = _.find(this.settings.options, (o) => o.key === 'notification').on || ignore;
             $.ajax({
                 method: 'get',
@@ -88,7 +89,7 @@ export class VersionManager extends Feature {
                         this.sendNotification(__('checkVersionNoNewVersion'), ignore);
                     } else if (compareRes > 0) { // 有新版本
                         this.setVersion(res);
-                        this.sendNotification(__('checkVersionNewVersion') + res.version, ignore);
+                        this.sendNotification(__('checkVersionNewVersion') + res.lastVersion, ignore);
                     }
                 },
                 error: (e) => {

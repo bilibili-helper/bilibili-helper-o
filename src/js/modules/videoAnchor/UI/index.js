@@ -15,6 +15,7 @@ const createOldBtn = () => {
     oldBtn.setAttribute('style', `
         display: inline-block;
         vertical-align: top;
+        width: auto;
         height: 24px;
         line-height: 24px;
         font-size: 14px;

@@ -44,6 +44,27 @@ const VideoDarkModeStyle = createGlobalStyle`
   body {
     background-color: #1c2022!important;
   }
+  // nav 搜索框
+  .bili-header-m .nav-menu .showSearch.nav-search #nav_searchform {
+    border-color: var(--dark-3);
+    background-color: var(--dark-2);
+    input {
+      color: var(--dark-font-0);
+    }
+  }
+  .bili-header-m .nav-menu .bilibili-suggest {
+    border-color: var(--dark-4);
+    background-color: var(--dark-2);
+    .kw .b-line {
+      border-color: var(--dark-4);
+      span {
+        background-color: var(--dark-2);
+      }
+    }
+    li.suggest-item:hover {
+      background-color: var(--dark-3);
+    }
+  }
   // 视频信息
   #v_desc {
     .info {
@@ -122,13 +143,17 @@ const VideoDarkModeStyle = createGlobalStyle`
   }
   
   // 选集列表
-  #eplist_module, #multi_page {
+  #eplist_module, #multi_page, .ep-section-module {
     background-color: var(--dark-2);
     .list-title, .head-con {
       h4, h3 {
         color: var(--dark-font-1);
       }
     }
+    .section-title {
+      color: var(--dark-font-1);
+    }
+    
     .module-box  {
       li {
         &:not(.on):not(:hover) {
@@ -143,7 +168,7 @@ const VideoDarkModeStyle = createGlobalStyle`
         }
       }
     }
-    .list-wrapper, .cur-list .list-box {
+    .list-wrapper, .cur-list .list-box, .section-ep-wrapper {
       &.simple {
         .ep-item:not(.cursor) {
           color: var(--dark-font-1);
@@ -358,6 +383,7 @@ const VideoDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-1);
     }
   }
+  
   // up信息
   #v_upinfo .u-info .name .username{
     color: var(--dark-font-1);
