@@ -7,9 +7,15 @@ import $ from 'jquery';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
+import styled, {createGlobalStyle} from 'styled-components';
 import store from 'store';
 import {Icon, CheckBoxButton} from 'Components';
+
+const GlobalStyle = createGlobalStyle`
+  .chat-history-panel .chat-history-list .chat-item.danmaku-item, .chat-history-panel .chat-history-list .chat-item.danmaku-item * {
+    pointer-events: auto!important;
+  }
+`;
 
 const ChatFilterPanel = styled.div.attrs({className: 'chat-helper-panel ctrl-panel bilibili-chat-filter-panel'})`
   position: absolute;
@@ -148,6 +154,7 @@ export class ChatFilter extends React.Component {
                             <FilterItem key={key}>
                                 <FilterItemTitle>{title}</FilterItemTitle>
                                 <FilterRadio on={resultOn} onClick={() => this.handleOnClickRadio(key, !resultOn)}/>
+                                <GlobalStyle/>
                                 {!!style && resultOn ? <style>{style}</style> : null}
                             </FilterItem>
                         );
