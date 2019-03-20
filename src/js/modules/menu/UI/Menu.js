@@ -143,6 +143,7 @@ export class Menu extends React.Component {
                 permissionMap[message.permission] = {pass: message.value, msg: message.msg};
                 this.setState({permissionMap});
             }
+            return true;
         }));
         // 获取调试模式
         chrome.runtime.sendMessage({

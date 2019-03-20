@@ -63,8 +63,32 @@ export class Danmu extends Feature {
                 this.messageStore.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
-        chrome.runtime.onMessage.addListener((message, sender) => {
-            if (message.commend === 'downloadDanmuXML' && message.cid) {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.commend === 'fetchCardInfo' && message.url) {
+                fetch(message.url, {
+                    headers: {
+                        'From': 'bilibili-helper',
+                    },
+                }).then(res => res.json())
+                  .then((danmuDocument) => {
+                      sendResponse(danmuDocument);
+                  }, (res) => {
+                      console.error(res);
+                      sendResponse(res);
+                  });
+            } else if (message.commend === 'fetchDanmu' && message.url) {
+                fetch(message.url, {
+                    headers: {
+                        'From': 'bilibili-helper',
+                    },
+                }).then(res => res.text())
+                  .then((danmuDocument) => {
+                      sendResponse(danmuDocument);
+                  }, (res) => {
+                      console.error(res);
+                      sendResponse(res);
+                  });
+            } else if (message.commend === 'downloadDanmuXML' && message.cid) {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',
                 }));
@@ -101,6 +125,7 @@ export class Danmu extends Feature {
                 });
                 this.messageStore.dealWith(sender.id);
             }
+            return true;
         });
     };
 }

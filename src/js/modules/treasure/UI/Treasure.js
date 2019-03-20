@@ -9,6 +9,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {treasureCloseImg, treasureOpenImg} from './imgUrls';
 import apis from '../apis.js';
+import Url from 'url-parse';
 
 const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
   position: relative;
@@ -77,8 +78,7 @@ export class Treasure extends React.Component {
             counterComplete: true, // 计时器结束状态
             permissionMap: {},
         };
-        this.retryTime = 0;
-        this.maxRetryTime = 10;
+
         this.correctStr = {
             'i': 1, 'I': 1, '|': 1, 'l': 1,
             'o': 0, 'O': 0, 'D': 0,
@@ -114,7 +114,7 @@ export class Treasure extends React.Component {
         chrome.runtime.sendMessage({
             commend: 'getPermissionMap',
         }, (permissionMap) => {
-            this.setState({permissionMap})
+            this.setState({permissionMap});
         });
     }
 
@@ -199,57 +199,36 @@ export class Treasure extends React.Component {
      * 获取当前波次数据
      */
     getCurrentTask = () => {
-        $.ajax({
-            method: 'get',
-            url: apis.getCurrentTask,
-            success: (res) => {
-                if (this.retryTime) this.retryTime = 0;
-                if (res.code === 0) {
-                    const {max_times, times, minute, silver, time_end, time_start} = res.data;
-                    this.setState({max_times, times, minute, silver, time_end, time_start});
-                    this.setCounter(minute);
-                } else if (res.code === -10017) {
-                    this.counter.text('已领完');
-                }
-            },
-            error: (res) => {
-                if (this.retryTime < this.maxRetryTime) {
-                    ++this.retryTime;
-                    console.error(res);
-                } else this.counter.text('网络错误');
-            },
+        chrome.runtime.sendMessage({commend: 'getCurrentTask', type: 'treasure', url: apis.getCurrentTask}, (res) => {
+            if (this.retryTime) this.retryTime = 0;
+            if (res.code === 0) {
+                const {max_times, times, minute, silver, time_end, time_start} = res.data;
+                this.setState({max_times, times, minute, silver, time_end, time_start});
+                this.setCounter(minute);
+            } else if (res.code === -10017) {
+                this.counter.text('已领完');
+            } else this.counter.text('网络错误');
         });
+
     };
 
     /**
      * 获取验证码
      */
     getCaptcha = () => {
-        $.ajax({
-            method: 'get',
-            url: apis.getCaptcha,
-            data: {
-                ts: Date.now(),
-            },
-            success: (res) => {
-                if (this.retryTime) this.retryTime = 0;
-                if (res.code === 0) {
-                    this.counter.text('领取中');
-                    this.imgDOM.setAttribute('src', res.data.img);
-                } else if (res.code === -500) { // 稍后登录？还不知道为什么会有这个错误
-                    if (this.retryTime < this.maxRetryTime) {
-                        ++this.retryTime;
-                        setTimeout(this.getCaptcha, 2000);
-                    }
-                }
-            },
-            error: (res) => {
+        const url = new Url(apis.getCaptcha);
+        url.set('query', {ts: Date.now()});
+        chrome.runtime.sendMessage({commend: 'getCaptcha', type: 'treasure', url: url.toString()}, (res) => {
+            if (this.retryTime) this.retryTime = 0;
+            if (res.code === 0) {
+                this.counter.text('领取中');
+                this.imgDOM.setAttribute('src', res.data.img);
+            } else if (res.code === -500) { // 稍后登录？还不知道为什么会有这个错误
                 if (this.retryTime < this.maxRetryTime) {
                     ++this.retryTime;
-                    console.error(res);
                     setTimeout(this.getCaptcha, 2000);
-                } else this.counter.text('网络错误');
-            },
+                }
+            } else this.counter.text('网络错误');
         });
     };
 
@@ -261,35 +240,31 @@ export class Treasure extends React.Component {
      */
     getAward = (captcha) => {
         const {time_start, time_end} = this.state;
-        $.ajax({
-            method: 'get',
-            url: apis.getAward,
-            data: {time_start, time_end, captcha},
-            success: (res) => {
-                if (this.retryTime) this.retryTime = 0;
-                switch (res.code) {
-                    case 0:
-                        if (!res.data.isEnd) { // 没有全部领完
-                            this.sendNotification();
-                            this.getCurrentTask();
-                            this.counter.text('领取成功');
-                        } else this.counter.text('已领完');
-                        break;
-                    case -902: // 验证码错误
-                    case -901: // 验证码过期
-                    case -500: // 稍后登录？还不知道为什么会有这个错误
-                        setTimeout(this.getCaptcha, 500);
-                        break;
-                    default:
-                    // TODO 其他情况
-                }
-            },
-            error: (res) => {
-                if (this.retryTime < this.maxRetryTime) {
-                    ++this.retryTime;
-                    console.error(res);
-                } else this.counter.text('网络错误');
-            },
+        const url = new Url(apis.getAward);
+        url.set('query', {time_start, time_end, captcha});
+        chrome.runtime.sendMessage({commend: 'getAward', type: 'treasure', url: url.toString()}, (res) => {
+            if (this.retryTime) this.retryTime = 0;
+            switch (res.code) {
+                case 0:
+                    if (!res.data.isEnd) { // 没有全部领完
+                        this.sendNotification();
+                        this.getCurrentTask();
+                        this.counter.text('领取成功');
+                    } else this.counter.text('已领完');
+                    break;
+                case -902: // 验证码错误
+                    this.counter.text('验证码错误');
+                    setTimeout(this.getCaptcha, 500);
+                    break;
+                case -10017: // 验证码过期
+                case -901: // 验证码过期
+                case -500: // 稍后登录？还不知道为什么会有这个错误
+                    setTimeout(this.getCaptcha, 500);
+                    break;
+                default:
+                    this.counter.text('网络错误');
+                // TODO 其他情况
+            }
         });
     };
 

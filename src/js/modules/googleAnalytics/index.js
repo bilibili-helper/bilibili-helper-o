@@ -65,6 +65,7 @@ export class GoogleAnalytics extends Feature {
                 });
             });
         }
+        return true;
     };
 
     addListener = () => {

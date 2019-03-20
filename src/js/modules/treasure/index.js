@@ -5,7 +5,9 @@
  */
 
 import {Feature} from 'Libs/feature';
+import $ from 'Libs/jquery.min';
 import _ from 'lodash';
+import apis from 'Modules/treasure/apis';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
 import {__} from 'Utils';
 
@@ -28,10 +30,12 @@ export class Treasure extends Feature {
                 ],
             },
         });
+        this.retryTime = 0;
+        this.maxRetryTime = 10;
     }
 
     addListener = () => {
-        chrome.runtime.onMessage.addListener((message) => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'sendNotification' && message.type === 'treasure') {
                 const {time_start, silver} = message;
                 const notificationState = _.find(this.settings.options, {key: 'notification'});
@@ -43,7 +47,38 @@ export class Treasure extends Feature {
                         message: `成功领取${silver}瓜子`,
                     });
                 }
+            } else if (message.commend === 'getCaptcha' && message.type === 'treasure') {
+                fetch(message.url).then(res => res.json()).then((res) => {
+                    sendResponse(res);
+                }, (res) => {
+                    if (this.retryTime < this.maxRetryTime) {
+                        ++this.retryTime;
+                        console.error(res.json());
+                        setTimeout(this.getCaptcha, 2000);
+                    } else sendResponse(res);
+                });
+            } else if (message.commend === 'getAward' && message.type === 'treasure') {
+                fetch(message.url).then(res => res.json()).then((res) => {
+                    sendResponse(res);
+                }, (res) => {
+                    if (this.retryTime < this.maxRetryTime) {
+                        ++this.retryTime;
+                        console.error(res);
+                        setTimeout(this.getCaptcha, 2000);
+                    } else sendResponse(res);
+                });
+            } else if (message.commend === 'getCurrentTask' && message.type === 'treasure') {
+                fetch(message.url).then(res => res.json()).then((res) => {
+                    sendResponse(res);
+                }, (res) => {
+                    if (this.retryTime < this.maxRetryTime) {
+                        ++this.retryTime;
+                        console.error(res);
+                        setTimeout(this.getCaptcha, 2000);
+                    } else sendResponse(res);
+                });
             }
+            return true;
         });
     };
 }

@@ -1,3 +1,5 @@
+import $ from 'Libs/jquery.min';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/11
@@ -89,20 +91,32 @@ export class VideoDownload extends Feature {
                 this.messageStore.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
-        chrome.runtime.onMessage.addListener((message) => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'sendVideoFilename' && message.cid) {
                 const url = new Url(message.url, '', true);
                 this.downloadFilenames[url.pathname] = {
                     filename: message.filename,
                     cid: message.cid,
                 };
-            } else if(message.commend === 'downloadMergedVideo' && message.url && message.filename) {
+            } else if (message.commend === 'downloadMergedVideo' && message.url && message.filename) {
                 chrome.downloads.download({
                     saveAs: true,
                     url: message.url,
                     filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
+            } else if (message.commend === 'getFlvResponse') {
+                fetch(message.url, {
+                    method: message.method,
+                    headers: {
+                        'From': 'bilibili-helper',
+                    },
+                })
+                .then(res => res.json())
+                .then(res => {
+                    sendResponse(res);
+                });
             }
+            return true;
         });
         chrome.webRequest.onHeadersReceived.addListener((details) => {
             const {responseHeaders, initiator, url} = details;
@@ -111,7 +125,7 @@ export class VideoDownload extends Feature {
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
                 const {filename: originFilename, cid} = filenameObject;
-                const filename = originFilename.replace(/[|"*?:<>]/g, "_");
+                const filename = originFilename.replace(/[|"*?:<>]/g, '_');
                 const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
                 const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`.replace('/', '%2f');
                 if (targetData) {

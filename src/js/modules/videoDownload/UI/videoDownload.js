@@ -194,33 +194,26 @@ export class VideoDownload extends React.Component {
                 }
                 sendResponse(true);
             }
+            return true;
         });
     };
 
     getFlvResponse = (method, url, type = 'old') => {
         const {videoData, currentCid} = this.state;
-        $.ajax({
-            method,
-            url,
-            //data,
-            headers: {
-                'From': 'bilibili-helper',
-            },
-            success: (res) => {
-                if (res.code === 10005) return console.error(res);
-                let downloadData;
-                if (type === 'new' && res.code === 0) {
-                    downloadData = res.data || res.result || res;
-                } else if (type === 'old') {
-                    downloadData = res.result || res.data || res;
-                }
+        chrome.runtime.sendMessage({commend: 'getFlvResponse', method, url}, (res) => {
+            if (res.code === 10005) return console.error(res);
+            let downloadData;
+            if (type === 'new' && res.code === 0) {
+                downloadData = res.data || res.result || res;
+            } else if (type === 'old') {
+                downloadData = res.result || res.data || res;
+            }
 
-                const {accept_quality, accept_description, durl, quality, dash} = downloadData;
-                const currentData = {accept_quality, accept_description, durl, dash, quality};
-                if (!videoData[currentCid]) videoData[currentCid] = {};
-                videoData[currentCid][quality] = currentData;
-                this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
-            },
+            const {accept_quality, accept_description, durl, quality, dash} = downloadData;
+            const currentData = {accept_quality, accept_description, durl, dash, quality};
+            if (!videoData[currentCid]) videoData[currentCid] = {};
+            videoData[currentCid][quality] = currentData;
+            this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
         });
     };
 

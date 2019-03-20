@@ -89,6 +89,7 @@ export class DynamicCheck extends Feature {
         });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'getDynamicList') sendResponse(this.feedList);
+            return true;
         });
     };
 

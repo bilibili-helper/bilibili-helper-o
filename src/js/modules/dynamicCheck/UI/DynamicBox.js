@@ -14,7 +14,7 @@ const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
   margin: 9px 0 9px 10px;
   max-height: 258px;
   overflow: auto;
-  &::-webkit-scrollbar {
+  & .ReactVirtualized__List::-webkit-scrollbar {
     display: none;
   }
 `;

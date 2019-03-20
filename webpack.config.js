@@ -59,6 +59,7 @@ module.exports = (env) => {
             'popup': path.resolve(jsPath, 'pages', 'popup', indexFilename),
             'video': path.resolve(jsPath, 'pages', 'video', indexFilename),
             'website': path.resolve(jsPath, 'pages', 'website', indexFilename),
+            'cv': path.resolve(jsPath, 'pages', 'cv', indexFilename),
         },
         output: {
             filename: '[name].js',

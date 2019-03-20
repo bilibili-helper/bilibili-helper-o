@@ -32,4 +32,9 @@ export class PictureInPicture extends Feature {
             this.setSetting(this.settings);
         }
     };
+    pause = () => {
+        this.settings.on = false;
+        this.settings.toggle = false;
+        this.setSetting(this.settings);
+    }
 }

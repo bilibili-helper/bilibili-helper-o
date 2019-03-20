@@ -56,15 +56,16 @@ export class FeatureManager {
                 if (settings === undefined || settings.on === undefined) { // 缺少启动项配置
                     console.error(`No settings names ${name}`);
                     resolve(false);
-                } else if (!settings.on) { // 功能未启用
+                }/* else if (!settings.on) { // 功能未启用
                     resolve(false);
-                } else {
+                }*/ else {
                     this.permissionManager.load(feature).then(({pass}) => {
                         if (pass) { // 鉴权通过
                             feature.init();
                             resolve(true);
                         } else { // 鉴权未通过
                             //console.error(`Feature ${name}: ${_.map(data, o => o.msg).join(', ')}`);
+                            feature.pause();
                             resolve(false);
                         }
                     });
@@ -180,6 +181,7 @@ export class FeatureManager {
                     break;
                 }
             }
+            return true;
         });
     };
 }

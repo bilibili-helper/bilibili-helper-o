@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
-import {consoleLogo, createTab} from 'Utils';
+import {consoleLogo, createTab, version} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
@@ -164,13 +164,13 @@ class PageConfig extends React.Component {
 
             checkingVersion: false,
 
-            version: null,
         };
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
             if (message.commend === 'debugMode') {
                 this.setState({debug: message.value});
             }
+            return true;
         }));
     }
 
@@ -197,9 +197,6 @@ class PageConfig extends React.Component {
         });
         chrome.runtime.sendMessage({commend: 'getPermissionMap'}, (permissionMap) => {
             this.setState({permissionMap});
-        });
-        chrome.runtime.sendMessage({commend: 'getFeatureStore', feature: 'versionManager'}, (featureStore) => {
-            this.setState({version: featureStore.version});
         });
     }
 
@@ -342,17 +339,17 @@ class PageConfig extends React.Component {
     //};
 
     //handleOpenUpdateList = () => {
-        //this.handleSetSubPage({
-        //    parent: this.aboutRef,
-        //    subPageList: updateList,
-        //    subPageTitle: '版本更新日志',
-        //    pageType: 'update',
-        //});
+    //this.handleSetSubPage({
+    //    parent: this.aboutRef,
+    //    subPageList: updateList,
+    //    subPageTitle: '版本更新日志',
+    //    pageType: 'update',
+    //});
     //};
 
     handleOpenWebsite = () => {
         createTab('https://bilibili-helper.github.io/');
-    }
+    };
 
     handleCheckVersion = () => {
         const {checkingVersion} = this.state;
@@ -380,15 +377,20 @@ class PageConfig extends React.Component {
                                                                                               on={on}/>;
 
                     let errorDescription = [];
-                    const permissionList = _.map(permissions, (name) => {
-                        if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
-                            errorDescription.push(
-                                <PermissionErrorDescription>{PERMISSION_STATUS[name].description}</PermissionErrorDescription>,
-                            );
+                    const permissionList = _.map(permissions, (nameStr) => {
+                        const nameMap = nameStr.split('?');
+                        if (nameMap.length > 0) {
+                            const name = nameMap[0];
+                            const description = PERMISSION_STATUS[name].description || (permissionMap[name] && PERMISSION_STATUS[name][permissionMap[name].type].description);
+                            if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
+                                errorDescription.push(
+                                    <PermissionErrorDescription>{description}</PermissionErrorDescription>,
+                                );
+                            }
+                            return debug ? <PermissionTag title={description}>
+                                {_.upperFirst(name)}
+                            </PermissionTag> : null;
                         }
-                        return debug ? <PermissionTag title={PERMISSION_STATUS[name].description}>
-                            {_.upperFirst(name)}
-                        </PermissionTag> : null;
                     });
                     const twoLine = description !== undefined || errorDescription.length > 0;
                     let second = '';
@@ -415,7 +417,7 @@ class PageConfig extends React.Component {
     };
 
     renderAboutList = () => {
-        const {checkingVersion, version, debug} = this.state;
+        const {checkingVersion, debug} = this.state;
         return (
             <List title="关于" ref={i => this.aboutRef = i}>
                 <ListItem
@@ -451,7 +453,6 @@ class PageConfig extends React.Component {
             pageType,
             debug,
             broadcast,
-            version,
         } = this.state;
         return <React.Fragment>
             <GlobalStyleSheet/>
@@ -464,7 +465,8 @@ class PageConfig extends React.Component {
                 </Header>
                 <Broadcast>
                     <div>如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装</div>
-                    <p>哔哩哔哩助手官网已经更新为：<a href="https://bilibili-helper.github.io/" target="_blank" rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
+                    <p>哔哩哔哩助手官网已经更新为：<a href="https://bilibili-helper.github.io/" target="_blank"
+                                        rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
                     {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
                 </Broadcast>

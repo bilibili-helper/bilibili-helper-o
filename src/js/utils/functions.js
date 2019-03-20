@@ -89,8 +89,7 @@ export const getLink = (url_name) => {
 export const getFilename = (doc) => {
     const partDOM = doc.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
     const partName = partDOM ? partDOM.innerText : '';
-    const title = doc.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1')
-                          .getAttribute('title');
+    const title = doc.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1').getAttribute('title');
     return `${title}${partName ? `_${partName}` : ''}`;
 };
 
@@ -135,4 +134,40 @@ export const toDuration = (seconds) => {
     let durationStr = `${Number(hoursStr) ? hoursStr + ':' : ''}${minutesStr}:${secondsStr}`;
     if (durationStr[0] === '0') { durationStr = durationStr.slice(1); }
     return durationStr;
-}
+};
+
+export const isBiggerThan = (a, b) => {
+    if (a === b) {
+        return 0;
+    }
+
+    let a_components = a.split('.');
+    let b_components = b.split('.');
+
+    let len = Math.min(a_components.length, b_components.length);
+
+    // loop while the components are equal
+    for (let i = 0; i < len; i++) {
+        // A bigger than B
+        if (parseInt(a_components[i] || 0) > parseInt(b_components[i] || 0)) {
+            return 1;
+        }
+
+        // B bigger than A
+        if (parseInt(a_components[i] || 0) < parseInt(b_components[i] || 0)) {
+            return -1;
+        }
+    }
+
+    // If one's a prefix of the other, the longer one is greater.
+    if (a_components.length > b_components.length) {
+        return 1;
+    }
+
+    if (a_components.length < b_components.length) {
+        return -1;
+    }
+
+    // Otherwise they are the same.
+    return 0;
+};

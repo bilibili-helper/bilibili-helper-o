@@ -30,6 +30,7 @@ export class MessageStore {
                 // 如果在收到前端初始化通知前就有收到请求，则处理任务队列
                 this.dealWith(id);
             }
+            return true;
         });
         chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
             this.has(tabId) && removeInfo.isWindowClosing && this.delete(tabId);

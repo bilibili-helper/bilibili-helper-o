@@ -8,6 +8,7 @@ import $ from 'jquery';
 import PropTypes from 'prop-types';
 import React from 'react';
 import apis from '../apis.js';
+import Url from 'url-parse';
 import styled from 'styled-components';
 import {Button} from 'Components/common/Button';
 import {Crc32Engine} from 'Libs/crc32';
@@ -192,6 +193,7 @@ export class Danmu extends React.Component {
                 this.getDANMUList(message.cid);
                 sendResponse(true);
             }
+            return true;
         });
         // 对pakku的hack，仅发送历史弹幕的请求
         window.addEventListener('message', function(e) {
@@ -238,24 +240,20 @@ export class Danmu extends React.Component {
                     loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
                 });
             }, 800);
-            $.ajax({
-                method: 'get',
-                url: date ? historyList : list,
-                data: {
-                    oid: cid,
-                    type: 1,
-                    date,
-                },
-                headers: {
-                    'From': 'bilibili-helper',
-                },
-                contentType: 'text/xml',
-                success: (danmuDocument) => {
-                    clearTimeout(timer);
+            const url = new Url(date ? historyList : list);
+            url.set('query', {
+                oid: cid,
+                type: 1,
+                date,
+            });
+            chrome.runtime.sendMessage({commend: 'fetchDanmu', url: url.toString()}, (danmuDocumentStr) => {
+                clearTimeout(timer);
+                if (danmuDocumentStr) {
                     if (date) this.danmuDate = date;
-                    var oSerializer = new XMLSerializer();
-                    this.danmuDocumentStr = oSerializer.serializeToString(danmuDocument);
-                    const danmuJSON = this.danmuDocument2JSON(danmuDocument);
+                    const oSerializer = new DOMParser();
+                    this.danmuDocumentStr = danmuDocumentStr;
+                    this.danmuDocument = oSerializer.parseFromString(danmuDocumentStr, 'application/xml');
+                    const danmuJSON = this.danmuDocument2JSON(this.danmuDocument);
                     danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
                     this.orderedJSON = {...danmuJSON};
                     this.setState({
@@ -264,11 +262,9 @@ export class Danmu extends React.Component {
                         loading: false,
                         currentCid: cid,
                     });
-                },
-                error: (res) => {
-                    console.error(res);
+                } else {
                     this.setState({loadingText: '弹幕加载失败!请刷新页面！'});
-                },
+                }
             });
         }
     };
@@ -276,26 +272,30 @@ export class Danmu extends React.Component {
     // 通过uid获取用户信息
     getUserInfoByUid = (uid) => {
         return new Promise((resolve) => {
-            uid && $.ajax({
-                method: 'get',
-                url: apis.card,
-                data: {
-                    mid: uid,
-                    photo: 1,
-                },
-                success: ({code, data}) => {
-                    if (code === 0 && !this.isRobotUser(data)) { // 过滤掉可能是机器人的用户
+            const url = new Url(apis.card);
+            url.set('query', {mid: uid, photo: 1});
+            uid && chrome.runtime.sendMessage({commend: 'fetchDanmu', url: url.toString()}, (res) => {
+                if (res) { // 过滤掉可能是机器人的用户
+                    const {code, data} = JSON.parse(res);
+                    if (code === 0) {
+                        if (this.isRobotUser(data)) resolve(false);
                         const {card, space, follower, following} = data;
                         this.userMap[uid] = {...card, ...space, follower, following};
                         resolve(uid);
-                    } else resolve(false);
-                },
-                error: (res) => {
+                    } else {
+                        console.error(res);
+                        this.setState({loadingText: '查询失败!'}, () => { // 查询失败3秒后关闭错误信息
+                            setTimeout(() => this.setState({loading: false}), 3000);
+                        });
+                        resolve(false);
+                    }
+                } else {
                     console.error(res);
                     this.setState({loadingText: '查询失败!'}, () => { // 查询失败3秒后关闭错误信息
                         setTimeout(() => this.setState({loading: false}), 3000);
                     });
-                },
+                    resolve(false);
+                }
             });
         });
     };
