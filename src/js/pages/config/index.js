@@ -179,7 +179,8 @@ class PageConfig extends React.Component {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
                 const {kind, name} = setting;
-                this.settings[kind].map[name] = setting;
+                if (this.settings[kind]) { this.settings[kind].map[name] = setting; }
+                else { this.settings.other.map[name] = setting; }
             });
             this.setState(this.settings);
         });

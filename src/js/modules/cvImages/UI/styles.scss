@@ -1,0 +1,13 @@
+.img-box button {
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	top: calc(50% - 50px);
+	left: calc(50% - 50px);
+	border: 1px solid #fff;
+	border-radius: 3px;
+	font-size: 16px;
+	background-color: #00a1d6;
+	color: #fff;
+	cursor: pointer;
+}

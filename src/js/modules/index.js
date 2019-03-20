@@ -26,6 +26,8 @@ import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
 import {VideoDarkMode, VideoDarkModeUI} from 'Modules/videoDarkMode';
 import {ProxyForWebsite} from 'Modules/proxyForWebsite';
+import {CvImagesUI, CvImages} from 'Modules/cvImages';
+import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 
 let VideoUnblock;
 try {
@@ -56,6 +58,8 @@ export const Features = {
     VideoUnblock,
     VideoDarkMode,
     ProxyForWebsite,
+    CvImages,
+    NotAutoPlay,
 };
 
 export const UIs = {
@@ -73,4 +77,6 @@ export const UIs = {
     VideoHideDanmuUI,
     LiveChatModeUI,
     VideoDarkModeUI,
+    CvImagesUI,
+    NotAutoPlayUI,
 };
