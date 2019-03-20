@@ -29,6 +29,7 @@ export class ChatFilter extends Feature {
                         {key: 'medal', title: '粉丝勋章', on: true},
                         {key: 'achievement', title: '成就头衔', on: true},
                         {key: 'level', title: '用户等级', on: true},
+                        {key: '2233', title: '2233娘', on: true},
                         {key: 'announcement', title: '系统公告', on: false, description: '如：活动广播，抽奖或礼物广播推送等'},
                     ],
                 },

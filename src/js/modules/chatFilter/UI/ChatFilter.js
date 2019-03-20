@@ -85,6 +85,7 @@ export class ChatFilter extends React.Component {
             achievement: '.chat-item:not(.hover) .title-label{display:none !important;}',
             level: '.chat-item:not(.hover) .user-level-icon{display:none !important;}',
             announcement: '.chat-item:not(.hover).system-msg{display:none !important;}',
+            '2233': '#my-dear-haruna-vm{display:none !important;}',
         };
         this.roomId = location.pathname.slice(1);
         this.storeName = 'bilibili-helper-chat-filter';
