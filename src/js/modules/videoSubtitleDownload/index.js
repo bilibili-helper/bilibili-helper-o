@@ -7,7 +7,6 @@ import _ from 'lodash';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import {isBiggerThan} from 'Utils';
 
 export {VideoSubtitleDownloadUI} from './UI';
 
@@ -45,31 +44,11 @@ export class VideoSubtitleDownload extends Feature {
                 tabData.data.cid = query.id.slice(4);
                 const storeObject = this.messageStore.createData(tabId);
                 const {queue} = storeObject;
-                fetch(details.url, {
-                    mode: 'cors',
-                    headers: {
-                        'From': 'bilibili-helper',
-                        'Referer': location.href,
-                    },
-                })
-                .then(res => res.text())
-                .then((res) => {
-                    if (!res) return;
-                    const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
-                    if (regExpRes.length > 0) {
-                        const subtitleData = JSON.parse(regExpRes[1]).subtitles;
-                        queue.push({
-                            commend: 'loadSubtitle',
-                            data: subtitleData,
-                        });
-                        this.messageStore.dealWith(tabId);
-                    }
-                }, (e) => {
-                    console.error(e);
-                    if (e.status === 403) {
-                        return;
-                    }
+                queue.push({
+                    commend: 'loadSubtitle',
+                    url: details.url,
                 });
+                this.messageStore.dealWith(tabId);
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
@@ -91,12 +70,10 @@ export class VideoSubtitleDownload extends Feature {
 
     launch = () => {
         this.settings.on = true;
-        this.settings.toggle = true;
         this.setSetting(this.settings);
     }
     pause = () => {
         this.settings.on = false;
-        this.settings.toggle = false;
         this.setSetting(this.settings);
     }
 }

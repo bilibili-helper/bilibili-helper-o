@@ -65,7 +65,6 @@ export class FeatureManager {
                             resolve(true);
                         } else { // 鉴权未通过
                             //console.error(`Feature ${name}: ${_.map(data, o => o.msg).join(', ')}`);
-                            feature.pause();
                             resolve(false);
                         }
                     });

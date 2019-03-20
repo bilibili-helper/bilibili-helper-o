@@ -23,18 +23,15 @@ export class PictureInPicture extends Feature {
     }
 
     launch = () => {
-        if (document.pictureInPictureEnabled !== true) {
-            this.settings.on = false;
-            this.settings.toggle = false;
+        if (document.pictureInPictureEnabled) {
+            this.settings.on = true;
             this.setSetting(this.settings);
         } else {
-            this.settings.toggle = true;
-            this.setSetting(this.settings);
+            this.pause();
         }
     };
     pause = () => {
         this.settings.on = false;
-        this.settings.toggle = false;
         this.setSetting(this.settings);
     }
 }

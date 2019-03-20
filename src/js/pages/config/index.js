@@ -377,6 +377,7 @@ class PageConfig extends React.Component {
                                                                                               on={on}/>;
 
                     let errorDescription = [];
+                    let hasError = false;
                     const permissionList = _.map(permissions, (nameStr) => {
                         const nameMap = nameStr.split('?');
                         if (nameMap.length > 0) {
@@ -395,13 +396,15 @@ class PageConfig extends React.Component {
                     const twoLine = description !== undefined || errorDescription.length > 0;
                     let second = '';
                     if (twoLine) {
-                        if (errorDescription.length > 0) { second = errorDescription; }
-                        else { second = description; }
+                        if (errorDescription.length > 0) {
+                            hasError = true;
+                            second = errorDescription;
+                        } else { second = description; }
                     }
                     return <ListItem
                         key={featureName}
-                        toggle={toggleMode}
-                        onClick={on !== undefined && toggleMode !== false ? onClick : null}
+                        toggle={toggleMode && !hasError}
+                        onClick={on !== undefined && (toggleMode && !hasError) ? onClick : null}
                         operation={on !== undefined ? operation : null}
                         subList={SubListChildren ? {
                             hide: on === undefined ? false : !on,

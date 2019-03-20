@@ -77,15 +77,27 @@ class VideoSubtitleDownload extends React.Component {
     componentDidMount() {
         chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'loadSubtitle' && message.data) {
-                const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(message.data);
-                if (regExpRes.length > 0) {
-                    const subtitleData = JSON.parse(regExpRes[1]).subtitles;
-                    this.setState({subtitleData});
-                }
+            if (message.commend === 'loadSubtitle' && message.url) {
+                $.ajax({
+                    method: 'get',
+                    headers: {'From': 'bilibili-helper'},
+                    url: message.url,
+                    success: (res) => {
+                        const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
+                        if (regExpRes.length > 0) {
+                            const subtitleData = JSON.parse(regExpRes[1]).subtitles;
+                            this.setState({subtitleData});
+                        }
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        if (e.status === 403) {
+                            return;
+                        }
+                    },
+                });
                 sendResponse(true);
             }
-            return true;
         });
         chrome.runtime.sendMessage({
             commend: 'getPermissionMap',
