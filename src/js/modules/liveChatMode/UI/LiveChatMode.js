@@ -124,10 +124,10 @@ const stylesheet = css`
     bottom: 10px;
     right: 12px;
   }
-  .hide-aside-area .bilibili-live-player-video video {
+  .hide-aside-area:not(.fullscreen-fix) .bilibili-live-player-video video {
     height: calc(100% - 40px);
   }
-  .hide-aside-area .bilibili-live-player-video-controller {
+  .hide-aside-area:not(.fullscreen-fix) .bilibili-live-player-video-controller {
     bottom: 38px;
   }
   .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
@@ -278,13 +278,12 @@ export class LiveChatMode extends React.Component {
         if (!this.bodyDOM) this.bodyDOM = document.querySelector('body');
         const classList = this.bodyDOM.classList;
         const panel = document.querySelector('.chat-history-panel');
+        const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
         new MutationObserver(() => {
             const {on, currentState} = this.state;
-            if ((classList.contains('player-full-win') && currentState !== 1) ||
-                (classList.contains('fullscreen-fix') && currentState !== 2)) { // 当前是网页全屏/全屏 且之前并不是该状态
+            if (classList.contains('player-full-win') && currentState !== 1) { // 当前是网页全屏 且之前并不是该状态
                 if (on && !classList.contains('hide-aside-area')) {
                     document.querySelector('.aside-area-toggle-btn button').click();
-                    const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
                     if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
                 }
                 this.setState({currentState: 1}, () => {
@@ -296,6 +295,8 @@ export class LiveChatMode extends React.Component {
                 this.setState({currentState: 0}, () => {
                     if (panel) panel.style.height = '';
                 });
+            } else if(classList.contains('fullscreen-fix')) {
+                if (hideBtn.getAttribute('data-title') === '显示弹幕') hideBtn.click();
             }
             //if (classList.contains('fullscreen-fix')) this.setState({currentState: 2});
         }).observe(this.bodyDOM, {
