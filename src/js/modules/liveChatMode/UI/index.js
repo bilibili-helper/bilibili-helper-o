@@ -17,7 +17,7 @@ export class LiveChatModeUI extends UI {
 
     load = (containers, settings) => {
         return new Promise(resolve => {
-            this.interval('.room-info-down-row').then((container) => {
+            this.interval('.room-info-down-row', 2000).then((container) => {
                 const wrapper = document.createElement('div');
                 wrapper.setAttribute('class', 'bilibili-helper-live-chat-mode-wrapper');
                 container && container.appendChild(wrapper);

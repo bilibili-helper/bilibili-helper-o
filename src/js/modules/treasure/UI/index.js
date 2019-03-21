@@ -17,7 +17,7 @@ export class TreasureUI extends UI {
 
     load = () => {
         return new Promise(resolve => {
-            this.interval('.treasure-box').then((container) => {
+            this.interval('.treasure-box', 2000).then((container) => {
                 if (container) {
                     container.setAttribute('id', 'bilibili-helper-treasure')
                     ReactDOM.render(<Treasure/>, container, resolve);

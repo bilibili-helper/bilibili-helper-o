@@ -19,7 +19,7 @@ export class ChatFilterUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
-            this.interval('.aside-area .control-panel-icon-row', 1000).then((container) => {
+            this.interval('.aside-area .control-panel-icon-row', 2000).then((container) => {
                 if (container) {
                     const chatFilter = document.createElement('span');
                     chatFilter.setAttribute('class', 'icon-item icon-font');
