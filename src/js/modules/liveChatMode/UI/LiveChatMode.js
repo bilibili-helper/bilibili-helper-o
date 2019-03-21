@@ -281,22 +281,21 @@ export class LiveChatMode extends React.Component {
         const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
         new MutationObserver(() => {
             const {on, currentState} = this.state;
-            if (classList.contains('player-full-win') && currentState !== 1) { // 当前是网页全屏 且之前并不是该状态
-                if (on && !classList.contains('hide-aside-area')) {
+            if (on && classList.contains('player-full-win') && currentState !== 1) { // 当前是网页全屏 且之前并不是该状态
+                if (!classList.contains('hide-aside-area')) {
                     document.querySelector('.aside-area-toggle-btn button').click();
-                    if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
                 }
+                if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
                 this.setState({currentState: 1}, () => {
                     if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
                     if (panel && this.originOffectLeft) panel.style.left = `${this.originOffectLeft}px`;
                     if (panel && this.originOffectBottom) panel.style.bottom = `${this.originOffectBottom}px`;
                 });
-            } else if (!classList.contains('fullscreen-fix') && !classList.contains('player-full-win')) {
+            } else if (classList.contains('fullscreen-fix') || !classList.contains('player-full-win')) {
                 this.setState({currentState: 0}, () => {
                     if (panel) panel.style.height = '';
+                    if (hideBtn.getAttribute('data-title') === '显示弹幕') hideBtn.click();
                 });
-            } else if(classList.contains('fullscreen-fix')) {
-                if (hideBtn.getAttribute('data-title') === '显示弹幕') hideBtn.click();
             }
             //if (classList.contains('fullscreen-fix')) this.setState({currentState: 2});
         }).observe(this.bodyDOM, {
