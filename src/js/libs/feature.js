@@ -78,7 +78,7 @@ export class Feature {
     initSetting = (sets) => {
         return new Promise(resolve => {
             const localOptions = store.get(this.optionStoreName);
-            const settings = sets || localOptions || {}; // 缓存配置
+            const settings = this.mergeSetting(localOptions, sets); // 以本地存储的配置为基础合并入额外设置
             this.settings = this.mergeSetting(this.settings, settings);
             store.set(this.optionStoreName, this.simplifySetting(this.settings));
             resolve(this);
@@ -113,27 +113,28 @@ export class Feature {
     addListener = () => {};
 
     /**
-     * 合并配置，该操作以originSetting为模板，忽略originSetting中没有但localSetting中有的键
-     * @param originSetting
-     * @param localSetting
+     * 合并配置，该操作以originSetting为模板，忽略originSetting中没有的键
+     * @param originSetting 程序配置
+     * @param localSetting 本地保存的配置
      */
     mergeSetting = (originObject, localObject) => {
         const tempObject = {};
-        _.each(originObject, (value, key) => {
-            if (_.isArray(value) && localObject && _.isArray(localObject[key])) { // 处理options这种数组配置
+        for (let key in originObject) {
+            const value = originObject[key];
+            if (_.isArray(value) && localObject !== undefined && _.isArray(localObject[key])) { // 处理options这种数组配置
                 tempObject[key] = _.map(value, (object) => { // 以程序版本为模板
                     const local = _.find(localObject[key], (o) => o.key === object.key); // 查询在本地是否已有相关配置
                     if (local) { return this.mergeSetting(object, local); } // 查到则进行合并
                     else { return object; } // 查不到则以程序版本为准
                 });
-            } else if (_.isPlainObject(value)) {
+            } else if (_.isPlainObject(value) && localObject !== undefined &&  _.isPlainObject(localObject[key])) {
                 tempObject[key] = this.mergeSetting(value, localObject[key]);
-            } else if (localObject && localObject[key] !== undefined) {
+            } else if (localObject !== undefined && localObject[key] !== undefined) {
                 tempObject[key] = localObject[key];
             } else {
-                tempObject[key] = originObject[key];
+                tempObject[key] = value;
             }
-        });
+        }
         return tempObject;
     };
 

@@ -465,6 +465,7 @@ export class Danmu extends React.Component {
             btnBlock.setAttribute('class', 'helper-card-btn btn-box');
             card.setAttribute('id', 'helper-card');
             card.setAttribute('class', 'user-card');
+            levelBlock.setAttribute('class', 'helper-card-level level');
             levelBlock.setAttribute('href', '//www.bilibili.com/html/help.html#k_2');
             levelBlock.setAttribute('target', '_blank');
             likeBtn.setAttribute('class', 'like');

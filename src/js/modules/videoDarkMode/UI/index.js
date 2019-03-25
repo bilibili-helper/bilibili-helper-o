@@ -404,6 +404,7 @@ class VideoDarkMode extends React.Component {
         this.state = {
             settings: {},
         };
+        this.isOldPage = !!document.querySelector('#__bofqi');
     }
 
     componentDidMount() {
@@ -435,8 +436,8 @@ class VideoDarkMode extends React.Component {
         const {on} = this.state.settings;
         return (
             <React.Fragment>
-                <VideoDarkModeButton onClick={this.handleOnClick} on={on}>夜间模式</VideoDarkModeButton>
-                {on && <VideoDarkModeStyle/>}
+                <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPage}>夜间模式</VideoDarkModeButton>
+                {on && !this.isOldPage && <VideoDarkModeStyle/>}
             </React.Fragment>
         );
     }

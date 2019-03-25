@@ -96,13 +96,14 @@ export class VideoDownload extends React.Component {
         this.originVideoData = {};
         this.state = {
             videoData: {},
-            currentCid: NaN,
+            currentCid: null,
             originVideoData: {},
             percentage: 0,
             downloading: false,
             settings: null,
             currentQuality: null,
         };
+        this.currentAvid = null;
         this.addListener();
         _.map(document.scripts, (o) => {
             if (/^window.__playinfo__=/.test(o.innerHTML)) {
@@ -144,6 +145,7 @@ export class VideoDownload extends React.Component {
     };
 
     addListener = () => {
+        const that = this;
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.commend === 'videoDownloadSendVideoRequest') {
                 let {data, url, method, type} = message;
@@ -154,6 +156,7 @@ export class VideoDownload extends React.Component {
                     } else {
                         url = new Url(normalFlvDownloadURL);
                     }
+                    this.currentAvid = avid;
                     url.set('query', {cid, avid, qn, otype: 'json'});
                     url = url.toString();
                 }
@@ -161,10 +164,11 @@ export class VideoDownload extends React.Component {
                 //console.log(res, avid);
                 //if (type === 'old') {
                 const {videoData} = this.state;
-                const currentCid = data.cid;
+                const currentCid = +data.cid;
                 const quality = data.quality || data.qn;
+                this.setState({currentCid});
                 if (videoData[currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
-                    this.setState({currentCid});
+                    //
                 } else {
                     this.getFlvResponse(method, url);
                 }
@@ -196,6 +200,28 @@ export class VideoDownload extends React.Component {
             }
             return true;
         });
+        $(document).on('click', '.bui-select-list li, .bpui-selectmenu-list li', (e) => {
+            const quality = e.target.getAttribute('data-value');
+            that.changeQuality(quality);
+        });
+    };
+
+    changeQuality = (qn) => {
+        const {currentCid, videoData} = this.state;
+        let url;
+        if (location.href.indexOf('bangumi') >= 0) {
+            url = new Url(bangumiFlvDownloadURL);
+        } else {
+            url = new Url(normalFlvDownloadURL);
+        }
+        url.set('query', {cid: currentCid, avid: this.currentAvid, qn, otype: 'json'});
+        url = url.toString();
+
+        this.setState({currentCid, currentQuality: qn});
+        if (videoData[currentCid] && videoData[currentCid][qn] && !videoData[currentCid][qn].dash) {
+        } else {
+            this.getFlvResponse('get', url);
+        }
     };
 
     getFlvResponse = (method, url, type = 'old') => {

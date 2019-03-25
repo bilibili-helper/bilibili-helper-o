@@ -12,7 +12,7 @@ const HelperBtn = styled.span`
   padding: 0 15px;
   border-radius: 4px;
   transition: all 0.3s;
-  width: 48px;
+  width: ${({old}) => old ? 'auto' : 48}px;
   .func-module & {
     width: 90px;
     border: 1px solid #e5e9ef;
@@ -57,6 +57,7 @@ export class ToolBtn extends React.Component {
     constructor(props) {
         super(props);
         this.show = false;
+        this.isOldPage = !!document.querySelector('#__bofqi');
     }
 
     handleClick = (e) => {
@@ -75,7 +76,7 @@ export class ToolBtn extends React.Component {
         return (
             <React.Fragment>
                 <link href="//at.alicdn.com/t/font_862696_227xf8jklcw.css" type="text/css" rel="stylesheet"/>
-                <HelperBtn onClick={this.handleClick} title="哔哩哔哩助手">助手</HelperBtn>
+                <HelperBtn onClick={this.handleClick} title="哔哩哔哩助手" old={this.isOldPage}>{this.isOldPage ? '哔哩哔哩助手' : '助手'}</HelperBtn>
                 <ToolContent/>
             </React.Fragment>
         );

@@ -5,9 +5,7 @@
  */
 
 import {Feature} from 'Libs/feature';
-import $ from 'Libs/jquery.min';
 import _ from 'lodash';
-import apis from 'Modules/treasure/apis';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
 import {__} from 'Utils';
 
@@ -49,6 +47,7 @@ export class Treasure extends Feature {
                 }
             } else if (message.commend === 'getCaptcha' && message.type === 'treasure') {
                 fetch(message.url).then(res => res.json()).then((res) => {
+                    this.retryTime = 0;
                     sendResponse(res);
                 }, (res) => {
                     if (this.retryTime < this.maxRetryTime) {
@@ -59,6 +58,7 @@ export class Treasure extends Feature {
                 });
             } else if (message.commend === 'getAward' && message.type === 'treasure') {
                 fetch(message.url).then(res => res.json()).then((res) => {
+                    this.retryTime = 0;
                     sendResponse(res);
                 }, (res) => {
                     if (this.retryTime < this.maxRetryTime) {
@@ -69,6 +69,7 @@ export class Treasure extends Feature {
                 });
             } else if (message.commend === 'getCurrentTask' && message.type === 'treasure') {
                 fetch(message.url).then(res => res.json()).then((res) => {
+                    this.retryTime = 0;
                     sendResponse(res);
                 }, (res) => {
                     if (this.retryTime < this.maxRetryTime) {

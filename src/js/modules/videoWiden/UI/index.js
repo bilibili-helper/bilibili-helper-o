@@ -36,7 +36,7 @@ export class VideoWidenUI extends UI {
     setWide = (option) => {
         switch (option) {
             case 'wide': {
-                const btn = document.querySelector('.bilibili-player-video-btn-widescreen');
+                const btn = document.querySelector('.bilibili-player-video-btn-widescreen:not(.closed)');
                 if (btn && !btn.getAttribute('bilibili-helper-data')) {
                     btn.setAttribute('bilibili-helper-data', true);
                     btn.click();
