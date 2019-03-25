@@ -156,7 +156,6 @@ export class VideoDownload extends React.Component {
                     } else {
                         url = new Url(normalFlvDownloadURL);
                     }
-                    this.currentAvid = avid;
                     url.set('query', {cid, avid, qn, otype: 'json'});
                     url = url.toString();
                 }
@@ -165,6 +164,7 @@ export class VideoDownload extends React.Component {
                 //if (type === 'old') {
                 const {videoData} = this.state;
                 const currentCid = +data.cid;
+                this.currentAvid = avid;
                 const quality = data.quality || data.qn;
                 this.setState({currentCid});
                 if (videoData[currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
@@ -178,6 +178,7 @@ export class VideoDownload extends React.Component {
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
                     const {quality} = this.originVideoData;
+                    this.currentAvid = message.avid;
                     if (this.originVideoData.dash) {
 
                         let url = null;
@@ -187,6 +188,7 @@ export class VideoDownload extends React.Component {
                             url = new Url(normalFlvDownloadURL);
                         }
                         url.set('query', {cid: message.cid, avid: message.avid, qn: quality, otype: 'json'});
+                        this.setState({currentCid: message.cid});
                         this.getFlvResponse('get', url.toString());
                     } else {
                         const currentData = {...this.originVideoData};
