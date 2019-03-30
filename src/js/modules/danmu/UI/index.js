@@ -18,6 +18,7 @@ export class DanmuUI extends UI {
     }
 
     load = ([container], settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-danmu-wrapper');

@@ -15,11 +15,12 @@ export class TreasureUI extends UI {
         });
     }
 
-    load = () => {
+    load = (containers, settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             this.interval('.treasure-box', 2000).then((container) => {
                 if (container) {
-                    container.setAttribute('id', 'bilibili-helper-treasure')
+                    container.setAttribute('id', 'bilibili-helper-treasure');
                     ReactDOM.render(<Treasure/>, container, resolve);
                 }
             });

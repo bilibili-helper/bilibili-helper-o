@@ -78,6 +78,8 @@ export class Treasure extends React.Component {
             counterComplete: true, // 计时器结束状态
             permissionMap: {},
         };
+        this.retryTime = 0;
+        this.maxRetryTime = 10;
 
         this.correctStr = {
             'i': 1, 'I': 1, '|': 1, 'l': 1,
@@ -199,38 +201,51 @@ export class Treasure extends React.Component {
      * 获取当前波次数据
      */
     getCurrentTask = () => {
+        this.counter.text('刷新中');
         chrome.runtime.sendMessage({commend: 'getCurrentTask', type: 'treasure', url: apis.getCurrentTask}, (res) => {
-            if (res.code === 0) {
-                if (this.retryTime) this.retryTime = 0;
-                const {max_times, times, minute, silver, time_end, time_start} = res.data;
-                this.setState({max_times, times, minute, silver, time_end, time_start});
-                this.setCounter(minute);
-            } else if (this.retryTime < this.maxRetryTime) {
-                this.retryTime += 1;
-                if (res.code === -10017) {
+            switch (res.code) {
+                case 0: {
+                    if (this.retryTime) this.retryTime = 0;
+                    const {max_times, times, minute, silver, time_end, time_start} = res.data;
+                    this.setState({max_times, times, minute, silver, time_end, time_start});
+                    this.setCounter(minute);
+                    break;
+                }
+                case -10017:
                     this.counter.text('已领完');
-                } else this.counter.text(res.msg);
+                    break;
+                default: {
+                    if (this.retryTime < this.maxRetryTime) {
+                        this.retryTime += 1;
+                        this.counter.text(res.msg);
+                        setTimeout(() => this.getCurrentTask(), 2000);
+                    }
+                }
             }
         });
-
     };
 
     /**
      * 获取验证码
      */
     getCaptcha = () => {
+        this.counter.text('验证中');
         const url = new Url(apis.getCaptcha);
         url.set('query', {ts: Date.now()});
         chrome.runtime.sendMessage({commend: 'getCaptcha', type: 'treasure', url: url.toString()}, (res) => {
-            if (res.code === 0) {
-                if (this.retryTime) this.retryTime = 0;
-                this.counter.text('领取中');
-                this.imgDOM.setAttribute('src', res.data.img);
-            } else if (this.retryTime < this.maxRetryTime) {
-                this.retryTime += 1;
-                if (res.code === -500) { // 稍后登录？还不知道为什么会有这个错误
-                    setTimeout(this.getCaptcha, 2000);
-                } else this.counter.text(res.msg);
+            switch (res.code) {
+                case 0: {
+                    if (this.retryTime) this.retryTime = 0;
+                    this.imgDOM.setAttribute('src', res.data.img);
+                    break;
+                }
+                case -500: // 稍后登录？还不知道为什么会有这个错误
+                default:
+                    if (this.retryTime < this.maxRetryTime) {
+                        this.retryTime += 1;
+                        this.counter.text(res.msg);
+                        setTimeout(this.getCaptcha, 2000);
+                    }
             }
         });
     };
@@ -242,6 +257,7 @@ export class Treasure extends React.Component {
      * @param time_end
      */
     getAward = (captcha) => {
+        this.counter.text('领取中');
         const {time_start, time_end} = this.state;
         const url = new Url(apis.getAward);
         url.set('query', {time_start, time_end, captcha});
@@ -260,12 +276,14 @@ export class Treasure extends React.Component {
                 case -10017: // 验证码过期
                 case -901: // 验证码过期
                 case -500: // 稍后登录？还不知道为什么会有这个错误
-                default: // 其他情况
+                default: {
                     if (this.retryTime < this.maxRetryTime) {
                         this.retryTime += 1;
-                        setTimeout(this.getCaptcha, 500);
                         this.counter.text(res.msg);
+                        setTimeout(this.getCaptcha, 2000);
                     }
+                    break;
+                }
             }
         });
     };

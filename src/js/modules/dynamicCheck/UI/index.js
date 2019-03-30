@@ -19,6 +19,7 @@ export class DynamicCheckUI extends UI {
     }
 
     load = ([popupDOM], settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const dynamicCheckBoxState = _.find(settings.options, ({key}) => key === 'dynamicCheckBox');
             if (dynamicCheckBoxState.on) {

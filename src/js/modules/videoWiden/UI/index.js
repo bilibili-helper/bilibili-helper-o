@@ -15,6 +15,7 @@ export class VideoWidenUI extends UI {
     }
 
     load = (containers, settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const option = settings.subPage.value;
             this.setWide(option);

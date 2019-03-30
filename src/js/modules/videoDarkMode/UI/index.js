@@ -26,6 +26,7 @@ const VideoDarkModeButton = styled(Button).attrs({
     border-radius: 4px;
     color: ${({on}) => on ? '#fff' : '#fb7299'};
     background-color: ${({on}) => on ? '#fb7299' : '#fff'};
+    cursor: pointer;
   }
 `;
 
@@ -145,6 +146,9 @@ const VideoDarkModeStyle = createGlobalStyle`
   // 选集列表
   #eplist_module, #multi_page, .ep-section-module {
     background-color: var(--dark-2);
+    .list-wrapper.longlist {
+      padding-right: 6px;
+    }
     .list-title, .head-con {
       h4, h3 {
         color: var(--dark-font-1);
@@ -221,6 +225,9 @@ const VideoDarkModeStyle = createGlobalStyle`
         background-color: var(--dark-3)!important;
       }
     }
+    .media-desc i {
+      background-color: var(--dark-1);
+    }
   }
   .media-tool-bar {
     .btn-rating {
@@ -294,7 +301,13 @@ const VideoDarkModeStyle = createGlobalStyle`
         
       }
     }
+    .paging-box {
+      .dian, .next, .prev, .tcd-number {
+        color: var(--dark-font-1);
+      }
+    }
   }
+  
   .comment-header {
     border-color: var(--dark-1)!important;
     .tabs-order li:not(.on):not(:hover) {
@@ -404,7 +417,7 @@ class VideoDarkMode extends React.Component {
         this.state = {
             settings: {},
         };
-        this.isOldPage = !!document.querySelector('#__bofqi');
+        this.isOldPageOrWatchLater = !!document.querySelector('#__bofqi,.view-later-module, #bangumi_detail');
     }
 
     componentDidMount() {
@@ -436,8 +449,8 @@ class VideoDarkMode extends React.Component {
         const {on} = this.state.settings;
         return (
             <React.Fragment>
-                <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPage}>夜间模式</VideoDarkModeButton>
-                {on && !this.isOldPage && <VideoDarkModeStyle/>}
+                <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPageOrWatchLater}>夜间模式</VideoDarkModeButton>
+                {on && !this.isOldPageOrWatchLater && <VideoDarkModeStyle/>}
             </React.Fragment>
         );
     }

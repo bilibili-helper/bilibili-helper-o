@@ -573,14 +573,13 @@ export class Danmu extends React.Component {
     />;
 
     render() {
-        const {on} = this.props.settings;
-        return on ? (
+        return (
             <React.Fragment>
                 {this.renderHeader()}
                 {this.renderList()}
                 <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
                 {this.state.loading && <LoadingMask>{this.state.loadingText}</LoadingMask>}
             </React.Fragment>
-        ) : null;
+        );
     }
 }

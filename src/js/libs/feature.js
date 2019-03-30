@@ -127,7 +127,7 @@ export class Feature {
                     if (local) { return this.mergeSetting(object, local); } // 查到则进行合并
                     else { return object; } // 查不到则以程序版本为准
                 });
-            } else if (_.isPlainObject(value) && localObject !== undefined &&  _.isPlainObject(localObject[key])) {
+            } else if (_.isPlainObject(value) && localObject !== undefined && _.isPlainObject(localObject[key])) {
                 tempObject[key] = this.mergeSetting(value, localObject[key]);
             } else if (localObject !== undefined && localObject[key] !== undefined) {
                 tempObject[key] = localObject[key];

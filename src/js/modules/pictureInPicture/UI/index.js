@@ -25,6 +25,7 @@ const PipButton = styled(Button).attrs({
     border-radius: 4px;
     color: ${({on}) => on ? '#fff' : '#fb7299'};
     background-color: ${({on}) => on ? '#fb7299' : '#fff'};
+    cursor: pointer;
   }
 `;
 

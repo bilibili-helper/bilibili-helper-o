@@ -6,6 +6,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {ToolContent} from './ToolContent';
+import {Icon} from 'Components/common/Icon';
 
 const HelperBtn = styled.span`
   display: inline-block;
@@ -75,8 +76,14 @@ export class ToolBtn extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <link href="//at.alicdn.com/t/font_862696_227xf8jklcw.css" type="text/css" rel="stylesheet"/>
-                <HelperBtn onClick={this.handleClick} title="哔哩哔哩助手" old={this.isOldPage}>{this.isOldPage ? '哔哩哔哩助手' : '助手'}</HelperBtn>
+                <link href="https://at.alicdn.com/t/font_894803_ilqifyzi68.css" rel="stylesheet" type="text/css"/>
+                <HelperBtn
+                    onClick={this.handleClick}
+                    title="哔哩哔哩助手"
+                    old={this.isOldPage}
+                >
+                    {this.isOldPage ? '哔哩哔哩助手' : <React.Fragment>哔哩<br/>助手</React.Fragment>}
+                </HelperBtn>
                 <ToolContent/>
             </React.Fragment>
         );

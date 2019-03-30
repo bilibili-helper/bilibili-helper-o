@@ -12,7 +12,8 @@ export class NotAutoPlayUI extends UI {
         });
     }
 
-    load = () => {
+    load = (containers, settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const body = document.querySelector('body');
             const script = document.createElement('script');

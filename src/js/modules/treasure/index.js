@@ -45,8 +45,23 @@ export class Treasure extends Feature {
                         message: `成功领取${silver}瓜子`,
                     });
                 }
+            } else if (message.commend === 'getCurrentTask' && message.type === 'treasure') {
+                fetch(message.url, {
+                    credentials: 'include',
+                }).then(res => res.json()).then((res) => {
+                    this.retryTime = 0;
+                    sendResponse(res);
+                }, (res) => {
+                    if (this.retryTime < this.maxRetryTime) {
+                        ++this.retryTime;
+                        console.error(res);
+                        setTimeout(this.getCaptcha, 2000);
+                    } else sendResponse(res);
+                });
             } else if (message.commend === 'getCaptcha' && message.type === 'treasure') {
-                fetch(message.url).then(res => res.json()).then((res) => {
+                fetch(message.url, {
+                    credentials: 'include',
+                }).then(res => res.json()).then((res) => {
                     this.retryTime = 0;
                     sendResponse(res);
                 }, (res) => {
@@ -57,18 +72,9 @@ export class Treasure extends Feature {
                     } else sendResponse(res);
                 });
             } else if (message.commend === 'getAward' && message.type === 'treasure') {
-                fetch(message.url).then(res => res.json()).then((res) => {
-                    this.retryTime = 0;
-                    sendResponse(res);
-                }, (res) => {
-                    if (this.retryTime < this.maxRetryTime) {
-                        ++this.retryTime;
-                        console.error(res);
-                        setTimeout(this.getCaptcha, 2000);
-                    } else sendResponse(res);
-                });
-            } else if (message.commend === 'getCurrentTask' && message.type === 'treasure') {
-                fetch(message.url).then(res => res.json()).then((res) => {
+                fetch(message.url, {
+                    credentials: 'include',
+                }).then(res => res.json()).then((res) => {
                     this.retryTime = 0;
                     sendResponse(res);
                 }, (res) => {

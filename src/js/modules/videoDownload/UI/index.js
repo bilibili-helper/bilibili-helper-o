@@ -16,7 +16,8 @@ export class VideoDownloadUI extends UI {
         });
     }
 
-    load = ([container], setting) => {
+    load = ([container], settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-video-download-wrapper');
@@ -24,7 +25,7 @@ export class VideoDownloadUI extends UI {
 
             container.appendChild(wrapper);
             ReactDOM.render(
-                <VideoDownload ref={i => this.container = i} setting={setting}/>,
+                <VideoDownload ref={i => this.container = i} setting={settings}/>,
                 wrapper,
                 () => resolve(this.container),
             );

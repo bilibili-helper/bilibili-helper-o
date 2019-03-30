@@ -14,16 +14,15 @@ const createOldBtn = () => {
     oldBtn.innerText = '助手已移动到页面右侧边缘';
     oldBtn.setAttribute('style', `
         display: inline-block;
-        vertical-align: top;
         width: auto;
         height: 24px;
         line-height: 24px;
         font-size: 14px;
         color: #505050;
         margin-left: 20px;
-    `)
+    `);
     return oldBtn;
-}
+};
 
 export class VideoAnchorUI extends UI {
     constructor() {
@@ -40,6 +39,7 @@ export class VideoAnchorUI extends UI {
                 //'.video-info .video-title',
                 '.entry-old',
                 '#arc_toolbar_report',
+                '#viewlater-app .video-toolbar-module',
             ];
             const newPage = document.querySelector('.video-data, .stardust-player');
             const addUI = (container, callback) => {
@@ -54,35 +54,8 @@ export class VideoAnchorUI extends UI {
                 });
             };
             if (newPage) { // 新页面要先判断b站代码是否跑完
-                const retryMax = 10;
-                let retryTime = 0;
-                let timer = setInterval(() => {
-                    if (retryTime > retryMax) {
-                        clearInterval(timer);
-                        return console.error(`title for view has not changed!`);
-                    }
-                    const coin = document.querySelector('.coin-info,.coin');
-                    if (!coin) return;
-                    if ('coin'.indexOf(coin.classList) > -1) {
-                        const title = document.querySelector('.view').getAttribute('title');
-                        if (title !== '总播放数--') {
-                            clearInterval(timer);
-                            addUI(document.querySelector('#entryOld'), () => {
-                                const container = document.querySelector('#arc_toolbar_report .ops');
-                                container.appendChild(createOldBtn());
-                            });
-                        } else ++retryTime;
-                    } else if ('coin-info'.indexOf(coin.classList) > -1) { // 新版番剧页面
-                        const coinStr = coin.innerText;
-                        if (coinStr !== '--') {
-                            clearInterval(timer);
-                            addUI(document.querySelector('.entry-old'), () => {
-                                const container = document.querySelector('#toolbar_module');
-                                container.appendChild(createOldBtn());
-                            });
-                        } else ++retryTime;
-                    } else ++retryTime;
-                }, 1000);
+                document.querySelector('html').classList.add('new-page');
+                addUI(document.body);
             } else { // 老页面
                 this.interval(containerSelectors).then(() => {
                     const retryMax = 10;
@@ -97,7 +70,7 @@ export class VideoAnchorUI extends UI {
                         const favNum = favDOM ? favDOM.innerText : false;
                         if (favNum) {
                             clearInterval(timer);
-                            addUI(document.querySelector('#arc_toolbar_report, #bangumi_detail .func-module'));
+                            addUI(document.querySelector('#arc_toolbar_report, #bangumi_detail .func-module, #viewlater-app .video-toolbar-module'));
                         } else if (bangumiDOM) {
                             addUI(bangumiDOM);
                         } else ++retryTime;

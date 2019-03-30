@@ -102,6 +102,7 @@ export class VideoDownload extends React.Component {
             downloading: false,
             settings: null,
             currentQuality: null,
+            errorStr: '',
         };
         this.currentAvid = null;
         this.addListener();
@@ -203,7 +204,7 @@ export class VideoDownload extends React.Component {
             return true;
         });
         $(document).on('click', '.bui-select-list li, .bpui-selectmenu-list li', (e) => {
-            const quality = e.target.getAttribute('data-value');
+            const quality = e.currentTarget.getAttribute('data-value');
             that.changeQuality(quality);
         });
     };
@@ -229,7 +230,10 @@ export class VideoDownload extends React.Component {
     getFlvResponse = (method, url, type = 'old') => {
         const {videoData, currentCid} = this.state;
         chrome.runtime.sendMessage({commend: 'getFlvResponse', method, url}, (res) => {
-            if (res.code === 10005) return console.error(res);
+            if (res.code !== 0) {
+                this.setState({errorStr: res.message});
+                return;
+            }
             let downloadData;
             if (type === 'new' && res.code === 0) {
                 downloadData = res.data || res.result || res;
@@ -397,14 +401,17 @@ export class VideoDownload extends React.Component {
     };
 
     render() {
-        const {videoData, currentCid, percentage, currentQuality} = this.state;
+        const {videoData, currentCid, percentage, currentQuality, errorStr} = this.state;
         const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
         return (
             <React.Fragment>
                 <Title>视频下载 - 切换清晰度来获取视频连接</Title>
                 <Container>
                     {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
-                    {!videoData[currentCid] ? <LinkGroupTitle><p>请尝试切换视频清晰度 或 切换到旧播放页面</p></LinkGroupTitle> : null}
+                    {!videoData[currentCid] ? <LinkGroupTitle>
+                        {!errorStr && <p>请尝试切换视频清晰度 或 切换到旧播放页面</p>}
+                        {errorStr && <p>{errorStr}</p>}
+                    </LinkGroupTitle> : null}
                 </Container>
             </React.Fragment>
         );

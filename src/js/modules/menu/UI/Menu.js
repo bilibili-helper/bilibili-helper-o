@@ -263,6 +263,7 @@ export class Menu extends React.Component {
         if (event.key === 'Enter') this.link();
         else {
             const value = String(event.target.value).toLowerCase().trim();
+            store.set('lastSearch', value);
             const res = this.checkLinkerValue(value);
             this.setState({linkerError: !res && value !== ''});
         }
@@ -274,7 +275,7 @@ export class Menu extends React.Component {
     };
 
     render() {
-        const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options, debug, version} = this.state;
+        const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options} = this.state;
         const {video, live, dynamic, favourite, linker} = menuOptions;
         const showIconOption = options ? _.find(options, (o) => o.key === 'showIcon') : {};
         const showIcon = showIconOption ? showIconOption.on : false;
@@ -311,7 +312,6 @@ export class Menu extends React.Component {
                 </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                 {linker && <LinkerWrapper>
                     <Linker
-                        ref={i => this.linkerRef = i}
                         error={linkerError}
                         onKeyUp={this.handleKeyUp}
                         onFocus={this.handleFocusIn}

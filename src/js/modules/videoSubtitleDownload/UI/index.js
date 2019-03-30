@@ -150,7 +150,8 @@ export class VideoSubtitleDownloadUI extends UI {
         });
     }
 
-    load = ([container]) => {
+    load = ([container], settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-subtitle-download-wrapper');

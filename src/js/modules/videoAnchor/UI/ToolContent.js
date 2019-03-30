@@ -20,6 +20,7 @@ const Content = styled.div.attrs({
   justify-content: space-between;
   padding: 15px 10px 5px;
   width: 422px;
+  min-height: 28px;
   line-height: initial;
   font-size: initial;
   color: #505050;

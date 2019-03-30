@@ -17,6 +17,7 @@ export class CvImagesUI extends UI {
 
     load = (containers, settings) => {
         const that = this;
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             if (!settings.on) return resolve(containers);
             const btn = document.createElement('button');

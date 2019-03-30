@@ -1,14 +1,67 @@
 body {
 	background-color: white;
 }
+/**
+	new container for helper
+ */
+
+.new-page {
+	.entry-old {
+		.feedback > img {
+			top: -54px;
+		}
+	}
+	.bilibili-helper {
+		position: fixed;
+		bottom: 412px;
+		right: 6px;
+		z-index: 100;
+		& > span {
+			display: block;
+			padding: 6px 0;
+			line-height: 17px;
+			vertical-align: baseline;
+			font-size: 12px;
+			text-align: center;
+			border-radius: 2px;
+			box-shadow: 0 6px 10px 0 rgba(251,114,153,.4);
+			background: #fb7299;
+			color: #fff;
+			cursor: pointer;
+		}
+		.bilibili-helper-content {
+			top: 0;
+		}
+	}
+}
 .player-module #bofqi.stardust-player {
-	z-index: auto!important;
+	z-index: auto !important;
 }
 #entryOld {
 	z-index: 900;
 }
 #toolbar_module .bilibili-helper {
 	position: relative;
+}
+// 稍后再看页面
+#viewlater-app .video-toolbar-module .bilibili-helper {
+	position: relative;
+	float: left;
+	left: 10px;
+	display: block;
+	line-height: 78px;
+	cursor: pointer;
+	& > span {
+		color: #000;
+		display: block;
+		padding: 0;
+		font-size: 16px;
+		line-height: 68px;
+	}
+	.bilibili-helper-content {
+		right: -200px;
+		top: 80px;
+	}
 }
 #arc_toolbar_report {
 	.ops {
@@ -28,6 +81,9 @@ body {
 		height: 80px;
 		line-height: 80px;
 		float: left;
+		color: #000;
+		display: block;
+		font-size: 16px;
 		& > span {
 			user-select: none;
 			cursor: pointer;
