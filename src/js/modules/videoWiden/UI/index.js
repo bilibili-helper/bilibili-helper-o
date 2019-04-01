@@ -45,7 +45,7 @@ export class VideoWidenUI extends UI {
                 break;
             }
             case 'web': {
-                const btn = document.querySelector('.bilibili-player-video-web-fullscreen');
+                const btn = document.querySelector('.bilibili-player-video-web-fullscreen:not(.closed)');
                 if (btn && !btn.getAttribute('bilibili-helper-data')) {
                     btn.setAttribute('bilibili-helper-data', true);
                     btn.click();

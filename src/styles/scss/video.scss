@@ -5,17 +5,15 @@ body {
 	new container for helper
  */
 
-.new-page {
-	.entry-old {
-		.feedback > img {
-			top: -54px;
-		}
+.new-page body:not(.player-fullscreen-fix){
+	.entry-old .feedback img, #entryOld .feedback-btn img {
+		display: none;
 	}
 	.bilibili-helper {
 		position: fixed;
 		bottom: 412px;
 		right: 6px;
-		z-index: 100;
+		z-index: 1000;
 		& > span {
 			display: block;
 			padding: 6px 0;
@@ -24,7 +22,7 @@ body {
 			font-size: 12px;
 			text-align: center;
 			border-radius: 2px;
-			box-shadow: 0 6px 10px 0 rgba(251,114,153,.4);
+			box-shadow: 0 6px 10px 0 rgba(251, 114, 153, .4);
 			background: #fb7299;
 			color: #fff;
 			cursor: pointer;

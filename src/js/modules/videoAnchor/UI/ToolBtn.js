@@ -82,7 +82,7 @@ export class ToolBtn extends React.Component {
                     title="哔哩哔哩助手"
                     old={this.isOldPage}
                 >
-                    {this.isOldPage ? '哔哩哔哩助手' : <React.Fragment>哔哩<br/>助手</React.Fragment>}
+                    {this.isOldPage ? '哔哩哔哩助手' : '助手'}
                 </HelperBtn>
                 <ToolContent/>
             </React.Fragment>
