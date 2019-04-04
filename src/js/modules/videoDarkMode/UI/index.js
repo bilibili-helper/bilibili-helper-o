@@ -376,7 +376,7 @@ const VideoDarkModeStyle = createGlobalStyle`
   }
   #reco_list {
     .rec-title,
-    .rec-list .video-page-card .card-box .info .title {
+    .rec-list .card-box .info .title {
       color: var(--dark-font-1);
     }
     .rec-footer {
