@@ -51,6 +51,7 @@ const FilterTitle = styled.h1`
 
 const FilterItem = styled.div.attrs({className: 'filter-item'})`
   display: flex;
+  justify-content: space-between;
   margin: 0 0 10px;
   font-size: 12px;
   color: #666;

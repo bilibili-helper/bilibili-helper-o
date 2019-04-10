@@ -165,7 +165,7 @@ export class Feature {
         const thisTime = new Date();
         const currentZone = thisTime.getTimezoneOffset() / 60;
         const offset = currentZone + 8; // 需要调整的偏移量
-        return new Date(thisTime.getTime() + offset * 1000 * 60).getDate();
+        return new Date(thisTime.getTime() - offset * 1000 * 60).getDate();
     };
 
     permissionHandleLogin = () => {};
