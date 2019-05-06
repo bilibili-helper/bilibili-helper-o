@@ -23,6 +23,10 @@
     "message": "Options",
     "description": "Popup Button: go_option"
   },
+    "enterID": {
+        "message": "Enter ID",
+        "description": "Popup Button: enter_id"
+    },
     "notLogin": {
         "message": "not login",
         "description": "Popup Button: not login"

@@ -118,14 +118,16 @@ const VideoDarkModeStyle = createGlobalStyle`
   .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function,
   .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-wrap,
   .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-btn-history,
+  .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-btn-footer,
   .player-auxiliary-area {
     background: #191919!important;
   }
-  .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-wrap .mCustomScrollBox {
-    .mCSB_container .player-auxiliary-danmaku-list .danmaku-info-row {
-      span {
-        color: var(--dark-font-1)!important;
-      }
+  .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-wrap .bscroll-vertical-scrollbar {
+    background-color: black !important;
+  }
+  .danmaku-info-row {
+    .danmaku-info-danmaku,span {
+      color: var(--dark-font-1)!important;
     }
   }
   .v-wrap .danmaku-wrap {

@@ -23,6 +23,10 @@
         "message": "更多選項",
         "description": "Popup Button: go_option"
     },
+    "enterID": {
+        "message": "請輸入ID",
+        "description": "Popup Button: enter_id"
+    },
     "notLogin": {
         "message": "未登錄",
         "description": "Popup Button: not login"

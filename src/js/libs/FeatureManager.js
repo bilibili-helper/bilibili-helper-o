@@ -24,8 +24,7 @@ export class FeatureManager {
         return new Promise(resolve => {
             _.each(Features, (FeatureClass, featureName) => {
                 if (!this.features[_.lowerFirst(featureName)]) {
-                    if (!FeatureClass) { console.warn(`Feature ${featureName}'s feature class is not defined!`); }
-                    else { this.features[_.lowerFirst(featureName)] = new FeatureClass(); }
+                    if (!FeatureClass) { console.warn(`Feature ${featureName}'s feature class is not defined!`); } else { this.features[_.lowerFirst(featureName)] = new FeatureClass(); }
                 } else { throw `Feature ${featureName} has instantiated!`; }
             });
             resolve();
@@ -160,12 +159,12 @@ export class FeatureManager {
                         return sendResponse(false);
                     }
                     if (commend === 'setSetting' && featureName === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
-                        feature.setSetting(settings);
                         if (!feature.initialed && settings.on === true) { feature.init(); }  // 没有初始化过
                         if (feature.initialed && settings.on !== feature.settings.on) { // 总启动状态发生变化时
                             if (settings.on === true) {
                                 feature.launch();
                             } else { feature.pause(); }
+                            feature.setSetting(settings);
                         }
                         sendResponse(true);
                     } else if (commend === 'getSetting' && featureName === feature.name) { // 获取单个功能的配置

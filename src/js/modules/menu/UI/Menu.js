@@ -316,7 +316,7 @@ export class Menu extends React.Component {
                         onKeyUp={this.handleKeyUp}
                         onFocus={this.handleFocusIn}
                         onFocusOut={this.handleFocusIn}
-                        placeholder="请输入ID"
+                        placeholder={__('enterID')}
                         defaultValue={lastSearch}
                         showIcon={showIcon}
                     />
