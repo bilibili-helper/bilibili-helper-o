@@ -61,7 +61,7 @@ getSetting 获取指定参数（feature）的配置
 
 ## Listener
 
-| commend            | other properties                                             | Description                  | Return                                                       |
+| command            | other properties                                             | Description                  | Return                                                       |
 | ------------------ | ------------------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ |
 | getSettings        | feature {string}：指定返回某一个功能的配置<br />kind {string}：指定返回某一类功能的配置<br />checkHide {bool}：过滤掉不需要显示配置的功能<br />hasUI {bool}：过滤出拥有UI的配置 | 返回功能的配置               | {FeatureName: [SettingObject](./Feature.md/#SettingObject), ...} |
 | inIncognitoContext |                                                              | 返回用户所处的隐私模式的状态 | Bool                                                         |

@@ -1,0 +1,12 @@
+{
+    "followingLiveUpdateMessage": {
+        "message": "您关注的主播「$UPPER$」开播啦! ",
+        "description": "Notification: Following Live Up Available",
+        "placeholders": {
+            "upper": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    }
+}

@@ -14,7 +14,7 @@ export const fetchPOST = async (websitePort, {url, options, sign, model}) => {
     .then(response => response.json())
     .then(result => {
         websitePort.postMessage({
-            commend: 'returnFetch',
+            command: 'returnFetch',
             data: {...result, receipt: body},
             from: 'helperProxy',
             model,

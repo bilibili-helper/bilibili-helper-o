@@ -90,7 +90,6 @@ export class FeatureManager {
                     resolve(false);
                 }
             });
-
         });
         this.waitQueue = newWaitQueue;
         Promise.all(promiseList).then(() => this.waitQueue.length > 0 && this.dealWidthWaitQueue());
@@ -115,8 +114,8 @@ export class FeatureManager {
     // 绑定相关监听事件
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            const {commend} = message;
-            switch (commend) {
+            const {command} = message;
+            switch (command) {
                 /**
                  * 获取Feature的配置
                  * feature: 如果指定feature则优先返回指定名称的Feature的配置
@@ -158,16 +157,16 @@ export class FeatureManager {
                         console.error(`Error feature name: ${featureName}`);
                         return sendResponse(false);
                     }
-                    if (commend === 'setSetting' && featureName === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
+                    if (command === 'setSetting' && featureName === feature.name && !_.isEmpty(settings)) { // 设置单个功能的配置
                         if (!feature.initialed && settings.on === true) { feature.init(); }  // 没有初始化过
                         if (feature.initialed && settings.on !== feature.settings.on) { // 总启动状态发生变化时
-                            if (settings.on === true) {
+                            if (settings.on === true && feature.settings.on === false) {
                                 feature.launch();
                             } else { feature.pause(); }
-                            feature.setSetting(settings);
                         }
+                        feature.setSetting(settings);
                         sendResponse(true);
-                    } else if (commend === 'getSetting' && featureName === feature.name) { // 获取单个功能的配置
+                    } else if (command === 'getSetting' && featureName === feature.name) { // 获取单个功能的配置
                         sendResponse(feature.settings);
                     }
                     break;

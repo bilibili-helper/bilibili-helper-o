@@ -19,7 +19,7 @@ const View = styled.div`
   outline: none;
   z-index: 0;
   cursor: ${({theme = {}}) => theme.toggle !== false ? 'pointer' : 'not-allowed'};
-  filter: grayscale(${({theme = {}}) => theme.toggle !== false ? 0 : 1});
+  ${({theme = {}}) => theme.toggle !== false ? '' : 'filter: grayscale(1)'};
 `;
 const Bar = styled.div`
   width: 36px;
@@ -32,7 +32,7 @@ const Bar = styled.div`
   .checked & {
     background-color: ${color('bilibili-pink')};
     box-shadow: inset 0px 0px 2px hsla(340, 60%, 50%, 1);
-    opacity: 1;
+    //opacity: 1;
   }
 `;
 

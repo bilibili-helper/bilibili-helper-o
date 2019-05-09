@@ -29,8 +29,9 @@ const TitleView = styled.div.attrs({
     className: 'title-view',
 })`
   min-height: ${props => props.theme.twoLine ? '65px' : '49px'};
-  padding: 0 20px;
+  padding: 0 0 0 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   font-size: 13px;
@@ -101,8 +102,9 @@ const End = styled.div.attrs({
 })`
   display: flex;
   align-items: center;
+  margin: 0 20px 0 0;
   .separator + & {
-    margin: -12px;
+    margin: 0 13px 0 -13px;
   }
 `;
 

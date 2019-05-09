@@ -45,7 +45,7 @@ tabUnload
 
 | Type   | Name     | Description                                             |
 | ------ | -------- | ------------------------------------------------------- |
-| string | commend  | 代表任务的特殊标识符，用于区分所要执行的不用的任务/事件 |
+| string | command  | 代表任务的特殊标识符，用于区分所要执行的不用的任务/事件 |
 | /      | 其他参数 |                                                         |
 
 
@@ -76,4 +76,4 @@ messageStore拥有几个使用的方法，用于管理监听到的事件和数�
 
 异步处理指定tabId的store的queue。
 
-处理过程其实是依次取出 [TaskObject](#TaskObject) 中的数据，然后用`chrome.tabs.sendMessage`对指定tabId的页面进行消息发送，当页面捕获消息并根据 [TaskData](#TaskData) 里的commend进行过滤后在前端页面执行相关的操作，其中自然的就附带发送了一些监听到的数据。
+处理过程其实是依次取出 [TaskObject](#TaskObject) 中的数据，然后用`chrome.tabs.sendMessage`对指定tabId的页面进行消息发送，当页面捕获消息并根据 [TaskData](#TaskData) 里的command进行过滤后在前端页面执行相关的操作，其中自然的就附带发送了一些监听到的数据。

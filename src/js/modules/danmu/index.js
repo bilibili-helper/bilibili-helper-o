@@ -49,14 +49,14 @@ export class Danmu extends Feature {
                 const tabData = this.messageStore.createData(tabId);
                 tabData.data.cid = query.id.slice(4);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
-                    commend: 'loadCurrentDanmu',
+                    command: 'loadCurrentDanmu',
                     cid: tabData.data.cid,
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/x/v2/dm/history' && query.date) { // 如果tab请求了历史弹幕
                 const tabData = this.messageStore.createData(tabId);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
-                    commend: 'loadHistoryDanmu',
+                    command: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: query.date,
                 });
@@ -64,7 +64,7 @@ export class Danmu extends Feature {
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'fetchCardInfo' && message.url) {
+            if (message.command === 'fetchCardInfo' && message.url) {
                 fetch(message.url, {
                     headers: {
                         'From': 'bilibili-helper',
@@ -76,7 +76,7 @@ export class Danmu extends Feature {
                       console.error(res);
                       sendResponse(res);
                   });
-            } else if (message.commend === 'fetchDanmu' && message.url) {
+            } else if (message.command === 'fetchDanmu' && message.url) {
                 fetch(message.url, {
                     headers: {
                         'From': 'bilibili-helper',
@@ -88,7 +88,7 @@ export class Danmu extends Feature {
                       console.error(res);
                       sendResponse(res);
                   });
-            } else if (message.commend === 'downloadDanmuXML' && message.cid) {
+            } else if (message.command === 'downloadDanmuXML' && message.cid) {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',
                 }));
@@ -98,7 +98,7 @@ export class Danmu extends Feature {
                     url,
                     filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
-            } else if (message.commend === 'downloadDanmuASS' && message.cid) {
+            } else if (message.command === 'downloadDanmuASS' && message.cid) {
                 const parser = new DOMParser();
                 const parsedXML = parser.parseFromString(
                     message.danmuDocumentStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
@@ -115,11 +115,11 @@ export class Danmu extends Feature {
                     url,
                     filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
-            } else if (message.commend === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
+            } else if (message.command === 'pakkuGetHistoryDanmu') { // 对pakku的hack，仅处理历史弹幕的请求
                 const tabData = this.messageStore.createData(sender.id);
                 const url = new URLParse(message.url, '', true);
                 tabData.queue.push({
-                    commend: 'loadHistoryDanmu',
+                    command: 'loadHistoryDanmu',
                     cid: tabData.data.cid,
                     date: url.query.date,
                 });

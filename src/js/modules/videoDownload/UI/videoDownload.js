@@ -117,9 +117,9 @@ export class VideoDownload extends React.Component {
 
     componentDidMount() {
         this.inited = true;
-        chrome.runtime.sendMessage({commend: 'videoDownloadDOMInitialized'});
+        chrome.runtime.sendMessage({command: 'videoDownloadDOMInitialized'});
         chrome.runtime.sendMessage({
-            commend: 'getSetting',
+            command: 'getSetting',
             feature: 'videoDownload',
         }, (settings) => {
             this.setState({settings});
@@ -148,7 +148,7 @@ export class VideoDownload extends React.Component {
     addListener = () => {
         const that = this;
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'videoDownloadSendVideoRequest') {
+            if (message.command === 'videoDownloadSendVideoRequest') {
                 let {data, url, method, type} = message;
                 const {cid, avid, qn = ''} = data;
                 if (type === 'new') {
@@ -175,7 +175,7 @@ export class VideoDownload extends React.Component {
                 }
 
                 sendResponse(true);
-            } else if (message.commend === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
+            } else if (message.command === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
                 const {videoData} = this.state;
                 if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
                     const {quality} = this.originVideoData;
@@ -207,6 +207,29 @@ export class VideoDownload extends React.Component {
             const quality = e.currentTarget.getAttribute('data-value');
             that.changeQuality(quality);
         });
+
+        window.addEventListener('message', (event) => {
+            if (event.data.command === 'bilibili-helper-video-download-get-flv-url' && event.data.res) {
+                const res = event.data.res;
+                if (res.code !== 0) {
+                    this.setState({errorStr: res.message});
+                    return;
+                }
+                const {videoData, currentCid} = this.state;
+                let downloadData;
+                if (res.type === 'new' && res.code === 0) {
+                    downloadData = res.data || res.result || res;
+                } else if (res.type === 'old') {
+                    downloadData = res.result || res.data || res;
+                }
+
+                const {accept_quality, accept_description, durl, quality, dash} = downloadData;
+                const currentData = {accept_quality, accept_description, durl, dash, quality};
+                if (!videoData[currentCid]) videoData[currentCid] = {};
+                videoData[currentCid][quality] = currentData;
+                this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
+            }
+        });
     };
 
     changeQuality = (qn) => {
@@ -227,31 +250,25 @@ export class VideoDownload extends React.Component {
         }
     };
 
+    // 由于chrome73开始CROB策略，改为插入页面的请求方式，在用window的message传回脚本，心累累
     getFlvResponse = (method, url, type = 'old') => {
-        const {videoData, currentCid} = this.state;
-        chrome.runtime.sendMessage({commend: 'getFlvResponse', method, url}, (res) => {
-            if (res.code !== 0) {
-                this.setState({errorStr: res.message});
-                return;
-            }
-            let downloadData;
-            if (type === 'new' && res.code === 0) {
-                downloadData = res.data || res.result || res;
-            } else if (type === 'old') {
-                downloadData = res.result || res.data || res;
-            }
-
-            const {accept_quality, accept_description, durl, quality, dash} = downloadData;
-            const currentData = {accept_quality, accept_description, durl, dash, quality};
-            if (!videoData[currentCid]) videoData[currentCid] = {};
-            videoData[currentCid][quality] = currentData;
-            this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
-        });
+        const scriptHTML = document.createElement('script');
+        scriptHTML.innerHTML = `
+            fetch('${url}', {
+                method: '${method}',
+                credentials: 'include',
+            })
+            .then(res => res.json())
+            .then(res => {
+                window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}'}});
+            });
+        `;
+        document.body.appendChild(scriptHTML);
     };
 
     handleOnClickDownloadFLV = (downloadUrl) => {
         chrome.runtime.sendMessage({
-            commend: 'sendVideoFilename',
+            command: 'sendVideoFilename',
             url: downloadUrl.split('?')[0],
             cid: this.state.currentCid,
             filename: getFilename(document),
@@ -298,7 +315,7 @@ export class VideoDownload extends React.Component {
             //buffers = null;
             //const url = window.URL.createObjectURL(new Blob([out], {type: `video/mp4; codecs="${videoCodec}, ${audioCodec}"`}));
             //chrome.runtime.sendMessage({
-            //    commend: 'downloadMergedVideo',
+            //    command: 'downloadMergedVideo',
             //    url,
             //    cid: currentCid,
             //    filename: getFilename(document) + '.mp4',
@@ -323,7 +340,7 @@ export class VideoDownload extends React.Component {
                 this.setState({downloading: false});
                 const url = window.URL.createObjectURL(mergeBlob, {type: 'video/x-flv'});
                 chrome.runtime.sendMessage({
-                    commend: 'downloadMergedVideo',
+                    command: 'downloadMergedVideo',
                     url,
                     cid: currentCid,
                     filename: getFilename(document) + '.flv',
@@ -348,12 +365,25 @@ export class VideoDownload extends React.Component {
         const {durl, accept_description, accept_quality} = videoData[currentCid][quality];
         if (!showPiece.on) { // 不显示分段
             const title = accept_description[accept_quality.indexOf(+quality)];
-            return (
-                <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
-                    <a onClick={() => this.handleOnClickDownloadFLVAll(videoData[currentCid][quality])}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>
-                    <Progress percentage={percentage}/>
-                </LinkGroup>
-            );
+            if (videoData[currentCid][quality].durl.length === 1) { // 如果只有一个分段则直接显示下载地址的按钮
+                return (
+                    <LinkGroup key={quality}>
+                        <a
+                            href={videoData[currentCid][quality].durl[0].url}
+                            onClick={() => this.handleOnClickDownloadFLV(videoData[currentCid][quality].durl[0].url)}
+                            referrerPolicy="unsafe-url"
+                            download
+                        >{title}</a>
+                    </LinkGroup>
+                );
+            } else {
+                return (
+                    <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
+                        <a onClick={() => this.handleOnClickDownloadFLVAll(videoData[currentCid][quality])}>{title}{downloading ? ` 下载中 (${percentage}%)` : ''}</a>
+                        <Progress percentage={percentage}/>
+                    </LinkGroup>
+                );
+            }
         } else return (
             <LinkGroup key={quality} downloading={downloading} disabled={downloading}>
                 {_.map(durl, (o, i) => {
@@ -369,6 +399,7 @@ export class VideoDownload extends React.Component {
                                 key={i}
                                 href={o.url}
                                 referrerPolicy="unsafe-url"
+                                download
                                 onClick={() => this.handleOnClickDownloadFLV(o.url)}
                             >{title}</a>
 

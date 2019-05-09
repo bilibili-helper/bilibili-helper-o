@@ -16,6 +16,7 @@ export class LiveChatModeUI extends UI {
     }
 
     load = (containers, settings) => {
+        if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             this.interval('.room-info-down-row', 2000).then((container) => {
                 const wrapper = document.createElement('div');

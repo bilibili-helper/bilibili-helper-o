@@ -45,14 +45,14 @@ export class VideoSubtitleDownload extends Feature {
                 const storeObject = this.messageStore.createData(tabId);
                 const {queue} = storeObject;
                 queue.push({
-                    commend: 'loadSubtitle',
+                    command: 'loadSubtitle',
                     url: details.url,
                 });
                 this.messageStore.dealWith(tabId);
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
-            if (message.commend === 'downloadSubtitle' && message.subtitleObject) {
+            if (message.command === 'downloadSubtitle' && message.subtitleObject) {
                 const tabData = this.messageStore.createData(sender.id);
                 if (tabData) {
                     const {lan, subtitle_url} = message.subtitleObject;

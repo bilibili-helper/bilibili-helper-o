@@ -17,7 +17,7 @@ export class NotAutoPlayUI extends UI {
         return new Promise(resolve => {
             const body = document.querySelector('body');
             const script = document.createElement('script');
-            script.innerText = `
+            script.innerHTML = `
                 const n = setInterval(() => {
                     Array.from(document.querySelectorAll('.vc-video')).map((o) => {
                         if (o.getBoundingClientRect().top === 0) clearInterval(n);

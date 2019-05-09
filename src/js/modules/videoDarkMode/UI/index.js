@@ -424,7 +424,7 @@ class VideoDarkMode extends React.Component {
 
     componentDidMount() {
         chrome.runtime.sendMessage({
-            commend: 'getSetting',
+            command: 'getSetting',
             feature: 'videoDarkMode',
         }, (settings) => {
             this.setState({settings});
@@ -435,12 +435,12 @@ class VideoDarkMode extends React.Component {
         const {on} = this.state.settings;
         this.setState({settings: {...this.state.settings, on: !on}});
         chrome.runtime.sendMessage({
-            commend: 'setSetting',
+            command: 'setSetting',
             feature: 'videoDarkMode',
             settings: {...this.state.settings, on: !on},
         });
         chrome.runtime.sendMessage({
-            commend: 'setGAEvent',
+            command: 'setGAEvent',
             action: 'click',
             category: 'videoDarkMode',
             label: 'videoDarkMode',

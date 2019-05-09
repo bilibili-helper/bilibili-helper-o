@@ -40,7 +40,7 @@ export class VersionManager extends Feature {
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'checkVersion') {
+            if (message.command === 'checkVersion') {
                 this.request(true);
                 sendResponse(true);
             }

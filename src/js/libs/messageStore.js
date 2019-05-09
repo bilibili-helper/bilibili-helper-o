@@ -19,7 +19,7 @@ export class MessageStore {
              * 然后初始化后端每个对应的store
              */
             const id = (sender.tab && sender.tab.id) || sender.id;
-            if (message.commend === this.initializedName) {
+            if (message.command === this.initializedName) {
                 // 发现没有创建过相关tabStore，说明dom初始化在原始页面发送请求前完成，按理说概率不大/不会发生
                 let data = this.createData(id);
                 if (data.state === 0) {
@@ -74,7 +74,7 @@ export class MessageStore {
             if (!taskData) { return Promise.resolve(); }
             return new Promise((resolve, reject) => {
                 chrome.tabs.sendMessage(id, taskData, (res) => {
-                    res !== undefined ? resolve() : reject(`No result from tab[${id}] - commend[${taskData.commend}]`);
+                    res !== undefined ? resolve() : reject(`No result from tab[${id}] - command[${taskData.command}]`);
                 });
             });
         };

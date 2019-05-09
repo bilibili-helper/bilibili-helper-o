@@ -178,18 +178,18 @@ export class Danmu extends React.Component {
     }
 
     componentDidMount() {
-        chrome.runtime.sendMessage({commend: 'danmuDOMInitialized'});
+        chrome.runtime.sendMessage({command: 'danmuDOMInitialized'});
     }
 
     addListener = () => {
         const that = this;
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'loadHistoryDanmu') { // 被通知载入历史弹幕
+            if (message.command === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                 if (message.date) {
                     this.getDANMUList(message.cid, message.date);
                     sendResponse(true);
                 } else console.error(`Error history danmu date: ${message.date}`);
-            } else if (message.commend === 'loadCurrentDanmu') { // 被通知载入当日弹幕
+            } else if (message.command === 'loadCurrentDanmu') { // 被通知载入当日弹幕
                 this.getDANMUList(message.cid);
                 sendResponse(true);
             }
@@ -198,7 +198,7 @@ export class Danmu extends React.Component {
         // 对pakku的hack，仅发送历史弹幕的请求
         window.addEventListener('message', function(e) {
             if (e.data.type === 'pakku_ajax_request' && /x\/v2\/dm\/history/.test(e.data.arg)) {
-                chrome.runtime.sendMessage({commend: 'pakkuGetHistoryDanmu', url: e.data.arg});
+                chrome.runtime.sendMessage({command: 'pakkuGetHistoryDanmu', url: e.data.arg});
             }
         });
         let n, m;
@@ -246,7 +246,7 @@ export class Danmu extends React.Component {
                 type: 1,
                 date,
             });
-            chrome.runtime.sendMessage({commend: 'fetchDanmu', url: url.toString()}, (danmuDocumentStr) => {
+            chrome.runtime.sendMessage({command: 'fetchDanmu', url: url.toString()}, (danmuDocumentStr) => {
                 clearTimeout(timer);
                 if (danmuDocumentStr) {
                     if (date) this.danmuDate = date;
@@ -274,7 +274,7 @@ export class Danmu extends React.Component {
         return new Promise((resolve) => {
             const url = new Url(apis.card);
             url.set('query', {mid: uid, photo: 1});
-            uid && chrome.runtime.sendMessage({commend: 'fetchDanmu', url: url.toString()}, (res) => {
+            uid && chrome.runtime.sendMessage({command: 'fetchDanmu', url: url.toString()}, (res) => {
                 if (res) { // 过滤掉可能是机器人的用户
                     const {code, data} = JSON.parse(res);
                     if (code === 0) {
@@ -426,7 +426,7 @@ export class Danmu extends React.Component {
 
     handleDownloadClick = (type) => {
         chrome.runtime.sendMessage({
-            commend: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
+            command: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
             cid: this.state.currentCid,
             danmuDocumentStr: this.danmuDocumentStr,
             date: this.danmuDate,

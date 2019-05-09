@@ -19,23 +19,46 @@ export class CvImagesUI extends UI {
         const that = this;
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
-            if (!settings.on) return resolve(containers);
+            $('.page-container .img-box img').wrap('<div class="bilibili-ct-wrapper"></div>')
+
             const btn = document.createElement('button');
             btn.innerText = '下载图片';
-            $(document).on('mouseenter', '.page-container .img-box', function(e) {
-                e.preventDefault();
-                that.currentSrc = 'https:' + $(this).children('img').attr('src');
+            $(document).on('mouseenter', '.banner-img-holder', function(e) {
+               e.preventDefault();
+                that.currentSrc = $(this)[0].style.backgroundImage.split('"')[1];
                 $(this).append(btn);
                 $(btn).on('click', function() {
                     if (that.currentSrc) {
                         chrome.runtime.sendMessage({
-                            commend: 'cvDownloadImage',
+                            command: 'cvDownloadImage',
                             src: that.currentSrc,
+                            filename: $('.title-container h1')[0].innerText + '_封面',
                         });
                     }
                 })
             });
-            $(document).on('mouseleave', '.page-container .img-box', function(e) {
+
+            $(document).on('mouseenter', '.bilibili-ct-wrapper', function(e) {
+                e.preventDefault();
+                const img = $(this).children('img');
+                that.currentSrc = 'https:' + img.attr('src');
+                $(this).append(btn);
+                $(this).css({
+                    width: 'auto',
+                    height: img.height(),
+                })
+                const caption = $(this).next('figcaption')[0].innerText;
+                $(btn).on('click', function() {
+                    if (that.currentSrc) {
+                        chrome.runtime.sendMessage({
+                            command: 'cvDownloadImage',
+                            src: that.currentSrc,
+                            filename: caption || null,
+                        });
+                    }
+                })
+            });
+            $(document).on('mouseleave', '.bilibili-ct-wrapper, .banner-img-holder', function(e) {
                 e.preventDefault();
                 $(this).children('button').remove();
             })

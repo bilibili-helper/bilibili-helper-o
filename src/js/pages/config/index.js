@@ -28,18 +28,19 @@ const {color} = theme;
 
 const GlobalStyleSheet = createGlobalStyle`
   body{
-    font-family: system-ui, "PingFang SC", STHeiti, sans-serif;
-    font-size: 75%;
+    margin: 0;
+    font-family: -apple-system, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+    //font-size: 75%;
   }
 `;
 
 const ConfigBody = styled(Body).attrs({className: 'config-body'})`
-  position: absolute;
-  top: ${theme.headerHeight}px;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
+  //position: absolute;
+  //top: ${theme.headerHeight}px;
+  //right: 0;
+  //bottom: 0;
+  //left: 0;
+  //overflow: auto;
   background-color: #f2f3f5;
 `;
 
@@ -167,7 +168,7 @@ class PageConfig extends React.Component {
         };
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
-            if (message.commend === 'debugMode') {
+            if (message.command === 'debugMode') {
                 this.setState({debug: message.value});
             }
             return true;
@@ -175,7 +176,7 @@ class PageConfig extends React.Component {
     }
 
     componentDidMount() {
-        chrome.runtime.sendMessage({commend: 'getSettings', checkHide: true}, (settings) => {
+        chrome.runtime.sendMessage({command: 'getSettings', checkHide: true}, (settings) => {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
                 const {kind, name} = setting;
@@ -185,18 +186,18 @@ class PageConfig extends React.Component {
             this.setState(this.settings);
         });
         // 获取调试模式
-        chrome.runtime.sendMessage({commend: 'getSetting', feature: 'debug'}, (setting) => {
+        chrome.runtime.sendMessage({command: 'getSetting', feature: 'debug'}, (setting) => {
             this.setState({debug: setting.on});
         });
 
-        chrome.runtime.sendMessage({commend: 'inIncognitoContext'}, (inIncognitoContext) => {
+        chrome.runtime.sendMessage({command: 'inIncognitoContext'}, (inIncognitoContext) => {
             if (inIncognitoContext) {
                 this.setState({broadcast: '您正在使用隐身模式，该模式下部分功能将无法正常启用'});
             } else {
                 this.setState({broadcast: this.defaultBroadcast});
             }
         });
-        chrome.runtime.sendMessage({commend: 'getPermissionMap'}, (permissionMap) => {
+        chrome.runtime.sendMessage({command: 'getPermissionMap'}, (permissionMap) => {
             this.setState({permissionMap});
         });
     }
@@ -235,13 +236,13 @@ class PageConfig extends React.Component {
                 return;
             }
             chrome.runtime.sendMessage({
-                commend: 'setSetting',
+                command: 'setSetting',
                 feature: featureName,
                 settings: settingObject,
             }, (res) => {
                 if (res) {
                     chrome.runtime.sendMessage({
-                        commend: 'setGAEvent',
+                        command: 'setGAEvent',
                         action: 'click',
                         category: 'config',
                         label: `${featureName} ${settingName !== undefined ? `${settingName} ${settingObject.on}` : settingObject.on}`,
@@ -357,7 +358,7 @@ class PageConfig extends React.Component {
         if (checkingVersion) { return; }
         else { this.setState({checkingVersion: true}); }
         chrome.runtime.sendMessage({
-            commend: 'checkVersion',
+            command: 'checkVersion',
         }, () => {
             setTimeout(() => this.setState({checkingVersion: false}), 500);
         });

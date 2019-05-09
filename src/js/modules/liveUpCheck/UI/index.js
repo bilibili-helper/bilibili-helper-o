@@ -10,10 +10,10 @@ import ReactDOM from 'react-dom';
 import {DynamicBox} from './DynamicBox';
 import {UI} from 'Libs/UI';
 
-export class DynamicCheckUI extends UI {
+export class LiveUpCheckUI extends UI {
     constructor() {
         super({
-            name: 'dynamicCheck',
+            name: 'liveUpCheck',
             dependencies: ['popupAnchor'],
         });
     }
@@ -25,7 +25,7 @@ export class DynamicCheckUI extends UI {
             chrome.browserAction.setBadgeText({text: ''}); // 不管ui是否加载，只要功能开着，打开菜单都会清理badge
             if (dynamicCheckBoxState.on) {
                 const wrapper = document.createElement('div');
-                wrapper.setAttribute('class', 'bilibili-helper-dynamic-check-container');
+                wrapper.setAttribute('class', 'bilibili-helper-live-up-check-container');
                 popupDOM.appendChild(wrapper);
                 ReactDOM.render(
                     <DynamicBox ref={i => this.container = i}/>,

@@ -54,13 +54,7 @@ export const getURL = (name) => chrome.extension.getURL(name);
  * @return {boolean}
  */
 export const hasNewVersion = (checkVersion) => {
-    const checkVersionStr = checkVersion.split('.').join('');
-    const currentVersionStr = version.split('.').join('');
-    if (checkVersionStr.length !== currentVersionStr.length) { // 版本号格式不同
-        console.error('版本号格式不同');
-        return false;
-    }
-    return Number(checkVersionStr) > Number(currentVersionStr);
+    return isBiggerThan(checkVersion, version) > 0;
 };
 
 /**

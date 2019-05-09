@@ -7,7 +7,7 @@ import {version} from 'Utils';
 
 export const connect = (websitePort, {model, sign}) => {
     websitePort.postMessage({
-        commend: 'returnApp',
+        command: 'returnApp',
         data: {
             code: 0,
             data: {

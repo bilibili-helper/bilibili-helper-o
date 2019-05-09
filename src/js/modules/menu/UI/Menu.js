@@ -133,12 +133,11 @@ export class Menu extends React.Component {
     }
 
     componentDidMount() {
-        chrome.browserAction.setBadgeText({text: ''});
         // 监听配置更新
         chrome.runtime.onMessage.addListener(((message) => {
-            if (message.commend === 'debugMode' && message.value !== undefined) {
+            if (message.command === 'debugMode' && message.value !== undefined) {
                 this.setState({debug: message.value});
-            } else if (message.commend === 'permissionUpdate') {
+            } else if (message.command === 'permissionUpdate') {
                 const permissionMap = {...this.state.permissionMap};
                 permissionMap[message.permission] = {pass: message.value, msg: message.msg};
                 this.setState({permissionMap});
@@ -147,13 +146,13 @@ export class Menu extends React.Component {
         }));
         // 获取调试模式
         chrome.runtime.sendMessage({
-            commend: 'getSetting',
+            command: 'getSetting',
             feature: 'debug',
         }, (options) => {
             this.setState({debug: options.on});
         });
         chrome.runtime.sendMessage({
-            commend: 'getSetting',
+            command: 'getSetting',
             feature: 'menu',
         }, (settings) => {
             const oldWatchPage = _.find(settings.options, {key: 'oldWatchPage'}).on;
@@ -171,24 +170,34 @@ export class Menu extends React.Component {
         });
 
         chrome.runtime.sendMessage({
-            commend: 'getPermissionMap',
+            command: 'getPermissionMap',
         }, (permissionMap) => {
             this.setState({permissionMap});
         });
 
-        chrome.runtime.sendMessage({commend: 'getFeatureStore', feature: 'versionManager'}, (featureStore) => {
+        chrome.runtime.sendMessage({command: 'getFeatureStore', feature: 'versionManager'}, (featureStore) => {
             this.setState({version: featureStore.version});
         });
     }
 
     handleOnClick = (type, link) => {
         chrome.runtime.sendMessage({
-            commend: 'setGAEvent',
+            command: 'setGAEvent',
             action: 'click',
             category: 'menu',
             label: `menu ${type}`,
         });
-        createTab(link);
+        if (type === 'favourite') {
+            chrome.cookies.get({
+                url: 'http://www.bilibili.com/',
+                name: 'DedeUserID',
+            }, (cookie) => {
+                if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
+                    createTab(`${link}${ cookie.value}/favlist`);
+                }
+            });
+        } else createTab(link);
+
     };
 
     link = () => {
@@ -236,7 +245,7 @@ export class Menu extends React.Component {
                 this.setState({lastSearch: value}, () => {
                     store.set('lastSearch', value);
                     chrome.runtime.sendMessage({
-                        commend: 'setGAEvent',
+                        command: 'setGAEvent',
                         action: 'click',
                         category: 'menu',
                         label: 'linker ' + (res[1] || 'av'),

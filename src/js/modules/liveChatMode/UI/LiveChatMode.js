@@ -315,7 +315,7 @@ export class LiveChatMode extends React.Component {
                 delete locationOption[this.roomId];
             }
             chrome.runtime.sendMessage({
-                commend: 'setGAEvent',
+                command: 'setGAEvent',
                 action: 'click',
                 category: 'liveChatMode',
                 label: `liveChatMode ${newValue}`,

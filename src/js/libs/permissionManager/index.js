@@ -133,7 +133,7 @@ export class PermissionManager {
         if (this.permissionMap[name].pass !== value) {
             this.permissionMap[name].pass = value;
             chrome.runtime.sendMessage({
-                commend: 'permissionUpdate',
+                command: 'permissionUpdate',
                 permission: name,
                 value,
                 msg,
@@ -234,7 +234,7 @@ export class PermissionManager {
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'getPermissionMap') {
+            if (message.command === 'getPermissionMap') {
                 sendResponse(this.permissionMap);
             }
             return true;

@@ -45,7 +45,7 @@ export class DynamicCheck extends Feature {
                 },
             },
         });
-        this.lastDynamicID = null;
+        this.hasLaunched = false;
     }
 
     get userId() {
@@ -60,74 +60,159 @@ export class DynamicCheck extends Feature {
         });
     }
 
+    get typeList() {
+        const options = this.settings.subPage.options;
+        const typeList = _.compact(options.map((option) => option.on ? option.value : null));
+        return typeList;
+    }
+
     launch = () => {
-        this.feedList = [];
-        this.lastCheckTime = Date.now();
+        this.currentList = [];
+        this.lastList = [];
+        this.lastCounter = 0;
+        this.lastCheckDynamicID = undefined;
+        this.lastDynamicID = this.store;
         chrome.alarms.create('dynamicCheck', {periodInMinutes: 1});
-        this.checkNew();
+        this.initCurrentList();
+        this.hasLaunched = true;
     };
 
     pause = () => {
-        this.feedList = [];
-        this.lastCheckTime = Date.now();
+        this.currentList = [];
+        this.oldList = [];
+        this.lastList = [];
+        this.lastCounter = 0;
+        this.lastCheckDynamicID = undefined;
         chrome.alarms.clear('dynamicCheck');
+        this.hasLaunched = false;
     };
 
     addListener = () => {
         chrome.alarms.onAlarm.addListener((alarm) => {
             switch (alarm.name) {
                 case 'dynamicCheck':
-                    this.checkNew();
+                    this.lastCheckDynamicID && this.checkNew();
                     break;
             }
+            return true;
         });
         chrome.notifications.onButtonClicked.addListener((notificationId, index) => {
-            if (this.feedList[notificationId] && index === 0) {
+            if (this.currentList[notificationId] && index === 0) {
                 chrome.notifications.clear(notificationId);
-                chrome.tabs.create({url: this.feedList[notificationId]});
+                chrome.tabs.create({url: this.currentList[notificationId]});
             }
         });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'getDynamicList') sendResponse(this.feedList);
+            if (message.command === 'getDynamicList') sendResponse({feedList: this.currentList, lastCounter: this.lastCounter});
+            else if (message.command === 'updateLastDynamicId') {
+                if (this.lastList.length > 0) {
+                    this.store = this.lastList[0].desc.dynamic_id_str;
+                    this.lastCheckDynamicID = this.store;
+                    this.oldList = this.lastList.concat(this.oldList);
+                    this.lastList = [];
+                    this.lastCounter = 0;
+                }
+            }
             return true;
         });
     };
 
     permissionHandleLogin = (value) => {
-        if (value) this.launch();
+        if (value) !this.hasLaunched && this.launch();
         else this.pause();
     };
 
-    // 检查未读推送
-    checkNew = () => this.userId.then((userId) => {
-        const options = this.settings.subPage.options;
-        const typeList = _.compact(options.map((option) => option.on ? option.value : null));
-        const dynamic_id = this.lastDynamicID ? `&update_num_dy_id=${this.lastDynamicID}` : '';
-        if (typeList.length > 0) return $.ajax({
-            type: 'get',
-            url: apis.dynamic_num + `?uid=${userId}&type_list=${typeList.join(',')}` + dynamic_id,
-            success: ({code, data: {new_num}, message}) => {
-                if (code === 0) {
-                    if (!this.lastDynamicID) this.getFeed(typeList);
-                    else if (new_num > 0) this.getFeed(typeList, new_num).then(this.sendNotification);
-                } else console.error(message);
-            },
+    initCurrentList() {
+        if (this.typeList.length === 0) return;
+
+        this.getFeed(this.typeList, this.lastDynamicID).then(({code, data, message}) => {
+            if (code === 0) {
+                const newList = data.cards.slice(0, MAX_LIST_NUMBERS);
+                this.currentList = _.map(newList, (card) => {
+                    try {
+                        card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
+                        if (card.card.duration) card.card.duration = toDuration(card.card.duration);
+                        return card;
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                });
+                this.oldList = this.currentList.slice(0);
+                if (this.currentList.length > 0) {
+                    if (!this.store) {
+                        this.lastCheckDynamicID = this.currentList[0].desc.dynamic_id_str;
+                        this.store = this.lastCheckDynamicID;
+                    } else {
+                        this.lastCheckDynamicID = this.store;
+                        this.checkNew();
+                    }
+                }
+            } else console.warn(message);
         });
-    });
+    }
+
+    // 检查未读推送
+    checkNew = () => {
+        this.userId.then((userId) => {
+            if (this.typeList.length === 0) return new Promise.reject(false);
+            const dynamic_id = this.lastCheckDynamicID ? `&update_num_dy_id=${this.lastCheckDynamicID}` : '';
+
+            return fetch(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
+            .then(response => response.json())
+            .then(({code, data: {new_num}, message}) => {
+                if (code !== 0) return console.error(message);
+                else if (new_num > 0) return new_num;
+            })
+            .then((new_num) => {
+                if (!new_num) return;
+                this.getFeed(this.typeList).then(({code, data, message}) => {
+                    if (code !== 0) return console.warn(message);
+                    const newList = _.map(data.cards.slice(0, new_num || MAX_LIST_NUMBERS), (card) => {
+                        try {
+                            card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
+                            if (card.card.duration) card.card.duration = toDuration(card.card.duration);
+                            return card;
+                        } catch (e) {
+                            console.warn(e);
+                        }
+                    });
+                    if (newList[0].desc.dynamic_id_str !== this.currentList[0].desc.dynamic_id_str) {
+                        this.lastCheckDynamicID = newList[0].desc.dynamic_id_str;
+                        this.lastList = newList.concat(this.lastList);
+                        this.currentList = this.lastList.concat(this.oldList);
+                        this.lastCounter += new_num;
+                        chrome.browserAction.setBadgeText({text: String(this.lastCounter)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+                        this.sendNotification(newList);
+                    }
+                });
+            });
+        });
+    };
 
     // 处理推送数据 - 不缓存到本地(￣.￣)
-    getFeed = (typeList, newNum) => {
-        return new Promise(resolve => this.userId.then((userId) => {
-            return $.ajax({
+    getFeed = (typeList, offsetID) => {
+        return this.userId.then((userId) => {
+            const url = offsetID ? `${apis.dynamic_history}?uid=${userId}&type_list=${this.typeList}&offset_dynamic_id=${offsetID}` : `${apis.dynamic_new}?uid=${userId}&type_list=${typeList}`;
+            return fetch(url).then(response => response.json());
+        });
+        /*return $.ajax({
                 type: 'get',
-                url: apis.dynamic_new + `?uid=${userId}&type_list=${typeList}`,
+                url,
                 success: ({code, data}) => {
                     if (code === 0) {
-                        if (data.cards.length > 0) {
-                            const res = _.find(this.feedList, (feed) => feed.desc.dynamic_id_str === data.cards[0].desc.dynamic_id_str);
-                            if (res) return;
+                        const newList = data.cards.slice(0, newNum || MAX_LIST_NUMBERS);
+                        if (newList.length > 0) {
+                            // 检查新获取到的列表时候包含之前的条目
+                            if (this.lastList.length > 0) {
+                                if (this.lastList[0].desc.dynamic_id_str === newList[0].desc.dynamic_id_str) return;
+                            }
+                            if (this.feedList.length > 0) { // 包含或者初始化获取的话就判定为旧数据
+                                if (this.feedList[0].desc.dynamic_id_str === newList[0].desc.dynamic_id_str)
+                                    return;
+                            }
                         }
-                        let newFeedList = _.map(data.cards.slice(0, newNum || MAX_LIST_NUMBERS), (card) => {
+                        // 处理新数据列表
+                        let newFeedList = _.map(newList, (card) => {
                             try {
                                 card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
                                 if (card.card.duration) card.card.duration = toDuration(card.card.duration);
@@ -136,17 +221,23 @@ export class DynamicCheck extends Feature {
                                 console.warn(e);
                             }
                         });
+
+                        if (this.feedList.length > 0) {
+                            this.lastCounter += newFeedList.length;
+                            this.lastList.splice(0, 0, ...newFeedList);
+                        }
                         this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
-                        if (this.feedList.length === 0) this.feedList = data.cards.slice(0, MAX_LIST_NUMBERS);
-                        this.lastDynamicID = newFeedList.length > 0 ? newFeedList[0].desc.dynamic_id_str : this.feedList[0].desc.dynamic_id_str;
-                        if (newFeedList.length > 0 && newNum > 0) {
-                            chrome.browserAction.setBadgeText({text: String(newFeedList.length)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
+
+                        //this.lastDynamicID = newFeedList.length > 0 ? newFeedList[0].desc.dynamic_id_str : '';
+                        //this.store = this.lastDynamicID;
+
+                        if (newFeedList.length > 0 && this.lastCounter > 0) {
+                            chrome.browserAction.setBadgeText({text: String(this.lastCounter)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                             resolve(newFeedList);
                         } else resolve();
                     }
                 },
-            });
-        }));
+            });*/
     };
 
     createLinkByType = (type, data) => {
@@ -171,7 +262,7 @@ export class DynamicCheck extends Feature {
             const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
             const topic = cardData.title || (cardData.item && cardData.item.description) || cardData.new_desc || '';
             const link = this.createLinkByType(desc.type, cardData);
-            chrome.notifications.create('bilibili-helper-aid' + Math.random(), {
+            chrome.notifications.create('bilibili-helper-dynamic-check' + Math.random(), {
                 type: 'basic',
                 iconUrl: picture || getURL('/statics/imgs/cat.svg'),
                 title: __('extensionNotificationTitle'),

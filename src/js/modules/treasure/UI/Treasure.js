@@ -101,7 +101,7 @@ export class Treasure extends React.Component {
 
     componentDidMount() {
         chrome.runtime.sendMessage({
-            commend: 'getSetting',
+            command: 'getSetting',
             feature: 'treasure',
         }, (settings) => {
             this.settings = settings;
@@ -109,12 +109,12 @@ export class Treasure extends React.Component {
         this.counter = $(this.counterDOM);
         this.imgDOM.crossOrigin = 'Anonymous';
         chrome.runtime.sendMessage({
-            commend: 'inIncognitoContext',
+            command: 'inIncognitoContext',
         }, (inIncognitoContext) => {
             if (!inIncognitoContext) this.getCurrentTask();
         });
         chrome.runtime.sendMessage({
-            commend: 'getPermissionMap',
+            command: 'getPermissionMap',
         }, (permissionMap) => {
             this.setState({permissionMap});
         });
@@ -202,7 +202,7 @@ export class Treasure extends React.Component {
      */
     getCurrentTask = () => {
         this.counter.text('刷新中');
-        chrome.runtime.sendMessage({commend: 'getCurrentTask', type: 'treasure', url: apis.getCurrentTask}, (res) => {
+        chrome.runtime.sendMessage({command: 'getCurrentTask', type: 'treasure', url: apis.getCurrentTask}, (res) => {
             switch (res.code) {
                 case 0: {
                     if (this.retryTime) this.retryTime = 0;
@@ -232,7 +232,7 @@ export class Treasure extends React.Component {
         this.counter.text('验证中');
         const url = new Url(apis.getCaptcha);
         url.set('query', {ts: Date.now()});
-        chrome.runtime.sendMessage({commend: 'getCaptcha', type: 'treasure', url: url.toString()}, (res) => {
+        chrome.runtime.sendMessage({command: 'getCaptcha', type: 'treasure', url: url.toString()}, (res) => {
             switch (res.code) {
                 case 0: {
                     if (this.retryTime) this.retryTime = 0;
@@ -261,7 +261,7 @@ export class Treasure extends React.Component {
         const {time_start, time_end} = this.state;
         const url = new Url(apis.getAward);
         url.set('query', {time_start, time_end, captcha});
-        chrome.runtime.sendMessage({commend: 'getAward', type: 'treasure', url: url.toString()}, (res) => {
+        chrome.runtime.sendMessage({command: 'getAward', type: 'treasure', url: url.toString()}, (res) => {
             switch (res.code) {
                 case 0: {
                     if (this.retryTime) this.retryTime = 0;
@@ -294,7 +294,7 @@ export class Treasure extends React.Component {
         if (notificationState && notificationState.on) {
             const {silver, time_start} = this.state;
             chrome.runtime.sendMessage({
-                commend: 'sendNotification',
+                command: 'sendNotification',
                 type: 'treasure',
                 time_start,
                 silver,

@@ -9,7 +9,7 @@ import Url from 'url-parse';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import {flvDownloadURL} from 'Modules/videoDownload/api';
+//import {flvDownloadURL} from 'Modules/videoDownload/api';
 
 export {VideoDownloadUI} from './UI';
 
@@ -27,7 +27,7 @@ export class VideoDownload extends Feature {
                 description: '支持新播放页面视频下载，分段合并下载，分段单独下载功能',
                 type: 'checkbox',
                 options: [
-                    {key: 'showPiece', title: '显示FLV分段', on: false, description: '如果视频源包含分段，则显示分段下载按钮'},
+                    {key: 'showPiece', title: '显示FLV分段', on: true, description: '如果视频源包含分段，则显示分段下载按钮'},
                 ],
             },
         });
@@ -65,7 +65,7 @@ export class VideoDownload extends Feature {
             const tabData = this.messageStore.createData(tabId);
             if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
                 tabData.queue.push({
-                    commend: 'videoDownloadSendVideoRequest',
+                    command: 'videoDownloadSendVideoRequest',
                     type: 'old',
                     data,
                     url: url.origin + url.pathname,
@@ -76,7 +76,7 @@ export class VideoDownload extends Feature {
                 //const {cid, avid, qn = ''} = data;
                 //newUrl.set('query', {cid, avid, otype: 'json', qn});
                 tabData.queue.push({
-                    commend: 'videoDownloadSendVideoRequest',
+                    command: 'videoDownloadSendVideoRequest',
                     type: 'new',
                     data,
                     //url: newUrl.toString(),
@@ -84,7 +84,7 @@ export class VideoDownload extends Feature {
                 this.messageStore.dealWith(tabId); // 处理queue
             } else if (pathname === '/player' || pathname === '/x/player.so') {
                 tabData.queue.push({
-                    commend: 'videoDownloadCid',
+                    command: 'videoDownloadCid',
                     cid: +data.id.slice(4),
                     avid: data.aid,
                 });
@@ -92,29 +92,30 @@ export class VideoDownload extends Feature {
             }
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'sendVideoFilename' && message.cid) {
+            if (message.command === 'sendVideoFilename' && message.cid) {
                 const url = new Url(message.url, '', true);
                 this.downloadFilenames[url.pathname] = {
                     filename: message.filename,
                     cid: message.cid,
                 };
-            } else if (message.commend === 'downloadMergedVideo' && message.url && message.filename) {
+            } else if (message.command === 'downloadMergedVideo' && message.url && message.filename) {
                 chrome.downloads.download({
                     saveAs: true,
                     url: message.url,
                     filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
-            } else if (message.commend === 'getFlvResponse') {
-                fetch(message.url, {
-                    method: message.method,
-                    headers: {
-                        'From': 'bilibili-helper',
-                    },
-                })
-                .then(res => res.json())
-                .then(res => {
-                    sendResponse(res);
-                });
+            } else if (message.command === 'getFlvResponse') {
+                //fetch(message.url, {
+                //    //method: message.method,
+                //    credentials: 'include',
+                //    headers: {
+                //        'From': 'bilibili-helper',
+                //    },
+                //})
+                //.then(res => res.json())
+                //.then(res => {
+                //    sendResponse(res);
+                //});
             }
             return true;
         });

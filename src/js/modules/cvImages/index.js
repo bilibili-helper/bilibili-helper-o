@@ -15,7 +15,7 @@ export class CvImages extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '专栏图片保存',
+                title: '专栏图片保存与去除文字可选中限制',
             },
         });
         this.imageMap = {};
@@ -25,13 +25,13 @@ export class CvImages extends Feature {
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message) => {
-            if (message.commend === 'cvDownloadImage') {
+            if (message.command === 'cvDownloadImage') {
                 this.image.src = message.src;
                 this.getData(message.src).then((url) => {
                     chrome.downloads.download({
                         saveAs: true,
                         url,
-                        filename: Date.now() + '.jpg',
+                        filename: (message.filename || Date.now()) + '.jpg',
                     });
                 });
             }

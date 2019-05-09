@@ -105,12 +105,12 @@ export class ChatFilter extends React.Component {
                 $(that.panel).fadeOut(200);
             }
         });
-        $(document).on('mouseenter', '.chat-item', function() {
-            $(this).addClass('hover');
-        });
-        $(document).on('mouseleave', '.chat-item', function() {
-            $(this).removeClass('hover');
-        });
+        //$(document).on('mouseenter', '.chat-item', function() {
+        //    $(this).addClass('hover');
+        //});
+        //$(document).on('mouseleave', '.chat-item', function() {
+        //    $(this).removeClass('hover');
+        //});
     }
 
     handleOnClick = () => {
@@ -127,7 +127,7 @@ export class ChatFilter extends React.Component {
         else localOption[key] = on;
 
         chrome.runtime.sendMessage({
-            commend: 'setGAEvent',
+            command: 'setGAEvent',
             action: 'click',
             category: 'chatFilter',
             label: `chatFilter ${key}`,

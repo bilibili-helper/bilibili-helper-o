@@ -75,9 +75,9 @@ class VideoSubtitleDownload extends React.Component {
     }
 
     componentDidMount() {
-        chrome.runtime.sendMessage({commend: 'videoSubtitleDownloadDOMInitialized'});
+        chrome.runtime.sendMessage({command: 'videoSubtitleDownloadDOMInitialized'});
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'loadSubtitle' && message.url) {
+            if (message.command === 'loadSubtitle' && message.url) {
                 $.ajax({
                     method: 'get',
                     headers: {'From': 'bilibili-helper'},
@@ -100,7 +100,7 @@ class VideoSubtitleDownload extends React.Component {
             }
         });
         chrome.runtime.sendMessage({
-            commend: 'getPermissionMap',
+            command: 'getPermissionMap',
         }, (permissionMap) => {
             this.setState({permissionMap});
         });
@@ -108,13 +108,13 @@ class VideoSubtitleDownload extends React.Component {
 
     handleDownloadSubtitle = (subtitleObject) => {
         chrome.runtime.sendMessage({
-            commend: 'setGAEvent',
+            command: 'setGAEvent',
             action: 'click',
             category: 'videoSubtitleDownload',
             label: 'videoSubtitleDownload',
         });
         chrome.runtime.sendMessage({
-            commend: 'downloadSubtitle',
+            command: 'downloadSubtitle',
             subtitleObject,
             filename: document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title'),
         });

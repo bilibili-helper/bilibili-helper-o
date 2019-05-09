@@ -1,25 +1,33 @@
-.img-box:hover::after {
-	content: '';
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	user-select: none;
-	pointer-events: none;
-	border: 2px solid #00a1d6;
+.page-container .article-holder.unable-reprint {
+	user-select: auto;
 }
 
-.img-box button {
-	width: 100px;
-	height: 30px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	border-radius: 3px;
-	font-size: 16px;
-	background-color: #00a1d6;
-	color: #fff;
-	cursor: pointer;
+.bilibili-ct-wrapper, .banner-img-holder {
+	margin: 0px 5px;
+
+	&:hover {
+		outline: 5px solid #00a1d6;
+	}
+
+	button {
+		width: 100px;
+		height: 30px;
+		position: absolute;
+		top: 0;
+		left: 5px;
+		font-size: 16px;
+		border: none;
+		background-color: #00a1d6;
+		color: #fff;
+		cursor: pointer;
+		transition: opacity .3s;
+
+		&:hover {
+			opacity: 0.85;
+		}
+
+		&:active {
+			opacity: 0.75;
+		}
+	}
 }

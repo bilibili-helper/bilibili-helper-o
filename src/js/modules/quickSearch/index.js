@@ -25,7 +25,7 @@ export class QuickSearch extends Feature {
             contexts: ['selection'],
             onclick: function(info) {
                 chrome.runtime.sendMessage({
-                    commend: 'setGAEvent',
+                    command: 'setGAEvent',
                     action: 'click',
                     category: 'quickSearch',
                     label: 'quickSearch',

@@ -27,7 +27,7 @@ export class UIManager {
      */
     getUIList = () => {
         return new Promise(resolve => {
-            chrome.runtime.sendMessage({commend: 'getSettings', kind: this.kind, hasUI: true}, (settings) => {
+            chrome.runtime.sendMessage({command: 'getSettings', kind: this.kind, hasUI: true}, (settings) => {
                 this.retryMax = _.keys(settings).length;
                 this.settings = settings;
                 resolve(settings);

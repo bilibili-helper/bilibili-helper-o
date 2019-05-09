@@ -53,7 +53,7 @@ export class GoogleAnalytics extends Feature {
          * label 功能中的具体项目名称等
          * nonInteraction 标记非交互
          */
-        if (this.settings.on && message.commend === 'setGAEvent' && message.action && message.category) {
+        if (this.settings.on && message.command === 'setGAEvent' && message.action && message.category) {
             const {action: eventAction, label, category: eventCategory = '', nonInteraction = false} = message;
             this.insertGAScriptTag().then(() => {
                 this.send({

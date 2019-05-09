@@ -36,7 +36,7 @@ export const fetchImage = async (websitePort, {url, options, sign, model, mine})
         });
     }
     websitePort.postMessage({
-        commend: 'returnFetch',
+        command: 'returnFetch',
         data: imageBase64String,
         from: 'helperProxy',
         model,

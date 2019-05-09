@@ -34,7 +34,7 @@ export class Treasure extends Feature {
 
     addListener = () => {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.commend === 'sendNotification' && message.type === 'treasure') {
+            if (message.command === 'sendNotification' && message.type === 'treasure') {
                 const {time_start, silver} = message;
                 const notificationState = _.find(this.settings.options, {key: 'notification'});
                 if (notificationState && notificationState.on) {
@@ -45,7 +45,7 @@ export class Treasure extends Feature {
                         message: `成功领取${silver}瓜子`,
                     });
                 }
-            } else if (message.commend === 'getCurrentTask' && message.type === 'treasure') {
+            } else if (message.command === 'getCurrentTask' && message.type === 'treasure') {
                 fetch(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {
@@ -58,7 +58,7 @@ export class Treasure extends Feature {
                         setTimeout(this.getCaptcha, 2000);
                     } else sendResponse(res);
                 });
-            } else if (message.commend === 'getCaptcha' && message.type === 'treasure') {
+            } else if (message.command === 'getCaptcha' && message.type === 'treasure') {
                 fetch(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {
@@ -71,7 +71,7 @@ export class Treasure extends Feature {
                         setTimeout(this.getCaptcha, 2000);
                     } else sendResponse(res);
                 });
-            } else if (message.commend === 'getAward' && message.type === 'treasure') {
+            } else if (message.command === 'getAward' && message.type === 'treasure') {
                 fetch(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {

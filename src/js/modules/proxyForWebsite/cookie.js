@@ -9,7 +9,7 @@ export const cookie = async (websitePort, data) => {
     if (!model) throw(`fetch from Model ${model}`);
     chrome.cookies.get(detail, (cookie) => {
         websitePort.postMessage({
-            commend: 'returnCookie',
+            command: 'returnCookie',
             data: cookie.value,
             from: 'helperProxy',
             model,

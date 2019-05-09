@@ -94,7 +94,7 @@ class PIP extends React.Component {
             });
         }
         chrome.runtime.sendMessage({
-            commend: 'setGAEvent',
+            command: 'setGAEvent',
             action: 'click',
             category: 'PIP',
             label: 'PIP',

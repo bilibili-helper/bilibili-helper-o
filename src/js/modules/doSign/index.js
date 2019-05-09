@@ -42,6 +42,7 @@ export class DoSign extends Feature {
                     this.request();
                     break;
             }
+            return true;
         });
     };
 

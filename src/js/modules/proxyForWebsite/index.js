@@ -24,8 +24,8 @@ export class ProxyForWebsite extends Feature {
     addListener = () => {
         chrome.runtime.onConnect.addListener((port) => {
             port.onMessage.addListener((message, websitePort) => {
-                const {commend, data} = message;
-                switch (commend) {
+                const {command, data} = message;
+                switch (command) {
                     case 'connect': {
                         connect(websitePort, data);
                         break;
@@ -38,7 +38,7 @@ export class ProxyForWebsite extends Feature {
                         break;
                     }
                     case 'cookie': {
-                        cookie(websitePort, data);
+                        void cookie(websitePort, data);
                         break;
                     }
                 }

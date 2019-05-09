@@ -28,6 +28,7 @@ import {VideoDarkMode, VideoDarkModeUI} from 'Modules/videoDarkMode';
 import {ProxyForWebsite} from 'Modules/proxyForWebsite';
 import {CvImagesUI, CvImages} from 'Modules/cvImages';
 import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
+import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 
 let VideoUnblock;
 try {
@@ -60,6 +61,7 @@ export const Features = {
     ProxyForWebsite,
     CvImages,
     NotAutoPlay,
+    LiveUpCheck,
 };
 
 export const UIs = {
@@ -79,4 +81,5 @@ export const UIs = {
     VideoDarkModeUI,
     CvImagesUI,
     NotAutoPlayUI,
+    LiveUpCheckUI,
 };
