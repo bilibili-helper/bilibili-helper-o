@@ -255,12 +255,12 @@ export class VideoDownload extends React.Component {
         const scriptHTML = document.createElement('script');
         scriptHTML.innerHTML = `
             fetch('${url}', {
-                method: '${method}',
+                method: 'get',
                 credentials: 'include',
             })
             .then(res => res.json())
             .then(res => {
-                window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}'}});
+                window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}'}}, '*');
             });
         `;
         document.body.appendChild(scriptHTML);

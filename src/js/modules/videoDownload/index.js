@@ -104,18 +104,6 @@ export class VideoDownload extends Feature {
                     url: message.url,
                     filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
-            } else if (message.command === 'getFlvResponse') {
-                //fetch(message.url, {
-                //    //method: message.method,
-                //    credentials: 'include',
-                //    headers: {
-                //        'From': 'bilibili-helper',
-                //    },
-                //})
-                //.then(res => res.json())
-                //.then(res => {
-                //    sendResponse(res);
-                //});
             }
             return true;
         });

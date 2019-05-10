@@ -183,6 +183,8 @@ const VideoDarkModeStyle = createGlobalStyle`
         }
       }
       .ep-item, li {
+        width: auto;
+        margin-right: 5px;
         color: var(--dark-font-1);
         a {
           color: var(--dark-font-1);

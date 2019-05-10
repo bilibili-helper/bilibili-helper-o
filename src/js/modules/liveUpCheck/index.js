@@ -93,7 +93,7 @@ export class LiveUpCheck extends Feature {
         this.getList(this.lastList).then(() => {
             const newList = this.getDifferent(this.currentList, this.lastList);
             if (this.newCounter > 0) {
-                this.sendNotification(newList);
+                this.sendNotification(newList.slice(0, this.newCounter));
                 this.currentList = newList;
             }
             this.lastList = [];
