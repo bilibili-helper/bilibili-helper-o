@@ -29,6 +29,7 @@ import {ProxyForWebsite} from 'Modules/proxyForWebsite';
 import {CvImagesUI, CvImages} from 'Modules/cvImages';
 import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
+//import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
 
 let VideoUnblock;
 try {
@@ -62,6 +63,7 @@ export const Features = {
     CvImages,
     NotAutoPlay,
     LiveUpCheck,
+    //ShowDisabledVideo,
 };
 
 export const UIs = {
@@ -82,4 +84,5 @@ export const UIs = {
     CvImagesUI,
     NotAutoPlayUI,
     LiveUpCheckUI,
+    //ShowDisabledVideoUI,
 };

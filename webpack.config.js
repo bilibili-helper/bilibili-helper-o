@@ -61,6 +61,7 @@ module.exports = (env) => {
             'website': path.resolve(jsPath, 'pages', 'website', indexFilename),
             'cv': path.resolve(jsPath, 'pages', 'cv', indexFilename),
             'tbilibili': path.resolve(jsPath, 'pages', 'tbilibili', indexFilename),
+            //'videoList': path.resolve(jsPath, 'pages', 'videoList', indexFilename),
         },
         output: {
             filename: '[name].js',

@@ -3,13 +3,12 @@
  * Create: 2018-08-20
  * Description: 我的关注 视频自动推送 功能
  */
-import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
 import {getURL, __, toDuration} from 'Utils';
 import apis from './apis';
 
-export {DynamicCheckUI} from './UI/index';
+export {DynamicCheckUI} from './UI/index.js';
 
 const MAX_LIST_NUMBERS = 100;
 
@@ -21,7 +20,7 @@ export class DynamicCheck extends Feature {
             permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function
-                title: '动态推送', // 在option页面中配置项目的显示名称
+                title: '视频动态推送', // 在option页面中配置项目的显示名称
                 type: 'checkbox', // 指该feature配置子选项的类型，此处为复选框
                 description: '视频消息、小视频、专栏、番剧自动推送，每分钟检测一次',
                 hasUI: true,
