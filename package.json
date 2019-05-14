@@ -29,7 +29,6 @@
     "url-parse": "^1.4.3"
   },
   "devDependencies": {
-    "@gfx/zopfli": "^1.0.10",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.4",
@@ -91,7 +90,7 @@
     "build": "webpack --production --progress",
     "build:test": "webpack --env.DEBUG=true --production --progress"
   },
-  "author": "zacyu & ruo",
+  "author": "zacyu & drowsyflesh",
   "license": "MIT",
   "repository": "https://github.com/zacyu/bilibili-helper",
   "readme": "/source/README.md"

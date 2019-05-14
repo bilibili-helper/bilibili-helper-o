@@ -75,27 +75,32 @@ export class GoogleAnalytics extends Feature {
     insertGAScriptTag = (UA = 'UA-39765420-2') => {
         return new Promise(resolve => {
             if (document.getElementsByClassName('ga-script').length === 0) {
-                let {userID} = this.store || {};
-                if (!userID) {
-                    userID= String(Math.random()).slice(2);
-                    this.store = {userID: userID};
-                }
-                const script = `https://www.google-analytics.com/analytics.js`;
-                //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
-                window['GoogleAnalyticsObject'] = 'ga';
-                window.ga = window.ga || function() {
-                    (window.ga.q = window.ga.q || []).push(arguments);
-                };
-                window.ga.l = 1 * new Date();
-                const scriptTag = document.createElement('script');
-                scriptTag.setAttribute('class', 'ga-script');
-                scriptTag.setAttribute('async', 1);
-                scriptTag.setAttribute('src', script);
-                document.head.appendChild(scriptTag);
-                window.ga('create', UA, 'auto');
-                window.ga('set', 'checkProtocolTask');
-                window.ga('set', 'userId', userID);
-                resolve();
+                this.getStorage('userId')
+                    .then(({userId}) => {
+                        if (userId) return userId;
+                        else {
+                            const userId = String(Math.random()).slice(2);
+                            return this.setStorage({userId}).then(() => userId);
+                        }
+                    })
+                    .then((userId) => {
+                        const script = `https://www.google-analytics.com/analytics.js`;
+                        //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
+                        window['GoogleAnalyticsObject'] = 'ga';
+                        window.ga = window.ga || function() {
+                            (window.ga.q = window.ga.q || []).push(arguments);
+                        };
+                        window.ga.l = 1 * new Date();
+                        const scriptTag = document.createElement('script');
+                        scriptTag.setAttribute('class', 'ga-script');
+                        scriptTag.setAttribute('async', 1);
+                        scriptTag.setAttribute('src', script);
+                        document.head.appendChild(scriptTag);
+                        window.ga('create', UA, 'auto');
+                        window.ga('set', 'checkProtocolTask');
+                        window.ga('set', 'userId', userId);
+                        resolve();
+                    });
             } else resolve();
         });
     };

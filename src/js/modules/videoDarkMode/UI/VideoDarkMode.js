@@ -28,7 +28,7 @@ export default () => {
       }
     `;
 
-        const VideoDarkModeStyle = createGlobalStyle`
+    const VideoDarkModeStyle = createGlobalStyle`
       html {
         --dark-1: #0c0c0c;
         --dark-2: #131313;
@@ -42,6 +42,10 @@ export default () => {
       
       body {
         background-color: #1c2022!important;
+      }
+      // 播放器mini窗口
+      #bofqi.mini-player:before {
+        box-shadow: #000000 0 0 8px;
       }
       // nav 搜索框
       .bili-header-m .nav-menu .showSearch.nav-search #nav_searchform {
@@ -199,9 +203,6 @@ export default () => {
             }
           }
         }
-      }
-      #bofqi.mini-player:before {
-        box-shadow: #000000 0 0 8px;
       }
       // 播放器工具栏
       .bilibili-player-video-sendbar {

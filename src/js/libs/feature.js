@@ -40,8 +40,7 @@ export class Feature {
 
     get store() {
         const res = store.get(this.dataStoreName);
-        if (res) { return res; }
-        else {
+        if (res) { return res; } else {
             store.set(`in-module-${this.name}`, undefined);
             return undefined;
         }
@@ -56,7 +55,23 @@ export class Feature {
             chrome.storage.sync.get(['uid'], function(storage) {
                 resolve(storage);
             });
-        })
+        });
+    }
+
+    getStorage(...keys) {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get([...keys], function(storage) {
+                resolve(storage);
+            });
+        });
+    }
+
+    setStorage(updateItem) {
+        return new Promise((resolve, reject) => {
+            chrome.storage.sync.set(updateItem, function() {
+                chrome.runtime.lastError ? reject() : resolve();
+            });
+        });
     }
 
     /**
@@ -96,8 +111,7 @@ export class Feature {
 
     // 获取配置
     getSetting = (featureName) => {
-        if (featureName === this.name || !featureName) { return this.settings; }
-        else {
+        if (featureName === this.name || !featureName) { return this.settings; } else {
             return chrome.extension.getBackgroundPage().FeatureManager.features[featureName].getSetting();
         }
     };
