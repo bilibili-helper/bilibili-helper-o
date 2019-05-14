@@ -7,7 +7,7 @@
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ChatFilter} from './ChatFilter';
+import UIBuilder from './ChatFilter';
 
 export class ChatFilterUI extends UI {
     constructor() {
@@ -19,6 +19,7 @@ export class ChatFilterUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const ChatFilter = UIBuilder();
             this.interval('.aside-area .control-panel-icon-row', 2000).then((container) => {
                 if (container) {
                     const chatFilter = document.createElement('span');

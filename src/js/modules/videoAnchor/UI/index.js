@@ -6,23 +6,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ToolBtn} from './ToolBtn';
+import ToolBtnBuilder from './ToolBtn';
 import {UI} from 'Libs/UI.js';
-
-const createOldBtn = () => {
-    const oldBtn = document.createElement('span');
-    oldBtn.innerText = '助手已移动到页面右侧边缘';
-    oldBtn.setAttribute('style', `
-        display: inline-block;
-        width: auto;
-        height: 24px;
-        line-height: 24px;
-        font-size: 14px;
-        color: #505050;
-        margin-left: 20px;
-    `);
-    return oldBtn;
-};
 
 export class VideoAnchorUI extends UI {
     constructor() {
@@ -47,6 +32,7 @@ export class VideoAnchorUI extends UI {
                 const helperDOM = document.createElement('span');
                 helperDOM.setAttribute('class', 'bilibili-helper');
                 container.appendChild(helperDOM);
+                const ToolBtn = ToolBtnBuilder();
                 ReactDOM.render(<ToolBtn/>, document.querySelector('.bilibili-helper'), () => {
                     const helperContentDOM = document.querySelector('.bilibili-helper-content');
                     if (typeof callback === 'function') callback(container);

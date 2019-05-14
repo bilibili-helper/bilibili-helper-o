@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI.js';
-import {Treasure} from './Treasure.js';
+import UIBuilder from './Treasure.js';
 
 export class TreasureUI extends UI {
     constructor() {
@@ -18,6 +18,7 @@ export class TreasureUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const Treasure = UIBuilder();
             this.interval('.treasure-box', 2000).then((container) => {
                 if (container) {
                     container.setAttribute('id', 'bilibili-helper-treasure');

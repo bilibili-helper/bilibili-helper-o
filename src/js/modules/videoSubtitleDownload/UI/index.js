@@ -10,9 +10,11 @@ import styled from 'styled-components';
 import {UI} from 'Libs/UI';
 import {theme} from 'Styles';
 
-const {color} = theme;
+const UIBuilder = () => {
 
-const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
+    const {color} = theme;
+
+    const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
   width: 100%;
   margin-bottom: 6px;
   font-size: 12px;
@@ -23,11 +25,11 @@ const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
     color: ${color('google-grey-500')};
   }
 `;
-const Container = styled.div`
+    const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
-const LinkGroup = styled.div`
+    const LinkGroup = styled.div`
   display: inline-block;
   margin: 4px;
   padding: 3px;
@@ -52,7 +54,7 @@ const LinkGroup = styled.div`
     }
   }
 `;
-const LinkGroupTitle = styled.span`
+    const LinkGroupTitle = styled.span`
   display: inline-block;
   padding: 0 8px;
   border-right: 1px solid #fff;
@@ -65,82 +67,84 @@ const LinkGroupTitle = styled.span`
   }
 `;
 
-class VideoSubtitleDownload extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            subtitleData: [], // 因为有多种语言，所以是数组
-            permissionMap: {},
+    class VideoSubtitleDownload extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                subtitleData: [], // 因为有多种语言，所以是数组
+                permissionMap: {},
+            };
+        }
+
+        componentDidMount() {
+            chrome.runtime.sendMessage({command: 'videoSubtitleDownloadDOMInitialized'});
+            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+                if (message.command === 'loadSubtitle' && message.url) {
+                    $.ajax({
+                        method: 'get',
+                        headers: {'From': 'bilibili-helper'},
+                        url: message.url,
+                        success: (res) => {
+                            const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
+                            if (regExpRes.length > 0) {
+                                const subtitleData = JSON.parse(regExpRes[1]).subtitles;
+                                this.setState({subtitleData});
+                            }
+                        },
+                        error: (e) => {
+                            console.error(e);
+                            if (e.status === 403) {
+                                return;
+                            }
+                        },
+                    });
+                    sendResponse(true);
+                }
+            });
+            chrome.runtime.sendMessage({
+                command: 'getPermissionMap',
+            }, (permissionMap) => {
+                this.setState({permissionMap});
+            });
+        }
+
+        handleDownloadSubtitle = (subtitleObject) => {
+            chrome.runtime.sendMessage({
+                command: 'setGAEvent',
+                action: 'click',
+                category: 'videoSubtitleDownload',
+                label: 'videoSubtitleDownload',
+            });
+            chrome.runtime.sendMessage({
+                command: 'downloadSubtitle',
+                subtitleObject,
+                filename: document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title'),
+            });
         };
-    }
 
-    componentDidMount() {
-        chrome.runtime.sendMessage({command: 'videoSubtitleDownloadDOMInitialized'});
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.command === 'loadSubtitle' && message.url) {
-                $.ajax({
-                    method: 'get',
-                    headers: {'From': 'bilibili-helper'},
-                    url: message.url,
-                    success: (res) => {
-                        const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
-                        if (regExpRes.length > 0) {
-                            const subtitleData = JSON.parse(regExpRes[1]).subtitles;
-                            this.setState({subtitleData});
-                        }
-                    },
-                    error: (e) => {
-                        console.error(e);
-                        if (e.status === 403) {
-                            return;
-                        }
-                    },
-                });
-                sendResponse(true);
-            }
-        });
-        chrome.runtime.sendMessage({
-            command: 'getPermissionMap',
-        }, (permissionMap) => {
-            this.setState({permissionMap});
-        });
-    }
-
-    handleDownloadSubtitle = (subtitleObject) => {
-        chrome.runtime.sendMessage({
-            command: 'setGAEvent',
-            action: 'click',
-            category: 'videoSubtitleDownload',
-            label: 'videoSubtitleDownload',
-        });
-        chrome.runtime.sendMessage({
-            command: 'downloadSubtitle',
-            subtitleObject,
-            filename: document.querySelector('#viewbox_report h1, .header-info h1').getAttribute('title'),
-        });
-    };
-
-    render() {
-        const {subtitleData, permissionMap} = this.state;
-        return (
-            <React.Fragment>
-                {!permissionMap.login || subtitleData.length !== 0 && <Title>外挂字幕下载</Title>}
-                <Container>
-                    {!permissionMap.login && <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
-                    {permissionMap.login && subtitleData.length !== 0 &&
-                    <LinkGroup>
-                        {subtitleData.map((subtitle) => {
-                            const {id, lan_doc} = subtitle;
-                            return (<LinkGroupTitle key={id} onClick={() => this.handleDownloadSubtitle(subtitle)}>
-                                <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
-                            </LinkGroupTitle>);
-                        })}
-                    </LinkGroup>}
-                </Container>
-            </React.Fragment>
-        );
+        render() {
+            const {subtitleData, permissionMap} = this.state;
+            return (
+                <React.Fragment>
+                    {!permissionMap.login || subtitleData.length !== 0 && <Title>外挂字幕下载</Title>}
+                    <Container>
+                        {!permissionMap.login && <LinkGroupTitle><p>未登录</p></LinkGroupTitle>}
+                        {permissionMap.login && subtitleData.length !== 0 &&
+                        <LinkGroup>
+                            {subtitleData.map((subtitle) => {
+                                const {id, lan_doc} = subtitle;
+                                return (<LinkGroupTitle key={id} onClick={() => this.handleDownloadSubtitle(subtitle)}>
+                                    <a>{lan_doc.replace('（', ' (').replace('）', ')')}</a>
+                                </LinkGroupTitle>);
+                            })}
+                        </LinkGroup>}
+                    </Container>
+                </React.Fragment>
+            );
+        }
     }
 }
+
 
 export class VideoSubtitleDownloadUI extends UI {
     constructor() {
@@ -153,6 +157,7 @@ export class VideoSubtitleDownloadUI extends UI {
     load = ([container], settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const VideoSubtitleDownload = UIBuilder();
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-subtitle-download-wrapper');
             wrapper.setAttribute('style', 'order: 2;');

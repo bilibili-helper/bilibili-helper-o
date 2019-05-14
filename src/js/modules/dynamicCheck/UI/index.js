@@ -7,7 +7,7 @@
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {DynamicBox} from './DynamicBox';
+import UIBuilder from './DynamicBox';
 import {UI} from 'Libs/UI';
 
 export class DynamicCheckUI extends UI {
@@ -21,6 +21,7 @@ export class DynamicCheckUI extends UI {
     load = ([popupDOM], settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const DynamicBox = UIBuilder();
             const dynamicCheckBoxState = _.find(settings.options, ({key}) => key === 'dynamicCheckBox');
             chrome.browserAction.setBadgeText({text: ''}); // 不管ui是否加载，只要功能开着，打开菜单都会清理badge
             if (dynamicCheckBoxState.on) {

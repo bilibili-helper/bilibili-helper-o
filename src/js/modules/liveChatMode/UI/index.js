@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI';
-import {LiveChatMode} from './LiveChatMode';
+import UIBuilder from './LiveChatMode';
 
 export class LiveChatModeUI extends UI {
     constructor() {
@@ -18,6 +18,7 @@ export class LiveChatModeUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const LiveChatMode = UIBuilder();
             this.interval('.room-info-down-row', 2000).then((container) => {
                 const wrapper = document.createElement('div');
                 wrapper.setAttribute('class', 'bilibili-helper-live-chat-mode-wrapper');

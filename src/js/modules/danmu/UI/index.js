@@ -6,7 +6,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Danmu} from './danmu';
+import UIBuilder from './danmu';
 import {UI} from 'Libs/UI';
 
 export class DanmuUI extends UI {
@@ -20,6 +20,7 @@ export class DanmuUI extends UI {
     load = ([container], settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const Danmu = UIBuilder();
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-danmu-wrapper');
             wrapper.setAttribute('style', 'order: 3;');

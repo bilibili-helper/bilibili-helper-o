@@ -42,6 +42,7 @@ export class CvImagesUI extends UI {
                 e.preventDefault();
                 const img = $(this).children('img');
                 that.currentSrc = 'https:' + img.attr('src');
+                const extension = /.(jpg|jpeg|gif|webp)/.exec(that.currentSrc);
                 $(this).append(btn);
                 $(this).css({
                     width: 'auto',
@@ -54,6 +55,7 @@ export class CvImagesUI extends UI {
                             command: 'cvDownloadImage',
                             src: that.currentSrc,
                             filename: caption || null,
+                            extension: extension ? extension[1] : 'jpg',
                         });
                     }
                 })

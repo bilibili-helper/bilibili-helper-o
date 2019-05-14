@@ -51,6 +51,14 @@ export class Feature {
         store.set(this.dataStoreName, v);
     }
 
+    get storage() {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get(['uid'], function(storage) {
+                resolve(storage);
+            });
+        })
+    }
+
     /**
      * 初始化 - 位于装载过程之前
      * 1.检查(启动)配置
@@ -70,8 +78,9 @@ export class Feature {
 
     setPermission = (name, value) => {
         this.permissionMap[name] = value;
+        if (this.settings.on === false) { return; } // 如果feature没有启动，则不会触发launch或pause
         const f = this[`permissionHandle${_.upperFirst(name)}`];
-        if (typeof f === 'function' && this.settings.on === true) { f(value); }
+        if (typeof f === 'function') { f(value); }
     };
 
     // 初始化配置

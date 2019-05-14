@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {UI} from 'Libs/UI';
-import {VideoDownload} from './videoDownload';
+import UIBuilder from './videoDownload';
 
 export class VideoDownloadUI extends UI {
     constructor() {
@@ -19,6 +19,7 @@ export class VideoDownloadUI extends UI {
     load = ([container], settings) => {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
+            const VideoDownload = UIBuilder();
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-video-download-wrapper');
             wrapper.setAttribute('style', 'order: 0;');

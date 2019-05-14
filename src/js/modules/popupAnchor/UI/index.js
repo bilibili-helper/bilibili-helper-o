@@ -8,20 +8,23 @@ import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
 import {UI} from 'Libs/UI';
 
-export const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
-  display: flex;
-  flex-direction: row-reverse;
-  background-color: rgb(250,250,250);
-  max-height: 290px;
-`;
+const UIBuilder = () => {
+    const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
+      display: flex;
+      flex-direction: row-reverse;
+      background-color: rgb(250,250,250);
+      max-height: 290px;
+    `;
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
-  }
-`;
+    const GlobalStyle = createGlobalStyle`
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+      }
+    `;
+    return {Main, GlobalStyle};
+}
 
 export class PopupAnchorUI extends UI {
     constructor() {
@@ -32,6 +35,7 @@ export class PopupAnchorUI extends UI {
 
     load = () => {
         return new Promise(resolve => {
+            const {Main, GlobalStyle} = UIBuilder();
             ReactDOM.render(
                 <Main>
                     <GlobalStyle/>

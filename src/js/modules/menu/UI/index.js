@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Menu} from './Menu';
+import UIBuilder from './Menu';
 import {UI} from 'Libs/UI';
 
 export class MenuUI extends UI {
@@ -18,6 +18,7 @@ export class MenuUI extends UI {
 
     load = ([popupDOM], settings) => {
         return new Promise(resolve => {
+            const Menu = UIBuilder();
             const wrapper = document.createElement('div');
             wrapper.setAttribute('class', 'bilibili-helper-menu-container');
             popupDOM.appendChild(wrapper);
