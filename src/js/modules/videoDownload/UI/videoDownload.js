@@ -31,11 +31,11 @@ export default () => {
         color: ${color('google-grey-500')};
       }
     `;
-        const Container = styled.div`
+    const Container = styled.div`
       display: flex;
       flex-wrap: wrap;
     `;
-        const LinkGroup = styled.div`
+    const LinkGroup = styled.div`
       position: relative;
       display: inline-block;
       margin: 4px;
@@ -64,7 +64,7 @@ export default () => {
         }
       }
     `;
-        const LinkGroupTitle = styled.span`
+    const LinkGroupTitle = styled.span`
       display: inline-block;
       padding: 0 8px;
       border-right: 1px solid #fff;
@@ -74,13 +74,13 @@ export default () => {
       }
       cursor: pointer;
     `;
-        const Suggest = styled.p`
+    const Suggest = styled.p`
       margin-bottom: 6px;
       margin-left: 5px;
       font-size: 10px;
       color: ${color('bilibili-pink')};
     `;
-        const Progress = styled.div`
+    const Progress = styled.div`
       position: absolute;
       bottom: 0;
       left: 0;

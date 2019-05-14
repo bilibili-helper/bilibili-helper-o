@@ -15,59 +15,59 @@ const UIBuilder = () => {
     const {color} = theme;
 
     const Title = styled.div.attrs({className: 'bilibili-helper-danmu-title'})`
-  width: 100%;
-  margin-bottom: 6px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: left;
-  .count {
-    margin-left: 10px;
-    color: ${color('google-grey-500')};
-  }
-`;
-    const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-    const LinkGroup = styled.div`
-  display: inline-block;
-  margin: 4px;
-  padding: 3px;
-  border-radius: 3px;
-  font-size: 12px;
-  font-style: normal;
-  letter-spacing: 0.3px;
-  background-color: #eaf4ff;
-  cursor: pointer;
-  transition: all 0.3s;
-  &:hover {
-    background-color: #d4eaff;
-  }
-  a {
-    padding: 0 3px;
-    color: #00a1d6;
-    &:hover {
-      color: #004c65;
-    }
-    &:last-of-type {
-      border: none;
-    }
-  }
-`;
-    const LinkGroupTitle = styled.span`
-  display: inline-block;
-  padding: 0 8px;
-  border-right: 1px solid #fff;
-  &:last-of-type {
-    border-right: none;
-  }
-  p {
-      color: ${color('google-grey-900')};
+      width: 100%;
+      margin-bottom: 6px;
       font-size: 12px;
-  }
-`;
+      font-weight: bold;
+      text-align: left;
+      .count {
+        margin-left: 10px;
+        color: ${color('google-grey-500')};
+      }
+    `;
+    const Container = styled.div`
+      display: flex;
+      flex-wrap: wrap;
+    `;
+    const LinkGroup = styled.div`
+      display: inline-block;
+      margin: 4px;
+      padding: 3px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-style: normal;
+      letter-spacing: 0.3px;
+      background-color: #eaf4ff;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:hover {
+        background-color: #d4eaff;
+      }
+      a {
+        padding: 0 3px;
+        color: #00a1d6;
+        &:hover {
+          color: #004c65;
+        }
+        &:last-of-type {
+          border: none;
+        }
+      }
+    `;
+    const LinkGroupTitle = styled.span`
+      display: inline-block;
+      padding: 0 8px;
+      border-right: 1px solid #fff;
+      &:last-of-type {
+        border-right: none;
+      }
+      p {
+          color: ${color('google-grey-900')};
+          font-size: 12px;
+      }
+    `;
 
-    class VideoSubtitleDownload extends React.Component {
+    return class VideoSubtitleDownload extends React.Component {
         constructor(props) {
             super(props);
             this.state = {

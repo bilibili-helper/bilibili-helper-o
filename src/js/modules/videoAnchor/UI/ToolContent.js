@@ -45,17 +45,6 @@ export default () => {
       }
     `;
 
-    return class ToolContent extends React.Component {
-        propTypes = {
-            show: PropTypes.bool,
-        };
-
-        render() {
-            const {show = false} = this.props;
-            return (
-                <Content show={show}/>
-            );
-        }
-    }
+    return Content;
 
 }
