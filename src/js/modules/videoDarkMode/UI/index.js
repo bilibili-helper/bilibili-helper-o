@@ -10,7 +10,6 @@ import ReactDOM from 'react-dom';
 
 import UIBuilder from './VideoDarkMode';
 
-
 export class VideoDarkModeUI extends UI {
     constructor() {
         super({

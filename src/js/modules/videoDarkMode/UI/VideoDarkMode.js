@@ -200,6 +200,9 @@ export default () => {
           }
         }
       }
+      #bofqi.mini-player:before {
+        box-shadow: #000000 0 0 8px;
+      }
       // 播放器工具栏
       .bilibili-player-video-sendbar {
         background-color: var(--dark-2)!important;
@@ -364,51 +367,73 @@ export default () => {
             }
           }
         }
-      }
-      // 右侧视频推荐区
-      #recom_module {
-        .recom-title, .recom-item .info-wrapper a{
-          color: var(--dark-font-0);
-          font-weight: 400;
+        .paging-box-big {
+          a.tcd-number, a.next, a.prev {
+            color: var(--dark-font-1);
+            background-color: var(--dark-2);
+            border-color: var(--dark-3);
+            &:hover {
+              color: white;
+              background-color: #00a1d6;
+              border-color: var(--dark-3);
+            }
+          }
+          .dian, .dian:hover {
+            color: var(--dark-font-1);
+            background-color: #1c2022;
+            border-color: #1c2022;
+          }
+          .page-jump {
+            input {
+              border-color: var(--dark-3);
+              background-color: var(--dark-2);
+            }
+          }
         }
-        .expand-more {
+        // 右侧视频推荐区
+        #recom_module {
+          .recom-title, .recom-item .info-wrapper a{
+            color: var(--dark-font-0);
+            font-weight: 400;
+          }
+          .expand-more {
+            background-color: var(--dark-1);
+            color: var(--dark-font-1);
+          }
+        }
+        #reco_list {
+          .rec-title,
+          .rec-list .card-box .info .title {
+            color: var(--dark-font-1);
+          }
+          .rec-footer {
+            background-color: var(--dark-1);
+          }
+        }
+        // 番剧剧集信息
+        #seasonlist_module {
+          .series-title {
+            color: var(--dark-font-1);
+          }
+          .ss-list-wrapper .ss-item .ss-info .ss-title {
+            color: var(--dark-font-1);
+          }
+          .expand-more {
+            background-color: var(--dark-1);
+            color: var(--dark-font-1);
+          }
+        }
+        // up信息
+        #v_upinfo .u-info .name .username{
+          color: var(--dark-font-1);
+        }
+        // 直播推荐 
+        #live_recommand_report .pl__card {
+          border-color: var(--dark-1);
           background-color: var(--dark-1);
-          color: var(--dark-font-1);
-        }
-      }
-      #reco_list {
-        .rec-title,
-        .rec-list .card-box .info .title {
-          color: var(--dark-font-1);
-        }
-        .rec-footer {
-          background-color: var(--dark-1);
-        }
-      }
-      // 番剧剧集信息
-      #seasonlist_module {
-        .series-title {
-          color: var(--dark-font-1);
-        }
-        .ss-list-wrapper .ss-item .ss-info .ss-title {
-          color: var(--dark-font-1);
-        }
-        .expand-more {
-          background-color: var(--dark-1);
-          color: var(--dark-font-1);
-        }
-      }
-      
-      // up信息
-      #v_upinfo .u-info .name .username{
-        color: var(--dark-font-1);
-      }
-      // 直播推荐 
-      #live_recommand_report .pl__card {
-        border-color: var(--dark-1);
-        background-color: var(--dark-1);
-        .pl__info .pl__title {
-          color: var(--dark-font-1);
+          .pl__info .pl__title {
+            color: var(--dark-font-1);
+          }
         }
       }
     `;
