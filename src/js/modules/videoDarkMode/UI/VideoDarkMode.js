@@ -390,50 +390,55 @@ export default () => {
             }
           }
         }
-        // 右侧视频推荐区
-        #recom_module {
-          .recom-title, .recom-item .info-wrapper a{
+      }
+      // 右侧视频推荐区
+      #recom_module {
+        .recom-list {
+          .video-title {
             color: var(--dark-font-0);
-            font-weight: 400;
-          }
-          .expand-more {
-            background-color: var(--dark-1);
-            color: var(--dark-font-1);
           }
         }
-        #reco_list {
-          .rec-title,
-          .rec-list .card-box .info .title {
-            color: var(--dark-font-1);
-          }
-          .rec-footer {
-            background-color: var(--dark-1);
-          }
+        .recom-title, .recom-item .info-wrapper a, .video-title {
+          color: var(--dark-font-0);
+          font-weight: 400;
         }
-        // 番剧剧集信息
-        #seasonlist_module {
-          .series-title {
-            color: var(--dark-font-1);
-          }
-          .ss-list-wrapper .ss-item .ss-info .ss-title {
-            color: var(--dark-font-1);
-          }
-          .expand-more {
-            background-color: var(--dark-1);
-            color: var(--dark-font-1);
-          }
-        }
-        // up信息
-        #v_upinfo .u-info .name .username{
+        .expand-more {
+          background-color: var(--dark-1);
           color: var(--dark-font-1);
         }
-        // 直播推荐 
-        #live_recommand_report .pl__card {
-          border-color: var(--dark-1);
+      }
+      #reco_list {
+        .rec-title,
+        .rec-list .card-box .info .title {
+          color: var(--dark-font-1);
+        }
+        .rec-footer {
           background-color: var(--dark-1);
-          .pl__info .pl__title {
-            color: var(--dark-font-1);
-          }
+        }
+      }
+      // 番剧剧集信息
+      #seasonlist_module {
+        .series-title {
+          color: var(--dark-font-1);
+        }
+        .ss-list-wrapper .ss-item .ss-info .ss-title {
+          color: var(--dark-font-1);
+        }
+        .expand-more {
+          background-color: var(--dark-1);
+          color: var(--dark-font-1);
+        }
+      }
+      // up信息
+      #v_upinfo .u-info .name .username{
+        color: var(--dark-font-1);
+      }
+      // 直播推荐 
+      #live_recommand_report .pl__card {
+        border-color: var(--dark-1);
+        background-color: var(--dark-1);
+        .pl__info .pl__title {
+          color: var(--dark-font-1);
         }
       }
     `;
