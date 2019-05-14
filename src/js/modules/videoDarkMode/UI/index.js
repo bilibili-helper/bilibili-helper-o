@@ -366,6 +366,29 @@ const VideoDarkModeStyle = createGlobalStyle`
         }
       }
     }
+    .paging-box-big {
+      a.tcd-number, a.next, a.prev {
+        color: var(--dark-font-1);
+        background-color: var(--dark-2);
+        border-color: var(--dark-3);
+        &:hover {
+          color: white;
+          background-color: #00a1d6;
+          border-color: var(--dark-3);
+        }
+      }
+      .dian, .dian:hover {
+        color: var(--dark-font-1);
+        background-color: #1c2022;
+        border-color: #1c2022;
+      }
+      .page-jump {
+        input {
+          border-color: var(--dark-3);
+          background-color: var(--dark-2);
+        }
+      }
+    }
   }
   // 右侧视频推荐区
   #recom_module {
