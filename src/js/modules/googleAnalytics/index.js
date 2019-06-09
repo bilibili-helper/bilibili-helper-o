@@ -19,7 +19,6 @@ export class GoogleAnalytics extends Feature {
                 description: '匿名统计功能的使用情况，帮助开发者改进程序为您提供更好的体验',
             },
         });
-        this.userID = null;
     }
 
     launch = () => {

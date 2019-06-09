@@ -107,6 +107,7 @@ export default () => {
     const NewTag = styled.span`
       margin: 0 5px 0 0;
       padding: 0 2px;
+      font-size: 10px;
       border-radius: 3px;
       background-color: ${theme.color('bilibili-pink')};
       color: #fff;

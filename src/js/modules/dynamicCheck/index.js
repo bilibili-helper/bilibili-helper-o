@@ -10,7 +10,7 @@ import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index.js';
 
-const MAX_LIST_NUMBERS = 100;
+const MAX_LIST_NUMBERS = 50;
 
 export class DynamicCheck extends Feature {
     constructor() {
@@ -107,7 +107,7 @@ export class DynamicCheck extends Feature {
                 if (this.lastList.length > 0) {
                     this.store = this.lastList[0].desc.dynamic_id_str;
                     this.lastCheckDynamicID = this.store;
-                    this.oldList = this.lastList.concat(this.oldList);
+                    this.oldList = this.lastList.concat(this.oldList).slice(0, MAX_LIST_NUMBERS);
                     this.lastList = [];
                     this.lastCounter = 0;
                 }
@@ -124,7 +124,7 @@ export class DynamicCheck extends Feature {
     initCurrentList() {
         if (this.typeList.length === 0) return;
 
-        this.getFeed(this.typeList, this.lastDynamicID).then(({code, data, message}) => {
+        this.getFeed(this.typeList).then(({code, data, message}) => {
             if (code === 0) {
                 const newList = data.cards.slice(0, MAX_LIST_NUMBERS);
                 this.currentList = _.map(newList, (card) => {
@@ -158,27 +158,33 @@ export class DynamicCheck extends Feature {
 
             return fetch(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
             .then(response => response.json())
-            .then(({code, data: {new_num}, message}) => {
-                if (code !== 0) return console.error(message);
-                else if (new_num > 0) return new_num;
+            .then(({code, data: {new_num, update_num}, message}) => {
+                if (code !== 0) {
+                    return Promise.reject(message);
+                } else return new_num || update_num;
             })
             .then((new_num) => {
                 if (!new_num) return;
                 this.getFeed(this.typeList).then(({code, data, message}) => {
                     if (code !== 0) return console.warn(message);
-                    const newList = _.map(data.cards.slice(0, new_num || MAX_LIST_NUMBERS), (card) => {
+                    // 处理刚获取到的推送列表
+                    const newList = _.compact(data.cards.slice(0, new_num).map((card) => {
                         try {
+                            // 过滤重复项目
+                            const sameCard = this.currentList.find((last) => this.isSameCard(last, card));
+                            if (sameCard) return;
+
                             card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
                             if (card.card.duration) card.card.duration = toDuration(card.card.duration);
                             return card;
                         } catch (e) {
                             console.warn(e);
                         }
-                    });
-                    if (newList[0].desc.dynamic_id_str !== this.currentList[0].desc.dynamic_id_str) {
-                        this.lastCheckDynamicID = newList[0].desc.dynamic_id_str;
-                        this.lastList = newList.concat(this.lastList);
-                        this.currentList = this.lastList.concat(this.oldList);
+                    }));
+                    if (newList.length > 0) { // 如果新的推送列表不为空
+                        this.lastCheckDynamicID = newList[0].desc.dynamic_id_str; // 记录新推送列表第一项的id为offset
+                        this.lastList = newList.concat(this.lastList); // 更新最近推送列表，连接到上一次的列表上，
+                        this.currentList = this.lastList.concat(this.oldList).slice(0, MAX_LIST_NUMBERS); // 更新用于显示在菜单的推送列表
                         this.lastCounter += new_num;
                         chrome.browserAction.setBadgeText({text: String(this.lastCounter)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
                         this.sendNotification(newList);
@@ -188,55 +194,14 @@ export class DynamicCheck extends Feature {
         });
     };
 
+    isSameCard = (lastCard, newCard) => lastCard.desc.dynamic_id_str === newCard.desc.dynamic_id_str;
+
     // 处理推送数据 - 不缓存到本地(￣.￣)
     getFeed = (typeList, offsetID) => {
         return this.userId.then((userId) => {
             const url = offsetID ? `${apis.dynamic_history}?uid=${userId}&type_list=${this.typeList}&offset_dynamic_id=${offsetID}` : `${apis.dynamic_new}?uid=${userId}&type_list=${typeList}`;
             return fetch(url).then(response => response.json());
         });
-        /*return $.ajax({
-                type: 'get',
-                url,
-                success: ({code, data}) => {
-                    if (code === 0) {
-                        const newList = data.cards.slice(0, newNum || MAX_LIST_NUMBERS);
-                        if (newList.length > 0) {
-                            // 检查新获取到的列表时候包含之前的条目
-                            if (this.lastList.length > 0) {
-                                if (this.lastList[0].desc.dynamic_id_str === newList[0].desc.dynamic_id_str) return;
-                            }
-                            if (this.feedList.length > 0) { // 包含或者初始化获取的话就判定为旧数据
-                                if (this.feedList[0].desc.dynamic_id_str === newList[0].desc.dynamic_id_str)
-                                    return;
-                            }
-                        }
-                        // 处理新数据列表
-                        let newFeedList = _.map(newList, (card) => {
-                            try {
-                                card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
-                                if (card.card.duration) card.card.duration = toDuration(card.card.duration);
-                                return card;
-                            } catch (e) {
-                                console.warn(e);
-                            }
-                        });
-
-                        if (this.feedList.length > 0) {
-                            this.lastCounter += newFeedList.length;
-                            this.lastList.splice(0, 0, ...newFeedList);
-                        }
-                        this.feedList = newFeedList.concat(this.feedList).slice(0, MAX_LIST_NUMBERS);
-
-                        //this.lastDynamicID = newFeedList.length > 0 ? newFeedList[0].desc.dynamic_id_str : '';
-                        //this.store = this.lastDynamicID;
-
-                        if (newFeedList.length > 0 && this.lastCounter > 0) {
-                            chrome.browserAction.setBadgeText({text: String(this.lastCounter)}); // 设置扩展菜单按钮上的Badge\（￣︶￣）/
-                            resolve(newFeedList);
-                        } else resolve();
-                    }
-                },
-            });*/
     };
 
     createLinkByType = (type, data) => {
@@ -255,7 +220,8 @@ export class DynamicCheck extends Feature {
     // 弹出推送通知窗口
     sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
-        notificationState && notificationState.on && _.map(newFeedList, ({card, desc}) => {
+        const notifyList = newFeedList.slice(0, 3); // 由于目前会累积没查看的推送，一段时候没查后会累积很多，导致集中推送，故改为只推最近三条
+        notificationState && notificationState.on && _.map(notifyList, ({card, desc}) => {
             const cardData = card;
             const picture = cardData.pic || (cardData.item && cardData.item.cover.default) || cardData.banner_url || cardData.cover;
             const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
@@ -268,7 +234,7 @@ export class DynamicCheck extends Feature {
                 message: `${name ? name + ': ' : ''}${topic}`,
                 buttons: [{title: __('extensionNotificationWatch')}],
             }, (notificationId) => {
-                this.feedList[notificationId] = link;
+                this.currentList[notificationId] = link;
             });
         });
     };

@@ -5,8 +5,8 @@
  * Description:
  */
 const createPort = () => {
-    const HelperID = 'kpbnombpnpcffllnianjibmpadjolanh';
-    let port = chrome.runtime.connect(HelperID);
+    //const HelperID = 'kpbnombpnpcffllnianjibmpadjolanh';
+    let port = chrome.runtime.connect();
     // 接收来自proxy for website 模块的message并转发给website
     port.onMessage.addListener((message /*HelperPort*/) => {
         const {from, ...rest} = message;

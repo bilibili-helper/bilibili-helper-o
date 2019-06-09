@@ -74,6 +74,13 @@ export default () => {
           color: #879199;
         }
       }
+      // 创作团队
+      .members-info .members-info__header {
+        background-color: #131313;
+        .title {
+          color: #99a2aa;
+        }
+      }
       // up信息
       .up-info .btn .b-cd {
         background: var(--dark-3)!important;

@@ -41,7 +41,7 @@ export class Feature {
     get store() {
         const res = store.get(this.dataStoreName);
         if (res) { return res; } else {
-            store.set(`in-module-${this.name}`, undefined);
+            store.set(this.dataStoreName, undefined);
             return undefined;
         }
     }

@@ -142,11 +142,12 @@ export default () => {
         };
 
         // up投稿
-        renderType8 = ({index, link, owner, title, pic, duration}) => (
+        renderType8 = ({index, link, owner, title, pic, duration, desc}) => (
             <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
                 <FeedImg style={{backgroundImage: `url(${pic})`}}/>
                 <FeedInfo>
-                    <span title={owner.name}>{owner.name}</span>
+                    <span
+                        title={desc.user_profile ? desc.user_profile.info.uname : owner.name}>{desc.user_profile ? desc.user_profile.info.uname : owner.name}</span>
                     <span>{duration}</span>
                 </FeedInfo>
                 <FeedTitle title={title}>{title}</FeedTitle>
@@ -195,7 +196,7 @@ export default () => {
             const link = this.createLinkByType(card.desc.type, card.card);
             return typeFunc ? (
                 <FeedBoxWrapper style={style} isNew={index < this.state.lastCounter}>
-                    {typeFunc({index, link, ...card.card})}
+                    {typeFunc({index, link, ...card.card, desc: card.desc})}
                 </FeedBoxWrapper>
             ) : null;
         };
@@ -216,6 +217,6 @@ export default () => {
                 ) : null
             );
         }
-    }
+    };
 
 }

@@ -135,7 +135,7 @@ module.exports = (env) => {
         plugins: _.compact([
             new webpack.DefinePlugin({
                 'process.env': {
-                    DEBUG: env.DEBUG || false,
+                    DEBUG: Boolean(env.DEBUG) || false,
                 },
                 TARGET_ORIGIN: "'http://localhost:8000'",
             }),
@@ -178,6 +178,11 @@ module.exports = (env) => {
                 filename: 'package.json',
                 pretty: true,
             })),
+            {
+                apply: compiler => {
+                    compiler.hooks.watchClose.ta
+                }
+            }
             //new BundleAnalyzerPlugin(),
         ]),
     };

@@ -38,8 +38,7 @@ export class MessageStore {
         chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
             const {status, url} = changeInfo;
             // 切换分P时url!==undefined，不需要清除
-            if (this.has(tabId) && status === 'loading' && url === undefined) { this.delete(tabId); }
-            else if (this.has(tabId) && status === 'complete') {
+            if (this.has(tabId) && status === 'loading' && url === undefined) { this.delete(tabId); } else if (this.has(tabId) && status === 'complete') {
                 this.createData(tabId);
             }
         });
@@ -51,8 +50,7 @@ export class MessageStore {
      * @return {{state, queue, data}}
      */
     createData = (id) => {
-        if (this.has(id)) { return this.store[id]; }
-        else {
+        if (this.has(id)) { return this.store[id]; } else {
             //console.warn(`Create MessageStore on Tab ${id}`);
             return this.store[id] = {
                 state: 0, // 初始状态 0 等待前端信号
@@ -68,20 +66,27 @@ export class MessageStore {
 
     delete = (id) => delete this.store[id];
 
+    doIt = (id, taskData) => {
+        if (!taskData) { return Promise.resolve(); }
+        return new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(+id, taskData, (res) => {
+                res !== undefined ? resolve() : reject(`No result from tab[${id}] - command[${taskData.command}]`);
+            });
+        });
+    };
+
     // 处理任务队列
     dealWith = (id) => {
-        const doIt = (id, taskData) => {
-            if (!taskData) { return Promise.resolve(); }
-            return new Promise((resolve, reject) => {
-                chrome.tabs.sendMessage(id, taskData, (res) => {
-                    res !== undefined ? resolve() : reject(`No result from tab[${id}] - command[${taskData.command}]`);
-                });
-            });
-        };
-        if (this.has[id] === false) { return console.error(`Invalid tab id ${id}`); }
+        return this.dealWithOnce(id).then(() => {
+            this.store[id].queue.length > 0 && this.dealWithOnce(id); // 如果队列不为空
+        });
+    };
+
+    dealWithOnce = (id) => {
+        if (this.has[id] === false) { return Promise.resolve(console.error(`Invalid tab id ${id}`)); }
         const {state, queue} = this.store[id];
-        state && queue.length > 0 && doIt(id, queue.shift()).then(() => {
-            queue.length > 0 && this.dealWith(id); // 如果队列不为空
-        }, (error) => console.error(error));
+        if (state && queue.length > 0) {
+            return this.doIt(id, queue.shift()).catch((error) => console.error(error));
+        } else { return Promise.resolve(); }
     };
 }

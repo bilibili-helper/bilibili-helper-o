@@ -7,6 +7,8 @@
 1. contentScript页面打开后，UI加载的数据是哪儿来的？
 2. 点击下载后发生了什么？
 
+![image-20190516161232201](../images/image-20190516161232201.png)
+
 ```sequence
 Note over background: 初始化
 Note over background: 监听contentScript
