@@ -31,10 +31,10 @@ import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 //import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
 
-let VideoUnblock;
-try {
-    VideoUnblock = require('./videoUnblock').VideoUnblock;
-} catch (e) {``;}
+//let VideoUnblock;
+//try {
+//    VideoUnblock = require('./videoUnblock').VideoUnblock;
+//} catch (e) {``;}
 
 export const Features = {
     Background,
@@ -57,7 +57,7 @@ export const Features = {
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
-    VideoUnblock,
+    //VideoUnblock,
     VideoDarkMode,
     ProxyForWebsite,
     CvImages,

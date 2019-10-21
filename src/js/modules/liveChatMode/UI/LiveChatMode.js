@@ -41,6 +41,7 @@ export default () => {
       .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area {
         background-color: transparent;
         pointer-events: none;
+        z-index: 1001!important;
       }
       .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel {
         position: fixed;

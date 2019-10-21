@@ -30,7 +30,8 @@ export default () => {
 
     const VideoDarkModeStyle = createGlobalStyle`
       html {
-        --dark-1: #0c0c0c;
+        --dark-0: #101010;
+        --dark-1: #141414;
         --dark-2: #131313;
         --dark-3: #1f1f1f;
         --dark-4: #2b2b2b;
@@ -47,12 +48,26 @@ export default () => {
       #bofqi.mini-player:before {
         box-shadow: #000000 0 0 8px;
       }
+      // profile window
+      
+      .profile-m.dd-bubble {
+        background-color: var(--dark-1);
+        border: 1px solid var(--dark-0);
+        border-top: none;
+        .member-menu {
+          border-top: 1px solid var(--dark-0);
+        }
+        .member-bottom {
+          background-color: var(--dark-0);
+        }
+      }
+      
       // nav 搜索框
-      .bili-header-m .nav-menu .showSearch.nav-search #nav_searchform {
-        border-color: var(--dark-3);
-        background-color: var(--dark-2);
+      .bili-header-m .nav-search #nav_searchform {
+        border-color: var(--dark-3)!important;
+        background-color: var(--dark-2)!important;
         input {
-          color: var(--dark-font-0);
+          color: var(--dark-font-0)!important;
         }
       }
       .bili-header-m .nav-menu .bilibili-suggest {
@@ -63,6 +78,9 @@ export default () => {
           span {
             background-color: var(--dark-2);
           }
+        }
+        li.suggest-item a {
+          color: #616161!important;
         }
         li.suggest-item:hover {
           background-color: var(--dark-3);
@@ -76,7 +94,7 @@ export default () => {
       }
       // 创作团队
       .members-info .members-info__header {
-        background-color: #131313;
+        background-color: var(--dark-1);
         .title {
           color: #99a2aa;
         }
@@ -135,10 +153,22 @@ export default () => {
         background-color: black !important;
       }
       .danmaku-info-row {
-        .danmaku-info-danmaku,span {
+        .danmaku-info-danmaku, span {
           color: var(--dark-font-1)!important;
         }
+        &.danmaku-info-row-block {
+          opacity: 0.3!important;
+        }
       }
+      // 弹幕列表管理菜单
+      .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-management {
+        background-color: var(--dark-3)!important;
+        & > * {
+          border-color:  var(--dark-1)!important;
+        }
+      }
+      
+      
       .v-wrap .danmaku-wrap {
         background-color: var(--dark-2)!important;
       }

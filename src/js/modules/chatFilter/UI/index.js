@@ -27,6 +27,10 @@ export class ChatFilterUI extends UI {
                     chatFilter.setAttribute('id', 'bilibili-helper-chat-filter');
                     chatFilter.setAttribute('style', 'position: relative;');
 
+                    const iconBar = document.querySelector('.control-panel-icon-row');
+                    iconBar.style.overflow = 'unset';
+                    iconBar.style.height = '24px';
+
                     document.querySelector('.icon-left-part').appendChild(chatFilter);
                     ReactDOM.render(<ChatFilter settings={settings}/>, chatFilter, resolve);
                 }

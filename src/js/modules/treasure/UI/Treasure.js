@@ -304,14 +304,13 @@ export default () => {
         };
 
         getGrayScaleMap = (context, rate = 235, width = 120, height = 40) => {
-            const getGrayscale = (x, y) => {
-                const pixel = context.getImageData(x, y, 1, 1).data;
-                return pixel ? (77 * pixel[0] + 150 * pixel[1] + 29 * pixel[2] + 128) >> 8 : 0;
-            };
+            const pixelMap = context.getImageData(0, 0, width, height).data;
             const map = [];
             for (let y = 0; y < height; y++) { // line y
                 for (let x = 0; x < width; x++) { // column x
-                    const gray = getGrayscale(x, y);
+                    const index = (y * width + x) * 4;
+                    const pixel = pixelMap.slice(index, index + 4);
+                    const gray = pixel ? (77 * pixel[0] + 150 * pixel[1] + 29 * pixel[2] + 128) >> 8 : 0;
                     map.push(gray > rate ? gray : 0);
                 }
             }
