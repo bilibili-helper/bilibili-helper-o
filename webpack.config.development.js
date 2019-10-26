@@ -15,7 +15,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
-const WriteJsonPlugin = require('write-json-webpack-plugin');
+const WriteJsonPlugin = require('./write-json-webpack-plugin');
 
 const srcPath = path.resolve('src');
 const buildPath = path.resolve('build');
@@ -61,7 +61,7 @@ module.exports = (env) => {
             'website': path.resolve(jsPath, 'pages', 'website', indexFilename),
             'cv': path.resolve(jsPath, 'pages', 'cv', indexFilename),
             'tbilibili': path.resolve(jsPath, 'pages', 'tbilibili', indexFilename),
-            //'videoList': path.resolve(jsPath, 'pages', 'videoList', indexFilename),
+            'videoList': path.resolve(jsPath, 'pages', 'videoList', indexFilename),
         },
         output: {
             filename: '[name].js',
@@ -163,6 +163,7 @@ module.exports = (env) => {
                 output: {groupBy: localesGroup},
             }),
             (manifestJSON && new WriteJsonPlugin({
+                pretty: true,
                 object: manifestJSON,
                 path: '../src/',
                 filename: 'manifest.json',

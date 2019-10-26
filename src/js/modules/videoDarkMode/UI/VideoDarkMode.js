@@ -190,6 +190,9 @@ export default () => {
         .list-wrapper.longlist {
           padding-right: 6px;
         }
+        .list-wrapper.simple li {
+          width: 64px;
+        }
         .list-title, .head-con {
           h4, h3 {
             color: var(--dark-font-1);
@@ -425,6 +428,7 @@ export default () => {
             input {
               border-color: var(--dark-3);
               background-color: var(--dark-2);
+              color: white;
             }
           }
         }
