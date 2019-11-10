@@ -7,6 +7,7 @@ import _ from 'lodash';
 import URL from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
+import {__} from 'Utils/functions';
 
 export {VideoSubtitleDownloadUI} from './UI';
 
@@ -20,7 +21,7 @@ export class VideoSubtitleDownload extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '外挂字幕下载',
+                title: __('videoSubtitleDownload_name'),
             },
         });
         this.messageStore = new MessageStore('videoSubtitleDownloadDOMInitialized');

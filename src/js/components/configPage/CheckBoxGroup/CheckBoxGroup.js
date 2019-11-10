@@ -19,8 +19,9 @@ export const CheckBoxGroup = (props) => {
     const {data, onClick} = props;
     return <React.Fragment>
         {_.map(data, (entry) => {
-            const {key, title, on, toggle = true, description} = entry;
+            const {key, title, on, toggle = true, description, hide = false} = entry;
             const twoLine = description !== undefined;
+            if (hide) { return null; }
             return <ListItem
                 key={key}
                 noBorder={false}

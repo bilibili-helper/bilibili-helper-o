@@ -1,102 +1,110 @@
 {
-  "extensionName": {
-    "message": "Bilibili Helper: Bilibili.com Auxiliary",
-    "description": "Extension: Name"
-  },
-  "extensionShortName": {
-    "message": "Bilibili Helper",
-    "description": "Extension: Short Name"
-  },
-  "extensionDescription": {
-    "message": "An extension for Bilibili that provides convenient features/shortcuts.",
-    "description": "Extension: Description"
-  },
-  "goBili": {
-    "message": "Go to bilibili.com",
-    "description": "Popup Button: go_bili"
-  },
-  "goBiliLive": {
-    "message": "Go to Bilibili Live",
-    "description": "Popup Button: go_bili_live"
-  },
-  "adModeOff": {
-    "message": "Enter AD Mode",
-    "description": "Popup Button: ad_mode_off"
-  },
-  "adModeOn": {
-    "message": "Leave AD Mode",
-    "description": "Popup Button: ad_mode_on"
-  },
-  "goVideo": {
-    "message": "GO!",
-    "description": "Popup Button: go_video"
-  },
-  "goDynamic": {
-    "message": "Followings",
-    "description": "Popup Button: go_dynamic"
-  },
-  "goFavourite": {
-    "message": "Favourites",
-    "description": "Popup Button: go_favourite"
-  },
-  "notLogged": {
-    "message": " (Please Login)",
-    "description": "Popup Button: not_logged"
-  },
-  "nNewUpdate": {
-    "message": " (%n New)",
-    "description": "Popup Button: new_update"
-  },
-  "goSubscription": {
-    "message": "Subscriptions",
-    "description": "Popup Button: go_subscription"
-  },
-  "goOption": {
-    "message": "Options",
-    "description": "Popup Button: go_option"
-  },
-  "searchBili": {
-    "message": "Search Bilibili for '%s'",
-    "description": "Context Menu: Title"
-  },
-  "optionPage": {
-    "message": "Options",
-    "description": "Option Page: Title"
-  },
-  "extensionNotificationTitle": {
-    "message": "Bilibili Helper Notification",
-    "description": "Notification: Title"
-  },
-  "extensionNotificationExtensionUpdate": {
-    "message": "Bilibili Helper just auto updated to v%v!",
-    "description": "Notification: Extension Update"
-  },
-  "extensionNotificationNewFeatures": {
-    "message": "What's New",
-    "description": "Notification: New Features"
-  },
-  "followingUpdateMessage": {
-    "message": "Your bilibili followings updated (%n new)!\n%uploader just published '%title'!",
-    "description": "Notification: Following Update Message"
-  },
-  "extensionNotificationWatch": {
-    "message": "Watch",
-    "description": "Notification: Watch"
-  },
-  "extensionNotificationShowAll": {
-    "message": "Show All",
-    "description": "Notification: Show All"
-  },
-  "extensionNotificationLiveOn": {
-    "message": " is live-streaming!",
-    "description": "Notification: Live On"
-  },
-  "extensionNotificationGetTv": {
-    "message": "Attend it.",
-    "description": "Notification: Get TV"
-  },
-  "extensionNotificationWatchLater": {
-    "message": "Watch Later",
-    "description": "Notification: Watch Later"
-  }
+    "extensionName": {
+        "message": "Bilibili Helper: Bilibili.com Auxiliary",
+        "description": "Extension: Name"
+    },
+    "extensionShortName": {
+        "message": "Bilibili Helper",
+        "description": "Extension: Short Name"
+    },
+    "extensionDescription": {
+        "message": "An extension for Bilibili that provides convenient features/shortcuts.",
+        "description": "Extension: Description"
+    },
+    "goBili": {
+        "message": "Go to bilibili.com",
+        "description": "Popup Button: go_bili"
+    },
+    "goBiliLive": {
+        "message": "Go to Bilibili Live",
+        "description": "Popup Button: go_bili_live"
+    },
+    "adModeOff": {
+        "message": "Enter AD Mode",
+        "description": "Popup Button: ad_mode_off"
+    },
+    "adModeOn": {
+        "message": "Leave AD Mode",
+        "description": "Popup Button: ad_mode_on"
+    },
+    "goVideo": {
+        "message": "GO!",
+        "description": "Popup Button: go_video"
+    },
+    "goDynamic": {
+        "message": "Followings",
+        "description": "Popup Button: go_dynamic"
+    },
+    "goFavourite": {
+        "message": "Favourites",
+        "description": "Popup Button: go_favourite"
+    },
+    "notLogged": {
+        "message": " (Please Login)",
+        "description": "Popup Button: not_logged"
+    },
+    "nNewUpdate": {
+        "message": " (%n New)",
+        "description": "Popup Button: new_update"
+    },
+    "goSubscription": {
+        "message": "Subscriptions",
+        "description": "Popup Button: go_subscription"
+    },
+    "goOption": {
+        "message": "Options",
+        "description": "Popup Button: go_option"
+    },
+    "searchBili": {
+        "message": "Search Bilibili for '%s'",
+        "description": "Context Menu: Title"
+    },
+    "optionPage": {
+        "message": "Options",
+        "description": "Option Page: Title"
+    },
+    "extensionNotificationTitle": {
+        "message": "Bilibili Helper Notification",
+        "description": "Notification: Title"
+    },
+    "extensionNotificationExtensionUpdate": {
+        "message": "Bilibili Helper just auto updated to v%v!",
+        "description": "Notification: Extension Update"
+    },
+    "extensionNotificationNewFeatures": {
+        "message": "What's New",
+        "description": "Notification: New Features"
+    },
+    "followingUpdateMessage": {
+        "message": "Your bilibili followings updated (%n new)!\n%uploader just published '%title'!",
+        "description": "Notification: Following Update Message"
+    },
+    "extensionNotificationWatch": {
+        "message": "Watch",
+        "description": "Notification: Watch"
+    },
+    "extensionNotificationShowAll": {
+        "message": "Show All",
+        "description": "Notification: Show All"
+    },
+    "extensionNotificationLiveOn": {
+        "message": " is live-streaming!",
+        "description": "Notification: Live On"
+    },
+    "extensionNotificationGetTv": {
+        "message": "Attend it.",
+        "description": "Notification: Get TV"
+    },
+    "extensionNotificationWatchLater": {
+        "message": "Watch Later",
+        "description": "Notification: Watch Later"
+    },
+    "extensionVersionTypeOfficialVersion": {
+        "message": "official",
+        "description": "Version Type: official"
+    },
+    "extensionVersionTypeTestVersion": {
+        "message": "test",
+        "description": "Version Type: test"
+    }
 }

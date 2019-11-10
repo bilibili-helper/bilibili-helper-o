@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
-import {consoleLogo, createTab, version} from 'Utils';
+import {consoleLogo, createTab, version, __} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
 import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
@@ -138,10 +138,10 @@ class PageConfig extends React.Component {
     constructor(props) {
         super(props);
         this.settings = {
-            video: {title: '主站', map: {}},
-            live: {title: '直播', map: {}},
-            popup: {title: '菜单栏', map: {}},
-            other: {title: '其他', map: {}},
+            video: {title: __('config_type_main'), map: {}},
+            live: {title: __('config_type_live'), map: {}},
+            popup: {title: __('config_type_menu'), map: {}},
+            other: {title: __('config_type_other'), map: {}},
         };
         this.defaultBroadcast = '';
         this.state = {
@@ -391,7 +391,7 @@ class PageConfig extends React.Component {
                                 );
                             }
                             return debug ? <PermissionTag title={description}>
-                                {_.upperFirst(name)}
+                                Permission: {_.upperFirst(name)}
                             </PermissionTag> : null;
                         }
                     });
@@ -424,15 +424,15 @@ class PageConfig extends React.Component {
     renderAboutList = () => {
         const {checkingVersion, debug} = this.state;
         return (
-            <List title="关于" ref={i => this.aboutRef = i}>
+            <List title={__('config_type_about')} ref={i => this.aboutRef = i}>
                 <ListItem
-                    icon={<Icon iconfont="cat" image/>}
+                    icon={<Icon iconfont="cat2" image/>}
                     twoLine
                     first={chrome.i18n.getMessage('extensionName')}
-                    second={`版本 ${version}（${debug ? '测试' : '正式'}版）`}
+                    second={`${__('config_version')} ${version}（${debug === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}
                     separator
                     operation={
-                        <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>检查更新</Button>
+                        <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>{__('config_checking')}</Button>
                     }
                 />
                 {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
@@ -465,12 +465,12 @@ class PageConfig extends React.Component {
             <ConfigBody>
                 <Header>
                     <h1>BILIBILI HELPER</h1>
-                    <sub>{`version ${version}（${debug === true ? '测试' : '正式'}版）`}</sub>
+                    <sub>{`version ${version}（${debug === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}</sub>
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
                 <Broadcast>
-                    <div>如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装</div>
-                    <p>哔哩哔哩助手官网已经更新为：<a href="https://bilibili-helper.github.io/" target="_blank"
+                    <div>{__('config_commonNotify')}</div>
+                    <p>{__('config_websiteNotify')}<a href="https://bilibili-helper.github.io/" target="_blank"
                                         rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
                     {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
@@ -496,7 +496,7 @@ class PageConfig extends React.Component {
                     </span>
                     <Figure>
                         <Alipay src="./statics/imgs/alipay-df.png" alt="alipay"/>
-                        <figcaption>感谢支持</figcaption>
+                        <figcaption>{__('config_thank')}</figcaption>
                     </Figure>
                 </Footer>
             </ConfigBody>

@@ -1,0 +1,14 @@
+{
+    "treasure_name": {
+        "message": "Automatically receive the silver treasure chest"
+    },
+    "treasure_description": {
+        "message": "Open the live room will automatically pick the treasure chest"
+    },
+    "treasure_notification": {
+        "message": "Notification"
+    },
+    "treasure_notification_description": {
+        "message": "Push a notification after receiving the treasure chest"
+    }
+}

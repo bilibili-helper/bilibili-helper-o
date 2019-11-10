@@ -1,0 +1,8 @@
+{
+    "danmu_name": {
+        "message": "Download danmu & query sender of danmu"
+    },
+    "danmu_description": {
+        "message": "Query sender of danmu，support history danmu and switching video"
+    }
+}

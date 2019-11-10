@@ -5,6 +5,7 @@
  */
 
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
 export {PictureInPictureUI} from './UI';
 
 export class PictureInPicture extends Feature {
@@ -16,7 +17,7 @@ export class PictureInPicture extends Feature {
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,
-                title: '画中画（PIP）',
+                title: `${__('pictureInPicture_name')} (PIP)`,
                 hasUI: true,
             },
         });

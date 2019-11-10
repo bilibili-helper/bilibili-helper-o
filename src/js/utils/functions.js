@@ -83,8 +83,8 @@ export const getLink = (url_name) => {
 export const getFilename = (doc) => {
     const partDOM = doc.querySelector('#v_multipage a.on, #multi_page .cur-list li.on a, #eplist_module .list-wrapper ul .cursor');
     const partName = partDOM ? partDOM.innerText : '';
-    const title = doc.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1').getAttribute('title');
-    return `${title}${partName ? `_${partName}` : ''}`;
+    const title = doc.querySelector('#viewbox_report h1, .header-info h1, .media-wrapper > h1, h1.video-title').getAttribute('title');
+    return `${title}${partName ? `_${partName}` : ''}`.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_');
 };
 
 /**

@@ -19,7 +19,7 @@ export class NotAutoPlayUI extends UI {
             const script = document.createElement('script');
             script.innerHTML = `
                 const n = setInterval(() => {
-                    Array.from(document.querySelectorAll('.vc-video')).map((o) => {
+                    Array.from(document.querySelectorAll('.card .main-content')).map((o) => {
                         if (o.getBoundingClientRect().top === 0) clearInterval(n);
                         o.getBoundingClientRect = () => ({top: 0});
                     });

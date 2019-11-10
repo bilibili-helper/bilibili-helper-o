@@ -18,10 +18,10 @@ export class DoSign extends Feature {
             permissions: ['login'],
             settings: {
                 on: true,
-                title: '自动签到',
+                title: __('doSign_name'),
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: true, description: '签到成功后将会弹出代表成功的推送通知'},
+                    {key: 'notification', title: __('doSign_notification'), on: true, description: __('doSign_notification_description')},
                 ],
             },
         });
@@ -52,14 +52,13 @@ export class DoSign extends Feature {
 
     request = (hasLogin = this.permissionMap.login) => {
         if (chrome.extension.inIncognitoContext) return; // 隐身模式
-        const today = this.getTodayDate();
         let {day} = this.store || {};
-        if (day !== today) {
+        if (day !== this.getTodayDate()) {
             this.settings.on && hasLogin && $.ajax({
                 method: 'get',
                 url: apis.doSign,
                 success: (res) => {
-                    this.store = {day: today};
+                    this.store = {day: this.getTodayDate()};
                     if (res.code === 0) {
                         const notificationState = _.find(this.settings.options, {key: 'notification'});
                         notificationState && notificationState.on && chrome.notifications.create('bilibili-helper-doSign', {

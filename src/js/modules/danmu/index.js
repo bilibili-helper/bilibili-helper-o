@@ -8,6 +8,7 @@ import URLParse from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
+import {__} from 'Utils';
 
 export {DanmuUI} from './UI/index';
 
@@ -20,9 +21,9 @@ export class Danmu extends Feature {
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,
-                title: '视频弹幕查询及下载',
+                title: __('danmu_name'),
                 hasUI: true,
-                description: '查询弹幕发送者，支持历史弹幕，分P，视频切换等场景',
+                description: __('danmu_description'),
             },
         });
         this.messageStore = new MessageStore('danmuDOMInitialized');

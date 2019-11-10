@@ -1,5 +1,5 @@
 {
-    "version": "1.2.2.13",
+    "version": "1.2.2.14",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
@@ -22,8 +22,8 @@
     },
     "browser_action": {
         "default_icon": {
-            "19": "statics/imgs/icon-19.png",
-            "38": "statics/imgs/icon-38.png"
+            "19": "statics/imgs/bilibili-cat-256.png",
+            "38": "statics/imgs/bilibili-cat-256.png"
         },
         "default_popup": "popup.html",
         "default_title": "__MSG_extensionShortName__"
@@ -44,7 +44,8 @@
                 "*://*.bilibili.com/bangumi/play/ss*",
                 "*://*.bilibili.com/bangumi/play/ep*",
                 "*://*.bilibili.com/video/av*",
-                "*://www.bilibili.com/watchlater/*"
+                "*://www.bilibili.com/watchlater/*",
+                "*://www.bilibili.com/medialist/*"
             ],
             "run_at": "document_end"
         },
@@ -130,9 +131,9 @@
         ]
     },
     "icons": {
-        "16": "statics/imgs/icon-16.png",
-        "32": "statics/imgs/icon-32.png",
-        "128": "statics/imgs/icon-128.png"
+        "16": "statics/imgs/bilibili-cat-256.png",
+        "32": "statics/imgs/bilibili-cat-256.png",
+        "128": "statics/imgs/bilibili-cat-256.png"
     },
     "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXGarzPXVb5UpkDTsw4cdApsrQvPTNTMXdz/7j9QVuQZoPm5R9l3o9ppfGYeae7sZRaJiueBEO/LA8s7KCuE9icPl72xSqdei3Jo0PTTUlmNQIysl9PZy6Xd520sS5wNFhPaxOy1ApHZ6+o+yMEXWmjx2fX0tHJd7dKTii47MTnQIDAQAB",
     "permissions": [
@@ -146,7 +147,8 @@
         "webRequest",
         "webRequestBlocking",
         "http://*/",
-        "https://*/"
+        "https://*/",
+        "*://*.acgvideo.com/*"
     ],
     "web_accessible_resources": [
         "statics/*",

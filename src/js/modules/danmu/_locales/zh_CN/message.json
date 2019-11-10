@@ -1,3 +1,8 @@
 {
-
+    "danmu_name": {
+        "message": "视频弹幕查询及下载"
+    },
+    "danmu_description": {
+        "message": "查询弹幕发送者，支持历史弹幕，分P，视频切换等场景"
+    }
 }

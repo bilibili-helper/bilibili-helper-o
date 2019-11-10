@@ -1,4 +1,7 @@
 {
+    "common_version": {
+        "message": "版本"
+    },
     "extensionName": {
         "message": "哔哩哔哩助手：bilibili.com 综合辅助扩展",
         "description": "Extension: Name"
@@ -26,5 +29,13 @@
     "extensionNotificationWatch": {
         "message": "观看",
         "description": "Notification: Watch"
+    },
+    "extensionVersionTypeOfficialVersion": {
+        "message": "正式版",
+        "description": "Version Type: official"
+    },
+    "extensionVersionTypeTestVersion": {
+        "message": "测试版",
+        "description": "Version Type: test"
     }
 }

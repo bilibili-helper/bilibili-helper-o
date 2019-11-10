@@ -1,0 +1,14 @@
+{
+    "videoDownload_name": {
+        "message": "Video download"
+    },
+    "videoDownload_description": {
+        "message": "Support new type of video page, segment merging & downloading"
+    },
+    "videoDownload_options_showFLVSegment": {
+        "message": "Show FLV segment"
+    },
+    "videoDownload_options_showFLVSegment_description": {
+        "message": "If the video source contains segments, the segment download button will be displayed"
+    }
+}

@@ -9,6 +9,7 @@ import Url from 'url-parse';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
+import {__} from 'Utils/functions';
 //import {flvDownloadURL} from 'Modules/videoDownload/api';
 
 export {VideoDownloadUI} from './UI';
@@ -23,11 +24,11 @@ export class VideoDownload extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '视频下载',
-                description: '支持新播放页面视频下载，分段合并下载，分段单独下载功能',
+                title: __('videoDownload_name'),
+                description: __('videoDownload_description'),
                 type: 'checkbox',
                 options: [
-                    {key: 'showPiece', title: '显示FLV分段', on: true, description: '如果视频源包含分段，则显示分段下载按钮'},
+                    {key: 'showPiece', title: __('videoDownload_options_showFLVSegment'), on: true, description: __('videoDownload_options_showFLVSegment_description')},
                 ],
             },
         });
@@ -59,7 +60,9 @@ export class VideoDownload extends Feature {
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
-            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
+            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) {
+                return;
+            }
             const url = new Url(details.url, '', true);
             const {pathname, query: data} = url;
             const tabData = this.messageStore.createData(tabId);
@@ -91,9 +94,10 @@ export class VideoDownload extends Feature {
                 this.messageStore.dealWith(tabId); // 处理queue
             }
         }, requestFilter, ['requestHeaders']);
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener((message) => {
             if (message.command === 'sendVideoFilename' && message.cid) {
                 const url = new Url(message.url, '', true);
+                console.warn(message);
                 this.downloadFilenames[url.pathname] = {
                     filename: message.filename,
                     cid: message.cid,
@@ -102,33 +106,20 @@ export class VideoDownload extends Feature {
                 chrome.downloads.download({
                     saveAs: true,
                     url: message.url,
-                    filename: message.filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
+                    filename: message.filename,
                 });
             }
             return true;
         });
-        chrome.webRequest.onHeadersReceived.addListener((details) => {
-            const {responseHeaders, initiator, url} = details;
-            if (/^chrome-extension:\/\//.test(initiator)) return;
+        chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
+            const {url} = downloadItem;
             const urlObject = new Url(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
-                const {filename: originFilename, cid} = filenameObject;
-                const filename = originFilename.replace(/[|"*?:<>]/g, '_');
-                const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
-                const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`.replace('/', '%2f');
-                if (targetData) {
-                    targetData.value = nameValue;
-                } else {
-                    responseHeaders.push({
-                        name: 'Content-Disposition',
-                        value: nameValue,
-                    });
-                }
+                const {filename, cid} = filenameObject;
+                suggest({filename: `${filename}.${cid}.flv`, conflictAction: 'prompt'});
             }
-            return {responseHeaders};
-        }, {
-            urls: ['*://*.acgvideo.com/*'],
-        }, ['responseHeaders', 'blocking']);
+            return true;
+        });
     };
 }

@@ -1,0 +1,34 @@
+{
+    "config_version": {
+        "message": "version"
+    },
+    "config_checking": {
+        "message": "Check for updates"
+    },
+    "config_thank": {
+        "message": "Thanks for supporting"
+    },
+    "config_commonNotify": {
+        "message": "If your version shows up as a beta or if something goes wrong, try uninstalling this extension and reinstalling",
+        "description": "Extension: config page notify"
+    },
+    "config_websiteNotify": {
+        "message": "The bilibili helper's website has been updated to:",
+        "description": "Extension: config page website notify"
+    },
+    "config_type_main": {
+        "message": "Video Page"
+    },
+    "config_type_live": {
+        "message": "Live"
+    },
+    "config_type_menu": {
+        "message": "Menu"
+    },
+    "config_type_other": {
+        "message": "Other"
+    },
+    "config_type_about": {
+        "message": "About"
+    }
+}

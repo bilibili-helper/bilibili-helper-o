@@ -5,6 +5,7 @@
  */
 
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
 
 export {VideoWidenUI} from './UI';
 
@@ -15,15 +16,15 @@ export class VideoWiden extends Feature {
             kind: 'video',
             settings: {
                 on: true,
-                title: '宽屏模式',
+                title: __('videoWiden_name'),
                 hasUI: true,
                 subPage: {
                     type: 'radio',
-                    title: '启用自动宽屏模式',
+                    title: __('videoWiden_subPage_title'),
                     options: [
-                        {key: 'default', title: '默认'},
-                        {key: 'wide', title: '宽屏'},
-                        {key: 'web', title: '网页全屏'},
+                        {key: 'default', title: __('videoWiden_subPage_options_default')},
+                        {key: 'wide', title: __('videoWiden_subPage_options_normalWiden')},
+                        {key: 'web', title: __('videoWiden_subPage_options_webFullscreen')},
                     ],
                     value: 'default',
                 },

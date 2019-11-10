@@ -1,0 +1,17 @@
+{
+    "videoWiden_name": {
+        "message": "宽屏模式"
+    },
+    "videoWiden_subPage_title": {
+        "message": "启用自动宽屏模式"
+    },
+    "videoWiden_subPage_options_default": {
+        "message": "默认"
+    },
+    "videoWiden_subPage_options_normalWiden": {
+        "message": "宽屏"
+    },
+    "videoWiden_subPage_options_webFullscreen": {
+        "message": "网页全屏"
+    }
+}

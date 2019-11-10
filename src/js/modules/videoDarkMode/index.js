@@ -5,6 +5,7 @@
  */
 
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
 export {VideoDarkModeUI} from './UI/index';
 
 export class VideoDarkMode extends Feature {
@@ -16,7 +17,7 @@ export class VideoDarkMode extends Feature {
             settings: {
                 on: false,
                 hasUI: true,
-                title: '夜间模式',
+                title: __('videoDarkMode_name'),
             },
         });
     }

@@ -1,0 +1,11 @@
+{
+    "doSign_name": {
+        "message": "Automatic check-in"
+    },
+    "doSign_notification": {
+        "message": "Notification"
+    },
+    "doSign_notification_description": {
+        "message": "Push a notification after Checking-in successfully"
+    }
+}

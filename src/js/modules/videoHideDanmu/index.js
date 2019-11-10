@@ -4,6 +4,7 @@
  * Description:
  */
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
 export {VideoHideDanmuUI} from './UI';
 export class VideoHideDanmu extends Feature {
     constructor() {
@@ -13,7 +14,7 @@ export class VideoHideDanmu extends Feature {
             dependencies: ['videoAnchor'],
             settings: {
                 on: false,
-                title: '默认关闭弹幕显示',
+                title: __('videoHideDanmu_name'),
                 hasUI: true,
             }
         })

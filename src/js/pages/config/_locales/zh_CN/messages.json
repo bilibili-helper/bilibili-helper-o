@@ -1,0 +1,34 @@
+{
+    "config_version": {
+        "message": "版本"
+    },
+    "config_checking": {
+        "message": "检查更新"
+    },
+    "config_thank": {
+        "message": "感谢支持"
+    },
+    "config_commonNotify": {
+        "message": "如果您的版本显示为测试版或者出现了问题，请尝试卸载本扩展后重新安装",
+        "description": "Extension: config page notify"
+    },
+    "config_websiteNotify": {
+        "message": "哔哩哔哩助手官网已经更新为：",
+        "description": "Extension: config page website notify"
+    },
+    "config_type_main": {
+        "message": "主站"
+    },
+    "config_type_live": {
+        "message": "直播"
+    },
+    "config_type_menu": {
+        "message": "菜单栏"
+    },
+    "config_type_other": {
+        "message": "其他"
+    },
+    "config_type_about": {
+        "message": "关于"
+    }
+}

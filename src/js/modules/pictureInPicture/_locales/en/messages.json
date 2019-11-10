@@ -1,6 +1,6 @@
 {
-  "pictureInPictureTitle": {
-      "message": "Pip",
+  "pictureInPicture_name": {
+      "message": "PictureInPicture",
       "description": "picture in picture"
   }
 }

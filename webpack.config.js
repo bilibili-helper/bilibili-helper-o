@@ -174,6 +174,12 @@ module.exports = (env) => {
                 // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
             ]),
             (manifestJSON && new WriteJsonPlugin({
+                pretty: true,
+                object: manifestJSON,
+                path: '../src/',
+                filename: 'manifest.json',
+            })),
+            (manifestJSON && new WriteJsonPlugin({
                 object: manifestJSON,
                 path: '/',
                 filename: 'manifest.json',

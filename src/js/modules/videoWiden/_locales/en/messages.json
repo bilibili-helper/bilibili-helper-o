@@ -1,0 +1,17 @@
+{
+    "videoWiden_name": {
+        "message": "Widescreen mode"
+    },
+    "videoWiden_subPage_title": {
+        "message": "Enable automatic widescreen mode"
+    },
+    "videoWiden_subPage_options_default": {
+        "message": "default"
+    },
+    "videoWiden_subPage_options_normalWiden": {
+        "message": "normal"
+    },
+    "videoWiden_subPage_options_webFullscreen": {
+        "message": "web fullscreen"
+    }
+}

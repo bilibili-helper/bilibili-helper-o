@@ -20,11 +20,11 @@ export class Treasure extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '自动领瓜子',
-                description: '打开直播间就会自动领瓜子',
+                title: __('treasure_name'),
+                description: __('treasure_description'),
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: true, description: '领取成功后将会弹出代表成功的推送通知'},
+                    {key: 'notification', title: __('treasure_notification'), on: true, description: __('treasure_notification_description')},
                 ],
             },
         });

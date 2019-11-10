@@ -12,7 +12,8 @@ export const RadioButtonGroup = ({data, value, onClick}) => {
     if (data instanceof Array) {
         return <React.Fragment>
             {_.map(data, (entry, i) => {
-                const {key, title, disable} = entry;
+                const {key, title, disable, hide = false} = entry;
+                if (hide) { return null; }
                 return <ListItem
                     key={i}
                     noBorder={false}
