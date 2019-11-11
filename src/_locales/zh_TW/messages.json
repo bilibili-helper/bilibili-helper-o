@@ -11,58 +11,6 @@
     "message": "嗶哩嗶哩彈幕網輔助擴充套件，擁有視訊區和直播區的人性化功能",
     "description": "Extension: Description"
   },
-  "goBili": {
-    "message": "一鍵前往bilibili.com",
-    "description": "Popup Button: go_bili"
-  },
-  "goBiliLive": {
-    "message": "一鍵前往Bilibili Live",
-    "description": "Popup Button: go_bili_live"
-  },
-  "adModeOff": {
-    "message": "進入點廣告模式",
-    "description": "Popup Button: ad_mode_off"
-  },
-  "adModeOn": {
-    "message": "離開點廣告模式",
-    "description": "Popup Button: ad_mode_on"
-  },
-  "goVideo": {
-    "message": "跳轉",
-    "description": "Popup Button: go_video"
-  },
-  "goDynamic": {
-    "message": "我的關注",
-    "description": "Popup Button: go_dynamic"
-  },
-  "goFavourite": {
-    "message": "我的收藏",
-    "description": "Popup Button: go_favourite"
-  },
-  "notLogged": {
-    "message": "(未登入)",
-    "description": "Popup Button: not_logged"
-  },
-  "nNewUpdate": {
-    "message": "(%n個更新)",
-    "description": "Popup Button: new_update"
-  },
-  "goSubscription": {
-    "message": "我訂閱的",
-    "description": "Popup Button: go_subscription"
-  },
-  "goOption": {
-    "message": "更多選項",
-    "description": "Popup Button: go_option"
-  },
-  "searchBili": {
-    "message": "用 嗶哩嗶哩 搜尋 “%s”",
-    "description": "Context Menu: Title"
-  },
-  "optionPage": {
-    "message": "選項頁",
-    "description": "Option Page: Title"
-  },
   "extensionNotificationTitle": {
     "message": "嗶哩嗶哩助手提醒",
     "description": "Notification: Title"
@@ -75,28 +23,16 @@
     "message": "檢視更新內容",
     "description": "Notification: New Features"
   },
-  "followingUpdateMessage": {
-    "message": "您的嗶哩嗶哩關注更新了(%n 個新動態)!\n%uploader 剛剛釋出了「%title」!",
-    "description": "Notification: Following Update Message"
-  },
   "extensionNotificationWatch": {
     "message": "觀看",
     "description": "Notification: Watch"
   },
-  "extensionNotificationShowAll": {
-    "message": "顯示全部",
-    "description": "Notification: Show All"
+  "extensionVersionTypeOfficialVersion": {
+    "message": "正式版",
+    "description": "Version Type: official"
   },
-  "extensionNotificationLiveOn": {
-    "message": "開播啦",
-    "description": "Notification: Live On"
-  },
-  "notificationGetTv": {
-    "message": "前往參加",
-    "description": "Notification: Get TV"
-  },
-  "extensionNotificationWatchLater": {
-    "message": "稍後觀看",
-    "description": "Notification: Watch Later"
+  "extensionVersionTypeTestVersion": {
+    "message": "測試版",
+    "description": "Version Type: test"
   }
 }
