@@ -1,14 +1,14 @@
 {
     "checkVersionGetUpdateError": {
-        "message": "get update information failed",
+        "message": "Failed to fetch version info.",
         "description": "Notification: Extension Update Error"
     },
     "checkVersionNewVersion": {
-        "message": "New version detected:",
+        "message": "New version found: ",
         "description": "Notification: new version detected"
     },
     "checkVersionNoNewVersion": {
-        "message": "This is newest version",
+        "message": "You are running the latest version :)",
         "description": "Notification: no new version detected"
     }
 }

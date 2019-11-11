@@ -1,17 +1,17 @@
 {
     "videoWiden_name": {
-        "message": "Wide-screen mode"
+        "message": "寬屏模式"
     },
     "videoWiden_subPage_title": {
-        "message": "Enable wide-screen mode by default"
+        "message": "預設使用寬屏模式"
     },
     "videoWiden_subPage_options_default": {
-        "message": "Default"
+        "message": "預設"
     },
     "videoWiden_subPage_options_normalWiden": {
-        "message": "Wide Screen"
+        "message": "寬屏"
     },
     "videoWiden_subPage_options_webFullscreen": {
-        "message": "Full Screen"
+        "message": "網頁全屏"
     }
 }

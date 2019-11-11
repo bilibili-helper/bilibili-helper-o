@@ -3,7 +3,7 @@
         "message": "宽屏模式"
     },
     "videoWiden_subPage_title": {
-        "message": "启用自动宽屏模式"
+        "message": "默认使用宽屏模式"
     },
     "videoWiden_subPage_options_default": {
         "message": "默认"

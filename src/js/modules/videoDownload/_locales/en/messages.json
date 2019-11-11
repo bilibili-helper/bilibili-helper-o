@@ -9,6 +9,6 @@
         "message": "Show FLV segment"
     },
     "videoDownload_options_showFLVSegment_description": {
-        "message": "If the video source contains segments, the segment download button will be displayed"
+        "message": "If the video source is composed of multiple segments, show a download button for each segment."
     }
 }

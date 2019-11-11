@@ -9,6 +9,6 @@
         "message": "推送通知"
     },
     "treasure_notification_description": {
-        "message": "领取成功后将会弹出代表成功的推送通知"
+        "message": "领取成功后通过推送通知提示"
     }
 }

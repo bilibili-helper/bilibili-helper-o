@@ -1,10 +1,10 @@
 {
     "goBili": {
-        "message": "一鍵前往bilibili.com",
+        "message": "前往 bilibili.com",
         "description": "Popup Button: go_bili"
     },
     "goBiliLive": {
-        "message": "一鍵前往Bilibili Live",
+        "message": "前往 Bilibili Live",
         "description": "Popup Button: go_bili_live"
     },
     "goVideo": {
@@ -30,5 +30,9 @@
     "notLogin": {
         "message": "未登錄",
         "description": "Popup Button: not login"
+    },
+    "goBiliShort": {
+        "message": "視訊區",
+        "description": "Popup Button: go_bili"
     }
 }

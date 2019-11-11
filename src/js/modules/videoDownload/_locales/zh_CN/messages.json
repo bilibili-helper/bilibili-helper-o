@@ -6,9 +6,9 @@
         "message": "支持新播放页面视频下载，分段合并下载，分段单独下载功能"
     },
     "videoDownload_options_showFLVSegment": {
-        "message": "显示FLV分段"
+        "message": "显示 FLV 分段"
     },
     "videoDownload_options_showFLVSegment_description": {
-        "message": "如果视频源包含分段，则显示分段下载按钮"
+        "message": "视频源包含多个分段时，显示分段下载按钮"
     }
 }

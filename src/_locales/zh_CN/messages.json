@@ -19,7 +19,7 @@
         "description": "Notification: Title"
     },
     "extensionNotificationExtensionUpdate": {
-        "message": "哔哩哔哩助手已自动更新到 v%v!",
+        "message": "哔哩哔哩助手已自动更新到 v%v！",
         "description": "Notification: Extension Update"
     },
     "extensionNotificationNewFeatures": {

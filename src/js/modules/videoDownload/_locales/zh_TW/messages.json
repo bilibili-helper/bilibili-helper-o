@@ -1,0 +1,14 @@
+{
+    "videoDownload_name": {
+        "message": "視訊下載"
+    },
+    "videoDownload_description": {
+        "message": "支援新播放頁面影片下載，分段合併下載，分段單獨下載功能"
+    },
+    "videoDownload_options_showFLVSegment": {
+        "message": "顯示 FLV 分段"
+    },
+    "videoDownload_options_showFLVSegment_description": {
+        "message": "影片源包含多個分段時，顯示分段下載按鈕"
+    }
+}

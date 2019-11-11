@@ -1,0 +1,8 @@
+{
+    "danmu_name": {
+        "message": "視訊彈幕查詢及下載"
+    },
+    "danmu_description": {
+        "message": "查詢彈幕傳送者，支援歷史彈幕，分P，視訊切換等場景"
+    }
+}

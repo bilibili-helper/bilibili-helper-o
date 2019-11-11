@@ -1,8 +1,8 @@
 {
     "danmu_name": {
-        "message": "Download danmu & query sender of danmu"
+        "message": "Danmu download and author lookup"
     },
     "danmu_description": {
-        "message": "Query sender of danmu，support history danmu and switching video"
+        "message": "For danmu author lookup, we support history danmu, multi-part videos, etc."
     }
 }

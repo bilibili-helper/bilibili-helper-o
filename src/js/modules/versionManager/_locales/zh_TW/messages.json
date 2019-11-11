@@ -4,11 +4,11 @@
         "description": "Notification: Extension Update Error"
     },
     "checkVersionNewVersion": {
-        "message": "檢測到新版本:",
+        "message": "檢測到新版本：",
         "description": "Notification: new version detected"
     },
     "checkVersionNoNewVersion": {
-        "message": "當前已經是最新版本",
+        "message": "當前已經是最新版本 :)",
         "description": "Notification: no new version detected"
     }
 }

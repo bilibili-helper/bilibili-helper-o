@@ -16,7 +16,7 @@
     "description": "Notification: Title"
   },
   "extensionNotificationExtensionUpdate": {
-    "message": "嗶哩嗶哩助手已自動更新到 v%v!",
+    "message": "嗶哩嗶哩助手已自動更新到 v%v！",
     "description": "Notification: Extension Update"
   },
   "extensionNotificationNewFeatures": {

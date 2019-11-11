@@ -1,11 +1,11 @@
 {
     "doSign_name": {
-        "message": "自动每日签到"
+        "message": "自動每日簽到"
     },
     "doSign_notification": {
         "message": "推送通知"
     },
     "doSign_notification_description": {
-        "message": "签到成功后通过推送通知提醒"
+        "message": "簽到成功後通過推送通知提醒"
     }
 }

@@ -1,11 +1,11 @@
 {
     "doSign_name": {
-        "message": "Automatic check-in"
+        "message": "Auto Daily Check-In"
     },
     "doSign_notification": {
-        "message": "Notification"
+        "message": "Notifications"
     },
     "doSign_notification_description": {
-        "message": "Push a notification after Checking-in successfully"
+        "message": "Receives a notification when check-in successes."
     }
 }
