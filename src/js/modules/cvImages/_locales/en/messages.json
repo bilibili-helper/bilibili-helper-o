@@ -1,1 +1,8 @@
-{}
+{
+    "cvImages_name": {
+        "message": "专栏图片保存与去除文字可选中限制"
+    },
+    "cvImages_UI_downloadBtn": {
+        "message": "下载图片"
+    }
+}

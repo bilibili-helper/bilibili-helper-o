@@ -17,11 +17,11 @@ export class VersionManager extends Feature {
             permissions: ['notifications'],
             settings: {
                 on: true,
-                title: '自动检测更新',
-                description: '仅仅进行检测而并不进行更新操作',
+                title: __('versionManager_name'),
+                description: __('versionManager_description'),
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: false},
+                    {key: 'notification', title: __('versionManager_options_notification'), on: false},
                 ],
             },
         });

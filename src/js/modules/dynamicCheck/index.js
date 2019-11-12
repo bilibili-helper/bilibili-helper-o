@@ -20,26 +20,32 @@ export class DynamicCheck extends Feature {
             permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function
-                title: '视频动态推送', // 在option页面中配置项目的显示名称
+                title: __('dynamicCheck_name'), // 在option页面中配置项目的显示名称
                 type: 'checkbox', // 指该feature配置子选项的类型，此处为复选框
-                description: '视频消息、小视频、专栏、番剧自动推送，每分钟检测一次',
+                description: __('dynamicCheck_description'),
                 hasUI: true,
                 options: [ // 子选项
-                    {title: '推送通知', key: 'notification', on: false},
                     {
-                        title: '最近推送列表', key: 'dynamicCheckBox', on: true,
-                        description: `在扩展菜单显示${MAX_LIST_NUMBERS}条最近推送的视频`,
+                        title: __('dynamicCheck_options_notification'),
+                        key: 'notification',
+                        on: false,
+                    },
+                    {
+                        title: __('dynamicCheck_options_dynamicCheckBox'),
+                        key: 'dynamicCheckBox',
+                        on: true,
+                        description: __('dynamicCheck_options_dynamicCheckBox_description', [MAX_LIST_NUMBERS]),
                     },
                 ],
                 subPage: {
                     type: 'checkbox',
-                    title: '动态推送',
-                    description: '如果都选择关闭，将不会进行进行检测',
+                    title: __('dynamicCheck_subPage_title'),
+                    description: __('dynamicCheck_subPage_description'),
                     options: [
-                        {key: 'video', title: '视频投稿', on: true, value: 8},
-                        {key: 'smallVideo', title: '小视频', on: false, value: 16},
-                        {key: 'cv', title: '专栏', on: false, value: 64},
-                        {key: 'bangumi', title: '番剧', on: false, value: 512},
+                        {key: 'video', title: __('dynamicCheck_subPage_options_video'), on: true, value: 8},
+                        {key: 'smallVideo', title: __('dynamicCheck_subPage_options_smallVideo'), on: false, value: 16},
+                        {key: 'cv', title: __('dynamicCheck_subPage_options_cv'), on: false, value: 64},
+                        {key: 'bangumi', title: __('dynamicCheck_subPage_options_bangumi'), on: false, value: 512},
                     ],
                 },
             },
@@ -53,8 +59,11 @@ export class DynamicCheck extends Feature {
                 url: 'http://www.bilibili.com/',
                 name: 'DedeUserID',
             }, (cookie) => {
-                if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) resolve(cookie.value);
-                else reject();
+                if (cookie && cookie.expirationDate > (new Date()).getTime() / 1000) {
+                    resolve(cookie.value);
+                } else {
+                    reject();
+                }
             });
         });
     }
@@ -102,8 +111,9 @@ export class DynamicCheck extends Feature {
             }
         });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.command === 'getDynamicList') sendResponse({feedList: this.currentList, lastCounter: this.lastCounter});
-            else if (message.command === 'updateLastDynamicId') {
+            if (message.command === 'getDynamicList') {
+                sendResponse({feedList: this.currentList, lastCounter: this.lastCounter});
+            } else if (message.command === 'updateLastDynamicId') {
                 if (this.lastList.length > 0) {
                     this.store = this.lastList[0].desc.dynamic_id_str;
                     this.lastCheckDynamicID = this.store;
@@ -117,12 +127,17 @@ export class DynamicCheck extends Feature {
     };
 
     permissionHandleLogin = (value) => {
-        if (value) !this.hasLaunched && this.launch();
-        else this.pause();
+        if (value) {
+            !this.hasLaunched && this.launch();
+        } else {
+            this.pause();
+        }
     };
 
     initCurrentList() {
-        if (this.typeList.length === 0) return;
+        if (this.typeList.length === 0) {
+            return;
+        }
 
         this.getFeed(this.typeList).then(({code, data, message}) => {
             if (code === 0) {
@@ -130,7 +145,9 @@ export class DynamicCheck extends Feature {
                 this.currentList = _.map(newList, (card) => {
                     try {
                         card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
-                        if (card.card.duration) card.card.duration = toDuration(card.card.duration);
+                        if (card.card.duration) {
+                            card.card.duration = toDuration(card.card.duration);
+                        }
                         return card;
                     } catch (e) {
                         console.warn(e);
@@ -146,14 +163,18 @@ export class DynamicCheck extends Feature {
                         this.checkNew();
                     }
                 }
-            } else console.warn(message);
+            } else {
+                console.warn(message);
+            }
         });
     }
 
     // 检查未读推送
     checkNew = () => {
         this.userId.then((userId) => {
-            if (this.typeList.length === 0) return new Promise.reject(false);
+            if (this.typeList.length === 0) {
+                return new Promise.reject(false);
+            }
             const dynamic_id = this.lastCheckDynamicID ? `&update_num_dy_id=${this.lastCheckDynamicID}` : '';
 
             return fetch(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
@@ -161,21 +182,31 @@ export class DynamicCheck extends Feature {
             .then(({code, data: {new_num, update_num}, message}) => {
                 if (code !== 0) {
                     return Promise.reject(message);
-                } else return new_num || update_num;
+                } else {
+                    return new_num || update_num;
+                }
             })
             .then((new_num) => {
-                if (!new_num) return;
+                if (!new_num) {
+                    return;
+                }
                 this.getFeed(this.typeList).then(({code, data, message}) => {
-                    if (code !== 0) return console.warn(message);
+                    if (code !== 0) {
+                        return console.warn(message);
+                    }
                     // 处理刚获取到的推送列表
                     const newList = _.compact(data.cards.slice(0, new_num).map((card) => {
                         try {
                             // 过滤重复项目
                             const sameCard = this.currentList.find((last) => this.isSameCard(last, card));
-                            if (sameCard) return;
+                            if (sameCard) {
+                                return;
+                            }
 
                             card.card = typeof card.card === 'string' ? JSON.parse(card.card) : card.card;
-                            if (card.card.duration) card.card.duration = toDuration(card.card.duration);
+                            if (card.card.duration) {
+                                card.card.duration = toDuration(card.card.duration);
+                            }
                             return card;
                         } catch (e) {
                             console.warn(e);

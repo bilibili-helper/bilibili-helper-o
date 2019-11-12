@@ -1,1 +1,14 @@
-{}
+{
+    "silver2coin_name": {
+        "message": "银瓜子自动换硬币"
+    },
+    "silver2coin_options_notification": {
+        "message": "推送通知"
+    },
+    "silver2coin_options_notification_description": {
+        "message": "兑换成功后将会弹出代表成功的推送通知"
+    },
+    "silver2coin_notification_successfully": {
+        "message": "银瓜子换硬币成功！"
+    }
+}

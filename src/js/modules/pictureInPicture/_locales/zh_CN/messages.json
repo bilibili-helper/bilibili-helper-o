@@ -2,5 +2,8 @@
     "pictureInPicture_name": {
         "message": "画中画",
         "description": "Menu: Picture in picture"
+    },
+    "pictureInPicture_UI_buttonTitle": {
+        "message": "点击进入画中画"
     }
 }

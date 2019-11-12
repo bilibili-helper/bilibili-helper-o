@@ -5,6 +5,8 @@
  */
 
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
+
 export {ChatFilterUI} from './UI/index';
 
 export class ChatFilter extends Feature {
@@ -14,23 +16,61 @@ export class ChatFilter extends Feature {
             kind: 'live',
             settings: {
                 on: true,
-                title: '去污粉',
+                title: __('charFilter_name'),
                 hasUI: true,
-                description: '过滤直播区聊天区域的显示内容，也包括一些播放器上的广告推送',
+                description: __('charFilter_description'),
                 subPage: {
                     type: 'checkbox',
-                    title: '开启聊天过滤',
-                    description: '请注意b站自带的"关闭礼物特效"功能',
+                    title: __('charFilter_subPage_title'),
+                    description: __('charFilter_subPage_description'),
                     options: [
-                        {key: 'chat', title: '聊天内容', on: false},
-                        {key: 'small', title: '小型标志', on: true, description: '如：老爷标志，舰长等'},
-                        {key: 'gift', title: '礼物信息', on: true},
-                        {key: 'enterMsg', title: '进场信息', on: true},
-                        {key: 'medal', title: '粉丝勋章', on: true},
-                        {key: 'achievement', title: '成就头衔', on: true},
-                        {key: 'level', title: '用户等级', on: true},
-                        {key: '2233', title: '2233娘', on: true},
-                        {key: 'announcement', title: '系统公告', on: false, description: '如：活动广播，抽奖或礼物广播推送等'},
+                        {
+                            key: 'chat',
+                            title: __('charFilter_subPage_options_chat'),
+                            on: false,
+                        },
+                        {
+                            key: 'small',
+                            title: __('charFilter_subPage_options_small'),
+                            on: true,
+                            description: __('charFilter_subPage_options_small_description'),
+                        },
+                        {
+                            key: 'gift',
+                            title: __('charFilter_subPage_options_gift'),
+                            on: true,
+                        },
+                        {
+                            key: 'enterMsg',
+                            title: __('charFilter_subPage_options_enterMsg'),
+                            on: true,
+                        },
+                        {
+                            key: 'medal',
+                            title: __('charFilter_subPage_options_medal'),
+                            on: true,
+                        },
+                        {
+                            key: 'achievement',
+                            title: __('charFilter_subPage_options_achievement'),
+                            on: true,
+                        },
+                        {
+                            key: 'level',
+                            title: __('charFilter_subPage_options_level'),
+                            on: true,
+                        },
+                        {
+                            key: '2233',
+                            title: __('charFilter_subPage_options_2233'),
+                            on: true,
+                        },
+                        {
+                            key: 'announcement',
+                            title: __('charFilter_subPage_options_announcement'),
+                            on: false,
+                            description: __('charFilter_subPage_options_announcement_description'),
+                        },
                     ],
                 },
             },

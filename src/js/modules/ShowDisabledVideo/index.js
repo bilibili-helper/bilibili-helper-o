@@ -7,6 +7,7 @@ import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import _ from 'lodash';
 import Url from 'url-parse';
+import {__} from 'Utils/functions';
 
 export {ShowDisabledVideoUI} from './UI/index.js';
 
@@ -17,7 +18,7 @@ export class ShowDisabledVideo extends Feature {
             kind: 'videoList',
             settings: {
                 on: true,
-                title: '显示失效视频部分信息',
+                title: __('showDisabledVideo_name'),
                 hasUI: true,
             },
         });

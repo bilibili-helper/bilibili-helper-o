@@ -10,6 +10,7 @@ import React from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
 import store from 'store';
 import {Icon, CheckBoxButton} from 'Components';
+import {__} from 'Utils/functions';
 
 export default () => {
     const GlobalStyle = createGlobalStyle`
@@ -147,7 +148,7 @@ export default () => {
                     <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_894803_t8pireix5fq.css"/>
                     <ChatFilterIcon iconfont="ban" size={22} onClick={this.handleOnClick}/>
                     <ChatFilterPanel ref={i => this.panel = i}>
-                        <FilterTitle>屏蔽列表</FilterTitle>
+                        <FilterTitle>{__('charFilter_UI_listName')}</FilterTitle>
                         {_.map(options, (option) => {
                             const {key, title, on} = option;
                             const style = this.styleList[key];

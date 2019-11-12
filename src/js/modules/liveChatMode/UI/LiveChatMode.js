@@ -9,6 +9,7 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 import {theme} from 'Styles';
 import store from 'store';
+import {__} from 'Utils/functions';
 export default () => {
     const {color} = theme;
 
@@ -330,7 +331,9 @@ export default () => {
             const {on, currentState} = this.state;
             return (
                 <React.Fragment>
-                    <Btn className={on ? 'on' : ''} onClick={this.handleOnClick}>{on ? '关闭' : '开启'}版聊模式</Btn>
+                    <Btn className={on ? 'on' : ''} onClick={this.handleOnClick}>
+                        {on ? __('liveChatMode_UI_buttonOFF') : __('liveChatMode_UI_buttonON')}
+                    </Btn>
                     {currentState !== 0 && on && <style>{stylesheet}</style>}
                 </React.Fragment>
             );

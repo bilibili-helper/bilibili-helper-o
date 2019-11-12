@@ -1,0 +1,14 @@
+{
+    "treasure_name": {
+        "message": "自動領瓜子"
+    },
+    "treasure_description": {
+        "message": "打開直播間就會自動領瓜子"
+    },
+    "treasure_notification": {
+        "message": "推送通知"
+    },
+    "treasure_notification_description": {
+        "message": "領取成功後通過推送通知提示"
+    }
+}

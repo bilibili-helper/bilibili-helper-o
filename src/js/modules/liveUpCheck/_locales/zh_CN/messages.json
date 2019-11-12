@@ -1,4 +1,31 @@
 {
+    "liveUpCheck_name": {
+        "message": "直播开播推送"
+    },
+    "liveUpCheck_description": {
+        "message": "主播新开播后$TIME$分钟内进行推送",
+        "placeholders": {
+            "time": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "liveUpCheck_options_notification": {
+        "message": "推送通知"
+    },
+    "liveUpCheck_options_dynamicCheckBox": {
+        "message": "最近推送列表"
+    },
+    "liveUpCheck_options_dynamicCheckBox_description": {
+        "message": "在扩展菜单显示$MAX$条最近推送的视频",
+        "placeholders": {
+            "max": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
     "followingLiveUpdateMessage": {
         "message": "主播「$UPPER$」开播啦! ",
         "description": "Notification: Following Live Up Available",

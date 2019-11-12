@@ -13,7 +13,7 @@ export class QuickSearch extends Feature {
             kind: 'other',
             settings: {
                 on: true,
-                title: '右键用哔哩哔哩搜索',
+                title: __('quickSearch_name'),
             },
         });
     }

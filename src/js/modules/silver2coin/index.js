@@ -17,10 +17,15 @@ export class Silver2coin extends Feature {
             permissions: ['login', 'notifications'],
             settings: {
                 on: false,
-                title: '银瓜子自动换硬币',
+                title: __('silver2coin_name'),
                 type: 'checkbox',
                 options: [
-                    {key: 'notification', title: '推送通知', on: true, description: '兑换成功后将会弹出代表成功的推送通知'},
+                    {
+                        key: 'notification',
+                        title: __('silver2coin_options_notification'),
+                        on: true,
+                        description: __('silver2coin_options_notification_description'),
+                    },
                 ],
             },
         });
@@ -49,7 +54,9 @@ export class Silver2coin extends Feature {
     };
 
     request = (hasLogin = this.permissionMap.login) => {
-        if (chrome.extension.inIncognitoContext) return; // 隐身模式
+        if (chrome.extension.inIncognitoContext) {
+            return;
+        } // 隐身模式
         let {day} = this.store || {};
         if (day !== this.getTodayDate()) {
             this.settings.on && hasLogin && chrome.cookies.get({
@@ -71,7 +78,7 @@ export class Silver2coin extends Feature {
                                 type: 'basic',
                                 iconUrl: getURL('/statics/imgs/cat.svg'),
                                 title: __('extensionNotificationTitle'),
-                                message: '银瓜子换硬币成功！',
+                                message: __('silver2coin_notification_successfully'),
                                 buttons: [],
                             });
                         }

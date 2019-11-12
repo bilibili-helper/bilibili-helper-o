@@ -4,6 +4,7 @@
  * Description:
  */
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
 
 export {CvImagesUI} from './UI';
 
@@ -15,7 +16,7 @@ export class CvImages extends Feature {
             settings: {
                 on: true,
                 hasUI: true,
-                title: '专栏图片保存与去除文字可选中限制',
+                title: __('cvImages_name'),
             },
         });
         this.imageMap = {};

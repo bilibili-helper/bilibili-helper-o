@@ -1,4 +1,42 @@
 {
+    "dynamicCheck_name": {
+        "message": "视频动态推送"
+    },
+    "dynamicCheck_description": {
+        "message": "视频消息、小视频、专栏、番剧自动推送，每分钟检测一次"
+    },
+    "dynamicCheck_options_notification": {
+        "message": "推送通知"
+    },
+    "dynamicCheck_options_dynamicCheckBox": {
+        "message": "最近推送列表"
+    },
+    "dynamicCheck_options_dynamicCheckBox_description": {
+        "message": "在扩展菜单显示$MAX$条最近推送的视频",
+        "placeholders": {
+            "max": {
+                "content": "$1"
+            }
+        }
+    },
+    "dynamicCheck_subPage_title": {
+        "message": "动态推送"
+    },
+    "dynamicCheck_subPage_description": {
+        "message": "如果都选择关闭，将不会进行进行检测"
+    },
+    "dynamicCheck_subPage_options_video": {
+        "message": "视频投稿"
+    },
+    "dynamicCheck_subPage_options_smallVideo": {
+        "message": "小视频"
+    },
+    "dynamicCheck_subPage_options_cv": {
+        "message": "专栏"
+    },
+    "dynamicCheck_subPage_options_bangumi": {
+        "message": " 番剧"
+    },
     "followingUpdateMessage": {
         "message": "您的哔哩哔哩关注更新了（%n 个新动态）！\n%uploader 刚刚发布了「%title」！",
         "description": "Notification: Following Update Message"

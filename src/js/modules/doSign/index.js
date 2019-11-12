@@ -65,7 +65,7 @@ export class DoSign extends Feature {
                             type: 'basic',
                             iconUrl: getURL('/statics/imgs/cat.svg'),
                             title: __('extensionNotificationTitle'),
-                            message: '自动签到成功！',
+                            message: __('doSign_notification_successfully'),
                             buttons: [],
                         });
                     }

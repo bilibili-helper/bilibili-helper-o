@@ -1,4 +1,7 @@
 {
+    "quickSearch_name": {
+        "message": "右键用哔哩哔哩搜索"
+    },
     "searchBili": {
         "message": "使用 哔哩哔哩搜索 '%s'",
         "description": "Context Menu: Title"

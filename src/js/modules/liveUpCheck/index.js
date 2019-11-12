@@ -21,15 +21,21 @@ export class LiveUpCheck extends Feature {
             permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function
-                title: '直播开播推送', // 在option页面中配置项目的显示名称
+                title: __('liveUpCheck_name'), // 在option页面中配置项目的显示名称
                 type: 'checkbox', // 指该feature配置子选项的类型，此处为复选框
-                description: `主播新开播后${intervalTime}分钟内进行推送`,
+                description: __('liveUpCheck_description', [intervalTime]),
                 hasUI: true,
                 options: [ // 子选项
-                    {title: '推送通知', key: 'notification', on: true},
                     {
-                        title: '最近推送列表', key: 'dynamicCheckBox', on: true,
-                        description: `在扩展菜单显示${MAX_LIST_NUMBERS}条最近推送的视频`,
+                        title: __('liveUpCheck_options_notification'),
+                        key: 'notification',
+                        on: true,
+                    },
+                    {
+                        title: __('liveUpCheck_options_dynamicCheckBox'),
+                        key: 'dynamicCheckBox',
+                        on: true,
+                        description: __('liveUpCheck_options_dynamicCheckBox_description', [MAX_LIST_NUMBERS]),
                     },
                 ],
             },
@@ -72,8 +78,9 @@ export class LiveUpCheck extends Feature {
             }
         });
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.command === 'getLiveUpperDynamicList') sendResponse({feedList: this.currentList, newCounter: this.newCounter});
-            else if (message.command === 'updateLastLiveUpList') {
+            if (message.command === 'getLiveUpperDynamicList') {
+                sendResponse({feedList: this.currentList, newCounter: this.newCounter});
+            } else if (message.command === 'updateLastLiveUpList') {
                 this.newCounter = 0;
             }
             return true;
@@ -81,8 +88,11 @@ export class LiveUpCheck extends Feature {
     };
 
     permissionHandleLogin = (value) => {
-        if (value) !this.hasLaunched && this.launch();
-        else this.pause();
+        if (value) {
+            !this.hasLaunched && this.launch();
+        } else {
+            this.pause();
+        }
     };
 
     initList() {
@@ -107,12 +117,16 @@ export class LiveUpCheck extends Feature {
         last.forEach(({uid: l}, index) => {
             let same = false;
             current.forEach(({uid: c}) => {
-                if (l === c) same = true;
+                if (l === c) {
+                    same = true;
+                }
             });
             if (!same) {
                 newList.push(last[index]);
                 newCounter += 1;
-            } else oldList.push(last[index]);
+            } else {
+                oldList.push(last[index]);
+            }
         });
         this.newCounter = newCounter;
         return newList.concat(oldList);
@@ -128,7 +142,9 @@ export class LiveUpCheck extends Feature {
                 if (list.length < count) {
                     return this.getList(list, page + 1);
                 }
-            } else console.error(message);
+            } else {
+                console.error(message);
+            }
         });
     };
 

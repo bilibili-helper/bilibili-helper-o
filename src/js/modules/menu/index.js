@@ -4,7 +4,10 @@
  * Description:
  */
 import {Feature} from 'Libs/feature';
+import {__} from 'Utils/functions';
+
 export {MenuUI} from './UI/index';
+
 export class Menu extends Feature {
     constructor() {
         super({
@@ -15,23 +18,38 @@ export class Menu extends Feature {
             settings: {
                 on: true,
                 toggle: false,
-                title: '扩展程序菜单栏',
+                title: __('menu_name'),
                 type: 'checkbox',
                 hasUI: true,
-                description: '选择您需要在扩展菜单中显示的常用功能',
+                description: __('menu_description'),
                 options: [
-                    {key: 'showIcon', title: '图标按钮', on: false, description: '开启后菜单按钮将显示为图标', hide: true},
-                    {key: 'oldWatchPage', title: '旧关注页面', on: false},
+                    {
+                        key: 'showIcon',
+                        title: __('menu_options_showIcon'),
+                        on: false,
+                        description: __('menu_options_showIcon_description'),
+                        hide: true,
+                    },
+                    {
+                        key: 'oldWatchPage',
+                        title: __('menu_options_oldWatchPage'),
+                        on: false,
+                    },
                 ],
                 subPage: {
-                    title: '启用菜单栏',
+                    title: __('menu_subPage_title'),
                     type: 'checkbox',
                     options: [
-                        {key: 'video', title: '前往主站', on: true},
-                        {key: 'live', title: '前往直播区', on: true},
-                        {key: 'dynamic', title: '我的关注', on: true},
-                        {key: 'favourite', title: '我的收藏', on: true},
-                        {key: 'linker', title: '视频快速跳转', on: true, description: '图标模式下，需要按回车键进行跳转'},
+                        {key: 'video', title: __('menu_subPage_options_video'), on: true},
+                        {key: 'live', title: __('menu_subPage_options_live'), on: true},
+                        {key: 'dynamic', title: __('menu_subPage_options_dynamic'), on: true},
+                        {key: 'favourite', title: __('menu_subPage_options_favourite'), on: true},
+                        {
+                            key: 'linker',
+                            title: __('menu_subPage_options_linker'),
+                            on: true,
+                            description: __('menu_subPage_options_linker_description'),
+                        },
                     ],
                 },
             },

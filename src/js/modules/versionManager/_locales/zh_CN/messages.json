@@ -1,4 +1,13 @@
 {
+    "versionManager_name": {
+        "message": "自动检测更新"
+    },
+    "versionManager_description": {
+        "message": "仅仅进行检测而并不进行更新操作"
+    },
+    "versionManager_options_notification": {
+        "message": "推送通知"
+    },
     "checkVersionGetUpdateError": {
         "message": "获取更新信息失败",
         "description": "Notification: Extension Update Error"

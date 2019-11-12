@@ -103,7 +103,7 @@ export default () => {
         render() {
             return (
                 <React.Fragment>
-                    <PipButton title="点击进入画中画" onClick={() => this.handleOnClick()} on={this.state.inPIP}>
+                    <PipButton title={__('pictureInPicture_UI_buttonTitle')} onClick={() => this.handleOnClick()} on={this.state.inPIP}>
                         {__('pictureInPicture_name')}
                     </PipButton>
                 </React.Fragment>

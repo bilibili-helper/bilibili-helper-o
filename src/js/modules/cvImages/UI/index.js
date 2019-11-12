@@ -6,6 +6,7 @@
 import {UI} from 'Libs/UI';
 import $ from 'jquery';
 import './styles.scss';
+import {__} from 'Utils/functions';
 
 export class CvImagesUI extends UI {
     constructor() {
@@ -22,7 +23,7 @@ export class CvImagesUI extends UI {
             $('.page-container .img-box img').wrap('<div class="bilibili-ct-wrapper"></div>')
 
             const btn = document.createElement('button');
-            btn.innerText = '下载图片';
+            btn.innerText = __('cvImages_UI_downloadBtn');
             $(document).on('mouseenter', '.banner-img-holder', function(e) {
                e.preventDefault();
                 that.currentSrc = $(this)[0].style.backgroundImage.split('"')[1];
