@@ -1,6 +1,9 @@
 {
-  "searchBili": {
-    "message": "用 嗶哩嗶哩 搜尋 “%s”",
-    "description": "Context Menu: Title"
-  }
+    "quickSearch_name": {
+        "message": "右鍵用嗶哩嗶哩搜索"
+    },
+    "searchBili": {
+        "message": "用 嗶哩嗶哩 搜尋 “%s”",
+        "description": "Context Menu: Title"
+    }
 }

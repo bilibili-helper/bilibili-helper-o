@@ -16,7 +16,7 @@ export class VideoSubtitleDownload extends Feature {
         super({
             name: 'videoSubtitleDownload',
             kind: 'video',
-            permissions: ['login', 'downloads', 'checkChromeVersion?version=73&operation=smaller'],
+            permissions: ['login', 'downloads'],
             dependencies: ['videoAnchor'],
             settings: {
                 on: true,
@@ -54,7 +54,7 @@ export class VideoSubtitleDownload extends Feature {
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender) => {
             if (message.command === 'downloadSubtitle' && message.subtitleObject) {
-                const tabData = this.messageStore.createData(sender.id);
+                const tabData = this.messageStore.createData(sender.tab.id || sender.id);
                 if (tabData) {
                     const {lan, subtitle_url} = message.subtitleObject;
                     const {cid} = tabData.data;

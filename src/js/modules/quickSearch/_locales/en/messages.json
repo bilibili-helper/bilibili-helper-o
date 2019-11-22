@@ -1,6 +1,9 @@
 {
-  "searchBili": {
-    "message": "Search Bilibili for '%s'",
-    "description": "Context Menu: Title"
-  }
+    "quickSearch_name": {
+        "message": "Quick searching in Context Menu about bilibili"
+    },
+    "searchBili": {
+        "message": "Search Bilibili for '%s'",
+        "description": "Context Menu: Title"
+    }
 }

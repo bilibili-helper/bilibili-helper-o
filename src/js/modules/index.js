@@ -30,6 +30,7 @@ import {CvImagesUI, CvImages} from 'Modules/cvImages';
 import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
+import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
 
 //let VideoUnblock;
 //try {
@@ -64,6 +65,7 @@ export const Features = {
     NotAutoPlay,
     LiveUpCheck,
     ShowDisabledVideo,
+    LivePictureInPicture,
 };
 
 export const UIs = {
@@ -85,4 +87,5 @@ export const UIs = {
     NotAutoPlayUI,
     LiveUpCheckUI,
     ShowDisabledVideoUI,
+    LivePictureInPictureUI,
 };

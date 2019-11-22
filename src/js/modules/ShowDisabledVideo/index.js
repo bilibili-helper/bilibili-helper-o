@@ -37,7 +37,6 @@ export class ShowDisabledVideo extends Feature {
             }
             const url = new Url(details.url, '', true);
             const tabData = this.messageStore.createData(tabId);
-            console.warn(url.href);
             fetch(url.href)
             .then(res => res.json())
             .then((res) => {

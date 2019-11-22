@@ -26,7 +26,6 @@ export class ShowDisabledVideoUI extends UI {
     dealWithVideoList(list) {
         list.forEach((item) => {
             if (item.attr === 9 || item.attr === 1) {
-                console.warn(item);
                 const {id, cover = '', title = '', intro = '', pages = []} = item;
                 const disabledVideoDOM = document.querySelector(`.small-item.disabled[data-aid="${id}"]`);
                 disabledVideoDOM.classList.remove('disabled');

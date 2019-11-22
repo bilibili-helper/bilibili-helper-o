@@ -9,10 +9,10 @@
         "message": "推送通知"
     },
     "dynamicCheck_options_dynamicCheckBox": {
-        "message": "最近推送列表"
+        "message": "Recent notify list"
     },
     "dynamicCheck_options_dynamicCheckBox_description": {
-        "message": "在扩展菜单显示$MAX$条最近推送的视频",
+        "message": "show $MAX$ recent messages n popup menu",
         "placeholders": {
             "max": {
                 "content": "$1"
@@ -20,25 +20,25 @@
         }
     },
     "dynamicCheck_subPage_title": {
-        "message": "动态推送"
+        "message": "Dynamic notification"
     },
     "dynamicCheck_subPage_description": {
-        "message": "如果都选择关闭，将不会进行进行检测"
+        "message": "If set all off, it will not run"
     },
     "dynamicCheck_subPage_options_video": {
-        "message": "视频投稿"
+        "message": "Submission video"
     },
     "dynamicCheck_subPage_options_smallVideo": {
-        "message": "小视频"
+        "message": "Short video"
     },
     "dynamicCheck_subPage_options_cv": {
-        "message": "专栏"
+        "message": "Monography"
     },
     "dynamicCheck_subPage_options_bangumi": {
-        "message": " 番剧"
+        "message": "Bangumi"
     },
     "followingUpdateMessage": {
-        "message": "Your bilibili followings updated (%n new)!\n%uploader just published '%title'!",
+        "message": "您的哔哩哔哩关注更新了（%n 个新动态）！\n%uploader 刚刚发布了「%title」！",
         "description": "Notification: Following Update Message"
     }
 }

@@ -1,0 +1,50 @@
+{
+    "charFilter_name": {
+        "message": "去污粉"
+    },
+    "charFilter_description": {
+        "message": "過濾直播區聊天區域的顯示內容，也包括一些播放器上的廣告推送"
+    },
+    "charFilter_subPage_title": {
+        "message": "開啟聊天過濾"
+    },
+    "charFilter_subPage_description": {
+        "message": "請注意b站自帶的\"關閉禮物特效\"功能"
+    },
+    "charFilter_subPage_options_chat": {
+        "message": "聊天內容"
+    },
+    "charFilter_subPage_options_small": {
+        "message": "小型標誌"
+    },
+    "charFilter_subPage_options_small_description": {
+        "message": "如：姥爺標誌，艦長等"
+    },
+    "charFilter_subPage_options_gift": {
+        "message": "禮物信息"
+    },
+    "charFilter_subPage_options_enterMsg": {
+        "message": "進場信息"
+    },
+    "charFilter_subPage_options_medal": {
+        "message": "粉絲勛章"
+    },
+    "charFilter_subPage_options_achievement": {
+        "message": "成就頭銜"
+    },
+    "charFilter_subPage_options_level": {
+        "message": "用戶等級"
+    },
+    "charFilter_subPage_options_2233": {
+        "message": "2233娘"
+    },
+    "charFilter_subPage_options_announcement": {
+        "message": "系統公告"
+    },
+    "charFilter_subPage_options_announcement_description": {
+        "message": "系统公告"
+    },
+    "charFilter_UI_listName": {
+        "message": "屏蔽列表"
+    }
+}

@@ -1,8 +1,8 @@
 {
     "cvImages_name": {
-        "message": "专栏图片保存与去除文字可选中限制"
+        "message": "'Image download' and 'remove the limit of right mouse click'"
     },
     "cvImages_UI_downloadBtn": {
-        "message": "下载图片"
+        "message": "Image Download"
     }
 }

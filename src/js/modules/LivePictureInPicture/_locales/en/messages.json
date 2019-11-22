@@ -1,9 +1,9 @@
 {
-    "pictureInPicture_name": {
+    "livePictureInPicture_name": {
         "message": "Picture In Picture",
         "description": "Menu: Picture in picture"
     },
-    "pictureInPicture_UI_buttonTitle": {
+    "livePictureInPicture_UI_buttonTitle": {
         "message": "Click to turn on PiP"
     }
 }

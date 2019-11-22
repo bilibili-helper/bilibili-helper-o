@@ -7,5 +7,8 @@
     },
     "doSign_notification_description": {
         "message": "簽到成功後通過推送通知提醒"
+    },
+    "doSign_notification_successfully": {
+        "message": "自动签到成功！"
     }
 }

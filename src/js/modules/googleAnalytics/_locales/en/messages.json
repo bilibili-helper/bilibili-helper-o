@@ -1,1 +1,8 @@
-{}
+{
+    "googleAnalytics_name": {
+        "message": "Google Analytics"
+    },
+    "googleAnalytics_description": {
+        "message": "The use of anonymous statistics to help developers improve the program for a better experience"
+    }
+}

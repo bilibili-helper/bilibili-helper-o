@@ -1,0 +1,14 @@
+{
+    "liveChatMode_name": {
+        "message": "版聊模式"
+    },
+    "liveChatMode_description": {
+        "message": "在直播間開啟網頁全屏或全屏模式時以縱向排列的方式顯示聊天內容，同時隱藏彈幕"
+    },
+    "liveChatMode_UI_buttonON": {
+        "message": "開啟版聊模式"
+    },
+    "liveChatMode_UI_buttonOFF": {
+        "message": "關閉版聊模式"
+    }
+}

@@ -97,7 +97,6 @@ export class VideoDownload extends Feature {
         chrome.runtime.onMessage.addListener((message) => {
             if (message.command === 'sendVideoFilename' && message.cid) {
                 const url = new Url(message.url, '', true);
-                console.warn(message);
                 this.downloadFilenames[url.pathname] = {
                     filename: message.filename,
                     cid: message.cid,

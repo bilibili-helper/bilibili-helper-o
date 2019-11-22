@@ -1,4 +1,13 @@
 {
+    "versionManager_name": {
+        "message": "Automatic checking update"
+    },
+    "versionManager_description": {
+        "message": "just checking and not updateing automatically"
+    },
+    "versionManager_options_notification": {
+        "message": "Notifications"
+    },
     "checkVersionGetUpdateError": {
         "message": "Failed to fetch version info.",
         "description": "Notification: Extension Update Error"

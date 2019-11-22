@@ -1,9 +1,9 @@
 {
-    "pictureInPicture_name": {
+    "livePictureInPicture_name": {
         "message": "画中画",
         "description": "Menu: Picture in picture"
     },
-    "pictureInPicture_UI_buttonTitle": {
+    "livePictureInPicture_UI_buttonTitle": {
         "message": "点击开启画中画"
     }
 }
