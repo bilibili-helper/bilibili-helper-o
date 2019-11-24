@@ -97,6 +97,7 @@ export class GoogleAnalytics extends Feature {
                         document.head.appendChild(scriptTag);
                         window.ga('create', UA, 'auto');
                         window.ga('set', 'checkProtocolTask');
+                        window.ga('set', 'dimension1', version);
                         window.ga('set', 'userId', userId);
                         resolve();
                     });

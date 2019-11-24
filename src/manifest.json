@@ -1,5 +1,5 @@
 {
-    "version": "1.2.2.15",
+    "version": "1.2.3.1",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
@@ -125,17 +125,12 @@
             "run_at": "document_end"
         }
     ],
-    "externally_connectable": {
-        "matches": [
-            "*://*/*"
-        ]
-    },
     "icons": {
         "16": "statics/imgs/bilibili-cat-256.png",
         "32": "statics/imgs/bilibili-cat-256.png",
         "128": "statics/imgs/bilibili-cat-256.png"
     },
-    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXGarzPXVb5UpkDTsw4cdApsrQvPTNTMXdz/7j9QVuQZoPm5R9l3o9ppfGYeae7sZRaJiueBEO/LA8s7KCuE9icPl72xSqdei3Jo0PTTUlmNQIysl9PZy6Xd520sS5wNFhPaxOy1ApHZ6+o+yMEXWmjx2fX0tHJd7dKTii47MTnQIDAQAB",
+    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDd/wqh8sN1lnVWVGyKqhGM0Zz0ZuY3Dq5hNK3qNBw1/+B/XGe+zzwe7aSyr0qikd8pkN5HpoDvEDdkFHcdhPwXWoQGKiNAnKtohuz/2+g5YzLYzQg2bRqKdYJebEoCoiHtoSNS/HRtUeg483ypAH26LLyD6p+ykwQNo9DvtBo0kwIDAQAB",
     "permissions": [
         "downloads",
         "alarms",
@@ -146,9 +141,9 @@
         "tabs",
         "webRequest",
         "webRequestBlocking",
-        "http://*/",
-        "https://*/",
-        "*://*.acgvideo.com/*"
+        "*://*.acgvideo.com/*",
+        "*://*.bilibili.com/*",
+        "*://bilibili-helper.github.io/*"
     ],
     "web_accessible_resources": [
         "statics/*",

@@ -117,7 +117,7 @@ export class VideoDownload extends Feature {
             if (filenameObject) {
                 const {filename, cid} = filenameObject;
                 suggest({filename: `${filename}.${cid}.flv`, conflictAction: 'prompt'});
-            }
+            } else suggest();
             return true;
         });
     };

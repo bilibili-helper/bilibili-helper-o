@@ -24,9 +24,10 @@ export default () => {
         display: inline-block;
         padding: 0 5px;
         vertical-align: middle;
-        background-color: white;
+        font-weight: normal;
         border-radius: 4px;
         border: 1px solid ${color('bilibili-blue')};
+        background-color: white;
         color: ${color('bilibili-blue')};
         cursor: pointer;
         transition: all 0.3s;
