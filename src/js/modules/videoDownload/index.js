@@ -28,7 +28,10 @@ export class VideoDownload extends Feature {
                 description: __('videoDownload_description'),
                 type: 'checkbox',
                 options: [
-                    {key: 'showPiece', title: __('videoDownload_options_showFLVSegment'), on: true, description: __('videoDownload_options_showFLVSegment_description')},
+                    {
+                        key: 'showPiece', title: __('videoDownload_options_showFLVSegment'), on: true,
+                        description: __('videoDownload_options_showFLVSegment_description'),
+                    },
                 ],
             },
         });
@@ -110,15 +113,28 @@ export class VideoDownload extends Feature {
             }
             return true;
         });
-        chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
-            const {url} = downloadItem;
+        chrome.webRequest.onHeadersReceived.addListener((details) => {
+            const {responseHeaders, initiator, url} = details;
+            if (/^chrome-extension:\/\//.test(initiator)) return;
             const urlObject = new Url(url, '', true);
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
-                const {filename, cid} = filenameObject;
-                suggest({filename: `${filename}.${cid}.flv`, conflictAction: 'prompt'});
-            } else suggest();
-            return true;
-        });
+                const {filename: originFilename, cid} = filenameObject;
+                const filename = originFilename.replace(/[|"*?:<>]/g, '_');
+                const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
+                const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*=utf-8' '${encodeURIComponent(filename)}.${cid}.flv`.replace('/', '%2f');
+                if (targetData) {
+                    targetData.value = nameValue;
+                } else {
+                    responseHeaders.push({
+                        name: 'Content-Disposition',
+                        value: nameValue,
+                    });
+                }
+            }
+            return {responseHeaders};
+        }, {
+            urls: ['*://*.acgvideo.com/*'],
+        }, ['responseHeaders', 'blocking']);
     };
 }
