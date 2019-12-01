@@ -36,11 +36,11 @@
         "message": "图标模式下，需要按回车键进行跳转"
     },
     "goBili": {
-        "message": "前往 Bilibili.com",
+        "message": "主站",
         "description": "Popup Button: go_bili"
     },
     "goBiliLive": {
-        "message": "前往 Bilibili Live",
+        "message": "直播",
         "description": "Popup Button: go_bili_live"
     },
     "goVideo": {
@@ -48,15 +48,15 @@
         "description": "Popup Button: go_video"
     },
     "goDynamic": {
-        "message": "我的关注",
+        "message": "动态",
         "description": "Popup Button: go_dynamic"
     },
     "goFavourite": {
-        "message": "我的收藏",
+        "message": "收藏",
         "description": "Popup Button: go_favourite"
     },
     "goOption": {
-        "message": "更多选项",
+        "message": "设置",
         "description": "Popup Button: go_option"
     },
     "enterID": {

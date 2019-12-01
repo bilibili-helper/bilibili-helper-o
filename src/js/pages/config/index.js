@@ -1,3 +1,4 @@
+/* global process */
 /**
  * Author: Ruo
  * Create: 2018-06-12
@@ -93,6 +94,7 @@ const Footer = styled.div`
   box-sizing: border-box;
   color: #8c8c8c;
   & a {
+    font-size: 12px;
     color: #8c8c8c;
   }
   & > a {
@@ -109,6 +111,7 @@ const Broadcast = styled.p`
   max-width: 800px;
   margin: 16px auto 0;
   padding: 0px 10px;
+  font-size: 12px;
   text-align: left;
   color: ${color('bilibili-pink')};
   a {
@@ -157,8 +160,6 @@ class PageConfig extends React.Component {
             subPageList: false, // 标记子页面是否为纯展示列表，目前用于显示投喂列表
             ...this.settings,
 
-            debug: false,
-
             broadcast: this.defaultBroadcast, // header下的通知条
 
             permissionMap: {},
@@ -166,13 +167,6 @@ class PageConfig extends React.Component {
             checkingVersion: false,
 
         };
-        // 监听配置更新
-        chrome.runtime.onMessage.addListener(((message) => {
-            if (message.command === 'debugMode') {
-                this.setState({debug: message.value});
-            }
-            return true;
-        }));
     }
 
     componentDidMount() {
@@ -184,10 +178,6 @@ class PageConfig extends React.Component {
                 else { this.settings.other.map[name] = setting; }
             });
             this.setState(this.settings);
-        });
-        // 获取调试模式
-        chrome.runtime.sendMessage({command: 'getSetting', feature: 'debug'}, (setting) => {
-            this.setState({debug: setting.on});
         });
 
         chrome.runtime.sendMessage({command: 'inIncognitoContext'}, (inIncognitoContext) => {
@@ -364,7 +354,7 @@ class PageConfig extends React.Component {
         });
     };
     renderSettingDOM = () => {
-        const {permissionMap, debug} = this.state;
+        const {permissionMap} = this.state;
         return _.map(this.settings, (e, kind) => {
             const list = this.state[kind];
             return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
@@ -390,7 +380,7 @@ class PageConfig extends React.Component {
                                     <PermissionErrorDescription>{description}</PermissionErrorDescription>,
                                 );
                             }
-                            return debug ? <PermissionTag title={description}>
+                            return process.env.DEBUG ? <PermissionTag title={description}>
                                 Permission: {_.upperFirst(name)}
                             </PermissionTag> : null;
                         }
@@ -422,14 +412,14 @@ class PageConfig extends React.Component {
     };
 
     renderAboutList = () => {
-        const {checkingVersion, debug} = this.state;
+        const {checkingVersion} = this.state;
         return (
             <List title={__('config_type_about')} ref={i => this.aboutRef = i}>
                 <ListItem
                     icon={<Icon iconfont="cat2" image/>}
                     twoLine
                     first={chrome.i18n.getMessage('extensionName')}
-                    second={`${__('config_version')} ${version}（${debug === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}
+                    second={`${__('config_version')} ${version}（${process.env.DEBUG === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}
                     separator
                     operation={
                         <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>{__('config_checking')}</Button>
@@ -456,7 +446,6 @@ class PageConfig extends React.Component {
             subPageTitle,
             subPageParent,
             pageType,
-            debug,
             broadcast,
         } = this.state;
         return <React.Fragment>
@@ -465,7 +454,7 @@ class PageConfig extends React.Component {
             <ConfigBody>
                 <Header>
                     <h1>BILIBILI HELPER</h1>
-                    <sub>{`version ${version}（${debug === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}</sub>
+                    <sub>{`version ${version}（${process.env.DEBUG === true ? __('extensionVersionTypeTestVersion') : __('extensionVersionTypeOfficialVersion')}）`}</sub>
                     {/*<Cat iconfont="cat"/>*/}
                 </Header>
                 <Broadcast>

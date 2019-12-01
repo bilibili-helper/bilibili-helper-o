@@ -32,7 +32,7 @@ export default () => {
     `;
     const MenuButton = styled(Button)`
       display: block;
-      width: 150px;
+      width: 70px;
       height: 36px;
       border: 1px solid ${color('google-grey-100')};
       border-radius: 0;
@@ -88,9 +88,9 @@ export default () => {
     const LinkerWrapper = styled.div`
       display: flex;
     `;
-        const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input'})`
+    const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input'})`
       display: block;
-      width: ${({showIcon}) => showIcon ? '63px' : '110px'};
+      width: ${({showIcon}) => showIcon ? '63px' : '70px'};
       height: 36px;
       margin-bottom: 6px;
       position: relative;
@@ -291,13 +291,7 @@ export default () => {
             const showIcon = showIconOption ? showIconOption.on : false;
             return (
                 <MenuView>
-                    {video && (showIcon ? <IconBtn
-                        title={__('goBili')}
-                        onClick={() => this.handleOnClick('video', getLink('video'))}>
-                        <Icon size={20} iconfont="tv"/>
-                    </IconBtn> : <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>
-                                   {__('goBili')}
-                               </MenuButton>)}
+                    {video && <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>{__('goBili')}</MenuButton>}
                     {live && (showIcon ? <IconBtn
                         title={__('goBiliLive')}
                         onClick={() => this.handleOnClick('live', getLink('live'))}>
@@ -330,7 +324,7 @@ export default () => {
                             defaultValue={lastSearch}
                             showIcon={showIcon}
                         />
-                        {!showIcon && <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>}
+                        {/*{!showIcon && <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>}*/}
                     </LinkerWrapper>}
                     {showIcon ? <IconBtn
                         title={__('goOption')}

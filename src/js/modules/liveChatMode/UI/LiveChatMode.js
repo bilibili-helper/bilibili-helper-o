@@ -10,6 +10,7 @@ import styled, {css} from 'styled-components';
 import {theme} from 'Styles';
 import store from 'store';
 import {__} from 'Utils/functions';
+
 export default () => {
     const {color} = theme;
 
@@ -78,6 +79,21 @@ export default () => {
       .hide-aside-area .control-panel-icon-row {
         pointer-events: none;
       }
+      .hide-aside-area .control-panel-icon-row.superChat {
+        display: flex!important;
+      }
+      .hide-aside-area .control-panel-icon-row.superChat .icon-right-part {
+        float: right!important;
+        margin-left: auto;
+        order: 0;
+      }
+      .hide-aside-area .control-panel-icon-row.superChat .icon-right-end-part {
+        float: right!important;
+        order: 1;
+      }
+      .hide-aside-area .control-panel-icon-row .icon-right-part {
+        float: right;
+      }
       .hide-aside-area .live-room-app .app-content .app-body .chat-history-panel .chat-item {
         margin-left: 6px;
       }
@@ -135,6 +151,9 @@ export default () => {
       }
       .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
         padding: 0 130px 0 80px;
+      }
+      .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container .bilibili-live-player-video-controller-right {
+        margin-right: 22px;
       }
       
       .hide-aside-area .live-chat-mode-height-bar {
@@ -211,7 +230,9 @@ export default () => {
             const appContent = document.querySelector('.app-content');
             const videoArea = document.querySelector('.bilibili-live-player-video-area');
             const panel = document.querySelector('.chat-history-panel');
-            if (!appContent || !videoArea || !panel) return;
+            if (!appContent || !videoArea || !panel) {
+                return;
+            }
             const heightBar = document.createElement('div');
             const moveBar = document.createElement('div');
             heightBar.setAttribute('class', 'live-chat-mode-height-bar');
@@ -225,14 +246,18 @@ export default () => {
 
             heightBar.addEventListener('mousedown', function(e) {
                 e.stopPropagation();
-                if (e.button !== 0 && e.buttons !== 1) return; // 确定仅当按下左键时
+                if (e.button !== 0 && e.buttons !== 1) {
+                    return;
+                } // 确定仅当按下左键时
                 that.heightMouseDown = true;
                 that.originHeight = panel.clientHeight;
                 that.originY = e.clientY;
             });
             moveBar.addEventListener('mousedown', function(e) {
                 e.stopPropagation();
-                if (e.button !== 0 && e.buttons !== 1) return; // 确定仅当按下左键时
+                if (e.button !== 0 && e.buttons !== 1) {
+                    return;
+                } // 确定仅当按下左键时
                 that.moveMouseDown = true;
                 that.originOffectLeft = panel.offsetLeft;
                 that.originOffectBottom = videoArea.offsetHeight - panel.offsetTop - panel.offsetHeight;
@@ -240,7 +265,9 @@ export default () => {
                 that.originY = e.clientY;
             });
             appContent.addEventListener('mousemove', _.throttle(function(e) {
-                if (!that.state.on) return;
+                if (!that.state.on) {
+                    return;
+                }
                 if (that.heightMouseDown) {
                     const deltaHeight = that.originY - e.clientY;
                     const currentHeight = that.originHeight + deltaHeight;
@@ -252,8 +279,12 @@ export default () => {
                     const deltaY = that.originY - e.clientY;
                     let currentLeft = that.originOffectLeft - deltaX;
                     let currentBottom = that.originOffectBottom + deltaY;
-                    if (currentLeft < 0) currentLeft = 0;
-                    if (currentBottom < 48) currentBottom = 48;
+                    if (currentLeft < 0) {
+                        currentLeft = 0;
+                    }
+                    if (currentBottom < 48) {
+                        currentBottom = 48;
+                    }
                     panel.style.left = `${currentLeft}px`;
                     panel.style.bottom = `${currentBottom}px`;
                 }
@@ -278,7 +309,9 @@ export default () => {
         };
 
         addListener = () => {
-            if (!this.bodyDOM) this.bodyDOM = document.querySelector('body');
+            if (!this.bodyDOM) {
+                this.bodyDOM = document.querySelector('body');
+            }
             const classList = this.bodyDOM.classList;
             const panel = document.querySelector('.chat-history-panel');
             const hideBtn = document.querySelector('.bilibili-live-player-video-controller-hide-danmaku-btn button');
@@ -288,16 +321,28 @@ export default () => {
                     if (!classList.contains('hide-aside-area')) {
                         document.querySelector('.aside-area-toggle-btn button').click();
                     }
-                    if (hideBtn.getAttribute('data-title') === '隐藏弹幕') hideBtn.click();
+                    if (hideBtn.getAttribute('data-title') === '隐藏弹幕') {
+                        hideBtn.click();
+                    }
                     this.setState({currentState: 1}, () => {
-                        if (panel && this.originHeight) panel.style.height = `${this.originHeight}px`;
-                        if (panel && this.originOffectLeft) panel.style.left = `${this.originOffectLeft}px`;
-                        if (panel && this.originOffectBottom) panel.style.bottom = `${this.originOffectBottom}px`;
+                        if (panel && this.originHeight) {
+                            panel.style.height = `${this.originHeight}px`;
+                        }
+                        if (panel && this.originOffectLeft) {
+                            panel.style.left = `${this.originOffectLeft}px`;
+                        }
+                        if (panel && this.originOffectBottom) {
+                            panel.style.bottom = `${this.originOffectBottom}px`;
+                        }
                     });
                 } else if (classList.contains('fullscreen-fix') || !classList.contains('player-full-win')) {
                     this.setState({currentState: 0}, () => {
-                        if (panel) panel.style.height = '';
-                        if (hideBtn.getAttribute('data-title') === '显示弹幕') hideBtn.click();
+                        if (panel) {
+                            panel.style.height = '';
+                        }
+                        if (hideBtn.getAttribute('data-title') === '显示弹幕') {
+                            hideBtn.click();
+                        }
                     });
                 }
                 //if (classList.contains('fullscreen-fix')) this.setState({currentState: 2});
