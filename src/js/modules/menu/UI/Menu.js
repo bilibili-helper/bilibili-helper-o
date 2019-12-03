@@ -43,7 +43,6 @@ export default () => {
         margin-bottom: 0;
       }
       button {
-        text-indent: 6px;
         font-size: 11px;
         font-weight: normal;
         color: ${color('google-grey-700')};

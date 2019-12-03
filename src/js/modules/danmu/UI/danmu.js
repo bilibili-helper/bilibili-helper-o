@@ -325,7 +325,10 @@ export default () => {
                     unknow, // eslint-disable-line
                     authorHash, rowId,
                 ] = d.getAttribute('p').split(',');
-                const danmu = d.innerHTML;
+                let danmu = d.innerHTML;
+                if (/^\[(".+"?){14}\]$/g.test(danmu)) {
+                    danmu = JSON.parse(danmu)[4].trim();
+                }
                 list.push({danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu, time: parseTime(time * 1000)});
             });
             this.setState({loaded: true});

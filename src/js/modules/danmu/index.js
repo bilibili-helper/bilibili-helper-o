@@ -33,7 +33,7 @@ export class Danmu extends Feature {
         const requestFilter = {
             urls: [
                 '*://api.bilibili.com/x/v2/dm/history?type=*', // 历史弹幕
-                //'*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
+                '*://api.bilibili.com/x/v1/dm/list.so?oid=*', // 最新弹幕
 
                 '*://api.bilibili.com/x/player.so?id=cid:*', // 新页面特有，用于标记新页面，加载时特殊处理
                 '*://interface.bilibili.com/player?id=cid:*', // 老页面特有
@@ -49,6 +49,14 @@ export class Danmu extends Feature {
             if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
                 const tabData = this.messageStore.createData(tabId);
                 tabData.data.cid = query.id.slice(4);
+                tabData.queue.push({ // 将监听到的事件添加到队列中
+                    command: 'loadCurrentDanmu',
+                    cid: tabData.data.cid,
+                });
+                this.messageStore.dealWith(tabId); // 处理queue
+            } else if (pathname === '/x/v1/dm/list.so') { // 新弹幕请求地址
+                const tabData = this.messageStore.createData(tabId);
+                tabData.data.cid = query.oid;
                 tabData.queue.push({ // 将监听到的事件添加到队列中
                     command: 'loadCurrentDanmu',
                     cid: tabData.data.cid,
