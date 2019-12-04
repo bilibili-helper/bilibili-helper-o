@@ -6,9 +6,9 @@
         "message": "在直播间开启网页全屏或全屏模式时以纵向排列的方式显示聊天内容，同时隐藏弹幕"
     },
     "liveChatMode_UI_buttonON": {
-        "message": "Turn on Chat Mode"
+        "message": "Chat Mode ON"
     },
     "liveChatMode_UI_buttonOFF": {
-        "message": "Turn off Chat Mode"
+        "message": "Chat Mode OFF"
     }
 }

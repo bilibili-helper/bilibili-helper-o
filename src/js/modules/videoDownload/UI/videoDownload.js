@@ -106,6 +106,11 @@ export default () => {
                 errorStr: '',
             };
             this.currentAvid = null;
+            this.containers = {};
+        }
+
+        componentDidMount() {
+            this.inited = true;
             this.addListener();
             _.map(document.scripts, (o) => {
                 if (/^window.__playinfo__=/.test(o.innerHTML)) {
@@ -113,11 +118,6 @@ export default () => {
                     this.originVideoData = playInfo.data || playInfo;
                 }
             });
-            this.containers = {};
-        }
-
-        componentDidMount() {
-            this.inited = true;
             chrome.runtime.sendMessage({command: 'videoDownloadDOMInitialized'});
             chrome.runtime.sendMessage({
                 command: 'getSetting',
@@ -151,7 +151,22 @@ export default () => {
         addListener = () => {
             const that = this;
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                if (message.command === 'videoDownloadSendVideoRequest') {
+                if (message.command === 'initVideoDownload' && message.data) {
+                    if (this.originVideoData.from === 'local') {
+                        const {cid, aid} = message.data;
+                        const {quality} = this.originVideoData;
+                        const {videoData} = this.state;
+                        const currentData = {...this.originVideoData};
+                        const cidData = videoData[aid] || {};
+                        cidData[quality] = currentData;
+                        videoData[cid] = cidData;
+                        this.currentAvid = aid;
+                        this.setState({currentCid: cid, videoData, currentQuality: quality}, () => {
+                            this.changeQuality(quality);
+                        });
+                    }
+                    sendResponse();
+                } else if (message.command === 'videoDownloadSendVideoRequest') {
                     let {data, url, method, type} = message;
                     const {cid, avid, qn = ''} = data;
                     if (type === 'new') {

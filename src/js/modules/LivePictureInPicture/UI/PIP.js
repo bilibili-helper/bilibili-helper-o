@@ -15,7 +15,7 @@ export default () => {
         class: `bilibili-helper-pip-btn`,
     })`
       position: absolute;
-      right: 220px;
+      right: 230px;
       top: 1px;
       height: 22px;
       line-height: 21px;

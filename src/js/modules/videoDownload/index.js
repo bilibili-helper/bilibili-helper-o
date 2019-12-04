@@ -58,6 +58,7 @@ export class VideoDownload extends Feature {
 
                 '*://interface.bilibili.com/player?id=cid:*',
                 '*://api.bilibili.com/x/player.so?id=cid:*',
+                '*://api.bilibili.com/x/web-interface/view?*', // 获取cid和aid
             ],
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
@@ -69,7 +70,15 @@ export class VideoDownload extends Feature {
             const url = new Url(details.url, '', true);
             const {pathname, query: data} = url;
             const tabData = this.messageStore.createData(tabId);
-            if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
+            if (pathname === '/x/web-interface/view') {
+                tabData.queue.push({
+                    command: 'initVideoDownload',
+                    type: 'init',
+                    data,
+                    url: url.origin + url.pathname,
+                });
+                this.messageStore.dealWith(tabId); // 处理queue
+            } else if (pathname === '/v2/playurl' || pathname === '/player/web_api/v2/playurl') { // 旧页面，画质，下载地址
                 tabData.queue.push({
                     command: 'videoDownloadSendVideoRequest',
                     type: 'old',
