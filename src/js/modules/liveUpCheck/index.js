@@ -5,7 +5,7 @@
  */
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {getURL, __} from 'Utils';
+import {getURL, __, createNotification} from 'Utils';
 import apis from './apis';
 
 export {LiveUpCheckUI} from './UI';
@@ -156,7 +156,7 @@ export class LiveUpCheck extends Feature {
     sendNotification = (newFeedList) => {
         const notificationState = _.find(this.settings.options, {key: 'notification'});
         notificationState && notificationState.on && _.map(newFeedList, ({room_id, uname, title, cover_from_user}) => {
-            chrome.notifications.create('bilibili-helper-live-up-check' + Math.random(), {
+            createNotification('bilibili-helper-live-up-check' + Math.random(), {
                 type: 'basic',
                 iconUrl: cover_from_user || getURL('/statics/imgs/cat.svg'),
                 title: __('followingLiveUpdateMessage', [uname]),

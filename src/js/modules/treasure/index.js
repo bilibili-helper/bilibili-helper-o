@@ -7,7 +7,7 @@
 import {Feature} from 'Libs/feature';
 import _ from 'lodash';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
-import {__} from 'Utils';
+import {__, createNotification} from 'Utils';
 
 export {TreasureUI} from './UI/index';
 
@@ -38,7 +38,7 @@ export class Treasure extends Feature {
                 const {time_start, silver} = message;
                 const notificationState = _.find(this.settings.options, {key: 'notification'});
                 if (notificationState && notificationState.on) {
-                    chrome.notifications.create('bilibili-helper-treasure' + time_start, {
+                    createNotification('bilibili-helper-treasure' + time_start, {
                         type: 'basic',
                         iconUrl: treasureOpenImg,
                         title: __('extensionNotificationTitle'),

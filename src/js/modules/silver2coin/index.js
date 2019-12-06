@@ -6,7 +6,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {__, getURL} from 'Utils';
+import {__, getURL, createNotification} from 'Utils';
 import apis from './apis';
 
 export class Silver2coin extends Feature {
@@ -74,7 +74,7 @@ export class Silver2coin extends Feature {
                         this.store = {day: this.getTodayDate()};
                         if (res.code === 0) {
                             const notificationState = _.find(this.settings.options, {key: 'notification'});
-                            notificationState && notificationState.on && chrome.notifications.create('bilibili-helper-silver2coin', {
+                            notificationState && notificationState.on && createNotification('bilibili-helper-silver2coin', {
                                 type: 'basic',
                                 iconUrl: getURL('/statics/imgs/cat.svg'),
                                 title: __('extensionNotificationTitle'),

@@ -4,7 +4,7 @@
  * Description:
  */
 import {Feature} from 'Libs/feature';
-import {__, createTab, hasNewVersion, version} from 'Utils';
+import {__, createTab, hasNewVersion, version, createNotification} from 'Utils';
 
 export class Background extends Feature {
     constructor() {
@@ -25,12 +25,12 @@ export class Background extends Feature {
             if (reason === 'install') { // 安装成功后默认打开设置页面
                 createTab(chrome.extension.getURL('config.html?mod=install'));
             } else if (reason === 'update' && !hasNewVersion(previousVersion)) {
-                chrome.notifications.create('bilibili-helper-update', {
+                createNotification('bilibili-helper-update', {
                     type: 'basic',
                     iconUrl: '../statics/imgs/cat.svg',
                     title: __('extensionNotificationTitle'),
                     message: __('extensionNotificationExtensionUpdate').replace('%v', version),
-                });
+                })
             }
         });
         if (typeof (chrome.runtime.setUninstallURL) === 'function') { // 卸载成功后自动跳到助手官网页面

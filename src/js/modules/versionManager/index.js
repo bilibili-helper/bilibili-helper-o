@@ -6,7 +6,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {__, getURL, version, isBiggerThan} from 'Utils';
+import {__, getURL, version, isBiggerThan, createNotification} from 'Utils';
 import apis from './apis';
 
 export class VersionManager extends Feature {
@@ -107,6 +107,6 @@ export class VersionManager extends Feature {
         const iconUrl = getURL('/statics/imgs/cat.svg');
         const title = __('extensionNotificationTitle');
         const type = 'basic';
-        notifyOn && chrome.notifications.create(notifyId, {type, iconUrl, title, message});
+        notifyOn && createNotification(notifyId, {type, iconUrl, title, message});
     };
 }

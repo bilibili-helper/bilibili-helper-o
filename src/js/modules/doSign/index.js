@@ -7,7 +7,7 @@ import $ from 'jquery';
  */
 import {Feature} from 'Libs/feature';
 import _ from 'lodash';
-import {__, getURL} from 'Utils';
+import {__, getURL, createNotification} from 'Utils';
 import apis from './apis';
 
 export class DoSign extends Feature {
@@ -61,7 +61,7 @@ export class DoSign extends Feature {
                     this.store = {day: this.getTodayDate()};
                     if (res.code === 0) {
                         const notificationState = _.find(this.settings.options, {key: 'notification'});
-                        notificationState && notificationState.on && chrome.notifications.create('bilibili-helper-doSign', {
+                        notificationState && notificationState.on && createNotification('bilibili-helper-doSign', {
                             type: 'basic',
                             iconUrl: getURL('/statics/imgs/cat.svg'),
                             title: __('extensionNotificationTitle'),

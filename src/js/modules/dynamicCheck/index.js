@@ -5,7 +5,7 @@
  */
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {getURL, __, toDuration} from 'Utils';
+import {getURL, __, toDuration, createNotification} from 'Utils';
 import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index.js';
@@ -258,7 +258,7 @@ export class DynamicCheck extends Feature {
             const name = (cardData.owner && cardData.owner.name) || (cardData.user && cardData.user.name) || (cardData.author && cardData.author.name);
             const topic = cardData.title || (cardData.item && cardData.item.description) || cardData.new_desc || '';
             const link = this.createLinkByType(desc.type, cardData);
-            chrome.notifications.create('bilibili-helper-dynamic-check' + Math.random(), {
+            createNotification('bilibili-helper-dynamic-check' + Math.random(), {
                 type: 'basic',
                 iconUrl: picture || getURL('/statics/imgs/cat.svg'),
                 title: __('extensionNotificationTitle'),

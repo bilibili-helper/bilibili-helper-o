@@ -165,3 +165,10 @@ export const isBiggerThan = (a, b) => {
     // Otherwise they are the same.
     return 0;
 };
+
+export const isFireFox = navigator.appCodeName === 'Mozilla';
+
+export const createNotification = (id, options, callback) => {
+    if (isFireFox) { delete options.buttons; }
+    return chrome.notifications.create(id, options, callback);
+};
