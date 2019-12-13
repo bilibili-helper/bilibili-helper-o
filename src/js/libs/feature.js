@@ -52,7 +52,7 @@ export class Feature {
 
     get storage() {
         return new Promise((resolve) => {
-            chrome.storage.sync.get(['uid'], function(storage) {
+            chrome.storage.local.get(['uid'], function(storage) {
                 resolve(storage);
             });
         });
@@ -60,7 +60,7 @@ export class Feature {
 
     getStorage(...keys) {
         return new Promise((resolve) => {
-            chrome.storage.sync.get([...keys], function(storage) {
+            chrome.storage.local.get([...keys], function(storage) {
                 resolve(storage);
             });
         });
@@ -68,7 +68,7 @@ export class Feature {
 
     setStorage(updateItem) {
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.set(updateItem, function() {
+            chrome.storage.local.set(updateItem, function() {
                 chrome.runtime.lastError ? reject() : resolve();
             });
         });

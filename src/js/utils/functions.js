@@ -166,7 +166,7 @@ export const isBiggerThan = (a, b) => {
     return 0;
 };
 
-export const isFireFox = navigator.appCodeName === 'Mozilla';
+export const isFireFox = typeof InstallTrigger !== 'undefined';
 
 export const createNotification = (id, options, callback) => {
     if (isFireFox) { delete options.buttons; }
