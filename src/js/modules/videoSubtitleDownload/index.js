@@ -31,6 +31,7 @@ export class VideoSubtitleDownload extends Feature {
         const requestFilter = {
             urls: [
                 '*://api.bilibili.com/x/player.so?id=cid:*',
+                '*://api.bilibili.com/x/player.so?id=cid%3A*', // b站改成这样其实挺好的，就是改得有点突然
             ],
         };
         chrome.webRequest.onSendHeaders.addListener(details => {

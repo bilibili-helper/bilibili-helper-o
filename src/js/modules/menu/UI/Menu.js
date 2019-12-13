@@ -32,7 +32,7 @@ export default () => {
     `;
     const MenuButton = styled(Button)`
       display: block;
-      width: 70px;
+      width: ${({shortMode}) => shortMode ? '70px' : '110px'};
       height: 36px;
       border: 1px solid ${color('google-grey-100')};
       border-radius: 0;
@@ -77,7 +77,7 @@ export default () => {
     //const Title = styled.div`
     //  display: flex;
     //  justify-content: space-between;
-    //  width:${({showIcon}) => showIcon ? '60px' : '152px'};
+    //  width:${({shortMode}) => shortMode ? '60px' : '152px'};
     //  font-size: 12px;
     //  position: absolute;
     //  bottom: 3px;
@@ -89,7 +89,7 @@ export default () => {
     `;
     const Linker = styled.input.attrs({className: 'bilibili-helper-menu-linker-input'})`
       display: block;
-      width: ${({showIcon}) => showIcon ? '63px' : '70px'};
+      width: ${({shortMode}) => shortMode ? '72px' : '70px'};
       height: 36px;
       margin-bottom: 6px;
       position: relative;
@@ -196,7 +196,9 @@ export default () => {
                         createTab(`${link}${cookie.value}/favlist`);
                     }
                 });
-            } else createTab(link);
+            } else {
+                createTab(link);
+            }
 
         };
 
@@ -215,15 +217,21 @@ export default () => {
                             url = 'https://www.bilibili.com/bangumi/play/' + value;
                             break;
                         case 's':
-                            if (res[2]) url = 'https://bangumi.bilibili.com/anime/' + res[2];
-                            else pass = false;
+                            if (res[2]) {
+                                url = 'https://bangumi.bilibili.com/anime/' + res[2];
+                            } else {
+                                pass = false;
+                            }
                             break;
                         case 'md':
                             url = 'https://www.bilibili.com/bangumi/media/' + value;
                             break;
                         case 'u':
-                            if (res[2]) url = 'https://space.bilibili.com/' + res[2];
-                            else pass = false;
+                            if (res[2]) {
+                                url = 'https://space.bilibili.com/' + res[2];
+                            } else {
+                                pass = false;
+                            }
                             break;
                         case 'cv':
                             url = 'https://www.bilibili.com/read/' + value;
@@ -253,15 +261,21 @@ export default () => {
                     });
 
                     createTab(url);
-                } else this.setState({linkerError: true});
+                } else {
+                    this.setState({linkerError: true});
+                }
             }
         };
 
         checkLinkerValue = (value) => {
             const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
-            if (res && res[1] && res[2]) return true;
-            else if (res && !res[1] && res[2]) return true;
-            else return false;
+            if (res && res[1] && res[2]) {
+                return true;
+            } else if (res && !res[1] && res[2]) {
+                return true;
+            } else {
+                return false;
+            }
         };
 
         handleLinkerClick = () => {
@@ -269,8 +283,9 @@ export default () => {
         };
 
         handleKeyUp = (event) => {
-            if (event.key === 'Enter') this.link();
-            else {
+            if (event.key === 'Enter') {
+                this.link();
+            } else {
                 const value = String(event.target.value).toLowerCase().trim();
                 store.set('lastSearch', value);
                 const res = this.checkLinkerValue(value);
@@ -286,32 +301,28 @@ export default () => {
         render() {
             const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options} = this.state;
             const {video, live, dynamic, favourite, linker} = menuOptions;
-            const showIconOption = options ? _.find(options, (o) => o.key === 'showIcon') : {};
-            const showIcon = showIconOption ? showIconOption.on : false;
+            const shortModeOption = options ? _.find(options, (o) => o.key === 'shortMode') : {};
+            const shortMode = shortModeOption ? shortModeOption.on : false;
             return (
                 <MenuView>
-                    {video && <MenuButton onClick={() => this.handleOnClick('video', getLink('video'))}>{__('goBili')}</MenuButton>}
-                    {live && (showIcon ? <IconBtn
-                        title={__('goBiliLive')}
-                        onClick={() => this.handleOnClick('live', getLink('live'))}>
-                        <Icon size={20} iconfont="live"/>
-                    </IconBtn> : <MenuButton onClick={() => this.handleOnClick('live', getLink('live'))}>
-                                  {__('goBiliLive')}
-                              </MenuButton>)}
+                    {video && <MenuButton
+                        shortMode={shortMode}
+                        onClick={() => this.handleOnClick('video', getLink('video'))}
+                    >{__('goBili')}</MenuButton>}
+                    {live && <MenuButton
+                        shortMode={shortMode}
+                        onClick={() => this.handleOnClick('live', getLink('live'))}
+                    >{__('goBiliLive')}</MenuButton>}
                     {/* 登录后显示“我的关注”和“我的收藏” */}
                     {permissionMap.login && permissionMap.login.pass ? <React.Fragment>
-                        {dynamic && (showIcon ? <IconBtn
-                            title={__('goDynamic')}
-                            onClick={() => this.handleOnClick('watch', newWatchPageLink)}>
-                            <Icon size={20} iconfont="like"/>
-                        </IconBtn> : <MenuButton
-                                         onClick={() => this.handleOnClick('watch', newWatchPageLink)}>{__('goDynamic')}</MenuButton>)}
-                        {favourite && (showIcon ? <IconBtn
-                            title={__('goFavourite')}
-                            onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>
-                            <Icon size={20} iconfont="favourite"/>
-                        </IconBtn> : <MenuButton
-                                           onClick={() => this.handleOnClick('favourite', getLink('favourite'))}>{__('goFavourite')}</MenuButton>)}
+                        {dynamic && <MenuButton
+                            shortMode={shortMode}
+                            onClick={() => this.handleOnClick('watch', newWatchPageLink)}
+                        >{__('goDynamic')}</MenuButton>}
+                        {favourite && <MenuButton
+                            shortMode={shortMode}
+                            onClick={() => this.handleOnClick('favourite', getLink('favourite'))}
+                        >{__('goFavourite')}</MenuButton>}
                     </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                     {linker && <LinkerWrapper>
                         <Linker
@@ -321,15 +332,11 @@ export default () => {
                             onFocusOut={this.handleFocusIn}
                             placeholder={__('enterID')}
                             defaultValue={lastSearch}
-                            showIcon={showIcon}
+                            shortMode={shortMode}
                         />
-                        {/*{!showIcon && <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>}*/}
+                        {!shortMode && <Enter onClick={this.handleLinkerClick}>{__('goVideo')}</Enter>}
                     </LinkerWrapper>}
-                    {showIcon ? <IconBtn
-                        title={__('goOption')}
-                        onClick={() => this.handleOnClick('config', getLink('config'))}
-                    ><Icon size={20} iconfont="option"/></IconBtn> : <MenuButton
-                         onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>}
+                    {<MenuButton shortMode={shortMode} onClick={() => this.handleOnClick('config', getLink('config'))}>{__('goOption')}</MenuButton>}
                 </MenuView>
             );
         }

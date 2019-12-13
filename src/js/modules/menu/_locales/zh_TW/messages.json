@@ -1,4 +1,40 @@
 {
+    "menu_name": {
+        "message": "擴展程序菜單欄"
+    },
+    "menu_description": {
+        "message": "選擇您需要在擴展菜單中顯示的常用功能"
+    },
+    "menu_options_shortMode": {
+        "message": "較短按鈕寬度"
+    },
+    "menu_options_shortMode_description": {
+        "message": "開啟後菜單按鈕將會縮短"
+    },
+    "menu_options_oldWatchPage": {
+        "message": "舊關注頁面"
+    },
+    "menu_subPage_title": {
+        "message": "啟用菜單欄"
+    },
+    "menu_subPage_options_video": {
+        "message": "前往主站"
+    },
+    "menu_subPage_options_live": {
+        "message": "前往直播區"
+    },
+    "menu_subPage_options_dynamic": {
+        "message": "我的關注"
+    },
+    "menu_subPage_options_favourite": {
+        "message": "我的收藏"
+    },
+    "menu_subPage_options_linker": {
+        "message": "視頻快速跳轉"
+    },
+    "menu_subPage_options_linker_description": {
+        "message": "窄模式下，需要按回车键进行跳转"
+    },
     "goBili": {
         "message": "主站",
         "description": "Popup Button: go_bili"

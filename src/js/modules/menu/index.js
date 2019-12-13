@@ -24,11 +24,10 @@ export class Menu extends Feature {
                 description: __('menu_description'),
                 options: [
                     {
-                        key: 'showIcon',
-                        title: __('menu_options_showIcon'),
+                        key: 'shortMode',
+                        title: __('menu_options_shortMode'),
                         on: false,
-                        description: __('menu_options_showIcon_description'),
-                        hide: true,
+                        description: __('menu_options_shortMode_description'),
                     },
                     {
                         key: 'oldWatchPage',
