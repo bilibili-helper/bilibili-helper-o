@@ -54,7 +54,7 @@ export class VideoDownload extends Feature {
                 '*://interface.bilibili.com/v2/playurl?cid=*', // 旧版页面必定加载，画质，下载地址
                 //'*://bangumi.bilibili.com/player/web_api/v2/playurl?cid=*', // 老番剧页面
                 '*://api.bilibili.com/pgc/player/web/playurl?avid=*', // 新番剧页面
-                '*://api.bilibili.com/x/player/playurl?avid=*', // 新版页面切换清晰度时调用，返回字段和上面相同
+                '*://api.bilibili.com/x/player/playurl?*', // 新版页面切换清晰度时调用，返回字段和上面相同
 
                 '*://interface.bilibili.com/player?id=cid:*',
                 '*://api.bilibili.com/x/player.so?id=cid:*',

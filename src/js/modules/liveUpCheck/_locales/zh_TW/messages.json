@@ -18,7 +18,7 @@
         "message": "最近推送列表"
     },
     "liveUpCheck_options_dynamicCheckBox_description": {
-        "message": "在扩展菜单显示$MAX$条最近推送的视频",
+        "message": "在扩展菜单显示$MAX$条最近推送的直播",
         "placeholders": {
             "max": {
                 "content": "$1",
