@@ -35,13 +35,15 @@ export class ShowDisabledVideoUI extends UI {
                 const titleDOM = disabledVideoDOM.querySelector('a[title=已失效视频]');
                 if (titleDOM && title === '已失效视频' && pages.length > 0 && pages[0].title !== '') { // 如果标题数据有效
                     titleDOM.textContent = pages[0].title;
-                } else if(titleDOM && intro) titleDOM.textContent = intro;
+                } else if (titleDOM && intro) {
+                    titleDOM.textContent = intro;
+                }
 
                 if (titleDOM && intro) {
                     titleDOM.title = intro;
                 }
 
-                disabledVideoDOM.querySelector('.disabled-cover').setAttribute('style', 'display: block;')
+                disabledVideoDOM.querySelector('.disabled-cover').setAttribute('style', 'display: block;');
             }
         });
     }

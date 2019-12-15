@@ -5,7 +5,7 @@
  */
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {getURL, __, createNotification} from 'Utils';
+import {getURL, __, createNotification, fetchFromHelper} from 'Utils';
 import apis from './apis';
 
 export {LiveUpCheckUI} from './UI';
@@ -134,7 +134,7 @@ export class LiveUpCheck extends Feature {
 
     // 检查未读推送
     getList(list, page = 1) {
-        return fetch(apis.getList + `?page=${page}&page_size=10`)
+        return fetchFromHelper(apis.getList + `?page=${page}&page_size=10`)
         .then(response => response.json())
         .then(({code, data: {rooms, count}, message}) => {
             if (code === 0) {

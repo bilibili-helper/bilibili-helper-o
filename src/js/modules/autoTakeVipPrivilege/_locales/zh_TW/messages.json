@@ -1,0 +1,14 @@
+{
+    "autoTakeVipPrivilege_name": {
+        "message": "自動領取大會員福利"
+    },
+    "autoTakeVipPrivilege_notification": {
+        "message": "推送通知"
+    },
+    "autoTakeVipPrivilege_notification_description": {
+        "message": "領取成功後通過推送通知提醒"
+    },
+    "autoTakeVipPrivilege_notification_successfully": {
+        "message": "自動領取成功！"
+    }
+}

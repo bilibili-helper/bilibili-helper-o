@@ -1,4 +1,3 @@
-/* global require */
 /**
  * Author: Ruo
  * Create: 2018-06-12
@@ -31,6 +30,7 @@ import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
 import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
+import {AutoTakeVipPrivilege} from 'Modules/autoTakeVipPrivilege';
 
 //let VideoUnblock;
 //try {
@@ -66,6 +66,7 @@ export const Features = {
     LiveUpCheck,
     ShowDisabledVideo,
     LivePictureInPicture,
+    AutoTakeVipPrivilege,
 };
 
 export const UIs = {

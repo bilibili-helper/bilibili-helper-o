@@ -172,3 +172,16 @@ export const createNotification = (id, options, callback) => {
     if (isFireFox) { delete options.buttons; }
     return chrome.notifications.create(id, options, callback);
 };
+
+export const fetchFromHelper = (url, options) => {
+    if (options) {
+        if (options.headers) {
+            options.headers = {...options.headers, 'From': 'bilibili-helper'};
+        } else {
+            options.headers = {'From': 'bilibili-helper'};
+        }
+    } else {
+        options = {headers: {'From': 'bilibili-helper'}};
+    }
+    return fetch(url, options);
+};

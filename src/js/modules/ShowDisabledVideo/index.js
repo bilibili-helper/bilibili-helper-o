@@ -7,7 +7,7 @@ import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import _ from 'lodash';
 import Url from 'url-parse';
-import {__} from 'Utils/functions';
+import {__, fetchFromHelper} from 'Utils/functions';
 
 export {ShowDisabledVideoUI} from './UI/index.js';
 
@@ -37,7 +37,7 @@ export class ShowDisabledVideo extends Feature {
             }
             const url = new Url(details.url, '', true);
             const tabData = this.messageStore.createData(tabId);
-            fetch(url.href)
+            fetchFromHelper(url.href)
             .then(res => res.json())
             .then((res) => {
                 tabData.queue.push({
@@ -47,7 +47,6 @@ export class ShowDisabledVideo extends Feature {
                 this.messageStore.dealWith(tabId); // 处理queue
             });
 
-
         }, requestFilter, ['requestHeaders']);
-    }
+    };
 }

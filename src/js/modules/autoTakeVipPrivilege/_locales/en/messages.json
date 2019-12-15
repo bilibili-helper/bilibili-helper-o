@@ -1,0 +1,14 @@
+{
+    "autoTakeVipPrivilege_name": {
+        "message": "Take vip privilege automatically"
+    },
+    "autoTakeVipPrivilege_notification": {
+        "message": "Notifications"
+    },
+    "autoTakeVipPrivilege_notification_description": {
+        "message": "Receives a notification when received successes."
+    },
+    "autoTakeVipPrivilege_notification_successfully": {
+        "message": "Received successfully！！"
+    }
+}

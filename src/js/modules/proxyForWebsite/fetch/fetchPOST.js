@@ -1,3 +1,5 @@
+import {fetchFromHelper} from 'Utils/functions';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2019/3/2
@@ -10,7 +12,7 @@ export const fetchPOST = async (websitePort, {url, options, sign, model}) => {
     for (let name in body) formData.append(name, body[name]);
     options.body = formData;
     rest.body = formData;
-    return fetch(url, rest)
+    return fetchFromHelper(url, rest)
     .then(response => response.json())
     .then(result => {
         websitePort.postMessage({

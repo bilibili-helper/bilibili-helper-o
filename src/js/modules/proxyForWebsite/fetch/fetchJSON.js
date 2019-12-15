@@ -4,6 +4,7 @@
  * Description:
  */
 import Url from 'url-parse';
+import {fetchFromHelper} from 'Utils/functions';
 
 /**
  *
@@ -17,7 +18,7 @@ import Url from 'url-parse';
 export const fetchJSON = async (websitePort, {url, options, sign, model}) => {
     if (!model) throw(`fetch from Model ${model}`);
     const urlObject = new Url(url, true);
-    return fetch(url, options)
+    return fetchFromHelper(url, options)
     .then(response => response.json())
     .then(result => {
         websitePort.postMessage({

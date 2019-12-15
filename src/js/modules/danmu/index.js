@@ -8,7 +8,7 @@ import URLParse from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
-import {__} from 'Utils';
+import {__, fetchFromHelper} from 'Utils';
 
 export {DanmuUI} from './UI/index';
 
@@ -42,7 +42,9 @@ export class Danmu extends Feature {
         chrome.webRequest.onSendHeaders.addListener((details) => {
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
-            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
+            if (/^chrome-extension:\/\//.test(initiator) || fromHelper) {
+                return;
+            }
             const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
             // 收到前端页面请求
@@ -74,29 +76,23 @@ export class Danmu extends Feature {
         }, requestFilter, ['requestHeaders']);
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.command === 'fetchCardInfo' && message.url) {
-                fetch(message.url, {
-                    headers: {
-                        'From': 'bilibili-helper',
-                    },
-                }).then(res => res.json())
-                  .then((danmuDocument) => {
-                      sendResponse(danmuDocument);
-                  }, (res) => {
-                      console.error(res);
-                      sendResponse(res);
-                  });
+                fetchFromHelper(message.url)
+                .then(res => res.json())
+                .then((danmuDocument) => {
+                    sendResponse(danmuDocument);
+                }, (res) => {
+                    console.error(res);
+                    sendResponse(res);
+                });
             } else if (message.command === 'fetchDanmu' && message.url) {
-                fetch(message.url, {
-                    headers: {
-                        'From': 'bilibili-helper',
-                    },
-                }).then(res => res.text())
-                  .then((danmuDocument) => {
-                      sendResponse(danmuDocument);
-                  }, (res) => {
-                      console.error(res);
-                      sendResponse(res);
-                  });
+                fetchFromHelper(message.url)
+                .then(res => res.text())
+                .then((danmuDocument) => {
+                    sendResponse(danmuDocument);
+                }, (res) => {
+                    console.error(res);
+                    sendResponse(res);
+                });
             } else if (message.command === 'downloadDanmuXML' && message.cid) {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',

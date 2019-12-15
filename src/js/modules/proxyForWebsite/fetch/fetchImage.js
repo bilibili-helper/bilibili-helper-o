@@ -1,3 +1,5 @@
+import {fetchFromHelper} from 'Utils/functions';
+
 /**
  * Author: DrowsyFlesh
  * Create: 2019/3/1
@@ -27,7 +29,7 @@ export const fetchImage = async (websitePort, {url, options, sign, model, mine})
     let imageBase64String = '';
     if (imageList[sign]) imageBase64String = imageList[sign];
     else {
-        imageBase64String = await fetch(url, options)
+        imageBase64String = await fetchFromHelper(url, options)
         .then(response => response)
         .then((response) => {
             return response.arrayBuffer().then(buffer => {

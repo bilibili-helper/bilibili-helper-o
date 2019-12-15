@@ -6,6 +6,7 @@
 import _ from 'lodash';
 import URL from 'url-parse';
 import fetchProgress from 'fetch-progress';
+import {fetchFromHelper} from 'Utils/functions';
 import {DataBase} from './lib/DataBase';
 
 const UPDATE_INTERVAL = 700;
@@ -59,7 +60,7 @@ export class Dash {
                 resolve(this.readAsBuffer(blob));
             }, () => {
                 let range = 'bytes=0-';
-                fetch(this.url.toString(), {
+                fetchFromHelper(this.url.toString(), {
                     method: 'get',
                     mode: 'cors',
                     referrerPolicy: 'no-referrer-when-downgrade',

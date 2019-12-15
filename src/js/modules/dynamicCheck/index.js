@@ -5,7 +5,7 @@
  */
 import _ from 'lodash';
 import {Feature} from 'Libs/feature';
-import {getURL, __, toDuration, createNotification} from 'Utils';
+import {getURL, __, toDuration, createNotification, fetchFromHelper} from 'Utils';
 import apis from './apis';
 
 export {DynamicCheckUI} from './UI/index.js';
@@ -177,7 +177,7 @@ export class DynamicCheck extends Feature {
             }
             const dynamic_id = this.lastCheckDynamicID ? `&update_num_dy_id=${this.lastCheckDynamicID}` : '';
 
-            return fetch(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
+            return fetchFromHelper(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
             .then(response => response.json())
             .then(({code, data: {new_num, update_num}, message}) => {
                 if (code !== 0) {
@@ -231,7 +231,7 @@ export class DynamicCheck extends Feature {
     getFeed = (typeList, offsetID) => {
         return this.userId.then((userId) => {
             const url = offsetID ? `${apis.dynamic_history}?uid=${userId}&type_list=${this.typeList}&offset_dynamic_id=${offsetID}` : `${apis.dynamic_new}?uid=${userId}&type_list=${typeList}`;
-            return fetch(url).then(response => response.json());
+            return fetchFromHelper(url).then(response => response.json());
         });
     };
 

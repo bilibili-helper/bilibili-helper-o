@@ -7,7 +7,7 @@
 import {Feature} from 'Libs/feature';
 import _ from 'lodash';
 import {treasureOpenImg} from 'Modules/treasure/UI/imgUrls';
-import {__, createNotification} from 'Utils';
+import {__, createNotification, fetchFromHelper} from 'Utils';
 
 export {TreasureUI} from './UI/index';
 
@@ -46,7 +46,7 @@ export class Treasure extends Feature {
                     });
                 }
             } else if (message.command === 'getCurrentTask' && message.type === 'treasure') {
-                fetch(message.url, {
+                fetchFromHelper(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {
                     this.retryTime = 0;
@@ -59,7 +59,7 @@ export class Treasure extends Feature {
                     } else sendResponse(res);
                 });
             } else if (message.command === 'getCaptcha' && message.type === 'treasure') {
-                fetch(message.url, {
+                fetchFromHelper(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {
                     this.retryTime = 0;
@@ -72,7 +72,7 @@ export class Treasure extends Feature {
                     } else sendResponse(res);
                 });
             } else if (message.command === 'getAward' && message.type === 'treasure') {
-                fetch(message.url, {
+                fetchFromHelper(message.url, {
                     credentials: 'include',
                 }).then(res => res.json()).then((res) => {
                     this.retryTime = 0;
