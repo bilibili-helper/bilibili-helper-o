@@ -9,6 +9,6 @@
         "message": "Receives a notification when received successes."
     },
     "autoTakeVipPrivilege_notification_successfully": {
-        "message": "Received successfully！！"
+        "message": "Received VIP privilege successfully！！"
     }
 }

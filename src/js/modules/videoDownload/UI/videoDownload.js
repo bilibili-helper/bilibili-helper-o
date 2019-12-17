@@ -17,6 +17,11 @@ import {getFilename} from 'Utils';
 import {normalFlvDownloadURL, bangumiFlvDownloadURL} from '../api';
 import {theme} from 'Styles';
 
+const videoDataCache = {
+    old: {},
+    new: {},
+};
+
 export default () => {
     const {color} = theme;
 
@@ -240,6 +245,7 @@ export default () => {
                     } else if (res.type === 'old') {
                         downloadData = res.result || res.data || res;
                     }
+                    videoDataCache[res.type][res.url] = downloadData;
 
                     const {accept_quality, accept_description, durl, quality, dash} = downloadData;
                     const currentData = {accept_quality, accept_description, durl, dash, quality};
@@ -272,18 +278,31 @@ export default () => {
 
         // 由于chrome73开始CROB策略，改为插入页面的请求方式，在用window的message传回脚本，心累累
         getFlvResponse = (method, url, type = 'old') => {
-            const scriptHTML = document.createElement('script');
-            scriptHTML.innerHTML = `
-            fetch('${url}', {
-                method: 'get',
-                credentials: 'include',
-            })
-            .then(res => res.json())
-            .then(res => {
-                window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}'}}, '*');
-            });
-        `;
-            document.body.appendChild(scriptHTML);
+            const {videoData, currentCid} = this.state;
+            if (videoDataCache[type][url]) {
+                const {accept_quality, accept_description, durl, quality, dash} = videoDataCache[type][url];
+                const currentData = {accept_quality, accept_description, durl, dash, quality};
+                if (!videoData[currentCid]) {
+                    videoData[currentCid] = {};
+                }
+                videoData[currentCid][quality] = currentData;
+                this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
+            } else {
+                const scriptHTML = document.createElement('script');
+                scriptHTML.innerHTML = `
+                fetch('${url}&requestFrom=bilibili-helper', {
+                    method: 'get',
+                    credentials: 'include',
+                })
+                .then(res => res.json())
+                .then(res => {
+                    window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}', url: '${url}'}}, '*');
+                }).catch(e => {
+                    console.log(e);
+                });
+                `;
+                document.body.appendChild(scriptHTML);
+            }
         };
 
         handleOnClickDownloadFLV = (e, downloadUrl) => {
@@ -460,7 +479,7 @@ export default () => {
             const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
             return (
                 <React.Fragment>
-                    <Title>视频下载（视频会暂停）- 切换清晰度</Title>
+                    <Title>视频下载 - 切换清晰度</Title>
                     <Container>
                         {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
                         {!videoData[currentCid] ? <LinkGroupTitle>

@@ -177,6 +177,22 @@ export class FeatureManager {
                     if (feature) { sendResponse(feature.store); }
                     break;
                 }
+                case 'getCookie': {
+                    if (!message.options) {
+                        sendResponse(null);
+                    } else {
+                        chrome.cookies.get(message.options, (cookie) => {
+                            const thisSecond = (new Date()).getTime() / 1000;
+                            // expirationDate 是秒数
+                            if (cookie && cookie.expirationDate > thisSecond) {
+                                sendResponse(cookie);
+                            } else {
+                                sendResponse(null);
+                            }
+                        });
+                    }
+                    break;
+                }
             }
             return true;
         });

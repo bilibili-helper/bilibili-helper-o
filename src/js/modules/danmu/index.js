@@ -47,6 +47,7 @@ export class Danmu extends Feature {
             }
             const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
+            if (query && query.requestFrom) return;
             // 收到前端页面请求
             if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
                 const tabData = this.messageStore.createData(tabId);

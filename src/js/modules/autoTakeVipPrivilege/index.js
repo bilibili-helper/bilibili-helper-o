@@ -1,4 +1,3 @@
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/24
@@ -8,16 +7,19 @@ import {Feature} from 'Libs/feature';
 import {__, getURL, createNotification, fetchFromHelper} from 'Utils';
 import apis from './apis';
 
+export {AutoTakeVipPrivilegeUI} from './UI';
+
 export class AutoTakeVipPrivilege extends Feature {
     constructor() {
         super({
             name: 'autoTakeVipPrivilege',
-            kind: 'other',
+            kind: 'vipPrivilege',
             permissions: ['login'],
             settings: {
                 on: true,
                 title: __('autoTakeVipPrivilege_name'),
                 type: 'checkbox',
+                hasUI: true,
                 options: [
                     {
                         on: true,
@@ -31,30 +33,42 @@ export class AutoTakeVipPrivilege extends Feature {
     }
 
     launch = () => {
-        chrome.alarms.create('autoTakeVipPrivilege', {periodInMinutes: 5});
+        this.addLaunchedListener();
     };
 
     pause = () => {
-        chrome.alarms.clear('autoTakeVipPrivilege');
+        this.removeLaunchedListener();
     };
 
-    addListener = () => {
-        chrome.alarms.onAlarm.addListener((alarm) => {
-            switch (alarm.name) {
-                case 'autoTakeVipPrivilege':
-                    this.request();
-                    break;
-            }
-            return true;
-        });
+    messageListener = (message, sender, sendResponse) => {
+        if (message.command === 'checkVipPrivilegeStatus') {
+            this.request().then((types) => {
+                sendResponse(types);
+            });
+        } else if (message.command === 'receiveVIPPrivilegeSuccessfully') {
+            const notificationState = _.find(this.settings.options, {key: 'notification'});
+            notificationState && notificationState.on && createNotification('bilibili-helper-autoTakeVipPrivilege', {
+                type: 'basic',
+                iconUrl: getURL('/statics/imgs/cat.svg'),
+                title: __('extensionNotificationTitle'),
+                message: __('autoTakeVipPrivilege_notification_successfully'),
+                buttons: [],
+            });
+        }
+        return true;
     };
 
-    permissionHandleLogin = (hasLogin) => {
-        this.request(hasLogin);
+    addLaunchedListener = () => {
+        chrome.runtime.onMessage.addListener(this.messageListener);
+    };
+
+    removeLaunchedListener = () => {
+        chrome.runtime.onMessage.removeListener(this.messageListener);
     };
 
     checkout = () => {
         return new Promise((resolve, reject) => {
+            this.store = {day: this.getTodayDate()};
             fetchFromHelper(apis.getStatus, {
                 credentials: 'include',
                 mode: 'cors',
@@ -75,54 +89,35 @@ export class AutoTakeVipPrivilege extends Feature {
         });
     };
 
-    receive = (types) => {
-        `code: 69801 message: "你已领取过该权益"`;
-        `code: 69800 message: "网络繁忙 请稍后再试"`;
-        chrome.cookies.get({
-            url: 'http://www.bilibili.com',
-            name: 'bili_jct',
-        }, (cookie) => {
-            types.forEach((type) => {
-                return fetchFromHelper(apis.receive, {
-                    method: 'post',
-                    body: `type=${type}&csrf=${cookie.value}`,
-                    credentials: 'include',
-                    mode: 'cors',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                })
-                .then(res => {
-                    console.warn(res);
-                });
-            });
-        });
-    };
+    //receive = (types) => {
+    //    `code: 69801 message: "你已领取过该权益"`;
+    //    `code: 69800 message: "网络繁忙 请稍后再试"`;
+    //    chrome.cookies.get({
+    //        url: 'http://www.bilibili.com',
+    //        name: 'bili_jct',
+    //    }, (cookie) => {
+    //        types.forEach((type) => {
+    //            return fetchFromHelper(apis.receive, {
+    //                method: 'post',
+    //                body: `type=${type}&csrf=${cookie.value}`,
+    //                credentials: 'include',
+    //                mode: 'cors',
+    //                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    //            })
+    //            .then(res => {
+    //                console.warn(res);
+    //            });
+    //        });
+    //    });
+    //};
 
-    request = (hasLogin = this.permissionMap.login) => {
+    request = () => {
         if (chrome.extension.inIncognitoContext) {
-            return;
+            return Promise.reject(`${this.name}: 请退出隐私模式`);
         } // 隐身模式
         let {day} = this.store || {};
-        if (day !== this.getTodayDate() && this.settings.on && hasLogin) {
-            this.checkout().then(() => {
-                //chrome.
-            });
-            //this.settings.on && hasLogin && $.ajax({
-            //    method: 'get',
-            //    url: apis.getStatus,
-            //    success: (res) => {
-            //        this.store = {day: this.getTodayDate()};
-            //        if (res.code === 0) {
-            //            const notificationState = _.find(this.settings.options, {key: 'notification'});
-            //            notificationState && notificationState.on && createNotification('bilibili-helper-autoTakeVipPrivilege', {
-            //                type: 'basic',
-            //                iconUrl: getURL('/statics/imgs/cat.svg'),
-            //                title: __('extensionNotificationTitle'),
-            //                message: __('autoTakeVipPrivilege_notification_successfully'),
-            //                buttons: [],
-            //            });
-            //        }
-            //    },
-            //});
-        }
+        if (day !== this.getTodayDate() && this.settings.on) {
+            return this.checkout();
+        } else return Promise.reject(`${this.name}:今天已经检查过了`);
     };
 }

@@ -30,7 +30,7 @@ import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
 import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
 import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
-import {AutoTakeVipPrivilege} from 'Modules/autoTakeVipPrivilege';
+import {AutoTakeVipPrivilege, AutoTakeVipPrivilegeUI} from 'Modules/autoTakeVipPrivilege';
 
 //let VideoUnblock;
 //try {
@@ -89,4 +89,5 @@ export const UIs = {
     LiveUpCheckUI,
     ShowDisabledVideoUI,
     LivePictureInPictureUI,
+    AutoTakeVipPrivilegeUI,
 };

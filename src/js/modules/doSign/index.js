@@ -56,7 +56,7 @@ export class DoSign extends Feature {
         if (day !== this.getTodayDate()) {
             this.settings.on && hasLogin && $.ajax({
                 method: 'get',
-                url: apis.doSign,
+                url: `${apis.doSign}?requestFrom=bilibili-helper`,
                 success: (res) => {
                     this.store = {day: this.getTodayDate()};
                     if (res.code === 0) {

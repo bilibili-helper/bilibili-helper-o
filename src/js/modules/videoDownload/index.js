@@ -69,6 +69,7 @@ export class VideoDownload extends Feature {
             }
             const url = new Url(details.url, '', true);
             const {pathname, query: data} = url;
+            if (data && data.requestFrom) return;
             const tabData = this.messageStore.createData(tabId);
             if (pathname === '/x/web-interface/view') {
                 tabData.queue.push({
@@ -126,6 +127,8 @@ export class VideoDownload extends Feature {
             const {responseHeaders, initiator, url} = details;
             if (/^chrome-extension:\/\//.test(initiator)) return;
             const urlObject = new Url(url, '', true);
+            const {query: data} = url;
+            if (data && data.requestFrom) return;
             const filenameObject = this.downloadFilenames[urlObject.pathname];
             if (filenameObject) {
                 const {filename: originFilename, cid} = filenameObject;

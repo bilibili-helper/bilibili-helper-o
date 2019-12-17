@@ -181,6 +181,9 @@ export default () => {
         background-color: ${color('bilibili-blue')};
         user-select: none;
       }
+      .hide-aside-area #aside-area-vm {
+        width: 190px!important;
+      }
       
       .hide-aside-area .chat-history-panel:hover .live-chat-mode-height-bar::after {
         content: '';

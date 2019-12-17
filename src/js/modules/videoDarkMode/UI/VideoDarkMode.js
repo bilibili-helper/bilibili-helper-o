@@ -246,7 +246,7 @@ export default () => {
       }
       // 播放器工具栏
       .bilibili-player-video-sendbar {
-        background-color: var(--dark-2)!important;
+        background-color: transparent!important;
         .bilibili-player-video-inputbar {
           background-color: unset!important;
           .bilibili-player-video-inputbar-wrap {

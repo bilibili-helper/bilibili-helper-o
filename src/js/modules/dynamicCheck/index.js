@@ -177,7 +177,7 @@ export class DynamicCheck extends Feature {
             }
             const dynamic_id = this.lastCheckDynamicID ? `&update_num_dy_id=${this.lastCheckDynamicID}` : '';
 
-            return fetchFromHelper(apis.dynamic_num + `?uid=${userId}&type_list=${this.typeList.join(',')}` + dynamic_id)
+            return fetchFromHelper(`${apis.dynamic_num}?uid=${userId}&type_list=${this.typeList.join(',')}${dynamic_id}&requestFrom=bilibili-helper`)
             .then(response => response.json())
             .then(({code, data: {new_num, update_num}, message}) => {
                 if (code !== 0) {
@@ -230,7 +230,7 @@ export class DynamicCheck extends Feature {
     // 处理推送数据 - 不缓存到本地(￣.￣)
     getFeed = (typeList, offsetID) => {
         return this.userId.then((userId) => {
-            const url = offsetID ? `${apis.dynamic_history}?uid=${userId}&type_list=${this.typeList}&offset_dynamic_id=${offsetID}` : `${apis.dynamic_new}?uid=${userId}&type_list=${typeList}`;
+            const url = offsetID ? `${apis.dynamic_history}?uid=${userId}&type_list=${this.typeList}&offset_dynamic_id=${offsetID}` : `${apis.dynamic_new}?uid=${userId}&type_list=${typeList}&requestFrom=bilibili-helper`;
             return fetchFromHelper(url).then(response => response.json());
         });
     };

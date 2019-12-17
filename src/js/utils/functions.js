@@ -6,6 +6,7 @@
 /* global chrome */
 
 import moment from 'moment';
+import Url from 'url-parse';
 
 /**
  * @param command {string}
@@ -101,7 +102,7 @@ export const parseTime = (time) => {
 // 判断是否在直播间
 export const inLiveRoom = () => /^\/([/blanc/\d]+)$/.exec(window.location.pathname) ? true : false;
 
-export const consoleLogo = () => {
+export const consoleLogo = (from) => {
     // eslint-disable-next-line no-console
     console.log(`%c
  ____ _____ _      _____ ____ _____ _      _____ _    _ ______ _      _____  ______ _____
@@ -111,7 +112,7 @@ export const consoleLogo = () => {
 | |_) _| |_| |____ _| |_| |_) _| |_| |____ _| |_| |  | | |____| |____| |    | |____| | \\ \\
 |____|_____|______|_____|____|_____|______|_____|_|  |_|______|______|_|    |______|_|  \\_\\
 
--... .. .-.. .. -... .. .-.. ..    .... . .-.. .--. . .-.                    version: ${version}
+-... .. .-.. .. -... .. .-.. ..    .... . .-.. .--. . .-.   version: ${version} ${from ? `from: ${from}` : ''}
 `, 'color: #00a1d6');
 };
 
@@ -183,5 +184,13 @@ export const fetchFromHelper = (url, options) => {
     } else {
         options = {headers: {'From': 'bilibili-helper'}};
     }
-    return fetch(url, options);
+    const urlObject = new Url(url, '', true);
+    if (!urlObject.query || !urlObject.query.requestFrom) {
+        urlObject.set('query', {
+            ...urlObject.query,
+            requestFrom: 'bilibili-helper',
+        });
+    }
+
+    return fetch(urlObject.href, options).catch((e)=> console.error(url, e));
 };

@@ -42,6 +42,7 @@ export class VideoSubtitleDownload extends Feature {
             const tabData = this.messageStore.createData(tabId);
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
+            if (query && query.requestFrom) return;
             if (pathname === '/x/player.so') {
                 tabData.data.cid = query.id.slice(4);
                 const storeObject = this.messageStore.createData(tabId);

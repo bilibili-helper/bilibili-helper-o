@@ -53,7 +53,7 @@ export class UIManager {
             if (this.waitQueue.length > 0) {
                 this.dealWithWaitQueue();
             } else {
-                consoleLogo();
+                consoleLogo(this.kind);
             }
         });
     };
@@ -87,7 +87,7 @@ export class UIManager {
             if (this.waitQueue.length > 0) {
                 this.dealWithWaitQueue();
             } else {
-                consoleLogo();
+                consoleLogo(this.kind);
             }
         });
     };

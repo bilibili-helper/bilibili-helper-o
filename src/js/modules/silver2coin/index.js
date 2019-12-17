@@ -69,6 +69,7 @@ export class Silver2coin extends Feature {
                     data: {
                         platform: 'pc',
                         csrf_token: cookie.value,
+                        requestFrom: 'bilibili-helper',
                     },
                     success: (res) => {
                         this.store = {day: this.getTodayDate()};
