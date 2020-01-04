@@ -12,33 +12,42 @@ export class VideoHideDanmuUI extends UI {
             name: 'videoHideDanmu',
             dependencies: ['videoAnchor'],
         });
+        this.btn1 = null;
+        this.btn2 = null;
     }
 
     load = (containers, settings) => {
-        if (!settings.on) return Promise.resolve();
+        if (!settings.on) {
+            return Promise.resolve();
+        }
         return new Promise(resolve => {
             this.hide();
             new MutationObserver((mutationList) => {
-                _.map(mutationList, (mutation) => {
-                    if (mutation.oldValue) this.hide();
+                mutationList.forEach((mutation) => {
+                    if (mutation.addedNodes.length > 0) {
+                        mutation.addedNodes.forEach((dom) => {
+                            if (dom.tagName === 'VIDEO' || dom.tagName === 'INPUT') {
+                                this.btn1 = document.querySelector('.bilibili-player-video-control .bilibili-player-iconfont.bilibili-player-iconfont-danmaku');
+                                this.btn2 = document.querySelector('.bilibili-player-video-danmaku-switch input[type=checkbox]');
+                                setTimeout(this.hide, 1000);
+                            }
+                        });
+                    }
                 });
             }).observe(document.querySelector('#bofqi'), {
-                attributeOldValue: true,
                 subtree: true,
+                childList: true,
             });
             resolve();
         });
     };
 
     hide = () => {
-        const btn1 = document.querySelector('.bilibili-player-video-control .bilibili-player-iconfont.bilibili-player-iconfont-danmaku');
-        const btn2 = document.querySelector('.bilibili-player-video-danmaku-switch input[type=checkbox]');
-        if (btn1 && !btn1.getAttribute('bibili-helper-data')) {
-            btn1.setAttribute('bibili-helper-data', true);
-            btn1.click();
-        } else if (btn2 && !btn2.getAttribute('bibili-helper-data')) {
-            btn2.setAttribute('bibili-helper-data', true);
-            btn2.click();
+        if (this.btn1 && !this.btn1.getAttribute('bibili-helper-data')) {
+            this.btn1.setAttribute('bibili-helper-data', true);
+            this.btn1.click();
+        } else if (this.btn2 && this.btn2.checked) {
+            this.btn2.click();
         }
     };
 }

@@ -159,16 +159,19 @@ export default () => {
                 if (message.command === 'initVideoDownload' && message.data) {
                     if (this.originVideoData.from === 'local') {
                         const {cid, aid} = message.data;
-                        const {quality} = this.originVideoData;
-                        const {videoData} = this.state;
-                        const currentData = {...this.originVideoData};
-                        const cidData = videoData[aid] || {};
-                        cidData[quality] = currentData;
-                        videoData[cid] = cidData;
-                        this.currentAvid = aid;
-                        this.setState({currentCid: cid, videoData, currentQuality: quality}, () => {
-                            this.changeQuality(quality);
-                        });
+                        const {currentCid} = this.state;
+                        if (+cid !== currentCid) {
+                            const {quality} = this.originVideoData;
+                            const {videoData} = this.state;
+                            const currentData = {...this.originVideoData};
+                            const cidData = videoData[aid] || {};
+                            cidData[quality] = currentData;
+                            videoData[+cid] = cidData;
+                            this.currentAvid = +aid;
+                            this.setState({currentCid: +cid, videoData, currentQuality: quality}, () => {
+                                this.changeQuality(quality);
+                            });
+                        }
                     }
                     sendResponse();
                 } else if (message.command === 'videoDownloadSendVideoRequest') {
@@ -239,21 +242,24 @@ export default () => {
                         return;
                     }
                     const {videoData, currentCid} = this.state;
+
                     let downloadData;
                     if (res.type === 'new' && res.code === 0) {
                         downloadData = res.data || res.result || res;
                     } else if (res.type === 'old') {
                         downloadData = res.result || res.data || res;
                     }
-                    videoDataCache[res.type][res.url] = downloadData;
+                    videoDataCache[res.type][res.url] = {...downloadData, cid: currentCid};
 
                     const {accept_quality, accept_description, durl, quality, dash} = downloadData;
                     const currentData = {accept_quality, accept_description, durl, dash, quality};
                     if (!videoData[currentCid]) {
                         videoData[currentCid] = {};
+                        videoData[currentCid][quality] = currentData;
+                        this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
+                    } else {
+                        this.setState({currentCid, percentage: 0, currentQuality: quality});
                     }
-                    videoData[currentCid][quality] = currentData;
-                    this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
                 }
             });
         };
@@ -268,6 +274,7 @@ export default () => {
             }
             url.set('query', {cid: currentCid, avid: this.currentAvid, qn, otype: 'json'});
             url = url.toString();
+            //console.warn('changeQuality', qn);
 
             this.setState({currentCid, currentQuality: qn});
             if (videoData[currentCid] && videoData[currentCid][qn] && !videoData[currentCid][qn].dash) {
@@ -278,15 +285,15 @@ export default () => {
 
         // 由于chrome73开始CROB策略，改为插入页面的请求方式，在用window的message传回脚本，心累累
         getFlvResponse = (method, url, type = 'old') => {
-            const {videoData, currentCid} = this.state;
+            const {videoData} = this.state;
             if (videoDataCache[type][url]) {
-                const {accept_quality, accept_description, durl, quality, dash} = videoDataCache[type][url];
+                const {accept_quality, accept_description, durl, quality, dash, cid} = videoDataCache[type][url];
                 const currentData = {accept_quality, accept_description, durl, dash, quality};
-                if (!videoData[currentCid]) {
-                    videoData[currentCid] = {};
+                if (!videoData[cid]) {
+                    videoData[cid] = {};
                 }
-                videoData[currentCid][quality] = currentData;
-                this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
+                videoData[cid][quality] = currentData;
+                this.setState({videoData, currentCid: cid, percentage: 0, currentQuality: quality});
             } else {
                 const scriptHTML = document.createElement('script');
                 scriptHTML.innerHTML = `

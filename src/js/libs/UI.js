@@ -89,6 +89,5 @@ export class UI {
                 }
             }, interval);
         });
-
     };
 }

@@ -48,44 +48,50 @@ export default () => {
       #bofqi.mini-player:before {
         box-shadow: #000000 0 0 8px;
       }
-      // profile window
       
-      .profile-m.dd-bubble {
-        background-color: var(--dark-1);
-        border: 1px solid var(--dark-0);
-        border-top: none;
-        .member-menu {
-          border-top: 1px solid var(--dark-0);
+      // 导航栏
+      #internationalHeader.international-header {
+        .mini-type {
+          background: var(--dark-0)!important;
         }
-        .member-bottom {
-          background-color: var(--dark-0);
+        .link {
+          color: var(--dark-font-1)!important;
         }
-      }
-      
-      // nav 搜索框
-      .bili-header-m .nav-search #nav_searchform {
-        border-color: var(--dark-3)!important;
-        background-color: var(--dark-2)!important;
-        input {
-          color: var(--dark-font-0)!important;
-        }
-      }
-      .bili-header-m .nav-menu .bilibili-suggest {
-        border-color: var(--dark-4);
-        background-color: var(--dark-2);
-        .kw .b-line {
-          border-color: var(--dark-4);
-          span {
-            background-color: var(--dark-2);
+        
+        .nav-user-center { // 右侧用户内容导航
+          .item {
+            .name, .t a {
+              color: var(--dark-font-1)!important;
+            }
           }
         }
-        li.suggest-item a {
-          color: #616161!important;
+        
+        // 搜索框
+        #nav_searchform {
+          background: var(--dark-3)!important;
+          border-color: var(--dark-3)!important;
         }
-        li.suggest-item:hover {
-          background-color: var(--dark-3);
+        .nav-search-btn { // 搜索按钮
+          background: var(--dark-4);
+        }
+        
+        .bilibili-search-history {
+          background: var(--dark-0)!important;
+          border-color: var(--dark-1)!important;
+          
+          
+          
+          li {
+            &:hover {
+              background-color: var(--dark-2);
+            }
+            a {
+              color: var(--dark-font-1)!important;
+            }
+          }
         }
       }
+      
       // 视频信息
       #v_desc {
         .info {
@@ -140,6 +146,7 @@ export default () => {
           color: var(--dark-font-1)!important;
         }
       }
+      
       // 弹幕列表
       .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function [class*=player-auxiliary-danmaku-btn-],
       .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function,
@@ -245,6 +252,11 @@ export default () => {
         }
       }
       // 播放器工具栏
+      .bilibili-player-video-bottom-area {
+        :before {
+          background: var(--dark-2)!important;
+        }
+      }
       .bilibili-player-video-sendbar {
         background-color: transparent!important;
         .bilibili-player-video-inputbar {
@@ -485,7 +497,7 @@ export default () => {
       }
     `;
 
-   return class VideoDarkMode extends React.Component {
+    return class VideoDarkMode extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
@@ -528,5 +540,5 @@ export default () => {
                 </React.Fragment>
             );
         }
-    }
+    };
 }

@@ -57,7 +57,7 @@ export default () => {
             videoDOM.removeEventListener('enterpictureinpicture', null);
             videoDOM.removeEventListener('leavepictureinpicture', null);
             videoDOM.addEventListener('ended', function() {
-                document.exitPictureInPicture();
+                document.pictureInPictureElement && document.exitPictureInPicture();
                 that.isEnd = true;
             });
             videoDOM.addEventListener('loadedmetadata', function() {
@@ -85,7 +85,7 @@ export default () => {
                     this.setState({inPIP: true}, () => this.video.play());
                 });
             } else if (this.state.inPIP) {
-                document.exitPictureInPicture().then(() => {
+                document.pictureInPictureElement && document.exitPictureInPicture().then(() => {
                     this.setState({inPIP: false}, () => this.video.play());
                 }).catch(e => {
                     console.error(e);

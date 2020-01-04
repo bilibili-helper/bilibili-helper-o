@@ -14,9 +14,10 @@ export default () => {
     const PipButton = styled(Button).attrs({
         class: `bilibili-helper-pip-btn`,
     })`
-      position: absolute;
+      position: static;
       right: 230px;
       top: 1px;
+      width: max-content;
       height: 22px;
       line-height: 21px;
       border-radius: 4px;

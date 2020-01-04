@@ -16,14 +16,11 @@ export default () => {
 
     const Btn = styled.span`
       display: inline-block;
-      position: absolute;
-      right: 130px;
-      top: 50%;
+      position: static;
       height: 20px;
       padding: 0 5px;
       line-height: 20px;
       vertical-align: middle;
-      transform: translateY(-50%);
       background-color: white;
       border-radius: 4px;
       border: 1px solid ${color('bilibili-blue')};
@@ -123,7 +120,7 @@ export default () => {
         width: 100%;
         height: auto;
         background-color: unset;
-        pointer-events: none;
+        pointer-events: none!important;
         z-index: 1;
       }
       .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
@@ -182,7 +179,11 @@ export default () => {
         user-select: none;
       }
       .hide-aside-area #aside-area-vm {
-        width: 190px!important;
+        pointer-events: none;!important;
+      }
+      
+      .hide-aside-area #aside-area-vm > *{
+        pointer-events: initial;
       }
       
       .hide-aside-area .chat-history-panel:hover .live-chat-mode-height-bar::after {
@@ -343,7 +344,7 @@ export default () => {
                         if (panel) {
                             panel.style.height = '';
                         }
-                        if (hideBtn.getAttribute('data-title') === '显示弹幕') {
+                        if (on && hideBtn.getAttribute('data-title') === '显示弹幕') {
                             hideBtn.click();
                         }
                     });

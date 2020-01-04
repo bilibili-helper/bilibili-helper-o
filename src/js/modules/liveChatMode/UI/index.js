@@ -19,9 +19,10 @@ export class LiveChatModeUI extends UI {
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
             const LiveChatMode = UIBuilder();
-            this.interval('.room-info-down-row', 2000).then((container) => {
+            this.interval('.room-info-down-row .attention-btn-ctnr', 2000).then((container) => {
                 const wrapper = document.createElement('div');
                 wrapper.setAttribute('class', 'bilibili-helper-live-chat-mode-wrapper');
+                wrapper.setAttribute('style', 'display: inline-block; float: left; margin-right: 7px;');
                 container && container.appendChild(wrapper);
                 ReactDOM.render(<LiveChatMode settings={settings}/>, wrapper, resolve);
             });

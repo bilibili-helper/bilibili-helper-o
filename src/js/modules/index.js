@@ -31,6 +31,7 @@ import {LiveUpCheck, LiveUpCheckUI} from 'Modules/liveUpCheck';
 import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo';
 import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
 import {AutoTakeVipPrivilege, AutoTakeVipPrivilegeUI} from 'Modules/autoTakeVipPrivilege';
+import {LiveReplayDownload, LiveReplayDownloadUI} from 'Modules/liveReplayDownload';
 
 //let VideoUnblock;
 //try {
@@ -67,6 +68,7 @@ export const Features = {
     ShowDisabledVideo,
     LivePictureInPicture,
     AutoTakeVipPrivilege,
+    LiveReplayDownload,
 };
 
 export const UIs = {
@@ -90,4 +92,5 @@ export const UIs = {
     ShowDisabledVideoUI,
     LivePictureInPictureUI,
     AutoTakeVipPrivilegeUI,
+    LiveReplayDownloadUI,
 };
