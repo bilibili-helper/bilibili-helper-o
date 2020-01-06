@@ -113,6 +113,7 @@ export default () => {
                 command: 'getDynamicList',
             }, ({feedList, lastCounter}) => {
                 this.setState({feedList, lastCounter});
+                chrome.runtime.sendMessage({command: 'updateLastDynamicId'});
             });
 
         }
