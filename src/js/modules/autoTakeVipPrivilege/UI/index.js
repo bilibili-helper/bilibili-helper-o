@@ -19,7 +19,7 @@ export class AutoTakeVipPrivilegeUI extends UI {
         }
         return new Promise(resolve => {
             chrome.runtime.sendMessage({command: 'checkVipPrivilegeStatus'}, (types) => {
-                if (types) {
+                if (types && types.length) {
                     window.onmessage = (event) => {
                         if (event.data && event.data.command === 'receiveVIPPrivilegeSuccessfully') {
                             chrome.runtime.sendMessage({command: 'receiveVIPPrivilegeSuccessfully'});

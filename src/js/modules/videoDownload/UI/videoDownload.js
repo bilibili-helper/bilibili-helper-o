@@ -36,6 +36,21 @@ export default () => {
         color: ${color('google-grey-500')};
       }
     `;
+    const Description = styled.p`
+      font-size: 12px;
+      min-width: unset;
+      color: rgb(255, 255, 255);
+      background-color: rgb(251, 114, 153);
+      padding: 0px 4px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgb(251, 114, 153);
+      border-image: initial;
+      border-radius: 4px;
+      width: max-content;
+      transform: translate(4px, 0px) scale(0.9);
+      transform-origin: left;
+    `;
     const Container = styled.div`
       display: flex;
       flex-wrap: wrap;
@@ -159,8 +174,7 @@ export default () => {
                 if (message.command === 'initVideoDownload' && message.data) {
                     if (this.originVideoData.from === 'local') {
                         const {cid, aid} = message.data;
-                        const {currentCid} = this.state;
-                        if (+cid !== currentCid) {
+                        if (+cid) {
                             const {quality} = this.originVideoData;
                             const {videoData} = this.state;
                             const currentData = {...this.originVideoData};
@@ -194,7 +208,7 @@ export default () => {
                     this.currentAvid = avid;
                     const quality = data.quality || data.qn;
                     this.setState({currentCid});
-                    if (videoData[currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
+                    if (videoData[+currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
                         //
                     } else {
                         this.getFlvResponse(method, url);
@@ -241,7 +255,9 @@ export default () => {
                         this.setState({errorStr: res.message});
                         return;
                     }
-                    const {videoData, currentCid} = this.state;
+                    const {videoData} = this.state;
+                    const targetURL = new Url(res.url, true);
+                    const currentCid = +targetURL.query.cid;
 
                     let downloadData;
                     if (res.type === 'new' && res.code === 0) {
@@ -258,7 +274,8 @@ export default () => {
                         videoData[currentCid][quality] = currentData;
                         this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
                     } else {
-                        this.setState({currentCid, percentage: 0, currentQuality: quality});
+                        videoData[currentCid][quality] = {...videoData[currentCid][quality], ...currentData};
+                        this.setState({videoData, currentCid, percentage: 0, currentQuality: quality});
                     }
                 }
             });
@@ -289,10 +306,10 @@ export default () => {
             if (videoDataCache[type][url]) {
                 const {accept_quality, accept_description, durl, quality, dash, cid} = videoDataCache[type][url];
                 const currentData = {accept_quality, accept_description, durl, dash, quality};
-                if (!videoData[cid]) {
-                    videoData[cid] = {};
+                if (!videoData[+cid]) {
+                    videoData[+cid] = {};
                 }
-                videoData[cid][quality] = currentData;
+                videoData[+cid][+quality] = currentData;
                 this.setState({videoData, currentCid: cid, percentage: 0, currentQuality: quality});
             } else {
                 const scriptHTML = document.createElement('script');
@@ -482,11 +499,12 @@ export default () => {
         };*/
 
         render() {
-            const {videoData, currentCid, percentage, currentQuality, errorStr} = this.state;
+            const {videoData, currentCid, currentQuality, errorStr} = this.state;
             const loadedVideo = videoData[currentCid] && videoData[currentCid][currentQuality];
             return (
                 <React.Fragment>
                     <Title>视频下载 - 切换清晰度</Title>
+                    <Description>合并下载会先下载至内存最后弹出另存为窗口。当卡主时，请下载分段</Description>
                     <Container>
                         {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
                         {!videoData[currentCid] ? <LinkGroupTitle>
