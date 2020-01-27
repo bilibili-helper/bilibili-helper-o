@@ -70,6 +70,9 @@ export default () => {
         #nav_searchform {
           background: var(--dark-3)!important;
           border-color: var(--dark-3)!important;
+          input:focus {
+            color: #ffffff;
+          }
         }
         .nav-search-btn { // 搜索按钮
           background: var(--dark-4);

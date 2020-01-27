@@ -42,6 +42,7 @@ export class Danmu extends Feature {
         chrome.webRequest.onSendHeaders.addListener((details) => {
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            console.warn(details);
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) {
                 return;
             }
