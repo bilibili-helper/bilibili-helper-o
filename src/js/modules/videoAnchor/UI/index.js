@@ -26,7 +26,7 @@ export class VideoAnchorUI extends UI {
                 '#arc_toolbar_report',
                 '#viewlater-app .video-toolbar-module',
             ];
-            const newPage = document.querySelector('.video-data, .stardust-player');
+            const newPage = document.querySelector('.video-data, .stardust-player, iframe.bnj-player-main');
             const addUI = (container, callback) => {
                 if (document.querySelector('.bilibili-helper')) return;
                 const helperDOM = document.createElement('span');

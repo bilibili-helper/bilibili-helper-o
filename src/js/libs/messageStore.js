@@ -36,9 +36,11 @@ export class MessageStore {
             this.has(tabId) && removeInfo.isWindowClosing && this.delete(tabId);
         });
         chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-            const {status, url} = changeInfo;
+            const {status, url, favIconUrl, audible} = changeInfo;
             // 切换分P时url!==undefined，不需要清除
-            if (this.has(tabId) && status === 'loading' && url === undefined) { this.delete(tabId); } else if (this.has(tabId) && status === 'complete') {
+            if (this.has(tabId) && status === 'loading' && url === undefined && !favIconUrl && audible === undefined) {
+                this.delete(tabId);
+            } else if (this.has(tabId) && status === 'complete' && !favIconUrl && audible === undefined) {
                 this.createData(tabId);
             }
         });
@@ -49,10 +51,13 @@ export class MessageStore {
      * @param id
      * @return {{state, queue, data}}
      */
-    createData = (id) => {
-        if (this.has(id)) { return this.store[id]; } else {
+    createData = (id, frameId) => {
+        const storeId = this.createStoreId(id, frameId);
+        if (this.has(storeId)) {
+            return this.store[storeId];
+        } else {
             //console.warn(`Create MessageStore on Tab ${id}`);
-            return this.store[id] = {
+            return this.store[storeId] = {
                 state: 0, // 初始状态 0 等待前端信号
                 queue: [], // 任务队列
                 data: {id}, // 数据对象 存储如cid之类的数据
@@ -60,11 +65,13 @@ export class MessageStore {
         }
     };
 
-    has = (id) => !!this.store[id];
+    createStoreId = (id, frameId) => `${id}${frameId ? '-' + frameId : ''}`;
 
-    get = (id) => this.store[id];
+    has = storeId => !!this.store[storeId];
 
-    delete = (id) => delete this.store[id];
+    get = storeId => this.store[storeId];
+
+    delete = storeId => delete this.store[storeId];
 
     doIt = (id, taskData) => {
         if (!taskData) { return Promise.resolve(); }
@@ -76,15 +83,17 @@ export class MessageStore {
     };
 
     // 处理任务队列
-    dealWith = (id) => {
-        return this.dealWithOnce(id).then(() => {
-            this.store[id].queue.length > 0 && this.dealWithOnce(id); // 如果队列不为空
+    dealWith = (id, frameId) => {
+        const storeId = this.createStoreId(id, frameId);
+        return this.dealWithOnce(id, frameId).then(() => {
+            this.store[storeId] && this.store[storeId].queue.length > 0 && this.dealWithOnce(id); // 如果队列不为空
         });
     };
 
-    dealWithOnce = (id) => {
-        if (this.has[id] === false) { return Promise.resolve(console.error(`Invalid tab id ${id}`)); }
-        const {state, queue} = this.store[id];
+    dealWithOnce = (id, frameId) => {
+        const storeId = this.createStoreId(id, frameId);
+        if (this.has[storeId] === false) { return Promise.resolve(console.error(`Invalid store id ${storeId}`)); }
+        const {state, queue} = this.store[storeId];
         if (state && queue.length > 0) {
             return this.doIt(id, queue.shift()).catch((error) => console.error(error));
         } else { return Promise.resolve(); }

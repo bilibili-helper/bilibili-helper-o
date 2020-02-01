@@ -181,6 +181,11 @@ export default () => {
 
         componentDidMount() {
             chrome.runtime.sendMessage({command: 'danmuDOMInitialized'});
+            $('.player-sidebar-list-item-inner, .bnj-player-single-item-mask').click(() => {
+                setTimeout(() => {
+                    chrome.runtime.sendMessage({command: 'danmuDOMInitialized'});
+                }, 500);
+            });
         }
 
         addListener = () => {

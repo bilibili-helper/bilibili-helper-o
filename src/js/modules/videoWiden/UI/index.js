@@ -15,21 +15,27 @@ export class VideoWidenUI extends UI {
     }
 
     load = (containers, settings) => {
-        if (!settings.on) return Promise.resolve();
+        if (!settings.on) {
+            return Promise.resolve();
+        }
         return new Promise(resolve => {
             const option = settings.subPage.value;
             this.setWide(option);
-            new MutationObserver((mutationList) => {
-                _.map(mutationList, (mutation) => {
-                    if (mutation.oldValue) {
-                        this.setWide(option);
-                    }
+            const player = document.querySelector('#bofqi');
+            if (player) {
+
+                new MutationObserver((mutationList) => {
+                    _.map(mutationList, (mutation) => {
+                        if (mutation.oldValue) {
+                            this.setWide(option);
+                        }
+                    });
+                }).observe(player, {
+                    attributes: true,
+                    attributeOldValue: true,
+                    subtree: true,
                 });
-            }).observe(document.querySelector('#bofqi'), {
-                attributes: true,
-                attributeOldValue: true,
-                subtree: true,
-            });
+            }
             resolve();
         });
     };

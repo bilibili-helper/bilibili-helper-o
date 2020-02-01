@@ -22,7 +22,8 @@ export class VideoHideDanmuUI extends UI {
         }
         return new Promise(resolve => {
             this.hide();
-            new MutationObserver((mutationList) => {
+            const player = document.querySelector('#bofqi');
+            player && new MutationObserver((mutationList) => {
                 mutationList.forEach((mutation) => {
                     if (mutation.addedNodes.length > 0) {
                         mutation.addedNodes.forEach((dom) => {
@@ -34,7 +35,7 @@ export class VideoHideDanmuUI extends UI {
                         });
                     }
                 });
-            }).observe(document.querySelector('#bofqi'), {
+            }).observe(player, {
                 subtree: true,
                 childList: true,
             });

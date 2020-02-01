@@ -56,8 +56,8 @@ export class VideoDownload extends Feature {
                 '*://api.bilibili.com/pgc/player/web/playurl?avid=*', // 新番剧页面
                 '*://api.bilibili.com/x/player/playurl*', // 新版页面切换清晰度时调用，返回字段和上面相同
 
-                '*://interface.bilibili.com/player?id=cid:*',
-                '*://api.bilibili.com/x/player.so?id=cid:*',
+                '*://interface.bilibili.com/player?id=cid*',
+                '*://api.bilibili.com/x/player.so?id=cid*',
                 '*://api.bilibili.com/x/web-interface/view?*', // 获取cid和aid
             ],
         };

@@ -42,7 +42,6 @@ export class Danmu extends Feature {
         chrome.webRequest.onSendHeaders.addListener((details) => {
             const {tabId, initiator, requestHeaders} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
-            console.warn(details);
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) {
                 return;
             }
@@ -99,7 +98,7 @@ export class Danmu extends Feature {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([message.danmuDocumentStr], {
                     type: 'application/xml',
                 }));
-                const filename = `${message.filename}.${message.cid}.${message.date}.xml`;
+                const filename = `${message.filename ? message.filename + '.' : ''}${message.cid}.${message.date}.xml`;
                 chrome.downloads.download({
                     saveAs: true,
                     url,
@@ -116,7 +115,7 @@ export class Danmu extends Feature {
                 const url = (window.URL ? URL : window.webkitURL).createObjectURL(new Blob([assData], {
                     type: 'application/octet-stream',
                 }));
-                const filename = `${message.filename}.${message.cid}.${message.date}.ass`;
+                const filename = `${message.filename ? message.filename + '.' : ''}${message.cid}.${message.date}.ass`;
                 chrome.downloads.download({
                     saveAs: true,
                     url,

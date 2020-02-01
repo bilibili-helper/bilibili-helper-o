@@ -145,6 +145,11 @@ export default () => {
             }, (settings) => {
                 this.setState({settings});
             });
+            $('.player-sidebar-list-item-inner, .bnj-player-single-item-mask').click(() => {
+                setTimeout(() => {
+                    chrome.runtime.sendMessage({command: 'videoDownloadDOMInitialized'});
+                }, 500);
+            });
         }
 
         getContainer = (type, currentCid, currentQuality, data) => {
@@ -217,11 +222,16 @@ export default () => {
                     sendResponse(true);
                 } else if (message.command === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
                     const {videoData} = this.state;
-                    if (_.isEmpty(videoData) && !_.isEmpty(this.originVideoData)) {
-                        const {quality} = this.originVideoData;
+                    if (_.isEmpty(videoData)) {
+                        const {quality = 80} = this.originVideoData;
                         this.currentAvid = message.avid;
-                        if (this.originVideoData.dash) {
-
+                        if (!_.isEmpty(this.originVideoData) && this.originVideoData.durl) {
+                            const currentData = {...this.originVideoData};
+                            const cidData = videoData[message.cid] || {};
+                            cidData[quality] = currentData;
+                            videoData[message.cid] = cidData;
+                            this.setState({currentCid: message.cid, videoData, currentQuality: quality});
+                        } else {
                             let url = null;
                             if (location.href.indexOf('bangumi') >= 0) {
                                 url = new Url(bangumiFlvDownloadURL);
@@ -231,12 +241,6 @@ export default () => {
                             url.set('query', {cid: message.cid, avid: message.avid, qn: quality, otype: 'json'});
                             this.setState({currentCid: message.cid});
                             this.getFlvResponse('get', url.toString());
-                        } else {
-                            const currentData = {...this.originVideoData};
-                            const cidData = videoData[message.cid] || {};
-                            cidData[quality] = currentData;
-                            videoData[message.cid] = cidData;
-                            this.setState({currentCid: message.cid, videoData, currentQuality: quality});
                         }
                     }
                     sendResponse(true);

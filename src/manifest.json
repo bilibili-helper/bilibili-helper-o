@@ -1,5 +1,5 @@
 {
-  "version": "1.2.14",
+  "version": "1.2.16.1",
   "update_url": "https://clients2.google.com/service/update2/crx",
   "manifest_version": 2,
   "minimum_chrome_version": "56.0.0",
@@ -45,7 +45,8 @@
         "*://*.bilibili.com/bangumi/play/ep*",
         "*://*.bilibili.com/video/av*",
         "*://www.bilibili.com/watchlater/*",
-        "*://www.bilibili.com/medialist/*"
+        "*://www.bilibili.com/medialist/*",
+        "*://www.bilibili.com/blackboard/*"
       ],
       "run_at": "document_end"
     },
