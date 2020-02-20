@@ -54,11 +54,16 @@ export default () => {
         background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 15%, transparent 75%);
         background-color: unset;
       }
+      .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel .chat-history-list::-webkit-scrollbar {
+        display: none;
+      }
+      // 在火狐下隐藏弹幕框滚动条
+      .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel .chat-history-list {
+        overflow: -moz-scrollbars-none;
+        scrollbar-width: none;
+      }
       .hide-aside-area .chat-history-panel:hover #chat-history-list {
         outline: 1px solid ${color('bilibili-blue')};
-      }
-      .hide-aside-area .chat-history-panel #chat-history-list::-webkit-scrollbar {
-        display: none;
       }
       .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel::-webkit-scrollbar,
       .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .rank-list-section,
