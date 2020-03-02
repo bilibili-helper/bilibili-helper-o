@@ -23,6 +23,9 @@ const ListItemView = styled.div.attrs({
     border-top: none;
     margin-top: 0;
   }
+  .sub-list &:nth-of-type(1) {
+    border-top: ${props => props.noBorder ? 'none' : '1px solid #f2f3f5'};
+  }
 `;
 
 const TitleView = styled.div.attrs({

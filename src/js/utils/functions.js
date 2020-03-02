@@ -192,5 +192,5 @@ export const fetchFromHelper = (url, options) => {
         });
     }
 
-    return fetch(urlObject.href, options).catch((e)=> console.error(url, e));
+    return fetch(decodeURIComponent(urlObject.href), options).catch((e)=> console.error(url, e));
 };

@@ -508,7 +508,7 @@ export default () => {
             return (
                 <React.Fragment>
                     <Title>视频下载 - 切换清晰度</Title>
-                    <Description>合并下载会先下载至内存最后弹出另存为窗口。当卡主时，请下载分段</Description>
+                    <Description>合并下载会先下载至内存最后弹出另存为窗口。当卡住时，请下载分段</Description>
                     <Container>
                         {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
                         {!videoData[currentCid] ? <LinkGroupTitle>

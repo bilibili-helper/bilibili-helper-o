@@ -434,6 +434,8 @@ class PageConfig extends React.Component {
         );
     };
 
+    isEdge = () => window.navigator.userAgent.indexOf("Edg") > -1;
+
     render() {
         const {
             // modal state
@@ -477,8 +479,8 @@ class PageConfig extends React.Component {
                 <Footer>
                     <a href="https://github.com/zacyu/bilibili-helper">Github</a>
                     <a href="https://bilibili-helper.github.io/">Website</a>
-                    <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome
-                        WebStore</a>
+                    {!this.isEdge() && <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome
+                        WebStore</a>}
                     <span>
                         Copyright (c) 2018 <a href="mailto:me@zacyu.com">Zac Yu</a>, Google LLC, <a
                         href="mailto:jjj201200@gmail.com">Drowsy Flesh</a>

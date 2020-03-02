@@ -80,24 +80,24 @@ const UIBuilder = () => {
             chrome.runtime.sendMessage({command: 'videoSubtitleDownloadDOMInitialized'});
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (message.command === 'loadSubtitle' && message.url) {
-                    $.ajax({
+                    fetch(message.url, {
+                        mode: 'cors',
                         method: 'get',
+                        referrer: window.location.href,
                         headers: {'From': 'bilibili-helper'},
-                        url: message.url,
-                        success: (res) => {
-                            const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
-                            if (regExpRes.length > 0) {
-                                const subtitleData = JSON.parse(regExpRes[1]).subtitles;
-                                this.setState({subtitleData});
-                            }
-                        },
-                        error: (e) => {
-                            console.error(e);
-                            if (e.status === 403) {
-                                return;
-                            }
-                        },
-                    });
+                        credentials: "include",
+                    }).then(res => res.text()).then(res => {
+                        const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);
+                        if (regExpRes.length > 0) {
+                            const subtitleData = JSON.parse(regExpRes[1]).subtitles;
+                            this.setState({subtitleData});
+                        }
+                    }).catch((e) => {
+                        console.error(e);
+                        if (e.status === 403) {
+                            return;
+                        }
+                    })
                     sendResponse(true);
                 }
             });
