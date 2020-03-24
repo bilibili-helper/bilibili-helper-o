@@ -126,6 +126,7 @@ export default () => {
                 errorStr: '',
             };
             this.currentAvid = null;
+            this.currentBvid = null;
             this.containers = {};
         }
 
@@ -178,15 +179,16 @@ export default () => {
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (message.command === 'initVideoDownload' && message.data) {
                     if (this.originVideoData.from === 'local') {
-                        const {cid, aid} = message.data;
+                        const {cid, aid, bvid} = message.data;
                         if (+cid) {
                             const {quality} = this.originVideoData;
                             const {videoData} = this.state;
                             const currentData = {...this.originVideoData};
-                            const cidData = videoData[aid] || {};
+                            const cidData = videoData[aid || bvid] || {};
                             cidData[quality] = currentData;
                             videoData[+cid] = cidData;
                             this.currentAvid = +aid;
+                            this.currentBvid = bvid;
                             this.setState({currentCid: +cid, videoData, currentQuality: quality}, () => {
                                 this.changeQuality(quality);
                             });
@@ -195,14 +197,14 @@ export default () => {
                     sendResponse();
                 } else if (message.command === 'videoDownloadSendVideoRequest') {
                     let {data, url, method, type} = message;
-                    const {cid, avid, qn = ''} = data;
+                    const {cid, avid, bvid, qn = ''} = data;
                     if (type === 'new') {
                         if (location.href.indexOf('bangumi') >= 0) {
                             url = new Url(bangumiFlvDownloadURL);
                         } else {
                             url = new Url(normalFlvDownloadURL);
                         }
-                        url.set('query', {cid, avid, qn, otype: 'json'});
+                        url.set('query', {cid, avid, bvid, qn, otype: 'json'});
                         url = url.toString();
                     }
                     //const res = /\/av([\d]+)\//.exec(location.pathname); // 新的视频播放页面会同时加载多个不同视频的playUrl
@@ -211,6 +213,7 @@ export default () => {
                     const {videoData} = this.state;
                     const currentCid = +data.cid;
                     this.currentAvid = avid;
+                    this.currentBvid = bvid;
                     const quality = data.quality || data.qn;
                     this.setState({currentCid});
                     if (videoData[+currentCid] && videoData[currentCid][quality] && !videoData[currentCid][quality].dash) {
@@ -225,6 +228,7 @@ export default () => {
                     if (_.isEmpty(videoData)) {
                         const {quality = 80} = this.originVideoData;
                         this.currentAvid = message.avid;
+                        this.currentBvid = message.bvid;
                         if (!_.isEmpty(this.originVideoData) && this.originVideoData.durl) {
                             const currentData = {...this.originVideoData};
                             const cidData = videoData[message.cid] || {};
@@ -293,8 +297,9 @@ export default () => {
             } else {
                 url = new Url(normalFlvDownloadURL);
             }
-            url.set('query', {cid: currentCid, avid: this.currentAvid, qn, otype: 'json'});
+            url.set('query', {cid: currentCid, avid: this.currentAvid, bvid: this.currentBvid, qn, otype: 'json'});
             url = url.toString();
+            console.warn(url, this.currentBvid);
             //console.warn('changeQuality', qn);
 
             this.setState({currentCid, currentQuality: qn});

@@ -130,6 +130,7 @@ export default () => {
                 version: null,
             };
             this.linkerRegExp = new RegExp(/^(av|ss|s|md|u|cv|au|ep)?(\d+)$/);
+            this.bvidRegExp = new RegExp(/^(bv|BV)?(\w+)$/);
         }
 
         componentDidMount() {
@@ -205,16 +206,17 @@ export default () => {
         link = () => {
             const value = document.querySelector('.bilibili-helper-menu-linker-input').value;
             if (value) {
-                const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
+                const originString = String(value);
+                const res = this.linkerRegExp.exec(originString.toLowerCase().trim());
                 let url = '';
                 let pass = true;
                 if (res && res[1]) {
                     switch (res[1]) {
                         case 'av':
-                            url = 'https://www.bilibili.com/video/' + value;
+                            url = 'https://www.bilibili.com/video/' + originString;
                             break;
                         case 'ss':
-                            url = 'https://www.bilibili.com/bangumi/play/' + value;
+                            url = 'https://www.bilibili.com/bangumi/play/' + originString;
                             break;
                         case 's':
                             if (res[2]) {
@@ -224,7 +226,7 @@ export default () => {
                             }
                             break;
                         case 'md':
-                            url = 'https://www.bilibili.com/bangumi/media/' + value;
+                            url = 'https://www.bilibili.com/bangumi/media/' + originString;
                             break;
                         case 'u':
                             if (res[2]) {
@@ -234,20 +236,31 @@ export default () => {
                             }
                             break;
                         case 'cv':
-                            url = 'https://www.bilibili.com/read/' + value;
+                            url = 'https://www.bilibili.com/read/' + originString;
                             break;
                         case 'au':
-                            url = 'https://www.bilibili.com/audio/' + value;
+                            url = 'https://www.bilibili.com/audio/' + originString;
                             break;
                         case 'ep':
-                            url = 'https://www.bilibili.com/bangumi/play/' + value;
+                            url = 'https://www.bilibili.com/bangumi/play/' + originString;
                     }
                 } else if (res && !res[1] && res[2]) {
                     url = 'https://www.bilibili.com/video/av' + res[2];
                 } else {
-                    pass = false;
+                    const res = this.bvidRegExp.exec(originString.trim());
+                    if (res && res[1]) {
+                        switch (res[1]) {
+                            case 'bv':
+                            case 'BV':
+                                url = 'https://www.bilibili.com/video/' + originString;
+                        }
+                    } else if (res && res[2]) {
+                        url = 'https://www.bilibili.com/video/bv' + res[2];
+                    } else {
+                        pass = false;
+                    }
                 }
-                if (pass) {
+                if (pass && url) {
                     this.setState({linkerError: false});
                     this.lastSearch = value;
                     this.setState({lastSearch: value}, () => {
@@ -269,9 +282,10 @@ export default () => {
 
         checkLinkerValue = (value) => {
             const res = this.linkerRegExp.exec(String(value).toLowerCase().trim());
-            if (res && res[1] && res[2]) {
+            const bvidRes = this.bvidRegExp.exec(String(value).trim());
+            if ((res && res[1] && res[2]) || (bvidRes && bvidRes[1] && bvidRes[2])) {
                 return true;
-            } else if (res && !res[1] && res[2]) {
+            } else if ((res && !res[1] && res[2]) || (bvidRes && !bvidRes[1] && bvidRes[2])) {
                 return true;
             } else {
                 return false;
@@ -286,7 +300,7 @@ export default () => {
             if (event.key === 'Enter') {
                 this.link();
             } else {
-                const value = String(event.target.value).toLowerCase().trim();
+                const value = String(event.target.value).trim();
                 store.set('lastSearch', value);
                 const res = this.checkLinkerValue(value);
                 this.setState({linkerError: !res && value !== ''});
@@ -340,6 +354,6 @@ export default () => {
                 </MenuView>
             );
         }
-    }
+    };
 
 }

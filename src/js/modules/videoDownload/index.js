@@ -103,6 +103,7 @@ export class VideoDownload extends Feature {
                     command: 'videoDownloadCid',
                     cid: +data.id.slice(4),
                     avid: data.aid,
+                    bvid: data.bvid,
                 });
                 this.messageStore.dealWith(tabId); // 处理queue
             }

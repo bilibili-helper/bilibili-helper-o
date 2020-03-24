@@ -160,8 +160,11 @@ export class PermissionManager {
                 const thisSecond = (new Date()).getTime() / 1000;
                 let [pass, msg] = [false, ''];
                 // expirationDate 是秒数
-                if (cookie && cookie.expirationDate > thisSecond) { [pass, msg] = [true, '']; }
-                else { [pass, msg] = [false, PERMISSION_STATUS.login.errorMsg]; }
+                if (cookie && cookie.expirationDate > thisSecond) { [pass, msg] = [true, '']; } else {
+                    [pass, msg] = [
+                        false, PERMISSION_STATUS.login.errorMsg,
+                    ];
+                }
 
                 this.updatePermission('login', pass, msg);
                 resolve({pass, msg});

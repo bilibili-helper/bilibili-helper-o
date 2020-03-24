@@ -100,7 +100,7 @@ export const parseTime = (time) => {
 };
 
 // 判断是否在直播间
-export const inLiveRoom = () => /^\/([/blanc/\d]+)$/.exec(window.location.pathname) ? true : false;
+export const inLiveRoom = () => /^\/([/blanc/\d]+)|(\/record\/)/.exec(window.location.pathname) ? true : false;
 
 export const consoleLogo = (from) => {
     // eslint-disable-next-line no-console

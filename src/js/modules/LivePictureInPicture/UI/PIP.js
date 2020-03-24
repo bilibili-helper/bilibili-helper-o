@@ -52,9 +52,10 @@ export default () => {
 
         componentDidMount() {
             const that = this;
-            this.video = document.querySelector('.bilibili-live-player-video video');
+            this.video = document.querySelector('.bilibili-live-player-video video, .blrp-video video');
             this.addListener(this.video);
-            document.querySelector('.bilibili-live-player-video').addEventListener('DOMNodeInserted', function(e) {
+            const video = document.querySelector('.bilibili-live-player-video, .blrp-video');
+            video.addEventListener('DOMNodeInserted', function(e) {
                 if (e.target.localName === 'video' && that.video !== e.target) {
                     that.video = e.target;
                     that.addListener(that.video);
@@ -92,7 +93,7 @@ export default () => {
         // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
         handleOnClick = () => {
             if (!this.video) {
-                this.video = document.querySelector('.bilibili-live-player-video video');
+                this.video = document.querySelector('.bilibili-live-player-video video, .blrp-video video');
                 this.addListener(this.video);
             }
             if (!this.video || !this.video.requestPictureInPicture) {
