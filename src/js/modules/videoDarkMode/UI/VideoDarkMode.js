@@ -176,6 +176,9 @@ export default () => {
         & > * {
           border-color:  var(--dark-1)!important;
         }
+        .player-auxiliary-danmaku-wrap .player-auxiliary-danmaku-load-status {
+          background: transparent !important;
+        }
       }
       
       

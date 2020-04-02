@@ -1,5 +1,3 @@
-import $ from 'Libs/jquery.min';
-
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/11

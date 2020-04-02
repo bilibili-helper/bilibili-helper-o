@@ -471,6 +471,7 @@ export default () => {
                 faceBlock.setAttribute('class', 'helper-card-face face');
                 userBlock.setAttribute('class', 'helper-card-user user');
                 nameBlock.setAttribute('class', 'helper-card-name name');
+                nameBlock.setAttribute('target', '_blank');
                 signBlock.setAttribute('class', 'helper-card-sign sign');
                 btnBlock.setAttribute('class', 'helper-card-btn btn-box');
                 card.setAttribute('id', 'helper-card');

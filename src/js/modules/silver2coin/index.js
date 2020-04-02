@@ -72,6 +72,7 @@ export class Silver2coin extends Feature {
                         requestFrom: 'bilibili-helper',
                     },
                     success: (res) => {
+                        // TODO 这里不应该请求成功就记作已兑换，还要考虑银瓜子暂时不够但之后又足够兑换的情况
                         this.store = {day: this.getTodayDate()};
                         if (res.code === 0) {
                             const notificationState = _.find(this.settings.options, {key: 'notification'});

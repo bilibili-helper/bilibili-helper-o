@@ -11,7 +11,7 @@ import {Treasure, TreasureUI} from './treasure';
 import {GoogleAnalytics} from './googleAnalytics';
 import {Debug} from './debug';
 import {Danmu, DanmuUI} from './danmu';
-import {PopupAnchor, PopupAnchorUI} from './PopupAnchor';
+import {PopupAnchor, PopupAnchorUI} from './popupAnchor';
 import {Menu, MenuUI} from './menu';
 import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';

@@ -39,4 +39,4 @@ https://github.com/zacyu/bilibili-helper/wiki
 
 ## Terms of Service & Privacy Policy (隐私协议)
 
-http://addons-privacy.com/
+[ADDON PRIVACY](https://github.com/bilibili-helper/bilibili-helper/blob/master/ADDON_PRIVACY.md)
