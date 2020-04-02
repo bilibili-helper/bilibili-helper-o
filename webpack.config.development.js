@@ -44,7 +44,7 @@ module.exports = (env) => {
         watch: true,
         mode: 'development',
         node: {
-            global: false,
+            fs: 'empty',
         },
         devtool: false,
         watchOptions: {
@@ -97,7 +97,7 @@ module.exports = (env) => {
                 'Modules': path.resolve(jsPath, 'modules'),
                 'Statics': path.resolve(srcPath, 'statics'),
                 'Styles': path.resolve(srcPath, 'styles'),
-                'jquery': path.resolve(jsPath, 'libs', 'jquery.min.js'),
+                //'jquery': path.resolve(jsPath, 'libs', 'jquery.min.js'),
             },
             mainFiles: ['index.js'],
             extensions: ['.js', '.json', '.jsx', '.css', '.less', '.scss', '.sass'],
@@ -107,7 +107,7 @@ module.exports = (env) => {
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/)/,
+                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -117,7 +117,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /(\.min\.js|\/ffmpeg\/)/,
+                    exclude: /(\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
                     include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',

@@ -23,7 +23,9 @@ import {
 } from 'Components/configPage';
 import {theme} from 'Styles';
 import announcementList from 'Statics/json/announcement.json';
+import store from 'store';
 import 'Styles/scss/config.scss';
+import {PrivatePolicy} from './privatePolicy';
 
 const {color} = theme;
 
@@ -147,11 +149,12 @@ class PageConfig extends React.Component {
             other: {title: __('config_type_other'), map: {}},
         };
         this.defaultBroadcast = '';
+        const showPrivatePolicy = store.get('show-private-policy');
         this.state = {
-            modalTitle: null,
-            modalBody: null,
-            modalButtons: null,
-            modalOn: false,
+            //modalTitle: null,
+            //modalBody: null,
+            //modalButtons: null,
+            modalOn: showPrivatePolicy === undefined ? true : showPrivatePolicy,
             // sub page state
             subPageTitle: null,
             subPageParent: null,
@@ -165,7 +168,6 @@ class PageConfig extends React.Component {
             permissionMap: {},
 
             checkingVersion: false,
-
         };
     }
 
@@ -174,8 +176,7 @@ class PageConfig extends React.Component {
             // 以kind字段来将设置分类到不同list
             _.forEach(settings, (setting) => {
                 const {kind, name} = setting;
-                if (this.settings[kind]) { this.settings[kind].map[name] = setting; }
-                else { this.settings.other.map[name] = setting; }
+                if (this.settings[kind]) { this.settings[kind].map[name] = setting; } else { this.settings.other.map[name] = setting; }
             });
             this.setState(this.settings);
         });
@@ -345,8 +346,7 @@ class PageConfig extends React.Component {
 
     handleCheckVersion = () => {
         const {checkingVersion} = this.state;
-        if (checkingVersion) { return; }
-        else { this.setState({checkingVersion: true}); }
+        if (checkingVersion) { return; } else { this.setState({checkingVersion: true}); }
         chrome.runtime.sendMessage({
             command: 'checkVersion',
         }, () => {
@@ -427,6 +427,10 @@ class PageConfig extends React.Component {
                 />
                 {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
                 <ListItem
+                    onClick={this.showPrivatePolicy}
+                    operation={<Button icon="arrowRight"></Button>}
+                >查看隐私条款</ListItem>
+                <ListItem
                     onClick={this.handleOpenWebsite}
                     operation={<Button icon="arrowRight"></Button>}
                 >前往官网查看更新日志 和 投喂记录</ListItem>
@@ -434,15 +438,26 @@ class PageConfig extends React.Component {
         );
     };
 
-    isEdge = () => window.navigator.userAgent.indexOf("Edg") > -1;
+    isEdge = () => window.navigator.userAgent.indexOf('Edg') > -1;
+
+    agreePrivatePolicy = () => {
+        this.setState({modalOn: false}, () => {
+           store.set('show-private-policy', false);
+        });
+    };
+
+    showPrivatePolicy = () => {
+        this.setState({modalOn: true});
+    };
+
 
     render() {
         const {
             // modal state
             modalOn,
-            modalTitle,
-            modalBody,
-            modalButtons,
+            //modalTitle,
+            //modalBody,
+            //modalButtons,
             // sub page state
             subPageOn,
             subPageTitle,
@@ -462,7 +477,7 @@ class PageConfig extends React.Component {
                 <Broadcast>
                     <div>{__('config_commonNotify')}</div>
                     <p>{__('config_websiteNotify')}<a href="https://bilibili-helper.github.io/" target="_blank"
-                                        rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
+                                                      rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
                     {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
                 </Broadcast>
@@ -491,7 +506,9 @@ class PageConfig extends React.Component {
                     </Figure>
                 </Footer>
             </ConfigBody>
-            <Modal on={modalOn} title={modalTitle} body={modalBody} buttons={modalButtons}/>
+            <Modal on={modalOn} title={'扩展程序隐私协议'} body={<PrivatePolicy/>} buttons={<React.Fragment>
+                <Button onClick={this.agreePrivatePolicy}>同意并开始使用</Button>
+            </React.Fragment>}/>
         </React.Fragment>;
     }
 }

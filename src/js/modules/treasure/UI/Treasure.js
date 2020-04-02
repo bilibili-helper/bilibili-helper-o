@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import {treasureCloseImg, treasureOpenImg} from './imgUrls';
 import apis from '../apis.js';
 import Url from 'url-parse';
+import OCRAD from '../ocrad';
 
 export default () => {
     const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
@@ -143,7 +144,7 @@ export default () => {
                 context.fillRect(i % 120, Math.round(i / 120), 1, 1);
             }
             try {
-                const question = this.adjustQuestion(window.OCRAD(context.getImageData(0, 0, 120, 40)));
+                const question = this.adjustQuestion(OCRAD(context.getImageData(0, 0, 120, 40)));
                 const answer = new Function('return ' + question)();
                 this.getAward(answer);
             } catch (e) {

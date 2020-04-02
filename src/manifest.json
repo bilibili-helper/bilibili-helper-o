@@ -1,5 +1,5 @@
 {
-  "version": "1.2.17.1",
+  "version": "1.2.17.2",
   "manifest_version": 2,
   "minimum_chrome_version": "56.0.0",
   "name": "__MSG_extensionName__",
@@ -56,7 +56,6 @@
       "js": [
         "vendors.bundle.js",
         "live.js",
-        "statics/js/ocrad.min.js",
         "features.bundle.js"
       ],
       "matches": [
@@ -172,6 +171,5 @@
     "at.alicdn.com/t/*",
     "libs/*",
     "js/*"
-  ],
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js https://www.google-analytics.com/analytics_debug.js; object-src 'self';"
+  ]
 }

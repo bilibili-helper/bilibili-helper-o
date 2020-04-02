@@ -61,7 +61,7 @@ const Body = styled.div.attrs({
     className: 'model-bdoy',
 })`
   flex: 1;
-  padding: 16px;
+  padding: 0 16px;
   min-height: 50px;
   max-height: 600px;
 `;

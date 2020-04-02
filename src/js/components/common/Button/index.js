@@ -32,6 +32,7 @@ const ButtonWrapper = styled.div.attrs({
   position: relative;
   ${({theme}) => theme.icon && iconStyle};
   overflow: hidden;
+  user-select: none;
 `;
 
 const ButtonView = styled.button.attrs({

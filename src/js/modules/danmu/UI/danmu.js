@@ -563,7 +563,7 @@ export default () => {
                     style={style}
                 >
                     <span className="time">{time}</span>
-                    <span className="danmu" dangerouslySetInnerHTML={{__html: danmu}}/>
+                    <span className="danmu">{danmu}</span>
                     <span className="author">
                     {authorNames.map((name, index) => (
                         <div key={name} helper-data-usercard-mid={uidArray[index]}>{name}</div>))}

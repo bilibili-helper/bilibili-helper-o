@@ -1,4 +1,3 @@
-/* global process */
 /**
  * Author: DrowsyFlesh
  * Create: 2018/10/28
@@ -7,7 +6,7 @@
 
 import {Feature} from 'Libs/feature';
 import {__, version} from 'Utils';
-import ReactGA from 'react-ga';
+import './analytics';
 
 export class GoogleAnalytics extends Feature {
     constructor() {
@@ -36,33 +35,14 @@ export class GoogleAnalytics extends Feature {
         });
     };
 
-    send = ({
-        hitType, action, category, label, nonInteraction, value,
-        path, title,
-        variable,
-    }) => {
-        switch (hitType) {
-            case 'event':
-                ReactGA.event({
-                    action,
-                    category,
-                    label,
-                    nonInteraction,
-                    value,
-                });
-                break;
-            case 'pageview':
-                ReactGA.pageview(path, title);
-                break;
-            case 'timing':
-                ReactGA.timing({
-                    category,
-                    variable, // 计时变量名称
-                    value, // 变量值
-                    label,
-                });
-                break;
-        }
+    send = ({hitType, eventAction, eventCategory, eventLabel, nonInteraction}) => {
+        window.ga && window.ga('send', {
+            hitType,
+            eventAction,
+            eventCategory,
+            eventLabel,
+            nonInteraction,
+        });
     };
 
     listener = (message) => {
@@ -74,13 +54,13 @@ export class GoogleAnalytics extends Feature {
          * nonInteraction 标记非交互
          */
         if (this.settings.on && message.command === 'setGAEvent' && message.action && message.category) {
-            const {hitType = 'event', action, label, category = '', nonInteraction = false} = message;
+            const {action: eventAction, label, category: eventCategory = '', nonInteraction = false} = message;
             this.insertGAScriptTag().then(() => {
                 this.send({
-                    hitType,
-                    action,
-                    category,
-                    label,
+                    hitType: 'event',
+                    eventAction,
+                    eventCategory,
+                    eventLabel: label,
                     nonInteraction,
                 });
             });
@@ -97,27 +77,27 @@ export class GoogleAnalytics extends Feature {
             if (document.getElementsByClassName('ga-script').length === 0) {
                 this.getStorage('userId')
                     .then(({userId}) => {
-                        if (userId) {
-                            return userId;
-                        } else {
+                        if (userId) return userId;
+                        else {
                             const userId = String(Math.random()).slice(2);
                             return this.setStorage({userId}).then(() => userId);
                         }
                     })
                     .then((userId) => {
-                        ReactGA.initialize(UA, {
-                            debug: process.env.DEBUG || false,
-                            titleCase: false,
-                            gaOptions: {
-                                userId: userId,
-                            },
-                        });
-                        ReactGA.set({dimension1: version});
+                        //const script = `https://www.google-analytics.com/analytics.js`;
+                        //const script = `https://www.google-analytics.com/analytics${debug ? '_debug' : ''}.js`;
+                        window['GoogleAnalyticsObject'] = 'ga';
+                        window.ga = window.ga || function() {
+                            (window.ga.q = window.ga.q || []).push(arguments);
+                        };
+                        window.ga.l = 1 * new Date();
+                        window.ga('create', UA, 'auto');
+                        window.ga('set', 'checkProtocolTask');
+                        window.ga('set', 'dimension1', version);
+                        window.ga('set', 'userId', userId);
                         resolve();
                     });
-            } else {
-                resolve();
-            }
+            } else resolve();
         });
     };
 };

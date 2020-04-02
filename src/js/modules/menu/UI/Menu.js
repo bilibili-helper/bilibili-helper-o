@@ -156,8 +156,7 @@ export default () => {
                 command: 'getSetting',
                 feature: 'menu',
             }, (settings) => {
-                const oldWatchPage = _.find(settings.options, {key: 'oldWatchPage'}).on;
-                const link = !oldWatchPage ? 'https://t.bilibili.com/' : 'https://www.bilibili.com/account/dynamic';
+                const link = 'https://t.bilibili.com/';
                 const menuOptions = {};
                 _.each(settings.subPage.options, (option) => {
                     menuOptions[option.key] = option.on;

@@ -43,6 +43,8 @@ export const createTab = (url) => {
  */
 export const version = chrome.runtime.getManifest().version;
 
+export const appName =  chrome.runtime.getManifest().name;
+
 /**
  * 根据资源名获取扩展程序内部资源
  * @param name

@@ -33,6 +33,7 @@ export class Menu extends Feature {
                         key: 'oldWatchPage',
                         title: __('menu_options_oldWatchPage'),
                         on: false,
+                        hide: true,
                     },
                 ],
                 subPage: {
