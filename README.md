@@ -1,6 +1,5 @@
 # bilibili-helper
-
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+[![LICENSE](https://img.shields.io/github/license/bilibili-helper/bilibili-helper-o)](LICENSE)
 [![Build Status](https://img.shields.io/travis/zacyu/bilibili-helper.svg)](https://travis-ci.org/zacyu/bilibili-helper)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
 [![Chrome Webstore Downloads](https://img.shields.io/chrome-web-store/d/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
@@ -35,7 +34,7 @@ https://github.com/zacyu/bilibili-helper/wiki
 
 ## License (许可)
 
-[MIT](LICENSE)
+[MPL2.0](LICENSE)
 
 ## Terms of Service & Privacy Policy (隐私协议)
 
