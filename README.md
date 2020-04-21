@@ -16,7 +16,9 @@ An auxiliary extension for Bilibili (bilibili.com) which allows users to bypass 
 https://bilibili-helper.github.io
 
 ## Group
-QQ:548321019 - 哔哩哔哩助手养老群 - 发布测试版本
+[![QQ群](https://img.shields.io/badge/QQ-548321019-blue)](https://shang.qq.com/wpa/qunwpa?idkey=232e4c4d66cd771f2ed21724b982fa302d9d6a01751126481032b7250a4c9e72) - 哔哩哔哩助手养老群 - 发布测试版本
+
+[![Telegram频道](https://img.shields.io/static/v1?label=Telegram&message=bilibili_helper&color=blue)](https://t.me/bilibili_helper) - 海外用户群，暂不发布文件
 
 ## Wiki
 
