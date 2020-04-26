@@ -3,7 +3,7 @@
     "message": "嗶哩嗶哩助手：bilibili.com 綜合輔助擴充套件",
     "description": "Extension: Name"
   },
-  "extensionShortName": {
+  "ShortName": {
     "message": "嗶哩嗶哩助手",
     "description": "Extension: Short Name"
   },

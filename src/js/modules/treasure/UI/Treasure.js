@@ -10,7 +10,6 @@ import styled from 'styled-components';
 import {treasureCloseImg, treasureOpenImg} from './imgUrls';
 import apis from '../apis.js';
 import Url from 'url-parse';
-import OCRAD from '../ocrad';
 
 export default () => {
     const Box = styled.div.attrs({className: 'bilibili-helper-treasure-box'})`
@@ -113,7 +112,9 @@ export default () => {
             chrome.runtime.sendMessage({
                 command: 'inIncognitoContext',
             }, (inIncognitoContext) => {
-                if (!inIncognitoContext) this.getCurrentTask();
+                if (!inIncognitoContext) {
+                    this.getCurrentTask();
+                }
             });
             chrome.runtime.sendMessage({
                 command: 'getPermissionMap',
@@ -158,7 +159,9 @@ export default () => {
          */
         showPanel = () => {
             const panel = $(this.panel);
-            if (panel.css('display') === 'block') return;
+            if (panel.css('display') === 'block') {
+                return;
+            }
             panel.css({'display': 'block'}).addClass('v-enter-active', 'v-enter-to');
             setTimeout(() => {
                 panel.removeClass('v-enter-active', 'v-enter-to');
@@ -170,7 +173,9 @@ export default () => {
          */
         hidePanel = () => {
             const panel = $(this.panel);
-            if (panel.css('display') === 'none') return;
+            if (panel.css('display') === 'none') {
+                return;
+            }
             panel.addClass('a-scale-out-ease', 'v-leave-to');
             setTimeout(() => {
                 panel.removeClass('a-scale-out-ease', 'v-leave-to').css({'display': 'none'});
@@ -196,7 +201,9 @@ export default () => {
                     const minute = String(Math.floor(seconds / 60)).padStart(2, '0');
                     this.counter.text(`${minute}:${second}`);
                 }, 1000);
-            } else return;
+            } else {
+                return;
+            }
         };
 
         /**
@@ -207,7 +214,9 @@ export default () => {
             chrome.runtime.sendMessage({command: 'getCurrentTask', type: 'treasure', url: apis.getCurrentTask}, (res) => {
                 switch (res.code) {
                     case 0: {
-                        if (this.retryTime) this.retryTime = 0;
+                        if (this.retryTime) {
+                            this.retryTime = 0;
+                        }
                         const {max_times, times, minute, silver, time_end, time_start} = res.data;
                         this.setState({max_times, times, minute, silver, time_end, time_start});
                         this.setCounter(minute);
@@ -266,16 +275,22 @@ export default () => {
             chrome.runtime.sendMessage({command: 'getAward', type: 'treasure', url: url.toString()}, (res) => {
                 switch (res.code) {
                     case 0: {
-                        if (this.retryTime) this.retryTime = 0;
+                        if (this.retryTime) {
+                            this.retryTime = 0;
+                        }
                         if (!res.data.isEnd) { // 没有全部领完
                             this.sendNotification();
                             this.getCurrentTask();
                             this.counter.text('领取成功');
-                        } else this.counter.text('已领完');
+                        } else {
+                            this.counter.text('已领完');
+                        }
                         break;
                     }
                     case -500: // 稍后登录？还不知道为什么会有这个错误
-                        if (this.retryTime) this.retryTime = 0;
+                        if (this.retryTime) {
+                            this.retryTime = 0;
+                        }
                         this.getCurrentTask();
                         break;
                     case -902: // 验证码错误
@@ -351,7 +366,9 @@ export default () => {
                 let a = this.correctStr[question[i]];
                 q += (a !== undefined ? a : question[i]);
             }
-            if (q[2] === '4') q[2] = '+';
+            if (q[2] === '4') {
+                q[2] = '+';
+            }
             return q;
         };
 
@@ -378,6 +395,6 @@ export default () => {
                 </React.Fragment>
             );
         }
-    }
+    };
 
 }

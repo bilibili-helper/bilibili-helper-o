@@ -6,7 +6,7 @@
         "message": "哔哩哔哩助手：bilibili.com 综合辅助扩展",
         "description": "Extension: Name"
     },
-    "extensionShortName": {
+    "ShortName": {
         "message": "哔哩哔哩助手",
         "description": "Extension: Short Name"
     },

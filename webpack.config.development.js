@@ -54,7 +54,7 @@ module.exports = (env) => {
         },
         entry: {
             'background': path.resolve(jsPath, 'pages', 'background', indexFilename),
-            'live': path.resolve(jsPath, 'pages', 'live', indexFilename),
+            'live': ['babel-polyfill', path.resolve(jsPath, 'pages', 'live', indexFilename)],
             'config': path.resolve(jsPath, 'pages', 'config', indexFilename),
             'popup': path.resolve(jsPath, 'pages', 'popup', indexFilename),
             'video': path.resolve(jsPath, 'pages', 'video', indexFilename),
@@ -107,7 +107,7 @@ module.exports = (env) => {
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
+                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -117,7 +117,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /(\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
+                    exclude: /(\.min\.js|\/ffmpeg\/)/,
                     include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',
@@ -138,7 +138,7 @@ module.exports = (env) => {
                 'process.env': {
                     DEBUG: Boolean(env.DEBUG) || false,
                 },
-                TARGET_ORIGIN: "'http://localhost:8000'",
+                TARGET_ORIGIN: '\'http://localhost:8000\'',
             }),
             new webpack.EnvironmentPlugin({
                 'DEBUG': false,
@@ -156,6 +156,7 @@ module.exports = (env) => {
                 {from: 'src/statics/fonts', to: 'statics/fonts'},
                 {from: 'src/statics/imgs', to: 'statics/imgs'},
                 {from: 'src/statics/js', to: 'statics/js'},
+                {from: 'src/statics/tf', to: 'statics/tf'},
                 //{from: 'src/js/libs', to: 'libs'},
                 // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
             ]),
@@ -182,9 +183,9 @@ module.exports = (env) => {
             })),
             {
                 apply: compiler => {
-                    compiler.hooks.watchClose.ta
-                }
-            }
+                    compiler.hooks.watchClose.ta;
+                },
+            },
             //new BundleAnalyzerPlugin(),
         ]),
     };

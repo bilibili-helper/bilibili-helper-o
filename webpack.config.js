@@ -122,7 +122,7 @@ module.exports = (env) => {
                 {
                     enforce: 'pre',
                     test: /\.js$/,
-                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
+                    exclude: /(\/node_modules\/|\/modules\/|\.min\.js|\/ffmpeg\/)/,
                     loader: 'eslint-loader',
                     options: {
                         emitError: true,
@@ -132,7 +132,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.js$/,
-                    exclude: /(\.min\.js|\/ffmpeg\/|\/ocrad\.js)/,
+                    exclude: /(\.min\.js|\/ffmpeg\/)/,
                     include: /(\/src\/js\/*)/,
                     loaders: [
                         'babel-loader',

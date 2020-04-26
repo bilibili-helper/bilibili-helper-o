@@ -132,6 +132,13 @@ export default () => {
           border: 1px solid var(--dark-3);
         }
       }
+      #member-container {
+        .up-card {
+          .info-name {
+            color: #c7c7c7;
+          }
+        }
+      }
       // tags
       #v_tag {
         border-color: var(--dark-1)!important;
@@ -153,9 +160,19 @@ export default () => {
       // 弹幕列表
       .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function [class*=player-auxiliary-danmaku-btn-],
       .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function,
-      .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-wrap,
-      .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-btn-history,
-      .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-btn-footer,
+      .danmaku-wrap {
+        .player-auxiliary-area {
+          .player-auxiliary-danmaku-wrap, .player-auxiliary-danmaku-btn-history, .player-auxiliary-danmaku-btn-footer {
+            background: #191919!important;
+          }
+        }
+        .player-auxiliary-danmaku-contaner {
+          .player-auxiliary-danmaku-load-status {
+            background: #191919!important;
+            color: #fff;
+          }
+        }
+      }
       .player-auxiliary-area {
         background: #191919!important;
       }

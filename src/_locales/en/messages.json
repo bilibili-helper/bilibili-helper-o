@@ -3,7 +3,7 @@
         "message": "Bilibili Helper: Bilibili.com Auxiliary",
         "description": "Extension: Name"
     },
-    "extensionShortName": {
+    "ShortName": {
         "message": "Bilibili Helper",
         "description": "Extension: Short Name"
     },
