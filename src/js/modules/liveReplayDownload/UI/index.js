@@ -18,9 +18,11 @@ export class LiveReplayDownloadUI extends UI {
                 return resolve();
             }
             this.interval('#sections-vm .room-feed .tabs', 1000).then((container) => {
+                let lock = false;
                 new MutationObserver((mutationList) => {
                     mutationList.forEach((mutation) => {
-                        if (mutation.target.textContent === '直播回放') {
+                        if (mutation.target.textContent === '直播回放' && !lock) {
+                            lock = true;
                             this.interval('.live-record-list-cntr', 300).then((list) => {
                                 Array.from(list.querySelectorAll('.card')).forEach((card) => {
                                     const href = card.querySelector('a').href;
