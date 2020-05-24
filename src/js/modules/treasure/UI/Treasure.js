@@ -287,6 +287,9 @@ export default () => {
                         }
                         break;
                     }
+                    case -903: // 已经领取过这个宝箱
+                        this.getCurrentTask();
+                        break;
                     case -500: // 稍后登录？还不知道为什么会有这个错误
                         if (this.retryTime) {
                             this.retryTime = 0;

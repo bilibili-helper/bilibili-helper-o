@@ -19,7 +19,6 @@ import {theme} from 'Styles';
 import './styles.scss';
 import 'react-virtualized/styles.css';
 
-
 export default () => {
     const {color} = theme;
     const crcEngine = new Crc32Engine();
@@ -191,11 +190,16 @@ export default () => {
         addListener = () => {
             const that = this;
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                if (message.command === 'loadHistoryDanmu') { // 被通知载入历史弹幕
+                if (message.command === 'loadNewTypeDanmu') { // 被通知加载新类型的弹幕
+                    this.getNewDANMUList(message.oid, message.pid);
+                    sendResponse(true);
+                } else if (message.command === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                     if (message.date) {
                         this.getDANMUList(message.cid, message.date);
                         sendResponse(true);
-                    } else console.error(`Error history danmu date: ${message.date}`);
+                    } else {
+                        console.error(`Error history danmu date: ${message.date}`);
+                    }
                 } else if (message.command === 'loadCurrentDanmu') { // 被通知载入当日弹幕
                     this.getDANMUList(message.cid);
                     sendResponse(true);
@@ -219,7 +223,9 @@ export default () => {
                     m = null;
                 }
                 m = setTimeout(() => {
-                    if (document.querySelector('#helper-card')) document.querySelector('#helper-card').style.display = 'block';
+                    if (document.querySelector('#helper-card')) {
+                        document.querySelector('#helper-card').style.display = 'block';
+                    }
                 }, 300);
                 if (n) {
                     clearTimeout(n);
@@ -232,9 +238,56 @@ export default () => {
             $(document).on('mouseleave', '[helper-data-usercard-mid], #helper-card, .bilibili-helper-danmu-wrapper', function() {
                 setTimeout(() => {
                     const dom = document.querySelector('#helper-card');
-                    if (that.removeCardSign && dom) dom.style.display = 'none';
+                    if (that.removeCardSign && dom) {
+                        dom.style.display = 'none';
+                    }
                 }, 200);
             });
+        };
+
+        getNewDANMUList = (oid, pid) => {
+            if (!!oid && !this.state.loading) {
+                const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
+                    this.setState({
+                        loading: true,
+                        loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
+                    });
+                }, 800);
+                const url = new Url(apis.seg);
+                url.set('query', {
+                    type: 1,
+                    oid,
+                    pid,
+                    segment_index: 1,
+                });
+                chrome.runtime.sendMessage({command: 'fetchNewTypeDanmu', url: url.toString()}, (danmuArray) => {
+                    clearTimeout(timer);
+                    const targetData = danmuArray.map(({id: rowId, content: danmu, midHash: authorHash, mode, progress}) => {
+                        if (mode === 7) {
+                            try {
+                                danmu = danmu.replace(/[\n\r]/g, '');
+                                danmu = JSON.parse(danmu)[4];
+                            } catch (e) {
+                                console.error(danmu);
+                            }
+                        }
+                        return {rowId, danmu, authorHash, time: parseTime(progress)};
+                    });
+                    const danmuJSON = {
+                        count: targetData.length,
+                        list: targetData,
+                        cid: oid,
+                    };
+                    this.orderedJSON = {...danmuJSON};
+                    danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
+                    this.setState({
+                        danmuJSON: danmuJSON,
+                        loaded: true,
+                        loading: false,
+                        currentCid: oid,
+                    });
+                });
+            }
         };
 
         // 获取弹幕xml数据源
@@ -256,7 +309,9 @@ export default () => {
                 chrome.runtime.sendMessage({command: 'fetchDanmu', url: url.toString()}, (danmuDocumentStr) => {
                     clearTimeout(timer);
                     if (danmuDocumentStr) {
-                        if (date) this.danmuDate = date;
+                        if (date) {
+                            this.danmuDate = date;
+                        }
                         const oSerializer = new DOMParser();
                         this.danmuDocumentStr = danmuDocumentStr;
                         this.danmuDocument = oSerializer.parseFromString(danmuDocumentStr, 'application/xml');
@@ -285,7 +340,9 @@ export default () => {
                     if (res) { // 过滤掉可能是机器人的用户
                         const {code, data} = JSON.parse(res);
                         if (code === 0) {
-                            if (this.isRobotUser(data)) resolve(false);
+                            if (this.isRobotUser(data)) {
+                                resolve(false);
+                            }
                             const {card, space, follower, following} = data;
                             this.userMap[uid] = {...card, ...space, follower, following};
                             resolve(uid);
@@ -317,8 +374,8 @@ export default () => {
         };
 
         // 将弹幕数据以时间顺序排序
-        sortJSONByTime = (originJSON) => {
-            return _.sortBy(originJSON, 'time');
+        sortJSONByTime = (originJSON, key = 'time') => {
+            return _.sortBy(originJSON, key);
         };
 
         // 将xml文档转化为json
@@ -330,16 +387,23 @@ export default () => {
                     unknow, // eslint-disable-line
                     authorHash, rowId,
                 ] = d.getAttribute('p').split(',');
-                let danmu = d.innerHTML;
-                if (/^\[(".+"?){14}\]$/g.test(danmu)) {
-                    danmu = JSON.parse(danmu)[4].trim();
+                let danmuString = d.innerHTML.replace(/[\n\r]/g, '');
+                let danmu = danmuString;
+                try {
+                    danmu = JSON.parse(danmu);
+                    if (!(danmu instanceof Array)) {
+                        danmu = danmuString;
+                    } else {
+                        danmu = danmu[4];
+                    }
+                } catch (e) {
+                    e;
                 }
                 list.push({danmuMode, fontSize, color, unixTime, authorHash, rowId, danmu, time: parseTime(time * 1000)});
             });
             this.setState({loaded: true});
             return {
                 cid: Number(document.getElementsByTagName('chatid')[0].innerHTML),
-                maxLimit: Number(document.getElementsByTagName('maxlimit')[0].innerHTML),
                 count: list.length,
                 list,
             };
@@ -397,7 +461,9 @@ export default () => {
             Promise.all(uids.map((uid) => this.getUserInfoByUid(uid))).then((res) => {
                 thisHashMap = thisHashMap.concat(_.compact(res));
             }).then(() => {
-                if (thisHashMap.length > 0) this.authorHashMap[authorHash] = thisHashMap;
+                if (thisHashMap.length > 0) {
+                    this.authorHashMap[authorHash] = thisHashMap;
+                }
                 this.setState({loading: false}, () => {
                     this.danmuListRef.recomputeRowHeights();
                     this.danmuListRef.forceUpdate();
@@ -498,8 +564,11 @@ export default () => {
             }
             header.setAttribute('style', `background-image: url(${s_img});`);
             faceBlock.setAttribute('src', face);
-            if (sex === '男') sexBlock.setAttribute('class', 'sex man');
-            else if (sex === '女') sexBlock.setAttribute('class', 'sex woman');
+            if (sex === '男') {
+                sexBlock.setAttribute('class', 'sex man');
+            } else if (sex === '女') {
+                sexBlock.setAttribute('class', 'sex woman');
+            }
             const levelInner = document.createElement('i');
             levelInner.setAttribute('class', `level l${level_info.current_level}`);
             levelBlock.innerHTML = '';
@@ -507,10 +576,15 @@ export default () => {
             likeBtn.setAttribute('mid', mid);
             likeBtn.setAttribute('uname', name);
             likeBtn.onclick = function() {
-                if (following) this.userMap[mid].following = false;
-                else this.userMap[mid].following = true;
+                if (following) {
+                    this.userMap[mid].following = false;
+                } else {
+                    this.userMap[mid].following = true;
+                }
             };
-            if (following) likeBtn.setAttribute('class', 'like liked');
+            if (following) {
+                likeBtn.setAttribute('class', 'like liked');
+            }
 
             messageBtn.setAttribute('href', '//message.bilibili.com/#whisper/mid' + mid);
             nameBlock.innerText = name;
@@ -522,7 +596,9 @@ export default () => {
         createCard = (target, mid) => {
             const userData = this.userMap[mid];
             const cardDOM = this.createCardDOM(userData);
-            if (!document.querySelector('#helper-card')) document.querySelector('body').appendChild(cardDOM);
+            if (!document.querySelector('#helper-card')) {
+                document.querySelector('body').appendChild(cardDOM);
+            }
 
             this.setTargetPosition(target, cardDOM);
         };
@@ -530,14 +606,19 @@ export default () => {
         setTargetPosition = (targetDOM, cardDOM) => {
             const {height, top, left} = targetDOM.getBoundingClientRect();
             const {height: cardHeight} = cardDOM.getBoundingClientRect();
-            if (cardHeight) this.lastHeight = cardHeight;
+            if (cardHeight) {
+                this.lastHeight = cardHeight;
+            }
             if (top >= cardHeight) {
                 cardDOM.style.top = `${top - this.lastHeight - 2}px`;
             } else {
                 cardDOM.style.top = `${top + height + 2}px`;
             }
-            if (left + 377 <= window.innerWidth) cardDOM.style.left = `${left}px`;
-            else cardDOM.style.left = `${window.innerWidth - 377}px`;
+            if (left + 377 <= window.innerWidth) {
+                cardDOM.style.left = `${left}px`;
+            } else {
+                cardDOM.style.left = `${window.innerWidth - 377}px`;
+            }
         };
 
         renderHeader = (danmuJSON = this.state.danmuJSON) => (
@@ -593,6 +674,6 @@ export default () => {
                 </React.Fragment>
             );
         }
-    }
+    };
 }
 

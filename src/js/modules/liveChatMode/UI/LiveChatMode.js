@@ -126,7 +126,7 @@ export default () => {
         height: auto;
         background-color: unset;
         pointer-events: none!important;
-        z-index: 1;
+        z-index: 9;
       }
       .hide-aside-area #chat-control-panel-vm .control-panel-ctnr {
         height: auto;
@@ -141,6 +141,9 @@ export default () => {
         color: #eee;
         pointer-events: auto;
       }
+      .hide-aside-area #chat-control-panel-vm .dialog-ctnr {
+        pointer-events: auto;
+      }
       .hide-aside-area #chat-control-panel-vm .input-limit-hint {
         bottom: 10px;
         right: 12px;
@@ -150,6 +153,9 @@ export default () => {
       }
       .hide-aside-area:not(.fullscreen-fix) .bilibili-live-player-video-controller {
         bottom: 38px;
+      }
+      .hide-asize-area .bilibili-live-player-video-danmaku {
+        pointer-events: none;
       }
       .hide-aside-area .bilibili-live-player-video-controller .bilibili-live-player-video-controller-container {
         padding: 0 130px 0 80px;

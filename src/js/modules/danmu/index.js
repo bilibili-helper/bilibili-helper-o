@@ -9,6 +9,7 @@ import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
 import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
 import {__, fetchFromHelper} from 'Utils';
+import {DanmuDecoder} from './danmuDecoder';
 
 export {DanmuUI} from './UI/index';
 
@@ -37,6 +38,8 @@ export class Danmu extends Feature {
 
                 '*://api.bilibili.com/x/player.so?id=cid:*', // 新页面特有，用于标记新页面，加载时特殊处理
                 '*://interface.bilibili.com/player?id=cid:*', // 老页面特有
+
+                '*://api.bilibili.com/x/v2/dm/web/seg.so?*', // 最新的protocolBuff格式的数据
             ],
         };
         chrome.webRequest.onSendHeaders.addListener((details) => {
@@ -47,9 +50,21 @@ export class Danmu extends Feature {
             }
             const url = new URLParse(details.url, '', true);
             const {pathname, query} = url;
-            if (query && query.requestFrom) return;
+            if (query && query.requestFrom) {
+                return;
+            }
             // 收到前端页面请求
-            if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
+            console.warn(pathname);
+            if (pathname === '/x/v2/dm/web/seg.so') { // 最新的protocolBuff格式的数据
+                const tabData = this.messageStore.createData(tabId);
+                tabData.data.cid = query.oid;
+                tabData.queue.push({ // 将监听到的事件添加到队列中
+                    command: 'loadNewTypeDanmu',
+                    oid: query.oid,
+                    pid: query.pid,
+                });
+                this.messageStore.dealWith(tabId); // 处理queue
+            } else if (pathname === '/x/player.so' || pathname === '/player') { // 如果tab请求了当天弹幕
                 const tabData = this.messageStore.createData(tabId);
                 tabData.data.cid = query.id.slice(4);
                 tabData.queue.push({ // 将监听到的事件添加到队列中
@@ -84,6 +99,15 @@ export class Danmu extends Feature {
                 }, (res) => {
                     console.error(res);
                     sendResponse(res);
+                });
+            }
+            if (message.command === 'fetchNewTypeDanmu' && message.url) {
+                fetchFromHelper(message.url)
+                .then(res => res.arrayBuffer())
+                .then(res => {
+                    const danmu = DanmuDecoder(res);
+                    console.warn(danmu);
+                    sendResponse(danmu);
                 });
             } else if (message.command === 'fetchDanmu' && message.url) {
                 fetchFromHelper(message.url)
