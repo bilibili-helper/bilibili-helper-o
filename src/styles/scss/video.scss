@@ -11,7 +11,7 @@ body {
 	}
 	.bilibili-helper {
 		position: fixed;
-		bottom: 420px;
+		bottom: calc(50% + 135px);
 		right: 6px;
 		z-index: 1000;
 		& > span {

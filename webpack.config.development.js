@@ -157,6 +157,7 @@ module.exports = (env) => {
                 {from: 'src/statics/imgs', to: 'statics/imgs'},
                 {from: 'src/statics/js', to: 'statics/js'},
                 {from: 'src/statics/tf', to: 'statics/tf'},
+                {from: 'src/statics/proto', to: 'statics/proto'},
                 //{from: 'src/js/libs', to: 'libs'},
                 // {from: 'webpack-src/styles/**/*.css', to: 'styles/css', flatten: true},
             ]),

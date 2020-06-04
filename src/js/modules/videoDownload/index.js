@@ -61,7 +61,7 @@ export class VideoDownload extends Feature {
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {tabId, initiator, requestHeaders} = details;
-            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper')) || details.url.match('from=bilibili-helper');
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) {
                 return;
             }

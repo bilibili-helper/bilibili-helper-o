@@ -1,6 +1,6 @@
 {
   "name": "bilibili-helper-master",
-  "version": "1.2.18",
+  "version": "1.2.20-beta.1",
   "description": "bilibili-helper",
   "main": "index.js",
   "dependencies": {
@@ -30,7 +30,8 @@
     "styled-components": "^4.1.2",
     "systemjs": "^2.1.1",
     "universal-analytics": "^0.4.20",
-    "url-parse": "^1.4.3"
+    "url-parse": "^1.4.3",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

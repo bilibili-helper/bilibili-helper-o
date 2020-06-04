@@ -36,12 +36,15 @@ export class VideoSubtitleDownload extends Feature {
         };
         chrome.webRequest.onSendHeaders.addListener(details => {
             const {tabId, initiator, requestHeaders} = details;
-            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            let fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'))
+                || details.url.match('from=bilibili-helper');
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
 
             const tabData = this.messageStore.createData(tabId);
             const url = new URL(details.url, '', true);
             const {pathname, query} = url;
+            // 做标记避免循环请求形成攻击，要被打死的_(:з」∠)_
+            url.set('query', {...query, from: 'bilibili-helper'});
             if (query && query.requestFrom) return;
             if (pathname === '/x/player.so') {
                 tabData.data.cid = query.id.slice(4);
@@ -49,7 +52,7 @@ export class VideoSubtitleDownload extends Feature {
                 const {queue} = storeObject;
                 queue.push({
                     command: 'loadSubtitle',
-                    url: details.url,
+                    url: url.toString(),
                 });
                 this.messageStore.dealWith(tabId);
             }

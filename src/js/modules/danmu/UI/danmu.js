@@ -46,6 +46,38 @@ export default () => {
       outline: none;
       & .no-data {}
     `;
+    const UnloadList =  styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
+      position: relative;
+      height: 200px;
+      margin-left: 4px;
+      padding: 1px;
+      border: 1px solid #eee;
+      border-radius: 4px 4px 0 0;
+      font-size: 12px;
+      overflow: hidden;
+      outline: none;
+      
+      button {
+        display: block;
+        position: relative;
+        margin: 4px;
+        padding: 3px 12px;
+        border: none;        
+        border-radius: 3px;
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        word-break: break-all;
+        background-color: rgb(234, 244, 255);
+        color: rgb(0, 161, 214);
+        transition: all 0.3s ease 0s, visibility 0s ease 0s;
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          color: #004c65;
+          background-color: #d4eaff;
+        }
+      }
+    `;
 
     const DanmuSearchInput = styled.input.attrs({className: 'bilibili-helper-danmu-input'})`
       display: block;
@@ -158,9 +190,17 @@ export default () => {
             this.currentRowIndex = 0;
 
             this.authorHashMap = {}; // authorHash -> uid
+            this.segmentDanmuList = [];
+            this.segmentDanmuOid = null;
+            this.segmentSize = 1;
+            // 分页大小÷1000
+            this.segmentDanmuPageSize = 360000;
 
             this.removeCardSign = null;
             this.lasetHeight = null;
+
+            this.currentOid = null;
+            this.currentPid = null;
 
             this.state = {
                 loaded: false,
@@ -175,6 +215,8 @@ export default () => {
                 queryUserMode: null, // 用户UID查询模式
 
                 currentCid: NaN,
+                segmentDanmu: [], // 分段式弹幕加载
+                needLoadByHandle: true,
             };
         }
 
@@ -189,9 +231,9 @@ export default () => {
 
         addListener = () => {
             const that = this;
-            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                 if (message.command === 'loadNewTypeDanmu') { // 被通知加载新类型的弹幕
-                    this.getNewDANMUList(message.oid, message.pid);
+                    this.getNewDANMUList(message.oid, message.pid, message.segmentIndex);
                     sendResponse(true);
                 } else if (message.command === 'loadHistoryDanmu') { // 被通知载入历史弹幕
                     if (message.date) {
@@ -245,49 +287,121 @@ export default () => {
             });
         };
 
-        getNewDANMUList = (oid, pid) => {
-            if (!!oid && !this.state.loading) {
-                const timer = setTimeout(() => { // 请求时长超过800毫秒则显示查询中
-                    this.setState({
-                        loading: true,
-                        loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
-                    });
-                }, 800);
-                const url = new Url(apis.seg);
-                url.set('query', {
-                    type: 1,
-                    oid,
-                    pid,
-                    segment_index: 1,
+        getNewDanmuOption = (oid, pid, type) => {
+            return new Promise(resolve => {
+                const url = new Url(apis.view);
+                url.set('query', {type, oid, pid});
+                chrome.runtime.sendMessage({command: 'fetchNewTypeDanmuOption', url: url.toString()}, (danmuOption) => {
+                    resolve(danmuOption);
                 });
-                chrome.runtime.sendMessage({command: 'fetchNewTypeDanmu', url: url.toString()}, (danmuArray) => {
-                    clearTimeout(timer);
-                    const targetData = danmuArray.map(({id: rowId, content: danmu, midHash: authorHash, mode, progress}) => {
-                        if (mode === 7) {
-                            try {
-                                danmu = danmu.replace(/[\n\r]/g, '');
-                                danmu = JSON.parse(danmu)[4];
-                            } catch (e) {
-                                console.error(danmu);
-                            }
-                        }
-                        return {rowId, danmu, authorHash, time: parseTime(progress)};
+            });
+
+        };
+
+        getNewDANMUList = (oid, pid, segmentIndex = 1) => {
+            if (oid) {
+                // 检测到新的分段弹幕需要加载
+                if (segmentIndex === 1 && this.segmentDanmuOid !== oid) {
+                    this.segmentDanmuOid = oid;
+                    this.segmentDanmuList = [];
+                    Promise.all([
+                        this.getNewDanmuOption(oid, pid, 1),
+                        this.getVideoDuration(),
+                    ]).then(([pageSize, duration]) => {
+                        this.segmentDanmuPageSize = pageSize;
+                        this.segmentSize = Math.ceil(duration / (pageSize / 1000));
+                        this.currentOid = oid;
+                        this.currentPid = pid;
                     });
-                    const danmuJSON = {
-                        count: targetData.length,
-                        list: targetData,
-                        cid: oid,
-                    };
-                    this.orderedJSON = {...danmuJSON};
-                    danmuJSON.list = this.sortJSONByTime(danmuJSON.list);
                     this.setState({
-                        danmuJSON: danmuJSON,
-                        loaded: true,
+                        needLoadByHandle: true,
                         loading: false,
-                        currentCid: oid,
+                        loadingText: '',
                     });
-                });
+                }
             }
+        };
+
+        getDanmuData = (oid, pid, segmentIndex) => {
+            const url = new Url(apis.seg);
+            url.set('query', {
+                type: 1,
+                oid,
+                pid,
+                segment_index: segmentIndex,
+            });
+            chrome.runtime.sendMessage({command: 'fetchNewTypeDanmu', url: url.toString()}, (danmuArray) => {
+                const targetData = danmuArray.map(({id: rowId, content: danmu, midHash: authorHash, mode, progress, fontsize, color, ctime, idStr, weight}) => {
+                    if (mode === 7) {
+                        try {
+                            danmu = danmu.replace(/[\n\r]/g, '');
+                            danmu = JSON.parse(danmu)[4];
+                        } catch (e) {
+                            console.error(danmu);
+                        }
+                    }
+                    return {rowId, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, time: parseTime(progress || 0)};
+                });
+                const data = this.sortJSONByTime(targetData);
+                this.segmentDanmuList[segmentIndex - 1] = data;
+                const currentFullList = this.segmentDanmuList.reduce((res, segment) => {
+                    return res.push(...segment), res;
+                }, []);
+                const danmuJSON = {
+                    count: currentFullList.length,
+                    list: currentFullList,
+                    cid: oid,
+                };
+                this.orderedJSON = {...danmuJSON};
+
+                this.setState({
+                    danmuJSON: danmuJSON,
+                    loaded: true,
+                    loading: false,
+                    currentCid: oid,
+                }, () => {
+                    let xmlStr = '<i>';
+                    this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
+                        const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
+                        return xmlStr += `<d p="${Math.round((progress || 0) / 1000)},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${danmu}</d>`;
+                    }, xmlStr) + '</i>';
+                });
+            });
+        };
+
+        getVideoDuration = () => {
+            return new Promise((resolve, reject) => {
+                window.postMessage({command: 'getVideoDuration'}, '*');
+                this.injectScript(`
+                    (()=>{
+                        const messageCallback = (event) => {
+                            const {data} = event;
+                            if (data.command === 'getVideoDuration') {
+                                window.postMessage({command: 'setDuration', duration: window.player.getDuration()}, '*');
+                                window.removeEventListener('message', messageCallback);
+                            }
+                        };
+                        window.addEventListener('message', messageCallback);
+                    })()
+                `, 5000);
+                const messageCallback = (event) => {
+                    const {data} = event;
+                    if (data.command === 'setDuration') {
+                        window.removeEventListener('message', messageCallback);
+                        data.duration ? resolve(data.duration) : reject();
+                    }
+                };
+                window.addEventListener('message', messageCallback);
+            });
+        };
+
+        injectScript = (script, clearTimeout = 0) => {
+            const dom = document.createElement('script');
+            dom.innerHTML = script;
+            document.body.appendChild(dom);
+            clearTimeout && setTimeout(() => {
+                dom.remove();
+            }, clearTimeout);
         };
 
         // 获取弹幕xml数据源
@@ -436,7 +550,13 @@ export default () => {
                     const index = data.danmu.indexOf(value);
                     if (index >= 0) {
                         // 这里一定要复制一份，不然会修改原数据
-                        const danmu = data.danmu.replace(value, `<span class="target-words">${value}</span>`);
+                        const split = data.danmu.split(value);
+                        const danmu = split.reduce((res, v, index) => {
+                            if (index < split.length) {
+                                res.push(v, <span className="target-words">{value}</span>);
+                                return res;
+                            }
+                        }, []);
                         list.push({...data, danmu});
                     }
                 });
@@ -508,6 +628,18 @@ export default () => {
                 date: this.danmuDate,
                 filename: getFilename(document),
                 origin: type === 'ass' ? document.location.href : null,
+            });
+        };
+
+        handleOnClickLoadDanmu = () => {
+            this.setState({
+                loading: true,
+                loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
+                needLoadByHandle: false,
+            }, () => {
+                for (let i = 0; i < this.segmentSize; ++i) {
+                    this.getDanmuData(this.currentOid, this.currentPid, i + 1);
+                }
             });
         };
 
@@ -665,12 +797,17 @@ export default () => {
         />;
 
         render() {
+            const {needLoadByHandle, loading} = this.state;
             return (
                 <React.Fragment>
                     {this.renderHeader()}
-                    {this.renderList()}
+                    {!needLoadByHandle && this.renderList()}
+                    {needLoadByHandle && <UnloadList>
+                        <button onClick={this.handleOnClickLoadDanmu}>点击加载完整弹幕</button>
+                    </UnloadList>}
                     <DanmuSearchInput placeholder="请输入需要查询的弹幕内容" onChange={this.handleInputChange}/>
-                    {this.state.loading && <LoadingMask>{this.state.loadingText}</LoadingMask>}
+                    {loading && <LoadingMask>{this.state.loadingText}</LoadingMask>}
+
                 </React.Fragment>
             );
         }

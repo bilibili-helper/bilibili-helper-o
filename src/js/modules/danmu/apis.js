@@ -8,4 +8,5 @@ export default {
     historyList: 'https://api.bilibili.com/x/v2/dm/history',
     card: 'https://api.bilibili.com/x/web-interface/card',
     seg: 'https://api.bilibili.com/x/v2/dm/web/seg.so',
+    view: 'https://api.bilibili.com/x/v2/dm/web/view',
 }
