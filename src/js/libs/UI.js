@@ -26,18 +26,31 @@ export class UI {
         console.error(`UI ${this.name}'s load function is not recode!`);
     };
 
-    getContainer = (selectors) => {
+    getContainer = (selectors, returnMore = false) => {
         const get = (name) => {
             const queryRes = document.querySelectorAll(name);
             return queryRes.length > 0 ? queryRes : false;
         };
         if (typeof selectors === 'string') {
             const res = get(selectors);
-            return res && res.length > 0 ? res[0] : false;
+            if (res && res.length > 0) {
+                if (returnMore) {
+                    return res;
+                } else {
+                    return res[0];
+                }
+            } else {
+                return false;
+            }
         } else if (selectors instanceof Array) {
             const t = _.compact(selectors.map((name) => get(name)));
-            if (t.length > 0) { return _.compact(selectors.map((name) => get(name)))[0]; }
-            else { console.error(`No target of name: ${selectors}!`); }
+            if (t.length > 0) {
+                if (returnMore) {
+                    return _.compact(t);
+                } else {
+                    return _.compact(selectors.map((name) => get(name)))[0];
+                }
+            } else { console.error(`No target of name: ${selectors}!`); }
         }
     };
 
@@ -71,12 +84,12 @@ export class UI {
         });
     };
 
-    interval = (containerSelectors, interval = 500) => {
+    interval = (containerSelectors, interval = 500, more = false) => {
         let retryTime = 0;
         const retryMax = 15;
         return new Promise(resolve => {
             let timer = setInterval(() => {
-                const container = this.getContainer(containerSelectors);
+                const container = this.getContainer(containerSelectors, more);
                 if (container) {
                     clearInterval(timer);
                     resolve(container);

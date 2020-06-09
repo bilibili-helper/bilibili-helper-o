@@ -64,7 +64,17 @@ export class CvImagesUI extends UI {
             $(document).on('mouseleave', '.bilibili-ct-wrapper, .banner-img-holder', function(e) {
                 e.preventDefault();
                 $(this).children('button').remove();
-            })
+            });
+
+            // 解除复制限制
+            this.interval('.article-holder').then(container => {
+                const wrapper = container;
+                const articleContent = Array.from(wrapper.children);
+                const replaceWrapper = document.createElement('div');
+                replaceWrapper.classList.add('article-holder', 'unable-reprint');
+                replaceWrapper.append(...articleContent);
+                wrapper.replaceWith(replaceWrapper);
+            });
             resolve(containers);
         });
     };

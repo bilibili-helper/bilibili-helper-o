@@ -27,7 +27,10 @@ export class ShowDisabledVideo extends Feature {
 
     addListener = () => {
         const requestFilter = {
-            urls: ['*://api.bilibili.com/medialist/gateway/base/spaceDetail?*'],
+            urls: [
+                //'*://api.bilibili.com/medialist/gateway/base/spaceDetail?*',
+                '*://api.bilibili.com/x/v3/fav/resource/list?*'
+            ],
         };
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {tabId, initiator, requestHeaders} = details;
@@ -36,18 +39,13 @@ export class ShowDisabledVideo extends Feature {
                 return;
             }
             const url = new Url(details.url, '', true);
-            const {query} = url;
-            if (query && query.requestFrom) return;
+            if (url.query && url.query.requestFrom) return;
             const tabData = this.messageStore.createData(tabId);
-            fetchFromHelper(url.href)
-            .then(res => res.json())
-            .then((res) => {
-                tabData.queue.push({
-                    command: 'showDisabledVideoURLRequest',
-                    data: res,
-                });
-                this.messageStore.dealWith(tabId); // 处理queue
+            tabData.queue.push({
+                command: 'showDisabledVideoURLRequest',
+                //data: res,
             });
+            this.messageStore.dealWith(tabId); // 处理queue
 
         }, requestFilter, ['requestHeaders']);
     };
