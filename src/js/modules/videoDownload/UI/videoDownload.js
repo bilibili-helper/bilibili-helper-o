@@ -39,6 +39,7 @@ export default () => {
     const Description = styled.p`
       font-size: 12px;
       min-width: unset;
+      max-width: 100%;
       color: rgb(255, 255, 255);
       background-color: rgb(251, 114, 153);
       padding: 0px 4px;

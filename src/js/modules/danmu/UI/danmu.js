@@ -340,7 +340,7 @@ export default () => {
                             console.error(danmu);
                         }
                     }
-                    return {rowId, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, time: parseTime(progress || 0)};
+                    return {rowId, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, progress, time: parseTime(progress || 0)};
                 });
                 const data = this.sortJSONByTime(targetData);
                 this.segmentDanmuList[segmentIndex - 1] = data;
@@ -360,10 +360,10 @@ export default () => {
                     loading: false,
                     currentCid: oid,
                 }, () => {
-                    let xmlStr = '<i>';
+                    let xmlStr = `<?xml version="1.0" encoding="UTF-8"?><i><chatserver></chatserver><chatid>${oid}</chatid><mission></mission><maxlimit></maxlimit><state></state><real_name></real_name><source></source>`;
                     this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
                         const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
-                        return xmlStr += `<d p="${Math.round((progress || 0) / 1000)},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${danmu}</d>`;
+                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${danmu}</d>`;
                     }, xmlStr) + '</i>';
                 });
             });
