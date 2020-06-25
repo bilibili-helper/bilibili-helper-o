@@ -96,7 +96,7 @@ export class LiveUpCheck extends Feature {
     };
 
     initList() {
-        void this.getList(this.currentList);
+        void this.getList(this.currentList || []);
     }
 
     checkNew() {

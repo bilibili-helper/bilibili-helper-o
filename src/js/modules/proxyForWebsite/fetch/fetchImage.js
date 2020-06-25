@@ -26,22 +26,33 @@ const imageList = {};
  * @return {Promise<void>}
  */
 export const fetchImage = async (websitePort, {url, options, sign, model, mine}) => {
-    let imageBase64String = '';
-    if (imageList[sign]) imageBase64String = imageList[sign];
-    else {
-        imageBase64String = await fetchFromHelper(url, options)
-        .then(response => response)
-        .then((response) => {
-            return response.arrayBuffer().then(buffer => {
-                return imageList[sign] = `data:${mine};base64,` + arrayBufferToBase64(buffer);
+    if (url.match(/^data:image\//)) {
+        websitePort.postMessage({
+            command: 'returnFetch',
+            data: url,
+            from: 'helperProxy',
+            model,
+            sign,
+        });
+    } else {
+        let imageBase64String = '';
+        if (imageList[sign]) imageBase64String = imageList[sign];
+        else {
+            imageBase64String = await fetchFromHelper(url, options)
+            .then(response => response)
+            .then((response) => {
+                return response.arrayBuffer().then(buffer => {
+                    return imageList[sign] = `data:${mine};base64,` + arrayBufferToBase64(buffer);
+                });
             });
+        }
+        websitePort.postMessage({
+            command: 'returnFetch',
+            data: imageBase64String,
+            from: 'helperProxy',
+            model,
+            sign,
         });
     }
-    websitePort.postMessage({
-        command: 'returnFetch',
-        data: imageBase64String,
-        from: 'helperProxy',
-        model,
-        sign,
-    });
+
 };
