@@ -1,5 +1,5 @@
 {
-    "version": "1.2.21.1",
+    "version": "1.2.21.2",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
     "name": "__MSG_extensionName__",
@@ -32,8 +32,7 @@
             "all_frames": false,
             "js": [
                 "video.js",
-                "vendors.bundle.js",
-                "features.bundle.js"
+                "vendors.bundle.js"
             ],
             "css": [
                 "styles/vendors.css",
@@ -69,8 +68,7 @@
             "all_frames": false,
             "js": [
                 "vendors.bundle.js",
-                "website.js",
-                "features.bundle.js"
+                "website.js"
             ],
             "matches": [
                 "*://localhost/*",
@@ -111,8 +109,7 @@
             "all_frames": false,
             "js": [
                 "vendors.bundle.js",
-                "videoList.js",
-                "features.bundle.js"
+                "videoList.js"
             ],
             "css": [
                 "styles/vendors.css",

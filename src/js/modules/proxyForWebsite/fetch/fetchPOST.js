@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {fetchFromHelper} from 'Utils/functions';
 
 /**
@@ -7,27 +6,6 @@ import {fetchFromHelper} from 'Utils/functions';
  * Description:
  */
 
-chrome.webRequest.onBeforeSendHeaders.addListener(details => {
-    const {tabId, initiator, requestHeaders, url} = details;
-    const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
-    if ((/^chrome-extension:\/\//.test(initiator) || fromHelper) && url.match('/reply/add')) {
-        const originHeader = requestHeaders.find((h) => h.name.toLowerCase() === 'origin');
-        if (originHeader) {
-            originHeader.value = 'https://h.bilibili.com';
-        } else {
-            requestHeaders.push({
-                name: 'Origin',
-                value: 'https://h.bilibili.com',
-            });
-        }
-        console.log(requestHeaders);
-        return {requestHeaders};
-    }
-}, {
-    urls: [
-        'https://api.bilibili.com/x/v2/reply/add?*',
-    ],
-}, ['blocking', 'requestHeaders', 'extraHeaders']);
 export const fetchPOST = async (websitePort, {url, options, sign, model}) => {
     if (!model) throw(`fetch from Model ${model}`);
     const {body, ...rest} = options;
