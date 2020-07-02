@@ -6,6 +6,7 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
+import {has} from 'mobx';
 //const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 import FLV from '../lib/flv';
 import React from 'react';
@@ -21,6 +22,8 @@ const videoDataCache = {
     old: {},
     new: {},
 };
+
+const hasCopyright = () => !!location.href.match(/^https:\/\/www\.bilibili\.com\/bangumi\/play/);
 
 export default () => {
     const {color} = theme;
@@ -198,14 +201,14 @@ export default () => {
                     sendResponse();
                 } else if (message.command === 'videoDownloadSendVideoRequest') {
                     let {data, url, method, type} = message;
-                    const {cid, avid, bvid, qn = ''} = data;
+                    const {cid, avid, bvid, qn = '', fourk = 0} = data;
                     if (type === 'new') {
                         if (location.href.indexOf('bangumi') >= 0) {
                             url = new Url(bangumiFlvDownloadURL);
                         } else {
                             url = new Url(normalFlvDownloadURL);
                         }
-                        url.set('query', {cid, avid, bvid, qn, otype: 'json'});
+                        url.set('query', {cid, avid, bvid, qn, fourk, otype: 'json'});
                         url = url.toString();
                     }
                     //const res = /\/av([\d]+)\//.exec(location.pathname); // 新的视频播放页面会同时加载多个不同视频的playUrl
@@ -222,7 +225,6 @@ export default () => {
                     } else {
                         this.getFlvResponse(method, url);
                     }
-
                     sendResponse(true);
                 } else if (message.command === 'videoDownloadCid' && message.cid) { // 本地script加载视频数据时，需要检测cid
                     const {videoData} = this.state;
@@ -237,13 +239,19 @@ export default () => {
                             videoData[message.cid] = cidData;
                             this.setState({currentCid: message.cid, videoData, currentQuality: quality});
                         } else {
-                            let url = null;
+                            let url;
                             if (location.href.indexOf('bangumi') >= 0) {
                                 url = new Url(bangumiFlvDownloadURL);
                             } else {
                                 url = new Url(normalFlvDownloadURL);
                             }
-                            url.set('query', {cid: message.cid, avid: message.avid, qn: quality, otype: 'json'});
+                            url.set('query', {
+                                cid: message.cid,
+                                avid: message.avid,
+                                qn: quality,
+                                otype: 'json',
+                                fourk: quality === 120 ? 1 : 0,
+                            });
                             this.setState({currentCid: message.cid});
                             this.getFlvResponse('get', url.toString());
                         }
@@ -298,10 +306,15 @@ export default () => {
             } else {
                 url = new Url(normalFlvDownloadURL);
             }
-            url.set('query', {cid: currentCid, avid: this.currentAvid, bvid: this.currentBvid, qn, otype: 'json'});
+            url.set('query', {
+                cid: currentCid,
+                avid: this.currentAvid,
+                bvid: this.currentBvid,
+                qn,
+                fourk: +qn === 120 ? 1 : 0,
+                otype: 'json',
+            });
             url = url.toString();
-            console.warn(url, this.currentBvid);
-            //console.warn('changeQuality', qn);
 
             this.setState({currentCid, currentQuality: qn});
             if (videoData[currentCid] && videoData[currentCid][qn] && !videoData[currentCid][qn].dash) {
@@ -463,7 +476,7 @@ export default () => {
             //}
             //} else
             return (<LinkGroup key={quality} downloading={downloading} disabled={downloading}>
-                {_.map(durl, (o, i) => {
+                {!hasCopyright() ? _.map(durl, (o, i) => {
                     const title = durl.length > 1 ? `${i + 1}` : accept_description[accept_quality.indexOf(+quality)];
                     return (
                         <React.Fragment key={i}>
@@ -486,7 +499,7 @@ export default () => {
                             </a>}
                         </React.Fragment>
                     );
-                })}
+                }) : <LinkGroupTitle>由于版权限制禁止下载，非版权视频不受影响</LinkGroupTitle>}
                 <Progress percentage={percentage}/>
             </LinkGroup>);
             //);
@@ -514,7 +527,8 @@ export default () => {
             return (
                 <React.Fragment>
                     <Title>视频下载 - 切换清晰度</Title>
-                    <Description>暂时无法支持4K下载；下载出现问题请检查是否有安装下载或者广告屏蔽相关的其他扩展，他们可能导致会处理浏览器的默认行为导致助手下载功能异常</Description>
+                    <Description>现已支持4K视频下载。并从1.2.22版本开始停止提供版权视频下载功能，非版权视频不受影响</Description>
+                    <Description>下载出现问题请检查是否有安装下载或者广告屏蔽相关的其他扩展，他们可能导致会处理浏览器的默认行为导致助手下载功能异常</Description>
                     <Description>合并下载会先下载至内存最后弹出另存为窗口。当卡住时，请下载分段</Description>
                     <Container>
                         {loadedVideo && (loadedVideo.durl || loadedVideo.dash) && this.renderFLV()}
