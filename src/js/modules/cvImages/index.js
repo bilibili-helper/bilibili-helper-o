@@ -29,9 +29,11 @@ export class CvImages extends Feature {
             case 'jpg':
             case 'jpeg':
             case 'webp':
-                return 'image/jpeg';
+                return 'jpeg';
             case 'gif':
-                return 'image/gif';
+                return 'gif';
+            default:
+                return extension;
         }
     };
 
