@@ -125,6 +125,7 @@
       "js": [
         "vendors.bundle.js",
         "vipPrivilege.js",
+        "darkMode.js",
         "features.bundle.js"
       ],
       "css": [
