@@ -32,6 +32,7 @@ import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo'
 import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
 import {AutoTakeVipPrivilege, AutoTakeVipPrivilegeUI} from 'Modules/autoTakeVipPrivilege';
 import {LiveReplayDownload, LiveReplayDownloadUI} from 'Modules/liveReplayDownload';
+import {DarkMode, DarkModeUI} from "Modules/darkMode";
 
 //let VideoUnblock;
 //try {
@@ -69,6 +70,7 @@ export const Features = {
     LivePictureInPicture,
     AutoTakeVipPrivilege,
     LiveReplayDownload,
+    DarkMode,
 };
 
 export const UIs = {
@@ -93,4 +95,5 @@ export const UIs = {
     LivePictureInPictureUI,
     AutoTakeVipPrivilegeUI,
     LiveReplayDownloadUI,
+    DarkModeUI,
 };
