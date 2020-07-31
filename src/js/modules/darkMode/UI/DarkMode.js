@@ -260,6 +260,7 @@ const DarkModeStyle = createGlobalStyle`
       --dark-3: #1f1f1f;
       --dark-4: #2b2b2b;
       --dark-5: #333333;
+      --dark-card: #131313;
         
       --dark-font-0: #e8e8e8;
       --dark-font-1: #99a2aa;
@@ -318,7 +319,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //弹出Popper
     .channel-menu-mini, .van-popper-avatar, .van-popper-avatar .level-intro, .van-popper-avatar .coins .info .login-award,
     .van-popper-vip, .van-popper-favorite, .van-popper-favorite .view-all, .van-popper-favorite .play-all, .van-popper-history, .van-popper-upload {
-      background-color: var(--dark-4)!important;
+      background-color: var(--dark-card)!important;
     }
     
     //文字 轻
@@ -513,21 +514,21 @@ const DynamicDarkModeStyle = createGlobalStyle`
     
     //所有Card背景
     .user-panel, .live-panel, .section-block, .publish-panel, .core-style, .most-viewed-panel, .tab-bar, .card, .notice-panel, .new-topic-panel {
-      background: var(--dark-4)!important;
+      background: var(--dark-card)!important;
     }
     
     //特殊背景
     .bg-white {
-      background: var(--dark-4)!important;
+      background: var(--dark-card)!important;
     }
     
     .live-panel-item .live-up-img {
-      background-color: var(--dark-4)!important;
+      background-color: var(--dark-card)!important;
       border-color: var(--dark-3)!important;
     }
     
     .notice-panel .img-container .notice-img {
-      background-color: var(--dark-4)!important;
+      background-color: var(--dark-card)!important;
     }
     
     .dynamic-link-hover-bg:hover {
@@ -578,9 +579,9 @@ const DynamicDarkModeStyle = createGlobalStyle`
     
     //新动态
     .new-notice-bar {
-      background: #eae7c8!important;
+      background: #cdcbb0!important;
       .message {
-        color: #e5b41d!important;
+        color: #f39c12!important;
       }
     }
     
@@ -592,9 +593,9 @@ const DynamicDarkModeStyle = createGlobalStyle`
     //常看列表
     .card-list .most-viewed-panel .list-content .most-viewed-item .section {
       .icon-all, .avatar {
-        border-color: var(--dark-4);
-        -webkit-box-shadow: 0 0 0 1px var(--dark-4);
-        box-shadow: 0 0 0 1px var(--dark-4);
+        border-color: var(--dark-card);
+        -webkit-box-shadow: 0 0 0 1px var(--dark-card);
+        box-shadow: 0 0 0 1px var(--dark-card);
         .active {
           -webkit-box-shadow: 0 0 0 1px #00a1d6!important;
           box-shadow: 0 0 0 1px #00a1d6!important;
@@ -661,8 +662,8 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-5)!important;
       border-color: var(--dark-5)!important;
       &:hover {
-        background-color: var(--dark-4)!important;
-        border-color: var(--dark-4)!important;
+        background-color: var(--dark-card)!important;
+        border-color: var(--dark-card)!important;
       }
       .icon-list {
         background-image: url(${getURL('/statics/imgs/article-list.png')})!important;
@@ -673,8 +674,8 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-5)!important;
       border-color: var(--dark-5)!important;
       .button:hover {
-        background-color: var(--dark-4)!important;
-        border-color: var(--dark-4)!important;
+        background-color: var(--dark-card)!important;
+        border-color: var(--dark-card)!important;
       }
     }
     
@@ -697,13 +698,19 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     // 侧边按钮
     .right-side-bar .to-comment, .right-side-bar .to-top, .right-side-bar .to-comment .comment-num {
-      background-color: var(--dark-4)!important;
-      border-color: var(--dark-4)!important;
+      background-color: var(--dark-card)!important;
+      border-color: var(--dark-card)!important;
     }
   `;
 
 //消息页
 const MessageDarkModeStyle = createGlobalStyle`
+    html {
+      background: url(//s2.hdslb.com/bfs/static/blive/blfe-message-web/static/img/infocenterbg.a1a0d152.jpg) top/cover no-repeat fixed;
+      body {
+        background: #1c2022d9!important;
+      }
+    }
     //左栏
     .space-left {
       background-color: #1f1f1fcc!important;
@@ -731,19 +738,19 @@ const MessageDarkModeStyle = createGlobalStyle`
       background-color: #1f1f1f80!important;
       .space-right-top {
         .title {
-          background-color: var(--dark-4)!important;
+          background-color: var(--dark-card)!important;
           color: var(--dark-font-1)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
         }
         .group-helper-msg-list {
-          background-color: var(--dark-4)!important;
+          background-color: var(--dark-card)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
           .tab-list {
             color: var(--dark-font-1)!important;
             .tab-item.active[data-v-29e10985]::before {
-              background-color: var(--dark-4)!important;
+              background-color: var(--dark-card)!important;
             }
           }
           .nothing {
@@ -758,13 +765,13 @@ const MessageDarkModeStyle = createGlobalStyle`
             }
           }
           &::after {
-            background-color: var(--dark-4)!important;
+            background-color: var(--dark-card)!important;
           }
         }
       }
       .space-right-bottom {
         .card {
-          background-color: var(--dark-4)!important;
+          background-color: var(--dark-card)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
           .loading .link-progress-tv {
@@ -831,7 +838,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                   color: var(--dark-font-2);
                 }
                 &.active, &:hover {
-                  background-color: var(--dark-2)!important;
+                  background-color: var(--dark-3)!important;
                 }
               }
             }
@@ -841,7 +848,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                 border-color: var(--dark-1);
               }
               .message-list {
-                background-color: var(--dark-2)!important;
+                background-color: var(--dark-3)!important;
                 .msg-item .message {
                   color: var(--dark-font-0);
                   .message-content {
@@ -858,7 +865,7 @@ const MessageDarkModeStyle = createGlobalStyle`
         //我的消息
         .bili-im {
           color: var(--dark-font-1);
-          background-color: var(--dark-4)!important;
+          background-color: var(--dark-card)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
           .left, .left .title {
@@ -877,13 +884,32 @@ const MessageDarkModeStyle = createGlobalStyle`
               }
             }
             .lds-spinner div:after {
-              background-color: var(--dark-font-0)!important;;
+              background-color: var(--dark-font-0)!important;
             }
           }
           .dialog {
             .title {
               color: var(--dark-font-0);
               border-color: var(--dark-1);
+              .action-menu .menu-list {
+                border-color: var(--dark-card);
+                background-color: var(--dark-card)!important;
+                -webkit-box-shadow: 0 6px 12px 0 var(--dark-card);
+                box-shadow: 0 6px 12px 0 var(--dark-card);
+                a {
+                  color: var(--dark-font-0);
+                  .tips {
+                    color: var(--dark-font-2);
+                  }
+                  &:hover {
+                    background-color: var(--dark-0)!important;
+                  }
+                }
+                &:before {
+                  border-color: var(--dark-card);
+                  background-color: var(--dark-card)!important;
+                }
+              }
             }
             .message-list {
               background-color: var(--dark-3)!important;
@@ -919,7 +945,7 @@ const MessageDarkModeStyle = createGlobalStyle`
         //消息设置
         .config {
           color: var(--dark-font-0);
-          background-color: var(--dark-4)!important;
+          background-color: var(--dark-card)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
           .tip {
@@ -963,7 +989,6 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //文字 重
     body, .n .n-data .n-data-v, .section-title, .large-item .title, .card .main-content .user-name a,
-    #page-fav .fav-main .filter-item, #page-fav .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name,
     #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-bottom li, #page-fav .fav-main .fav-action-bottom li:hover,
     .article-title, #page-fav .fav-main .fav-content .fav-pugv-list .pugv-item .item-infos p.main-title,
     .sub-tabs span, .sub-tabs .filter-content {
@@ -972,6 +997,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //高优先
     .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, #page-index .col-2 .section .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .my-album .title, .fav-sidenav, .nav-title .text,
+    #page-fav .fav-main .filter-item, #page-fav .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
     .pgc-space-follow-item .pgc-item-info .pgc-item-title, .pgc-space-follow-item .pgc-item-info .pgc-item-desc,
     #page-setting .setting-privacy-item .setting-privacy-name, #page-index .channel.guest .channel-item .channel-title .channel-name, #page-index .album .content .album-wrapper .album-item .album-title {
       color: var(--dark-font-0)!important;
@@ -982,21 +1008,21 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //Card背景 
-    .h .h-forbid, .n .n-inner,
+    .h .h-forbid, .n .n-inner, .bg-white,
     #page-index .col-1, .col-2 .section,
     .feed-title,
     .card,
     .col-full,
     .channel-option.no-channel, .channel-add-video,
     #page-fav .fav-main .fav-action-bottom .fav-action-fixtop {
-      background-color: var(--dark-4)!important;
+      background-color: var(--dark-card)!important;
     }
     
     //Card边框
     .col-1, .col-2 .section, .fav-covers,
     .card, 
     #page-fav .fav-main .small-item{
-      border-color: var(--dark-4)!important;
+      border-color: var(--dark-card)!important;
     }
     
     //Card阴影
@@ -1027,7 +1053,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //搜索
     .g-search input, #page-fav .fav-main .search-input input {
-      background: var(--dark-4)!important;
+      background: var(--dark-card)!important;
       color: var(--dark-font-0);
     }
     .g-search input {
