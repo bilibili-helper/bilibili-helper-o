@@ -1,0 +1,8 @@
+{
+    "darkMode_name": {
+        "message": "深色模式（动态页面，专栏阅读页面）"
+    },
+    "darkMode_description": {
+        "message": "独立于视频播放页面的深色模式，由于官方改动频繁，可能会出现失效或奇怪样式"
+    }
+}

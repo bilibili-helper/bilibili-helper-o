@@ -10,6 +10,15 @@ export class UI {
         this.name = name;
         this.dependencies = dependencies;
         this.outputDOM = null;
+        this.pages = {
+            home: '^(http|https)://www.bilibili.com/$',
+            dynamic: '/*://t.bilibili.com/*/',
+            video: '/*://.*.bilibili.com/(video/(av|bv|BV)|bangumi/play/(ss|ep)).*',
+            live: '/*://live.bilibili.com/*/',
+            readCV: '/*://www.bilibili.com/read/cv.*',
+            space: '/*://space.bilibili.com/*/',
+            message: '/*://message.bilibili.com/*/',
+        }
     }
 
     init = () => {
@@ -110,4 +119,21 @@ export class UI {
             }, interval);
         });
     };
+
+    isPage = (pageName = false) => {
+        const url = window.location.href;
+        if (!pageName) {
+            for (const item in this.pages) {
+                const pageUrl = new RegExp(this.pages[item]);
+                if (pageUrl.test(url)) {
+                    return item;
+                }
+            }
+            return false;
+        } else {
+            if (!this.pages[pageName]) { return false; }
+            const pageUrl = new RegExp(this.pages[pageName]);
+            return pageUrl.test(url);
+        }
+    }
 }

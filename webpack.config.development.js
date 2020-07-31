@@ -63,6 +63,7 @@ module.exports = (env) => {
             'tbilibili': path.resolve(jsPath, 'pages', 'tbilibili', indexFilename),
             'videoList': path.resolve(jsPath, 'pages', 'videoList', indexFilename),
             'vipPrivilege': path.resolve(jsPath, 'pages', 'vipPrivilege', indexFilename),
+            'darkMode': path.resolve(jsPath, 'pages', 'darkMode', indexFilename),
         },
         output: {
             filename: '[name].js',

@@ -1,0 +1,8 @@
+{
+    "darkMode_name": {
+        "message": "Dark mode(dynamic page, cv read page)"
+    },
+    "darkMode_description": {
+        "message": "the dark mode is independent of the video playback page. Due to frequent official changes, invalid or strange patterns may appear"
+    }
+}
