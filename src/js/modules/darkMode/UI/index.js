@@ -7,7 +7,7 @@
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DynamicDarkMode, ReadCVDarkMode, MessageDarkMode } from './DarkMode';
+import { DynamicDarkMode, ReadCVDarkMode, MessageDarkMode, SpaceDarkMode } from './DarkMode';
 
 export class DarkModeUI extends UI {
     constructor() {
@@ -30,6 +30,9 @@ export class DarkModeUI extends UI {
                 }
                 if (pageName === 'message') {
                     ReactDOM.render(<MessageDarkMode/>, wrapper, resolve);
+                }
+                if (pageName === 'space') {
+                    ReactDOM.render(<SpaceDarkMode/>, wrapper, resolve);
                 }
             }
         });
