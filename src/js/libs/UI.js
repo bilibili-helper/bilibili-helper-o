@@ -84,6 +84,13 @@ export class UI {
         });
     };
 
+    /**
+     * 轮询给定选择器并返回结果
+     * @param containerSelectors 查询Selectors
+     * @param interval 轮询间隔
+     * @param more 返回所有匹配的对象
+     * @return {Promise<*>}
+     */
     interval = (containerSelectors, interval = 500, more = false) => {
         let retryTime = 0;
         const retryMax = 15;
