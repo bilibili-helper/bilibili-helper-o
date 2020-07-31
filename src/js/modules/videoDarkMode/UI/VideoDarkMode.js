@@ -35,6 +35,7 @@ export default () => {
         --dark-2: #131313;
         --dark-3: #1f1f1f;
         --dark-4: #2b2b2b;
+        --dark-5: #333333;
           
         --dark-font-0: #e8e8e8;
         --dark-font-1: #99a2aa;
@@ -425,8 +426,14 @@ export default () => {
             .text {
               color: var(--dark-font-1);
             }
-            .info .reply:hover {
-              background: var(--dark-1);
+            .info {
+              .reply:hover {
+                background: var(--dark-1);
+              }
+              .reply-tags span {
+                background-color: var(--dark-1);
+                color: var(--dark-font-1);
+              }
             }
             .reply-box{
               .reply-item .reply-con {
@@ -507,8 +514,14 @@ export default () => {
         }
       }
       // up信息
-      #v_upinfo .u-info .name .username{
-        color: var(--dark-font-1);
+      #v_upinfo {
+        .u-info .name .username {
+          color: var(--dark-font-1);
+        }
+        .btn-panel .following {
+          background-color: var(--dark-5);
+          border-color: var(--dark-5);
+        }
       }
       // 直播推荐 
       #live_recommand_report .pl__card {
@@ -517,6 +530,11 @@ export default () => {
         .pl__info .pl__title {
           color: var(--dark-font-1);
         }
+      }
+      // 侧边按钮
+      .float-nav .nav-menu .item {
+        background-color: var(--dark-4);
+        border-color: var(--dark-4);
       }
     `;
 
