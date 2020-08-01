@@ -57,9 +57,20 @@ const CommentMain = `
     .bb-comment {
       background-color: unset!important;
       .comment-header {
-        border-color: var(--dark-2)!important;
+        border-color: var(--dark-3)!important;
         .tabs-order li {
           color: var(--dark-font-0);
+        }
+        .paging-box {
+          span.result, span.dian {
+            color: var(--dark-font-1);
+          }
+          a.tcd-number, a.next, a.prev {
+            color: var(--dark-font-1);
+            &:hover {
+              color: #00a1d6;
+            }
+          }
         }
       }
       .comment-send .comment-emoji {
@@ -111,17 +122,6 @@ const CommentMain = `
               }
             }
           }
-          .paging-box {
-            span.result, span.dian {
-              color: var(--dark-font-1);
-            }
-            a.tcd-number, a.next, a.prev {
-              color: var(--dark-font-1);
-              &:hover {
-                color: #00a1d6;
-              }
-            }
-          }
         }
       }
       .bottom-page.center {
@@ -137,17 +137,31 @@ const DynamicMain = `
       color: var(--dark-font-2)!important;
     }
     
-    .text-area .content {
+    .text-area .content, .imagesbox .boost-control li {
       color: var(--dark-font-1)!important;
     }
     
-    .text-area .title {
+    .text-area .title, .user-name, .user-name a {
       color: var(--dark-font-0)!important;
     }
     
-    //话题标签
-    .new-topic-panel .tag-item .label {
-      background: var(--dark-3)!important;
+    .user-name.big-vip a {
+      color: #fb7299!important;
+    }
+    
+    .imagesbox .boost-control li:hover {
+      color: #23ade5!important;
+    }
+    
+    .video-container.can-hover:hover .text-area .title,
+    .bangumi-container.can-hover:hover .text-area .title,
+    .article-container:hover .text-area .title,
+    .vote-container:hover .text-area .text-content {
+      color: #00a1d6!important;
+    }
+    
+    .dynamic-link-hover-bg:hover {
+      background: var(--dark-4)!important;
     }
     
     //关注的人点赞

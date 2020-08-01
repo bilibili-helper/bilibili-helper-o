@@ -10,7 +10,7 @@ const DarkModeStyle = createGlobalStyle`
       --dark-3: #1f1f1f;
       --dark-4: #2b2b2b;
       --dark-5: #333333;
-      --dark-card: #131313;
+      --dark-card: #151515;
       --divider: rgb(47 47 47 / 75%);
         
       --dark-font-0: #e8e8e8;
@@ -70,7 +70,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //弹出Popper
     .channel-menu-mini, .van-popper-avatar, .van-popper-avatar .level-intro, .van-popper-avatar .coins .info .login-award,
     .van-popper-vip, .van-popper-favorite, .van-popper-favorite .view-all, .van-popper-favorite .play-all, .van-popper-history, .van-popper-upload {
-      background-color: var(--dark-card)!important;
+      background-color: var(--dark-3)!important;
     }
     
     //文字 轻
@@ -133,7 +133,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //Card顶上的小尖尖
     .van-popper {
       .popper__arrow, .popper__arrow::after {
-        border-color: var(--dark-3)!important;
+        border-bottom-color: var(--dark-3)!important;
       }
     }
     

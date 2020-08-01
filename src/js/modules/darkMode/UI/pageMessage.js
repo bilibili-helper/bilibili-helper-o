@@ -95,8 +95,8 @@ const MessageDarkModeStyle = createGlobalStyle`
           }
           .reply-box {
             textarea {
-              background-color: var(--dark-1);
-              border-color: var(--dark-1);
+              background-color: var(--dark-3);
+              border-color: var(--dark-3);
               color: var(--dark-font-1);
             }
             &:hover textarea {

@@ -8,7 +8,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     //文字 轻
     .n .n-data .n-data-k, .sec-empty-hint, .channel .empty-state p, .fav-item .state, .small-item .meta, .section.empty:after, .section .user-auth.no-auth .no-auth-title span,
-    #page-fav .fav-sidenav .favlist-title, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .search-types, .favInfo-box .favInfo-details .fav-options .meta,
+    #page-fav .fav-sidenav .favlist-title, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .search-types,
     .i-live .i-live-unfo-btn, .section .operation, #page-channel-detail .watch-later-btn {
       color: var(--dark-font-2);
     }
@@ -20,7 +20,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //文字 重
-    body, .n .n-data .n-data-v, .section-title, .large-item .title, .card .main-content .user-name a,
+    body, .n .n-data .n-data-v, .section-title, .large-item .title,
     #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-bottom li, #page-fav .fav-main .fav-action-bottom li:hover,
     .article-title, #page-fav .fav-main .fav-content .fav-pugv-list .pugv-item .item-infos p.main-title,
     .sub-tabs span, .sub-tabs .filter-content {
@@ -35,7 +35,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-0)!important;
     }
     
-    .pgc-space-follow-item .pgc-item-info .type-and-area, .pgc-space-follow-item .pgc-item-info .pgc-item-state {
+    .pgc-space-follow-item .pgc-item-info .type-and-area, .pgc-space-follow-item .pgc-item-info .pgc-item-state, .favInfo-box .favInfo-details .fav-options .meta {
       color: var(--dark-font-1)!important;
     }
     
@@ -46,7 +46,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     .card,
     .col-full,
     .channel-option.no-channel, .channel-add-video,
-    #page-fav .fav-main .fav-action-bottom .fav-action-fixtop {
+    #page-fav .fav-main .fav-action-bottom .fav-action-fixtop, #page-fav .fav-main .small-item:hover {
       background-color: var(--dark-card)!important;
     }
     
@@ -68,7 +68,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     #page-fav .fav-sidenav .nav-container, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .favList-info,
     #page-fav .fav-main .filter-item.search, #page-fav .fav-main .search-types, #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-top,
     .article-content, .s-content, #page-setting .setting-index-container, #page-setting .setting-index-module,
-    .i-live .i-live-unfo-btn, .i-live .i-live-fo-count, .section .operation, #page-index .channel .channel-item, #page-channel-detail .watch-later-btn {
+    .i-live .i-live-unfo-btn, .i-live .i-live-fo-count, .section .operation, #page-index .channel .channel-item, #page-channel-detail .watch-later-btn, #page-subs .mini-item {
       border-color: var(--dark-1)!important;
     }
     
@@ -79,7 +79,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     //hover深
     #page-video #submit-video-type-filter,
     .contribution-sidenav .contribution-item:hover,
-    #page-fav .fav-sidenav .fav-item:hover, #page-fav .fav-main .small-item:hover {
+    #page-fav .fav-sidenav .fav-item:hover {
       background-color: var(--dark-3)!important;
     }
     
@@ -89,7 +89,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-0);
     }
     .g-search input {
-      border-color: var(--dark-1);
+      border-color: var(--dark-4);
     }
     
     //置顶视频，代表作
@@ -131,12 +131,12 @@ const SpaceDarkModeStyle = createGlobalStyle`
     //公告
     #i-ann-content {
       textarea {
-        background-color: var(--dark-1);
-        border-color: var(--dark-1);
-        color: var(--dark-font-1);
+        background-color: var(--dark-3);
+        border-color: var(--dark-3);
+        color: var(--dark-font-1)!important;
       }
       &:hover textarea, &.focus textarea {
-        color: var(--dark-font-0);
+        color: var(--dark-font-0)!important;
       }
     }
     
@@ -249,6 +249,16 @@ const SpaceDarkModeStyle = createGlobalStyle`
       }
     }
     
+    //认证标识修正
+    #page-index .col-2 .section .user-auth .auth-icon {
+      &.organization-auth {
+        background-position: -2px -50px!important;
+      }
+      &.personal-auth {
+        background-position: -36px -50px!important;
+      }
+    }
+    
     //充电图片
     .elec {
       .elec-status {
@@ -263,6 +273,161 @@ const SpaceDarkModeStyle = createGlobalStyle`
       }
       &:hover .elec-status {
         background-image: url(${getURL('/statics/imgs/charging_focus.gif')})!important
+      }
+      .elec-avatar {
+        border-color: var(--dark-5)!important;
+      }
+    }
+    
+    //弹出框
+    .modal-wrapper {
+      background-color: var(--dark-3)!important;
+      .modal-title, .title {
+        border-color: var(--dark-1)!important;
+      }
+      .btn.default {
+        background-color: var(--dark-5)!important;
+        border-color: var(--dark-5)!important;
+        color: var(--dark-font-1)!important;
+      }
+      .be-input_inner, .be-textarea_inner {
+        background: var(--dark-2)!important;
+        border-color: var(--dark-1)!important;
+        color: var(--dark-font-0);
+      }
+    }
+    
+    .h .report-popup-item-text {
+      color: unset!important;
+    }
+    
+    .edit-media-list .edit-mask {
+      .edit-board, .default-edit {
+        background-color: var(--dark-3)!important;
+        .head {
+          color: unset!important;
+          border-color: var(--dark-1)!important;
+        }
+        .info-wrap {
+          .name-input, .media-list-intro{
+            background: var(--dark-2)!important;
+            border-color: var(--dark-1)!important;
+            color: var(--dark-font-0);
+          }
+          .title {
+            color: unset!important;
+          }
+        }
+        .media-list-type {
+          color: var(--dark-font-1)!important;
+        }
+        .default-btn-wrap .default-btn.cancel {
+          background-color: var(--dark-5)!important;
+          border-color: var(--dark-5)!important;
+          color: var(--dark-font-1)!important;
+        }
+      }
+    }
+    
+    #pin-wrapper {
+      #pin-layer {
+        background-color: var(--dark-3)!important;
+      }
+      .pin-layer-header {
+        color: unset!important;
+        border-color: var(--dark-1)!important;
+      }
+      #pin-layer-search {
+        background: var(--dark-2)!important;
+        border-color: var(--dark-1)!important;
+        color: var(--dark-font-0);
+      }
+      .pin-layer-order-tip {
+        color: unset!important;
+      }
+      .btn.btn-disabled {
+        background-color: var(--dark-4)!important;
+        border-color: var(--dark-4)!important;
+        color: var(--dark-font-2)!important;
+      }
+      .btn.default {
+        background-color: var(--dark-5)!important;
+        border-color: var(--dark-5)!important;
+        color: var(--dark-font-1)!important;
+      }
+    }
+    
+    .follow-dialog-wrap .follow-dialog-window {
+      background-color: var(--dark-3)!important;
+      .title {
+        color: unset!important;
+        border-color: var(--dark-1)!important;
+      }
+      .content .group-list {
+        li {
+          color: unset!important;
+        }
+        .add-group {
+          .add-btn {
+            color: var(--dark-font-1)!important;
+            border-color: var(--dark-1)!important;
+          }
+          .input-group {
+            background-color: var(--dark-2)!important;
+            input {
+              background: var(--dark-2)!important;
+              border-color: var(--dark-1)!important;
+              color: var(--dark-font-0);
+            }
+            .submit {
+              background: #d9f1f933!important;
+            }
+          }
+        }
+        ul .follow-group-mask {
+          background: unset!important;
+        }
+      }
+      .bottom {
+        border-color: var(--dark-1)!important;
+        .btn:disabled {
+          background-color: var(--dark-4)!important;
+          border-color: var(--dark-4)!important;
+          color: var(--dark-font-2)!important;
+        }
+      }
+    }
+    
+    .wrapper .edit-video-modal {
+      .target-favlist {
+        .target-favitem .target-fav-title .fav-meta .fav-name, .target-fav-count {
+          color: unset!important;
+        }
+      }
+      .addfav-container {
+        .fake-fav-input {
+          color: var(--dark-font-1)!important;
+          border-color: var(--dark-1)!important;
+        }
+        .fav-container {
+          background-color: var(--dark-2)!important;
+          input {
+            background: var(--dark-2)!important;
+            border-color: var(--dark-1)!important;
+            color: var(--dark-font-0);
+          }
+          .fav-add-btn {
+            background: #d9f1f933!important;
+          }
+        }
+      }
+      .favlist-body:after {
+        background: var(--dark-1)!important;
+      }
+      .btn.ghost {
+        background-color: var(--dark-4)!important;
+        border-color: var(--dark-4)!important;
+        color: var(--dark-font-2)!important;
       }
     }
   `;
