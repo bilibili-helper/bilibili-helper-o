@@ -33,8 +33,8 @@ export const __ = (t, options = null) => chrome.i18n.getMessage(t, options);
  * 创建新tab页面
  * @param url
  */
-export const createTab = (url) => {
-    chrome.tabs.create({url});
+export const createTab = (url, active = true) => {
+    chrome.tabs.create({url, active});
 };
 
 /**
