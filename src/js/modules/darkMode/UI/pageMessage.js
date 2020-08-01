@@ -10,7 +10,7 @@ const MessageDarkModeStyle = createGlobalStyle`
     }
     //左栏
     .space-left {
-      background-color: #1f1f1fcc!important;
+      background-color: var(--dark-card) !important
       .side-bar {
         .title {
           color: var(--dark-font-0);
@@ -25,7 +25,7 @@ const MessageDarkModeStyle = createGlobalStyle`
           }
         }
         .divided-line {
-          border-color: var(--dark-1);
+          border-color: var(--divider);
         }
       }
     }
@@ -104,7 +104,7 @@ const MessageDarkModeStyle = createGlobalStyle`
             }
           }
           .divider, div::after {
-            border-color: var(--dark-1)!important;
+            border-color: var(--divider)!important;
           }
           //系统通知
           &.system-item {
