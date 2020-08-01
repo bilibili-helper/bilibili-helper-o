@@ -11,13 +11,13 @@ export class UI {
         this.dependencies = dependencies;
         this.outputDOM = null;
         this.pages = {
-            home: '^(http|https)://www.bilibili.com/$',
-            dynamic: '/*://t.bilibili.com/*/',
-            video: '/*://.*.bilibili.com/(video/(av|bv|BV)|bangumi/play/(ss|ep)).*',
-            live: '/*://live.bilibili.com/*/',
-            readCV: '/*://www.bilibili.com/read/cv.*',
-            space: '/*://space.bilibili.com/*/',
-            message: '/*://message.bilibili.com/*/',
+            home: /^(http|https):\/\/www\.bilibili\.com\/(\?spm_id_from(.*)$|$)/,
+            dynamic: /(http|https):\/\/t\.bilibili\.com\//,
+            video: /(http|https):\/\/www\.bilibili\.com\/(video\/(av|bv|BV)|bangumi\/play\/(ss|ep))(.*)/,
+            live: /(http|https):\/\/live\.bilibili\.com\//,
+            readCV: /(http|https):\/\/www\.bilibili\.com\/read\/cv(.*)/,
+            space: /(http|https):\/\/space\.bilibili\.com\//,
+            message: /(http|https):\/\/message\.bilibili\.com\//,
         }
     }
 

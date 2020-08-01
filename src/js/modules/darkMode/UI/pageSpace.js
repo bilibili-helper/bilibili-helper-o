@@ -1,0 +1,270 @@
+import {createGlobalStyle} from "styled-components";
+import {getURL} from "Utils/functions";
+import {DynamicMain} from "Modules/darkMode/UI/cardMain";
+
+const SpaceDarkModeStyle = createGlobalStyle`
+    html {
+      background: unset!important;
+    }
+    //文字 轻
+    .n .n-data .n-data-k, .sec-empty-hint, .channel .empty-state p, .fav-item .state, .small-item .meta, .section.empty:after, .section .user-auth.no-auth .no-auth-title span,
+    #page-fav .fav-sidenav .favlist-title, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .search-types, .favInfo-box .favInfo-details .fav-options .meta,
+    .i-live .i-live-unfo-btn, .section .operation, #page-channel-detail .watch-later-btn {
+      color: var(--dark-font-2);
+    }
+    
+    //文字 中
+    .private-hint, .i-m-btn, .user .info .meta .row, .tc-slate, #page-fav .fav-main .fav-action-bottom .select-counter, #page-fav .fav-main .fav-meta, #page-setting .setting-privacy-item .setting-privacy-switcher .be-switch-label,
+    .i-live .i-live-fo-count {
+      color: var(--dark-font-1);
+    }
+    
+    //文字 重
+    body, .n .n-data .n-data-v, .section-title, .large-item .title, .card .main-content .user-name a,
+    #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-bottom li, #page-fav .fav-main .fav-action-bottom li:hover,
+    .article-title, #page-fav .fav-main .fav-content .fav-pugv-list .pugv-item .item-infos p.main-title,
+    .sub-tabs span, .sub-tabs .filter-content {
+      color: var(--dark-font-0);
+    }
+    
+    //高优先
+    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, #page-index .col-2 .section .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .my-album .title, .fav-sidenav, .nav-title .text,
+    #page-fav .fav-main .filter-item, #page-fav .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
+    .pgc-space-follow-item .pgc-item-info .pgc-item-title, .pgc-space-follow-item .pgc-item-info .pgc-item-desc,
+    #page-setting .setting-privacy-item .setting-privacy-name, #page-index .channel.guest .channel-item .channel-title .channel-name, #page-index .album .content .album-wrapper .album-item .album-title {
+      color: var(--dark-font-0)!important;
+    }
+    
+    .pgc-space-follow-item .pgc-item-info .type-and-area, .pgc-space-follow-item .pgc-item-info .pgc-item-state {
+      color: var(--dark-font-1)!important;
+    }
+    
+    //Card背景 
+    .h .h-forbid, .n .n-inner, .bg-white,
+    #page-index .col-1, .col-2 .section,
+    .feed-title,
+    .card,
+    .col-full,
+    .channel-option.no-channel, .channel-add-video,
+    #page-fav .fav-main .fav-action-bottom .fav-action-fixtop {
+      background-color: var(--dark-card)!important;
+    }
+    
+    //Card边框
+    .col-1, .col-2 .section, .fav-covers,
+    .card, 
+    #page-fav .fav-main .small-item{
+      border-color: var(--dark-card)!important;
+    }
+    
+    //Card阴影
+    .n .n-inner, .large-item .cover img, .mini-item .cover img, .col-full, .i-pin-c{
+      box-shadow: 0 0 0 1px #1313138a!important;
+    }
+    
+    //框线
+    .section, .section-title, .i-pin-v .be-tab, .i-m-upload, .i-m-r2, .contribution-sidenav, .contribution-sidenav~.main-content,
+    #page-myalbum .album-content, .filter, .channel-detail .channel-action-row .be-dropdown,
+    #page-fav .fav-sidenav .nav-container, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .favList-info,
+    #page-fav .fav-main .filter-item.search, #page-fav .fav-main .search-types, #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-top,
+    .article-content, .s-content, #page-setting .setting-index-container, #page-setting .setting-index-module,
+    .i-live .i-live-unfo-btn, .i-live .i-live-fo-count, .section .operation, #page-index .channel .channel-item, #page-channel-detail .watch-later-btn {
+      border-color: var(--dark-1)!important;
+    }
+    
+    .my-album .line {
+      background-color: var(--dark-1)!important;
+    }
+    
+    //hover深
+    #page-video #submit-video-type-filter,
+    .contribution-sidenav .contribution-item:hover,
+    #page-fav .fav-sidenav .fav-item:hover, #page-fav .fav-main .small-item:hover {
+      background-color: var(--dark-3)!important;
+    }
+    
+    //搜索
+    .g-search input, #page-fav .fav-main .search-input input {
+      background: var(--dark-card)!important;
+      color: var(--dark-font-0);
+    }
+    .g-search input {
+      border-color: var(--dark-1);
+    }
+    
+    //置顶视频，代表作
+    .list-create {
+      background-color: unset!important;
+      .text {
+        color: var(--dark-font-1);
+      }
+    }
+    
+    //空收藏夹
+    .fav-covers.empty {
+      background-image: url(${getURL('/statics/imgs/playlistbg.png')})!important;
+    }
+    
+    //角标
+    .section .count {
+      background-color: var(--dark-2)!important;
+      border-color: var(--dark-1)!important;
+      color: var(--dark-font-1);
+      &:before {
+        background: url(${getURL('/statics/imgs/count-before.png')})!important;
+        left: -6px!important;
+        top: -1px!important;
+      }
+    }
+    
+    //更多
+    .section .more {
+      border-color: var(--dark-5)!important;
+      background-color: var(--dark-5)!important;
+      color: var(--dark-font-1);
+      background-position: -310px -404.5px!important;
+      &:hover {
+        background-position: -438px -404.5px!important;
+      }
+    }
+    
+    //公告
+    #i-ann-content {
+      textarea {
+        background-color: var(--dark-1);
+        border-color: var(--dark-1);
+        color: var(--dark-font-1);
+      }
+      &:hover textarea, &.focus textarea {
+        color: var(--dark-font-0);
+      }
+    }
+    
+    ${DynamicMain}
+    
+    //更多操作
+    #page-channel-detail .channel-detail .channel-action-row .be-dropdown {
+      border-color: var(--dark-5)!important;
+      background-color: var(--dark-5)!important;
+    }
+    .be-dropdown {
+      color: var(--dark-font-1);
+      .be-dropdown-menu {
+        background: var(--dark-3)!important;
+        border-color: var(--dark-3)!important;
+        box-shadow: 0 11px 12px 0 var(--dark-3)!important;
+        li:hover {
+          background-color: var(--dark-2)!important;
+        }
+        .be-dropdown-item {
+          color: var(--dark-font-0);
+          &.be-dropdown-item-delimiter {
+            border-color: var(--dark-1)!important;
+          }
+        }
+      }
+      &.filter-item {
+        color: var(--dark-font-0);
+      }
+      .icon-arrow {
+        background-position: -1369px -215px;
+      }
+    }
+    
+    .album-card .btn {
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      color: var(--dark-font-0)!important;
+    }
+    
+    .pgc-space-follow-item .bangumi-options .opt-list {
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      li {
+        color: var(--dark-font-0)!important;
+        &:hover {
+          color: #00a1d6!important;
+          background-color: var(--dark-2)!important;
+        }
+        &.disabled, &.disabled:hover {
+          color: #666666!important;
+        }
+      }
+    }
+    
+    //拖动排序
+    #page-fav .fav-sidenav .icon-cursor {
+      background-color: var(--dark-1)!important;
+    }
+    
+    //分页
+    .be-pager {
+      li.be-pager-item, li.be-pager-prev, li.be-pager-next {
+        color: var(--dark-font-1)!important;
+        background-color: var(--dark-2);
+        border-color: var(--dark-3);
+        &:hover {
+          a {
+            color: var(--dark-font-0)!important;
+          }
+          background-color: #00a1d6;
+          border-color: var(--dark-3);
+        }
+      }
+      .be-pager-options-elevator input {
+        border-color: var(--dark-3);
+        background-color: var(--dark-2);
+        color: var(--dark-font-0);
+      }
+    }
+    
+    .bangumi-pagelistbox {
+       a.p, a.prev-page, a.next-page {
+        color: var(--dark-font-1)!important;
+        background-color: var(--dark-2);
+        border-color: var(--dark-3);
+        &:hover {
+          a {
+            color: var(--dark-font-0)!important;
+          }
+          background-color: #00a1d6;
+          border-color: var(--dark-3);
+        }
+      }
+      .custom-right .custom-right-inner.custompage {
+        border-color: var(--dark-3)!important;
+        background-color: var(--dark-2)!important;
+        color: var(--dark-font-0)!important;
+      }
+    }
+    
+    //个人标签
+    #page-setting {
+      #setting-new-tag, #setting-new-tag-btn {
+        border-color: var(--dark-3)!important;
+        background: var(--dark-2)!important;
+      }
+      #setting-new-tag {
+        color: var(--dark-font-0)!important;
+      }
+    }
+    
+    //充电图片
+    .elec {
+      .elec-status {
+        color: var(--dark-font-0)!important;
+        .elec-count {
+          color: var(--dark-font-1)!important;
+        }
+        background-image: url(${getURL('/statics/imgs/charging_unfocus.png')})!important
+      }
+      .elec-status-bg-grey {
+        background: var(--dark-card)!important;
+      }
+      &:hover .elec-status {
+        background-image: url(${getURL('/statics/imgs/charging_focus.gif')})!important
+      }
+    }
+  `;
+
+export {SpaceDarkModeStyle}

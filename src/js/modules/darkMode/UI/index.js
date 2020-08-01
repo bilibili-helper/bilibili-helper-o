@@ -21,19 +21,19 @@ export class DarkModeUI extends UI {
         return new Promise(resolve => {
             const wrapper = document.createElement('div');
             const pageName = this.isPage();
-            if (pageName) {
-                if (pageName === 'dynamic'){
+            switch (pageName) {
+                case 'dynamic' :
                     ReactDOM.render(<DynamicDarkMode/>, wrapper, resolve);
-                }
-                if (pageName === 'readCV') {
+                    break;
+                case 'readCV' :
                     ReactDOM.render(<ReadCVDarkMode/>, wrapper, resolve);
-                }
-                if (pageName === 'message') {
+                    break;
+                case 'message' :
                     ReactDOM.render(<MessageDarkMode/>, wrapper, resolve);
-                }
-                if (pageName === 'space') {
+                    break;
+                case 'space' :
                     ReactDOM.render(<SpaceDarkMode/>, wrapper, resolve);
-                }
+                    break;
             }
         });
     };
