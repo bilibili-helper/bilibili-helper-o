@@ -11,6 +11,7 @@ const DarkModeStyle = createGlobalStyle`
       --dark-4: #2b2b2b;
       --dark-5: #333333;
       --dark-card: #131313;
+      --divider: rgb(47 47 47 / 75%);
         
       --dark-font-0: #e8e8e8;
       --dark-font-1: #99a2aa;

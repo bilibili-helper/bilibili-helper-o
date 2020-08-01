@@ -5,20 +5,21 @@
  */
 import _ from 'lodash';
 
+const PAGE_REGEXP = {
+    home: /^https?:\/\/www\.bilibili\.com\/(\?spm_id_from(.*)$|$)/,
+    dynamic: /^https?:\/\/t\.bilibili\.com\//,
+    video: /^https?:\/\/www\.bilibili\.com\/(video\/(av|bv|BV)|bangumi\/play\/(ss|ep))(.*)/,
+    live: /^https?:\/\/live\.bilibili\.com\//,
+    readCV: /^https?:\/\/www\.bilibili\.com\/read\/cv(.*)/,
+    space: /^https?:\/\/space\.bilibili\.com\//,
+    message: /^https?:\/\/message\.bilibili\.com\//,
+}
+
 export class UI {
     constructor({name, dependencies = []}) {
         this.name = name;
         this.dependencies = dependencies;
         this.outputDOM = null;
-        this.pages = {
-            home: /^(http|https):\/\/www\.bilibili\.com\/(\?spm_id_from(.*)$|$)/,
-            dynamic: /(http|https):\/\/t\.bilibili\.com\//,
-            video: /(http|https):\/\/www\.bilibili\.com\/(video\/(av|bv|BV)|bangumi\/play\/(ss|ep))(.*)/,
-            live: /(http|https):\/\/live\.bilibili\.com\//,
-            readCV: /(http|https):\/\/www\.bilibili\.com\/read\/cv(.*)/,
-            space: /(http|https):\/\/space\.bilibili\.com\//,
-            message: /(http|https):\/\/message\.bilibili\.com\//,
-        }
     }
 
     init = () => {
@@ -123,16 +124,16 @@ export class UI {
     isPage = (pageName = false) => {
         const url = window.location.href;
         if (!pageName) {
-            for (const item in this.pages) {
-                const pageUrl = new RegExp(this.pages[item]);
+            for (const item in PAGE_REGEXP) {
+                const pageUrl = new RegExp(PAGE_REGEXP[item]);
                 if (pageUrl.test(url)) {
                     return item;
                 }
             }
             return false;
         } else {
-            if (!this.pages[pageName]) { return false; }
-            const pageUrl = new RegExp(this.pages[pageName]);
+            if (!PAGE_REGEXP[pageName]) { return false; }
+            const pageUrl = new RegExp(PAGE_REGEXP[pageName]);
             return pageUrl.test(url);
         }
     }
