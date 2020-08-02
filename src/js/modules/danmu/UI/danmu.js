@@ -168,6 +168,18 @@ export default () => {
       }
     `;
 
+    function escapeXml(unsafe) {
+        return unsafe.replace(/[<>&'"]/g, function (c) {
+            switch (c) {
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '&': return '&amp;';
+                case '\'': return '&apos;';
+                case '"': return '&quot;';
+            }
+        });
+    }
+
     return class Danmu extends React.Component {
         propTypes = {
             settings: PropTypes.object,
@@ -363,7 +375,7 @@ export default () => {
                     let xmlStr = `<?xml version="1.0" encoding="UTF-8"?><i><chatserver></chatserver><chatid>${oid}</chatid><mission></mission><maxlimit></maxlimit><state></state><real_name></real_name><source></source>`;
                     this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
                         const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
-                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${danmu}</d>`;
+                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${escapeXml(danmu)}</d>`;
                     }, xmlStr) + '</i>';
                 });
             });

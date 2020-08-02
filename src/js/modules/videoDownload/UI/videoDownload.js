@@ -6,7 +6,7 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import {has} from 'mobx';
+//import {has} from 'mobx';
 //const ffmpeg = require('ffmpeg.js/ffmpeg-mp4.js');
 import FLV from '../lib/flv';
 import React from 'react';

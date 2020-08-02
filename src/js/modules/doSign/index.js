@@ -49,24 +49,27 @@ export class DoSign extends Feature {
     };
 
     request = (hasLogin = this.permissionMap.login) => {
-        if (chrome.extension.inIncognitoContext) return; // 隐身模式
+        if (chrome.extension.inIncognitoContext) {
+            return;
+        } // 隐身模式
         let {day} = this.store || {};
         if (day !== this.getTodayDate()) {
             this.settings.on && hasLogin && fetchFromHelper(`${apis.doSign}?requestFrom=bilibili-helper`, {
                 method: 'get',
-            }).then((res) => {
-                this.store = {day: this.getTodayDate()};
-                if (res.code === 0) {
-                    const notificationState = _.find(this.settings.options, {key: 'notification'});
-                    notificationState && notificationState.on && createNotification('bilibili-helper-doSign', {
-                        type: 'basic',
-                        iconUrl: getURL('/statics/imgs/cat.svg'),
-                        title: __('extensionNotificationTitle'),
-                        message: __('doSign_notification_successfully'),
-                        buttons: [],
-                    });
-                }
-            });
+            }).then(res => res.json())
+              .then((res) => {
+                  this.store = {day: this.getTodayDate()};
+                  if (res.code === 0) {
+                      const notificationState = _.find(this.settings.options, {key: 'notification'});
+                      notificationState && notificationState.on && createNotification('bilibili-helper-doSign', {
+                          type: 'basic',
+                          iconUrl: getURL('/statics/imgs/cat.svg'),
+                          title: __('extensionNotificationTitle'),
+                          message: __('doSign_notification_successfully'),
+                          buttons: [],
+                      });
+                  }
+              });
         }
     };
 }
