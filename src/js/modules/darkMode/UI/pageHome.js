@@ -3,6 +3,16 @@ import {HomeBase} from "Modules/darkMode/UI/cardMain";
 
 const HomeDarkModeStyle = createGlobalStyle`
     ${HomeBase}
+    .home-slide .item, .card-pic a, .video-card-reco, .pic {
+      &:before{
+        z-index: 1;
+      }
+    }
+    
+    .first-screen img, .storey-box img {
+      filter: contrast(0.93) brightness(0.86);
+    }
+    
     a, .storey-title .no-link {
       color: var(--dark-font-0);
     }

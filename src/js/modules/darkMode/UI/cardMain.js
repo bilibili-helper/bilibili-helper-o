@@ -15,6 +15,10 @@ const HomeBase = `
         border-top-color: var(--dark-3)!important;
       }
     }
+    .bili-banner .taper-line {
+      z-index: 2!important;
+      height: 180px!important;
+    }
     `;
 
 //评论
