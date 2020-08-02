@@ -7,7 +7,7 @@
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DynamicDarkMode, ReadCVDarkMode, MessageDarkMode, SpaceDarkMode } from './DarkMode';
+import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode} from './DarkMode';
 
 export class DarkModeUI extends UI {
     constructor() {
@@ -19,20 +19,29 @@ export class DarkModeUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) { return Promise.resolve(); }
         return new Promise(resolve => {
-            const wrapper = document.createElement('div');
+            const wrapper = document.createElement('style');
             const pageName = this.isPage();
             switch (pageName) {
+                case 'home' :
+                    ReactDOM.render(<HomeDarkMode/>, wrapper, resolve);
+                    break;
                 case 'dynamic' :
                     ReactDOM.render(<DynamicDarkMode/>, wrapper, resolve);
                     break;
                 case 'readCV' :
                     ReactDOM.render(<ReadCVDarkMode/>, wrapper, resolve);
                     break;
+                case 'read' :
+                    ReactDOM.render(<ReadDarkMode/>, wrapper, resolve);
+                    break;
                 case 'message' :
                     ReactDOM.render(<MessageDarkMode/>, wrapper, resolve);
                     break;
                 case 'space' :
                     ReactDOM.render(<SpaceDarkMode/>, wrapper, resolve);
+                    break;
+                case 'watchLater' :
+                    ReactDOM.render(<WatchLaterDarkMode/>, wrapper, resolve);
                     break;
             }
         });

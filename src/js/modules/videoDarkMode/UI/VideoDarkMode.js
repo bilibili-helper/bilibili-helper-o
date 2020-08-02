@@ -1,7 +1,7 @@
 import {Button} from 'Components/common/Button';
 import React from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
-import {TopBarDarkModeStyle} from 'Modules/darkMode/UI/basicStyle';
+import {TopBarWithoutBanner, TopBarDarkModeStyle} from 'Modules/darkMode/UI/basicStyle';
 
 /**
  * Author: DrowsyFlesh
@@ -569,7 +569,7 @@ export default () => {
             return (
                 <React.Fragment>
                     <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPageOrWatchLater}>深色模式</VideoDarkModeButton>
-                    {on && !this.isOldPageOrWatchLater && [<TopBarDarkModeStyle/>, <VideoDarkModeStyle/>]}
+                    {on && !this.isOldPageOrWatchLater && [<TopBarWithoutBanner/>, <TopBarDarkModeStyle/>, <VideoDarkModeStyle/>]}
                 </React.Fragment>
             );
         }

@@ -11,9 +11,11 @@ const PAGE_REGEXP = {
     video: /^https?:\/\/www\.bilibili\.com\/(video\/(av|bv|BV)|bangumi\/play\/(ss|ep))(.*)/,
     live: /^https?:\/\/live\.bilibili\.com\//,
     readCV: /^https?:\/\/www\.bilibili\.com\/read\/cv(.*)/,
+    read: /^https?:\/\/www\.bilibili\.com\/read\//,
     space: /^https?:\/\/space\.bilibili\.com\//,
     message: /^https?:\/\/message\.bilibili\.com\//,
-}
+    watchLater: /^https?:\/\/www\.bilibili\.com\/watchlater\//,
+};
 
 export class UI {
     constructor({name, dependencies = []}) {

@@ -1,56 +1,21 @@
-//输入框
-const InputMain = `
-    .textarea-container {
-      textarea {
-        background-color: var(--dark-3)!important;
-        border-color: var(--dark-3)!important;
-        color: var(--dark-font-1)!important;
-      }
-      &:hover textarea, &.focus textarea {
-        color: var(--dark-font-0)!important;
-      }
+const HomeBase = `
+    .international-header a {
+      color: var(--dark-font-0);
     }
-    
-    .emoji-box {
+    .tab-line-itnl {
+      border-color: var(--dark-1)!important;
+    }
+    .page-tab .con li {
+      border-color: var(--bg)!important;
+    }
+    .van-popover {
       background: var(--dark-3)!important;
       border-color: var(--dark-3)!important;
-      box-shadow: 0 11px 12px 0 var(--dark-1)!important;
-      .emoji-text {
-        color: var(--dark-font-3)!important;
-      }
-      .emoji-text:hover {
-        background-color: var(--dark-5)!important;
-      }
-      .emoji-notice {
-        background-color: var(--dark-3)!important;
-        border-color: var(--dark-3)!important;
-        color: var(--dark-font-3)!important;
-      }
-      .emoji-tabs {
-        background: var(--dark-4)!important;
-        .tab-link.on {
-          background: var(--dark-3)!important;
-        }
-        .tab-link:hover {
-          background: var(--dark-5)!important;
-        }
-        .emoji-tab-slider {
-          .prev {
-            background-image: url(https://static.hdslb.com/phoenix/dist/images/left-arrow.svg)!important;
-          }
-          .next {
-            background-image: url(https://static.hdslb.com/phoenix/dist/images/right-arrow.svg)!important;
-          }
-          .prev.on {
-            background-image: url(https://static.hdslb.com/phoenix/dist/images/left-arrow-disable.svg)!important;
-          }
-          .next.on {
-            background-image: url(https://static.hdslb.com/phoenix/dist/images/right-arrow-disable.svg)!important;
-          }
-        }
+      .popper__arrow, .popper__arrow::after {
+        border-top-color: var(--dark-3)!important;
       }
     }
-  `;
+    `;
 
 //评论
 const CommentMain = `
@@ -127,8 +92,82 @@ const CommentMain = `
       .bottom-page.center {
         border-color: var(--dark-2)!important;
       }
+      .paging-box-big {
+        a.tcd-number, a.next, a.prev {
+          color: var(--dark-font-1);
+          background-color: var(--dark-2);
+          border-color: var(--dark-3);
+          &:hover {
+            color: white;
+            background-color: #00a1d6;
+            border-color: var(--dark-3);
+          }
+        }
+        .dian, .dian:hover {
+          color: var(--dark-font-1);
+          background-color: var(--bg);
+          border-color: var(--bg);
+        }
+        .page-jump {
+          input {
+            border-color: var(--dark-3);
+            background-color: var(--dark-2);
+            color: white;
+          }
+        }
+      }
     }
-  `;
+    .textarea-container {
+      textarea {
+        background-color: var(--dark-3)!important;
+        border-color: var(--dark-3)!important;
+        color: var(--dark-font-1)!important;
+      }
+      &:hover textarea, &.focus textarea {
+        color: var(--dark-font-0)!important;
+      }
+    }
+    
+    .emoji-box {
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      box-shadow: 0 11px 12px 0 var(--dark-1)!important;
+      .emoji-text {
+        color: var(--dark-font-3)!important;
+      }
+      .emoji-text:hover {
+        background-color: var(--dark-5)!important;
+      }
+      .emoji-notice {
+        background-color: var(--dark-3)!important;
+        border-color: var(--dark-3)!important;
+        color: var(--dark-font-3)!important;
+      }
+      .emoji-tabs {
+        background: var(--dark-4)!important;
+        .tab-link.on {
+          background: var(--dark-3)!important;
+        }
+        .tab-link:hover {
+          background: var(--dark-5)!important;
+        }
+        .emoji-tab-slider {
+          .prev {
+            background-image: url(https://static.hdslb.com/phoenix/dist/images/left-arrow.svg)!important;
+          }
+          .next {
+            background-image: url(https://static.hdslb.com/phoenix/dist/images/right-arrow.svg)!important;
+          }
+          .prev.on {
+            background-image: url(https://static.hdslb.com/phoenix/dist/images/left-arrow-disable.svg)!important;
+          }
+          .next.on {
+            background-image: url(https://static.hdslb.com/phoenix/dist/images/right-arrow-disable.svg)!important;
+          }
+        }
+      }
+    }
+    `;
 
 //动态
 const DynamicMain = `
@@ -252,12 +291,10 @@ const DynamicMain = `
     .dynamic-list-item-wrap, .forw-more {
       border-color: var(--dark-2)!important;
     }
-    
-    ${InputMain}
-  `;
+    `;
 
 export {
-    InputMain,
+    HomeBase,
     CommentMain,
     DynamicMain,
 }
