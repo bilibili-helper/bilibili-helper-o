@@ -1,6 +1,5 @@
 import {createGlobalStyle} from "styled-components";
 import {getURL} from "Utils/functions";
-import {CommentMain, InputMain} from "Modules/darkMode/UI/cardMain";
 
 const DarkModeStyle = createGlobalStyle`
     html {
@@ -10,67 +9,64 @@ const DarkModeStyle = createGlobalStyle`
       --dark-3: #1f1f1f;
       --dark-4: #2b2b2b;
       --dark-5: #333333;
-      --dark-card: #131313;
+      --dark-6: #393939;
+      --dark-card: #151515;
+      
+      --bg: #1c2022;
       --divider: rgb(47 47 47 / 75%);
-        
+      
       --dark-font-0: #e8e8e8;
       --dark-font-1: #99a2aa;
       --dark-font-2: #879199;
     }
     
     body {
-      background-color: #1c2022!important;
+      background-color: var(--bg)!important;
     }
-  `;
+    `;
 
 //导航栏
+const TopBarWithoutBanner = createGlobalStyle`
+    .international-header .mini-type {
+      background: var(--dark-card)!important;
+    }
+    
+    .nav-link .nav-link-ul .nav-link-item .link,
+    .nav-user-center .user-con .item .name {
+      color: var(--dark-font-0)!important;
+    }
+    `;
+
 const TopBarDarkModeStyle = createGlobalStyle`
-    #internationalHeader.international-header {
-      .mini-type {
-        background: var(--dark-0)!important;
-      }
-      .link {
+    // 搜索框
+    .international-header .nav-search #nav_searchform {
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      input:focus {
         color: var(--dark-font-0)!important;
       }
-      
-      .nav-user-center { // 右侧用户内容导航
-        .item {
-          .name, .t a {
-            color: var(--dark-font-0)!important;
-          }
+      .nav-search-btn {
+        background: var(--dark-4)!important;
+      }
+    }
+    
+    .bilibili-search-history, .bilibili-search-suggest {
+      background: var(--dark-card)!important;
+      border-color: var(--dark-card)!important;
+      li {
+        &:hover {
+          background-color: var(--dark-3)!important;
         }
-      }
-      
-      // 搜索框
-      #nav_searchform {
-        background: var(--dark-3)!important;
-        border-color: var(--dark-3)!important;
-        input:focus {
-          color: #ffffff;
-        }
-      }
-      .nav-search-btn { // 搜索按钮
-        background: var(--dark-4);
-      }
-      
-      .bilibili-search-history, .bilibili-search-suggest {
-        background: var(--dark-0)!important;
-        border-color: var(--dark-1)!important;
-        
-        li {
-          &:hover {
-            background-color: var(--dark-2);
-          }
-          a {
-            color: var(--dark-font-1)!important;
-          }
+        a {
+          color: var(--dark-font-0)!important;
         }
       }
     }
+    
     //弹出Popper
-    .channel-menu-mini, .van-popper-avatar, .van-popper-avatar .level-intro, .van-popper-avatar .coins .info .login-award,
+    .channel-menu-mini, .van-popper-avatar, .van-popper-avatar .level-intro, .van-popper-avatar .coins .info .login-award, .van-popper-avatar .lang-change .lang-intro,
     .van-popper-vip, .van-popper-favorite, .van-popper-favorite .view-all, .van-popper-favorite .play-all, .van-popper-history, .van-popper-upload {
-      background-color: var(--dark-card)!important;
+      background-color: var(--dark-3)!important;
     }
     
     //文字 轻
@@ -84,7 +80,9 @@ const TopBarDarkModeStyle = createGlobalStyle`
     
     //文字 重
     .van-popover a,
-    .van-popper-avatar .level-info .grade, .van-popper-avatar .level-intro, .van-popper-avatar .coins, .van-popper-avatar .logout, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
+    .van-popper-avatar .level-info .grade, .van-popper-avatar .level-intro, .van-popper-avatar .coins,
+    .van-popper-avatar .lang-change .lang-title, .van-popper-avatar .lang-change .lang-intro,
+    .van-popper-avatar .logout, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
     .vip-m .bubble-traditional .recommand .title,
     .van-popper-favorite .view-all, .van-popper-favorite .play-all,
     .header-video-card .video-info .line-2,
@@ -97,14 +95,16 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-avatar .coins,
     .van-popper-avatar .counts,
     .van-popper-avatar .links,
+    .van-popper-avatar .lang-change,
     .channel-menu-mini .r-box,
     .van-popper-favorite .tabs-panel,
     .van-popper-favorite .play-all,
     .van-popper-history .tab-header {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     
     //hover蓝
+    .van-popover a:hover,
     .van-popper-avatar .coins .info a:hover,
     .van-popper-avatar .counts .count-item:hover .item-key,
     .van-popper-avatar .counts .count-item:hover .item-value .item-num,
@@ -122,7 +122,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-favorite .play-all:hover,
     .header-video-card:hover,
     .van-popper-upload .upload-item:hover {
-      background: var(--dark-3)!important;
+      background: var(--dark-2)!important;
     }
     
     //经验条
@@ -133,7 +133,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //Card顶上的小尖尖
     .van-popper {
       .popper__arrow, .popper__arrow::after {
-        border-color: var(--dark-3)!important;
+        border-bottom-color: var(--dark-3)!important;
       }
     }
     
@@ -145,12 +145,12 @@ const TopBarDarkModeStyle = createGlobalStyle`
         color: var(--dark-font-0)!important;
       }
     }
-  `;
+    `;
 
 //底栏
 const FooterDarkModeStyle = createGlobalStyle`
     .international-footer {
-      background-color: #1c2022!important;
+      background-color: var(--bg)!important;
       .link-box .link-item {
         border-color: var(--dark-1);
         .bt {
@@ -162,49 +162,28 @@ const FooterDarkModeStyle = createGlobalStyle`
         color: var(--dark-font-0);
       }
     }
-  `;
+    `;
 
-//评论区
-const CommentDarkModeStyle = createGlobalStyle`
-    .comment-title-block span {
-      color: var(--dark-font-1);
-    }
-    
-    ${CommentMain}
-    .bb-comment {
-      .header-page {
-        .result, span.dian, a.tcd-number, a.next, a.prev {
-          color: var(--dark-font-1);
+const FooterDarkModeStyle_2 = createGlobalStyle`
+    .bili-footer {
+      .footer-wrp {
+        background-color: var(--bg)!important;
+        padding-bottom: 70px!important;
+      }
+      .boston-postcards li {
+        border-color: var(--dark-1);
+        .tips {
+          color: var(--dark-font-2);
         }
       }
-      .paging-box-big {
-        a.tcd-number, a.next, a.prev {
-          color: var(--dark-font-1);
-          background-color: var(--dark-2);
-          border-color: var(--dark-3);
-          &:hover {
-            color: white;
-            background-color: #00a1d6;
-            border-color: var(--dark-3);
-          }
-        }
-        .dian, .dian:hover {
-          color: var(--dark-font-1);
-          background-color: #1c2022;
-          border-color: #1c2022;
-        }
-        .page-jump {
-          input {
-            border-color: var(--dark-3);
-            background-color: var(--dark-2);
-            color: white;
-          }
-        }
+      a {
+        color: var(--dark-font-0);
+      }
+      .partner a:hover {
+        color: #00a1d6!important;
       }
     }
-    
-    ${InputMain}
-  `;
+    `;
 
 //用户卡片popper
 const UserPopperDarkModeStyle = createGlobalStyle`
@@ -228,9 +207,9 @@ const UserPopperDarkModeStyle = createGlobalStyle`
           background: var(--dark-5)!important;
           color: var(--dark-font-1)!important;
           border-color: var(--dark-5)!important;
-        }
-        a:hover, a.liked:hover {
-          background: var(--dark-4)!important;
+          &:hover {
+            background: var(--dark-4)!important;
+          }
         }
       }
       .info .user .name {
@@ -254,12 +233,13 @@ const UserPopperDarkModeStyle = createGlobalStyle`
          color: var(--dark-font-0)!important;
        }
      }
-  `;
+    `;
 
 export {
     DarkModeStyle,
+    TopBarWithoutBanner,
     TopBarDarkModeStyle,
     FooterDarkModeStyle,
-    CommentDarkModeStyle,
+    FooterDarkModeStyle_2,
     UserPopperDarkModeStyle,
 }

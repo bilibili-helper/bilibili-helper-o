@@ -10,7 +10,7 @@ const MessageDarkModeStyle = createGlobalStyle`
     }
     //左栏
     .space-left {
-      background-color: var(--dark-card) !important
+      background-color: #151515cc!important
       .side-bar {
         .title {
           color: var(--dark-font-0);
@@ -95,8 +95,8 @@ const MessageDarkModeStyle = createGlobalStyle`
           }
           .reply-box {
             textarea {
-              background-color: var(--dark-1);
-              border-color: var(--dark-1);
+              background-color: var(--dark-3);
+              border-color: var(--dark-3);
               color: var(--dark-font-1);
             }
             &:hover textarea {
@@ -153,6 +153,18 @@ const MessageDarkModeStyle = createGlobalStyle`
                     &.is-me {
                       background-color: #6f9dca!important;
                     }
+                  }
+                }
+                .msg-notify {
+                  background: var(--dark-4)!important;
+                  .content {
+                    color: var(--dark-font-1);
+                  }
+                  hr {
+                    background: var(--dark-1)!important;
+                  }
+                  .link {
+                    color: var(--dark-font-0);
                   }
                 }
               }
@@ -217,6 +229,18 @@ const MessageDarkModeStyle = createGlobalStyle`
                   &.is-me {
                     background-color: #6f9dca!important;
                   }
+                }
+              }
+              .msg-notify {
+                background: var(--dark-4)!important;
+                .content {
+                  color: var(--dark-font-1);
+                }
+                hr {
+                  background: var(--dark-1)!important;
+                }
+                .link {
+                  color: var(--dark-font-0);
                 }
               }
             }

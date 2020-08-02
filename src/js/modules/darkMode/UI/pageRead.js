@@ -1,5 +1,94 @@
 import {createGlobalStyle} from "styled-components";
 import {getURL} from "Utils/functions";
+import {CommentMain} from "Modules/darkMode/UI/cardMain";
+
+const ReadDarkModeStyle = createGlobalStyle`
+    //文字 轻
+    .article-item .item-holder .article-desc, .info-holder .dynamic, .more .info {
+      color: var(--dark-font-2)!important;
+    }
+    
+    //文字 中
+    .info-holder .dynamic .arc-title {
+      color: var(--dark-font-1)!important;
+    }
+    
+    //文字 重
+    body, .nav-tab-bar .tab-item, .partitio-name, .article-item .item-holder .article-title-holder, .rank-module .rank-tabs-bar label, .rank-module .rank-list .item a, .up-list .title, .info-holder .head .nick-name, .more .top-bar, .more .title {
+      color: var(--dark-font-0)!important;
+    }
+ 
+    //hover蓝
+    .nav-tab-bar .tab-item.on, .nav-tab-bar .tab-item:hover, .article-item .item-holder .article-title-holder:hover, .rank-module .rank-tabs-bar .rank-tabs-list li.on, .rank-module .rank-list .item a:hover, .info-holder .head .nick-name:hover, .info-holder .dynamic .arc-title:hover, .more .title:hover {
+      color: #00a1d6!important;
+    }
+    
+    //背景
+    .article-item, .rank-module .rank-list .item, .up-list {
+      background-color: var(--bg)!important;
+    }
+    
+    .page-content .right-side .rank-module .rank-list .item .rank-index {
+      background: var(--dark-4);
+    }
+    
+    //框线
+    .article-item, .rank-module .rank-tabs-bar, .up-list .title, .more .top-bar {
+      border-color: var(--dark-1)!important;
+    }
+    
+    //按钮
+    .rank-module .complete-rank, .up-list .fresh-btn {
+      background: var(--dark-5)!important;
+      border-color: var(--dark-6)!important;
+      color: var(--dark-font-0);
+    }
+    
+    //搜索
+    .search-module .search-block {
+      border-color: var(--dark-6)!important;
+      background-color: var(--dark-2)!important;
+      input {
+        background-color: var(--dark-2)!important;
+        color: var(--dark-font-0)!important;
+      }
+      .search-word-panel {
+        border-color: var(--dark-card)!important;
+        background-color: var(--dark-card)!important;
+        .panel-title {
+          .split-line {
+            border-color: var(--dark-6)!important;
+          }
+          p span {
+            background-color: var(--dark-card)!important;
+            color: var(--dark-font-2)!important;
+          }
+        }
+        .suggest-item, .history-item {
+          color: var(--dark-font-0);
+          &:hover {
+            background-color: var(--dark-3)!important;
+          }
+        }
+      }
+    }
+    
+    //侧边按钮
+    .to-top {
+      background-color: var(--dark-card)!important;
+      border-color: var(--dark-card)!important;
+    }
+
+    //帮助按钮修正
+    .more .help .icon {
+      background-image: url(${getURL('/statics/imgs/read-help.png')});
+    }
+    
+    //游戏按钮修正
+    .nav-tab-bar .tab-item[data-tab-id="1"]:before {
+      background-image: url(${getURL('/statics/imgs/read-game.png')});
+    }
+    `;
 
 const ReadCVDarkModeStyle = createGlobalStyle`
     .page-container, .article-action .more .more-ops-list {
@@ -95,6 +184,12 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-card)!important;
       border-color: var(--dark-card)!important;
     }
+    
+    //评论区
+    .comment-title-block span {
+      color: var(--dark-font-1);
+    }
+    ${CommentMain}
   `;
 
-export {ReadCVDarkModeStyle}
+export {ReadDarkModeStyle, ReadCVDarkModeStyle}

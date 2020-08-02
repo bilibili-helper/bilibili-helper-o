@@ -44,7 +44,6 @@
                 "*://*.bilibili.com/video/av*",
                 "*://*.bilibili.com/video/bv*",
                 "*://*.bilibili.com/video/BV*",
-                "*://www.bilibili.com/watchlater*",
                 "*://www.bilibili.com/medialist/*",
                 "*://www.bilibili.com/blackboard/*"
             ],

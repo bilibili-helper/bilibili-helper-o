@@ -8,7 +8,9 @@ const DynamicDarkModeStyle = createGlobalStyle`
     }
     
     //所有Card背景
-    .user-panel, .live-panel, .section-block, .publish-panel, .core-style, .most-viewed-panel, .tab-bar, .card, .notice-panel, .new-topic-panel {
+    .user-panel, .live-panel, .section-block, .publish-panel, .core-style, .most-viewed-panel, .tab-bar, .card, .notice-panel, .new-topic-panel,
+    .feed-topic .publish-panel-container, .feed-topic .empty-content,
+    .sticky-bar {
       background: var(--dark-card)!important;
     }
     
@@ -26,36 +28,23 @@ const DynamicDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-card)!important;
     }
     
-    .dynamic-link-hover-bg:hover {
-      background: var(--dark-0)!important;
-    }
-    
     //文字 轻
     .tc-slate, .time, .live-name, .count, .dynamic-repost, .shop-desc .desc-box .sub-title {
       color: var(--dark-font-2)!important;
     }
     
     //文字 中
-    .most-viewed-item .name, .tag-item .label, .imagesbox .boost-control li, .shop-panel .panel-desc {
+    .most-viewed-item .name, .tag-item .label, .shop-panel .panel-desc {
       color: var(--dark-font-1)!important;
     }
     
     //文字 重
-    .tc-black, .numbers, .up-name, .user-name, .user-name a, .text .content, .tag-item .content, .item-detail .text, .core-style, .shop-desc .desc-box .title {
+    .tc-black, .numbers, .up-name, .text .content, .tag-item .content, .item-detail .text, .core-style, .shop-desc .desc-box .title {
       color: var(--dark-font-0)!important;
     }
     
-    //大会员修正
-    .user-name.big-vip a {
-      color: #fb7299!important;
-    }
-    
     //hover蓝
-    .imagesbox .boost-control li:hover {
-      color: #23ade5!important;
-    }
-    
-    .live-panel .more-button .more:hover,
+    .more-button .more:hover,
     .most-viewed-panel .list-content .most-viewed-item .name.active,
     .most-viewed-panel .list-content .most-viewed-item:hover .name,
     .tab-bar .tab .tab-text.selected,
@@ -64,19 +53,15 @@ const DynamicDarkModeStyle = createGlobalStyle`
     }
     
     .user-panel .content .bottom .number-part:hover .numbers,
-    .new-topic-panel .tag-item .content:hover,
-    .video-container.can-hover:hover .text-area .title,
-    .bangumi-container.can-hover:hover .text-area .title,
-    .article-container:hover .text-area .title,
-    .vote-container:hover .text-area .text-content {
+    .new-topic-panel .tag-item .content:hover {
       color: #00a1d6!important;
     }
     
     //新动态
     .new-notice-bar {
-      background: #cdcbb0!important;
+      background: #d7d4b8!important;
       .message {
-        color: #f39c12!important;
+        color: #cf8612!important;
       }
     }
     
@@ -88,14 +73,58 @@ const DynamicDarkModeStyle = createGlobalStyle`
     //常看列表
     .card-list .most-viewed-panel .list-content .most-viewed-item .section {
       .icon-all, .avatar {
-        border-color: var(--dark-card);
-        -webkit-box-shadow: 0 0 0 1px var(--dark-card);
-        box-shadow: 0 0 0 1px var(--dark-card);
+        border-color: var(--dark-5);
+        -webkit-box-shadow: 0 0 0 1px var(--dark-0);
+        box-shadow: 0 0 0 1px var(--dark-0);
         .active {
           -webkit-box-shadow: 0 0 0 1px #00a1d6!important;
           box-shadow: 0 0 0 1px #00a1d6!important;
         }
       }
+    }
+    
+    //话题标签
+    .new-topic-panel .tag-item .label {
+      background: var(--dark-3)!important;
+    }
+    
+    //feed
+    .feed-topic .separater-line, .feed-topic .card, .card-offset {
+      border-color: var(--dark-card)!important;
+    }
+    
+    .card .focus-btn .unfocus {
+      background-color: var(--dark-5)!important;
+      color: var(--dark-font-1);
+    }
+    
+    .active-panel {
+      .tc-dark-slate {
+        color: var(--dark-font-1);
+      }
+      .show-more-button {
+        background-color: unset!important;
+      }
+    }
+    
+    //动态详情
+    .sticky-bar {
+      -webkit-box-shadow: 0 2px 4px 0 var(--dark-card)!important;
+      box-shadow: 0 2px 4px 0 var(--dark-card)!important;
+      .bar-content {
+        .title {
+          color: var(--dark-font-0)!important;
+        }
+        .message {
+          color: var(--dark-font-2)!important;
+          &:hover {
+            color: #00b5e5 !important;
+          }
+        }
+      }
+    }
+    .detail-content .card {
+      border-color: var(--dark-card)!important;
     }
     
     ${DynamicMain}
