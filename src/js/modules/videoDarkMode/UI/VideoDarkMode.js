@@ -1,7 +1,7 @@
 import {Button} from 'Components/common/Button';
 import React from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
-import {TopBarWithoutBanner, TopBarDarkModeStyle} from 'Modules/darkMode/UI/basicStyle';
+import {TopBarWithoutBanner, TopBarDarkModeStyle, DarkModeStyle} from 'Modules/darkMode/UI/basicStyle';
 
 /**
  * Author: DrowsyFlesh
@@ -30,22 +30,6 @@ export default () => {
     `;
 
     const VideoDarkModeStyle = createGlobalStyle`
-      html {
-        --dark-0: #101010;
-        --dark-1: #141414;
-        --dark-2: #131313;
-        --dark-3: #1f1f1f;
-        --dark-4: #2b2b2b;
-        --dark-5: #333333;
-          
-        --dark-font-0: #e8e8e8;
-        --dark-font-1: #99a2aa;
-        --dark-font-2: #879199;
-      }
-      
-      body {
-        background-color: #1c2022!important;
-      }
       // 播放器mini窗口
       #bofqi.mini-player:before {
         box-shadow: #000000 0 0 8px;
@@ -569,7 +553,7 @@ export default () => {
             return (
                 <React.Fragment>
                     <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPageOrWatchLater}>深色模式</VideoDarkModeButton>
-                    {on && !this.isOldPageOrWatchLater && [<TopBarWithoutBanner/>, <TopBarDarkModeStyle/>, <VideoDarkModeStyle/>]}
+                    {on && !this.isOldPageOrWatchLater && [<DarkModeStyle/>, <TopBarWithoutBanner/>, <TopBarDarkModeStyle/>, <VideoDarkModeStyle/>]}
                 </React.Fragment>
             );
         }
