@@ -23,7 +23,6 @@ import {Silver2coin} from 'Modules/silver2coin';
 import {QuickSearch} from 'Modules/quickSearch';
 import {VideoHideDanmu, VideoHideDanmuUI} from 'Modules/videoHideDanmu';
 import {LiveChatMode, LiveChatModeUI} from './liveChatMode';
-import {VideoDarkMode, VideoDarkModeUI} from 'Modules/videoDarkMode';
 import {ProxyForWebsite} from 'Modules/proxyForWebsite';
 import {CvImagesUI, CvImages} from 'Modules/cvImages';
 import {NotAutoPlay, NotAutoPlayUI} from 'Modules/notAutoPlay';
@@ -61,7 +60,6 @@ export const Features = {
     VideoHideDanmu,
     LiveChatMode,
     //VideoUnblock,
-    VideoDarkMode,
     ProxyForWebsite,
     CvImages,
     NotAutoPlay,
@@ -87,7 +85,6 @@ export const UIs = {
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
     LiveChatModeUI,
-    VideoDarkModeUI,
     CvImagesUI,
     NotAutoPlayUI,
     LiveUpCheckUI,

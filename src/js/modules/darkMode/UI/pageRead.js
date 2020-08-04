@@ -193,6 +193,20 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-1);
     }
     ${CommentMain}
+    .textarea-container {
+      textarea {
+        background-color: var(--dark-1)!important;
+        border-color: var(--dark-1)!important;
+        color: var(--dark-font-1)!important;
+      }
+      &:hover textarea, &.focus textarea {
+        color: var(--dark-font-0)!important;
+      }
+    }
+    .comment-emoji {
+      border: 1px solid var(--dark-1)!important;
+      background-color: var(--dark-1)!important;
+    }
     `;
 
 const ReadRankDarkModeStyle = createGlobalStyle`

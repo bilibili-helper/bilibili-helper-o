@@ -11,6 +11,7 @@ import {DynamicDarkModeStyle} from 'Modules/darkMode/UI/pageDynamic';
 import {ReadDarkModeStyle, ReadCVDarkModeStyle, ReadRankDarkModeStyle} from 'Modules/darkMode/UI/pageRead';
 import {MessageDarkModeStyle} from 'Modules/darkMode/UI/pageMessage';
 import {SpaceDarkModeStyle} from 'Modules/darkMode/UI/pageSpace';
+import {VideoPlayDarkModeStyle} from 'Modules/darkMode/UI/pageVideo';
 import {LivePlayDarkModeStyle} from 'Modules/darkMode/UI/pageLive';
 
 const StyleRender = (style, withFooter = false, withoutBanner = true, withCustomTopBar = true) => {
@@ -53,6 +54,10 @@ function WatchLaterDarkMode() {
     return StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
 }
 
+function VideoPlayDarkMode() {
+    return StyleRender([<VideoPlayDarkModeStyle/>]);
+}
+
 function LivePlayDarkMode() {
     return StyleRender([<LivePlayDarkModeStyle/>], false, false, false);
 }
@@ -66,5 +71,6 @@ export {
     MessageDarkMode,
     SpaceDarkMode,
     WatchLaterDarkMode,
+    VideoPlayDarkMode,
     LivePlayDarkMode,
 }
