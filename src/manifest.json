@@ -123,8 +123,7 @@
             "all_frames": false,
             "js": [
                 "vendors.bundle.js",
-                "vipPrivilege.js",
-                "darkMode.js",
+                "global.js",
                 "features.bundle.js"
             ],
             "css": [

@@ -12,7 +12,7 @@ export class DarkMode extends Feature {
     constructor() {
         super({
             name: 'darkMode',
-            kind: 'darkMode',
+            kind: 'global',
             settings: {
                 on: false,
                 hasUI: true,

@@ -56,6 +56,7 @@ export const Features = {
     VideoSubtitleDownload,
     VersionManager,
     Silver2coin,
+    DarkMode,
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
@@ -68,7 +69,6 @@ export const Features = {
     LivePictureInPicture,
     AutoTakeVipPrivilege,
     LiveReplayDownload,
-    DarkMode,
 };
 
 export const UIs = {
