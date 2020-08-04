@@ -28,10 +28,9 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //高优先
-    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, #page-index .col-2 .section .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .my-album .title, .fav-sidenav, .nav-title .text,
-    #page-fav .fav-main .filter-item, #page-fav .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
-    .pgc-space-follow-item .pgc-item-info .pgc-item-title, .pgc-space-follow-item .pgc-item-info .pgc-item-desc,
-    #page-setting .setting-privacy-item .setting-privacy-name, #page-index .channel.guest .channel-item .channel-title .channel-name, #page-index .album .content .album-wrapper .album-item .album-title {
+    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .my-album .title, .fav-sidenav, .nav-title .text,
+    .fav-main .filter-item, .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
+    .pgc-item-title, .pgc-item-desc, .setting-privacy-item .setting-privacy-name, .channel-title .channel-name, .album-title, .follow-item {
       color: var(--dark-font-0)!important;
     }
     
@@ -51,9 +50,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //Card边框
-    .col-1, .col-2 .section, .fav-covers,
-    .card, 
-    #page-fav .fav-main .small-item{
+    .col-1, .col-2 .section, .fav-covers, .card, .fav-main .small-item{
       border-color: var(--dark-card)!important;
     }
     
@@ -63,13 +60,14 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //框线
-    .section, .section-title, .i-pin-v .be-tab, .i-m-upload, .i-m-r2, .contribution-sidenav, .contribution-sidenav~.main-content,
-    #page-myalbum .album-content, .filter, .channel-detail .channel-action-row .be-dropdown,
-    #page-fav .fav-sidenav .nav-container, #page-fav .fav-sidenav .watch-later, #page-fav .fav-main .favList-info,
-    #page-fav .fav-main .filter-item.search, #page-fav .fav-main .search-types, #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-top,
-    .article-content, .s-content, #page-setting .setting-index-container, #page-setting .setting-index-module,
-    .i-live .i-live-unfo-btn, .i-live .i-live-fo-count, .section .operation, #page-index .channel .channel-item, #page-channel-detail .watch-later-btn, #page-subs .mini-item {
-      border-color: var(--dark-1)!important;
+    .section, .section-title, .i-pin-v .be-tab, .i-m-upload, .i-m-r2, .user .tags, .contribution-sidenav, .contribution-sidenav~.main-content,
+    .album-content, .filter, .channel-detail .channel-action-row .be-dropdown,
+    .fav-sidenav,.fav-sidenav .nav-container, .fav-sidenav .watch-later, .fav-main .favList-info,
+    .fav-main .filter-item.search, .fav-main .search-types, .fav-main .fav-action-top .back-to-info, .fav-main .fav-action-top,
+    .article-content, .s-content, .setting-index-container, .setting-index-module,
+    .i-live .i-live-unfo-btn, .i-live .i-live-fo-count, .section .operation, .channel .channel-item, .watch-later-btn, .mini-item,
+    .follow-sidenav, .follow-sidenav .nav-container.follow-container, .follow-main, .follow-main .follow-header.follow-header-info, .list-item, .fans-action-btn.follow {
+      border-color: var(--divider)!important;
     }
     
     .my-album .line {
@@ -77,9 +75,10 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //hover深
-    #page-video #submit-video-type-filter,
+    #submit-video-type-filter,
     .contribution-sidenav .contribution-item:hover,
-    #page-fav .fav-sidenav .fav-item:hover {
+    .fav-item:hover,
+    .follow-item:hover {
       background-color: var(--dark-3)!important;
     }
     
@@ -89,7 +88,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-0);
     }
     .g-search input {
-      border-color: var(--dark-4);
+      border-color: var(--divider);
     }
     
     //置顶视频，代表作
@@ -428,6 +427,55 @@ const SpaceDarkModeStyle = createGlobalStyle`
         background-color: var(--dark-4)!important;
         border-color: var(--dark-4)!important;
         color: var(--dark-font-2)!important;
+      }
+    }
+    
+    .fans-action-btn {
+      color: var(--dark-font-1);
+    }
+    
+    .fans-action-follow {
+      background-color: var(--dark-5)!important;
+      color: var(--dark-font-1);
+    }
+    
+    #id-card {
+      background: var(--dark-3)!important;
+      .idc-meta, .idc-auth-description {
+        color: var(--dark-font-1)!important;
+      }
+      .idc-avatar {
+        border-color: var(--dark-3)!important;
+      }
+      .btn-center {
+        a.primary {
+          color: #fff!important;
+          border-color: #00a1d6!important;
+          background-color: #00a1d6!important;
+        }
+        a.primary:hover {
+          border-color: #00b5e5!important;
+          background-color: #00b5e5!important;
+        }
+        a, a.ghost {
+          background: var(--dark-5)!important;
+          color: var(--dark-font-1)!important;
+          border-color: var(--dark-5)!important;
+          &:hover {
+            background: var(--dark-4)!important;
+          }
+        }
+      }
+      .idc-content {
+        a .idc-uname{
+          color: var(--dark-font-0)!important;
+          &.this-is-vip {
+            color: #fb7299!important;
+          }
+          &:hover {
+            color: #00A1D6!important;
+          }
+        }
       }
     }
   `;

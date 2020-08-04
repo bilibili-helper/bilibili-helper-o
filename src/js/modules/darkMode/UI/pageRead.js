@@ -14,12 +14,12 @@ const ReadDarkModeStyle = createGlobalStyle`
     }
     
     //文字 重
-    body, .nav-tab-bar .tab-item, .partitio-name, .article-item .item-holder .article-title-holder, .rank-module .rank-tabs-bar label, .rank-module .rank-list .item a, .up-list .title, .info-holder .head .nick-name, .more .top-bar, .more .title {
-      color: var(--dark-font-0)!important;
+    body, .nav-tab-bar .tab-item, .partitio-name, .article-item .item-holder .article-title-holder, .rank-module .rank-tabs-bar label, .rank-module .rank-list .item a, .up-list .title, .info-holder .head .nick-name, .more .top-bar, .more .title, .categories-bar .tag-item {
+      color: var(--dark-font-3)!important;
     }
  
     //hover蓝
-    .nav-tab-bar .tab-item.on, .nav-tab-bar .tab-item:hover, .article-item .item-holder .article-title-holder:hover, .rank-module .rank-tabs-bar .rank-tabs-list li.on, .rank-module .rank-list .item a:hover, .info-holder .head .nick-name:hover, .info-holder .dynamic .arc-title:hover, .more .title:hover {
+    .nav-tab-bar .tab-item.on, .nav-tab-bar .tab-item:hover, .article-item .item-holder .article-title-holder:hover, .rank-module .rank-tabs-bar .rank-tabs-list li.on, .rank-module .rank-list .item a:hover, .info-holder .head .nick-name:hover, .info-holder .dynamic .arc-title:hover, .more .title:hover, .categories-bar .tag-item.on {
       color: #00a1d6!important;
     }
     
@@ -33,7 +33,7 @@ const ReadDarkModeStyle = createGlobalStyle`
     }
     
     //框线
-    .article-item, .rank-module .rank-tabs-bar, .up-list .title, .more .top-bar {
+    .article-item, .rank-module .rank-tabs-bar, .up-list .title, .more .top-bar, .categories-bar {
       border-color: var(--dark-1)!important;
     }
     
@@ -41,7 +41,10 @@ const ReadDarkModeStyle = createGlobalStyle`
     .rank-module .complete-rank, .up-list .fresh-btn {
       background: var(--dark-5)!important;
       border-color: var(--dark-6)!important;
-      color: var(--dark-font-0);
+      color: var(--dark-font-0)!important;
+      &:hover {
+        color: #00a1d6!important;
+      }
     }
     
     //搜索
@@ -81,7 +84,7 @@ const ReadDarkModeStyle = createGlobalStyle`
 
     //帮助按钮修正
     .more .help .icon {
-      background-image: url(${getURL('/statics/imgs/read-help.png')});
+      background-image: url(${getURL('/statics/imgs/read-help.png')})!important;
     }
     
     //游戏按钮修正
@@ -108,7 +111,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     //文字 重
     .nav-tab-bar .tab-item, .follow-btn-holder .follow-btn, .up-info-right-block .up-name, .rightside-article-list-btn .label, .up-article-list-block .block-title, .article-item .article-title, .more .top-bar, .more .title,
     .title-container .title, .article-holder, .article-holder h1, .article-list-plane .button .label {
-      color: var(--dark-font-0)!important;
+      color: var(--dark-font-3)!important;
     }
  
     //hover蓝
@@ -120,7 +123,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     }
     
     //框线
-    .up-article-list-block .block-title, .more .top-bar, .article-action {
+    .up-article-list-block .block-title, .more .top-bar, .article-action, #article-list-btn .title, #article-list-btn .label, .rightside-article-list-btn .label {
       border-color: var(--dark-1)!important;
     }
     
@@ -190,6 +193,32 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-1);
     }
     ${CommentMain}
-  `;
+    `;
 
-export {ReadDarkModeStyle, ReadCVDarkModeStyle}
+const ReadRankDarkModeStyle = createGlobalStyle`
+    #App, .tips, .article-title {
+      color: var(--dark-font-3)!important;
+    }
+    
+    .article-desc {
+      color: var(--dark-font-2)!important;
+    }
+    
+    .article-title:hover {
+      color: #00a1d6!important;
+    }
+    
+    .article-item, .rank-module .rank-list .item, .up-list {
+      background-color: var(--bg)!important;
+    }
+    
+    #App .rank-module .tips {
+      background: var(--dark-4);
+    }
+    
+    .article-content {
+      border-color: var(--dark-1)!important;
+    }
+    `;
+
+export {ReadDarkModeStyle, ReadCVDarkModeStyle, ReadRankDarkModeStyle}

@@ -7,7 +7,7 @@
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode} from './DarkMode';
+import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, ReadRankDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode, LivePlayDarkMode} from './DarkMode';
 
 export class DarkModeUI extends UI {
     constructor() {
@@ -31,6 +31,9 @@ export class DarkModeUI extends UI {
                 case 'readCV' :
                     ReactDOM.render(<ReadCVDarkMode/>, wrapper, resolve);
                     break;
+                case 'readRank' :
+                    ReactDOM.render(<ReadRankDarkMode/>, wrapper, resolve);
+                    break;
                 case 'read' :
                     ReactDOM.render(<ReadDarkMode/>, wrapper, resolve);
                     break;
@@ -42,6 +45,9 @@ export class DarkModeUI extends UI {
                     break;
                 case 'watchLater' :
                     ReactDOM.render(<WatchLaterDarkMode/>, wrapper, resolve);
+                    break;
+                case 'livePlay' :
+                    ReactDOM.render(<LivePlayDarkMode/>, wrapper, resolve);
                     break;
             }
         });

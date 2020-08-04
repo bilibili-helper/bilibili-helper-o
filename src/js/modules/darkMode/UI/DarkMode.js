@@ -8,20 +8,21 @@ import React from 'react';
 import {DarkModeStyle, TopBarWithoutBanner, TopBarDarkModeStyle, FooterDarkModeStyle, FooterDarkModeStyle_2, UserPopperDarkModeStyle} from 'Modules/darkMode/UI/basicStyle';
 import {HomeDarkModeStyle, WatchLaterDarkModeStyle} from 'Modules/darkMode/UI/pageHome';
 import {DynamicDarkModeStyle} from 'Modules/darkMode/UI/pageDynamic';
-import {ReadDarkModeStyle, ReadCVDarkModeStyle} from 'Modules/darkMode/UI/pageRead';
+import {ReadDarkModeStyle, ReadCVDarkModeStyle, ReadRankDarkModeStyle} from 'Modules/darkMode/UI/pageRead';
 import {MessageDarkModeStyle} from 'Modules/darkMode/UI/pageMessage';
 import {SpaceDarkModeStyle} from 'Modules/darkMode/UI/pageSpace';
+import {LivePlayDarkModeStyle} from 'Modules/darkMode/UI/pageLive';
 
-const StyleRender = (style, withBanner = true) => {
+const StyleRender = (style, withFooter = false, withoutBanner = true, withCustomTopBar = true) => {
     return (
         <React.Fragment>
-            <DarkModeStyle/><TopBarDarkModeStyle/>{withBanner && <TopBarWithoutBanner/>}{style}
+            <DarkModeStyle/>{withCustomTopBar && <TopBarDarkModeStyle/>}{withoutBanner && <TopBarWithoutBanner/>}{withFooter && <FooterDarkModeStyle/>}{style}
         </React.Fragment>
     );
 };
 
 function HomeDarkMode() {
-    return StyleRender([<HomeDarkModeStyle/>, <FooterDarkModeStyle/>], false);
+    return StyleRender([<HomeDarkModeStyle/>], true, false);
 }
 
 function DynamicDarkMode() {
@@ -33,7 +34,11 @@ function ReadDarkMode() {
 }
 
 function ReadCVDarkMode() {
-    return StyleRender([<ReadCVDarkModeStyle/>, <UserPopperDarkModeStyle/>, <FooterDarkModeStyle/>]);
+    return StyleRender([<ReadCVDarkModeStyle/>, <UserPopperDarkModeStyle/>], true);
+}
+
+function ReadRankDarkMode() {
+    return StyleRender([<ReadRankDarkModeStyle/>], true);
 }
 
 function MessageDarkMode() {
@@ -41,11 +46,15 @@ function MessageDarkMode() {
 }
 
 function SpaceDarkMode() {
-    return StyleRender([<SpaceDarkModeStyle/>]);
+    return StyleRender([<SpaceDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
 }
 
 function WatchLaterDarkMode() {
-    return StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false);
+    return StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+}
+
+function LivePlayDarkMode() {
+    return StyleRender([<LivePlayDarkModeStyle/>], false, false, false);
 }
 
 export {
@@ -53,7 +62,9 @@ export {
     DynamicDarkMode,
     ReadDarkMode,
     ReadCVDarkMode,
+    ReadRankDarkMode,
     MessageDarkMode,
     SpaceDarkMode,
     WatchLaterDarkMode,
+    LivePlayDarkMode,
 }

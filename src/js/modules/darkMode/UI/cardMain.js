@@ -57,7 +57,7 @@ const CommentMain = `
             color: var(--dark-font-1);
           }
           .text {
-            color: var(--dark-font-0);
+            color: var(--dark-font-3);
           }
           .info {
             .reply:hover {
