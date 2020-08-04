@@ -8,20 +8,24 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     
     .link-navbar-ctnr, .link-navbar-vm, .link-navbar, .head-info-section, .gift-control-section, .rank-list-section, .rank-list-ctnr, .chat-history-panel, .announcement-cntr, .chat-control-panel,
     .gift-sender-panel, .count-choice, .common-popup-wrap, .gift-panel-box, .content-wrapper, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
-    .user-panel, .link-panel-ctnr, .calendar-checkin, .calendar-checkin .title, .calendar-checkin .calendar-wrapper, .download-panel-ctnr {
+    .user-panel, .link-panel-ctnr, .calendar-checkin, .calendar-checkin .title, .calendar-checkin .calendar-wrapper, .download-panel-ctnr, .side-bar-popup-cntr {
       background-color: var(--dark-card)!important;
     }
     
-    .daily-record-title, .choice-item.active, .choice-item:hover, .logout-btn, .divider, .load-more-btn {
+    .daily-record-title, .choice-item.active, .choice-item:hover, .divider, .more-btn-cntr {
       background-color: var(--dark-5)!important;
     }
     
-    .choice-item {
+    .choice-item, .danmaku-menu, .logout-btn, .load-more-btn, .checkin-btn, .link-popup-panel {
       background-color: var(--dark-4)!important;
     }
     
-    .gift-item.buy:hover, .gift-panel-switch:hover, .download-item:hover {
+    .gift-item.buy:hover, .gift-panel-switch:hover, .download-item:hover, .item.self, .rank-list-ctnr .own {
       background-color: var(--dark-3)!important;
+    }
+    
+    .rank:not(.rank-1):not(.rank-2):not(.rank-3) {
+      background: var(--dark-6)!important;
     }
     
     .item, .daily-record-title, .daily-text, .gift-info-expScore, .seeds-wrap, .tab-candidate, .room-introduction-scroll-wrapper,
@@ -34,7 +38,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .link-navbar .main-ctnr .nav-logo, .link-navbar .nav-item, .shortcuts-ctnr, .room-title, .tab-list .item.active, .rank-list-box a, .chat-item.danmaku-item,
-    .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username {
+    .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username, .user-row, .gift-component-effect-rule {
       color: var(--dark-font-0)!important;
     }
     
@@ -55,19 +59,23 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     
     .head-info-section, .gift-control-section, .rank-list-ctnr, .aside-area, .announcement-cntr,
     .gift-sender-panel.arrow-bottom:before, .common-popup-wrap, .common-popup-wrap.arrow-bottom:before, .gift-panel-box,
-    .content-wrapper, .card, .live-record-list-cntr {
+    .content-wrapper, .card, .live-record-list-cntr, .common-popup-wrap.arrow-bottom:after, .side-bar-popup-cntr {
       border-color: var(--dark-card)!important;
     }
     
-    .tab-list .item, .l-line, .r-line, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr {
+    .tab-list .item, .l-line, .r-line, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr, .footer-line {
       border-color: var(--dark-5)!important;
+    }
+    
+    .arrow {
+      border-color: transparent transparent transparent var(--dark-card)!important;
     }
     
     .link-navbar-ctnr {
       box-shadow: 0 0 5px 1px var(--dark-card)!important;
     }
     
-    .gift-sender-panel, .common-popup-wrap {
+    .gift-sender-panel, .common-popup-wrap, .side-bar-popup-cntr {
       box-shadow: 0 6px 12px 0 var(--dark-card)!important;
     }
     
@@ -127,6 +135,10 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     .side-bar-cntr {
       background-color: var(--dark-card)!important;
       border-color: var(--dark-card)!important;
+    }
+    
+    .flip-view-image-ctnr {
+      filter: brightness(0.9);
     }
     
     ${DynamicMain}
