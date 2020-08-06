@@ -20,7 +20,7 @@ export class CvImagesUI extends UI {
         const that = this;
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
-            $('.page-container .img-box img').wrap('<div class="bilibili-ct-wrapper"></div>')
+            $('.page-container .img-box img:not(.article-card):not(.video-card)').wrap('<div class="bilibili-ct-wrapper"></div>')
 
             const btn = document.createElement('button');
             btn.innerText = __('cvImages_UI_downloadBtn');
