@@ -132,7 +132,6 @@ export class UI {
             for (const item in PAGE_REGEXP) {
                 const pageUrl = new RegExp(PAGE_REGEXP[item]);
                 if (pageUrl.test(url)) {
-                    console.error(pageUrl.test(url));
                     return item;
                 }
             }

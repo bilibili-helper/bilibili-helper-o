@@ -4,5 +4,8 @@
     },
     "darkMode_description": {
         "message": "由於官方改動頻繁，可能會出現失效或奇怪樣式"
+    },
+    "darkMode_follow_system": {
+        "message": "跟隨系統"
     }
 }

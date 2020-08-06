@@ -4,5 +4,8 @@
     },
     "darkMode_description": {
         "message": "Due to frequent official changes, invalid or strange patterns may appear"
+    },
+    "darkMode_follow_system": {
+        "message": "Follow system"
     }
 }
