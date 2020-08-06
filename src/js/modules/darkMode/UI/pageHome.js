@@ -78,11 +78,12 @@ const WatchLaterDarkModeStyle = createGlobalStyle`
     }
     .watch-later-list header {
       .s-btn {
-        background: var(--dark-5);
+        background: var(--bg);
       }
       .d-btn {
-        background: var(--dark-5);
+        background: var(--bg);
         border-color: var(--dark-6);
+        color: var(--dark-font-2);
       }
     }
     .watch-later-list .list-box .av-item .av-about{
@@ -94,6 +95,72 @@ const WatchLaterDarkModeStyle = createGlobalStyle`
         color: var(--dark-font-1);
       }
     }
+    .bili-dialog {
+      color: unset!important;
+      header {
+        border-color: var(--dark-1)!important;
+      }
+      .con {
+        background: var(--dark-3)!important;
+        .btn-cancel {
+          background-color: var(--dark-5)!important;
+          &:not(:hover) {
+            color: var(--dark-font-1)!important;
+            border-color: var(--dark-5)!important;
+          }
+        }
+      }
+    }
     `;
 
-export {HomeDarkModeStyle, WatchLaterDarkModeStyle}
+const HistoryDarkModeStyle = createGlobalStyle`
+    .history-wrap .b-head {
+      .b-head-t {
+        color: var(--dark-font-0);
+      }
+      .history-btn .btn {
+        border-color: #00a1d6!important;
+      }
+    }
+    .history-list {
+      .l-info {
+        border-color: var(--dark-6);
+        .lastplay-time .history-red-round {
+          border-color: transparent var(--dark-6) transparent;
+        }
+      }
+      .r-info {
+        background: unset!important;
+        .r-txt {
+          border-color: var(--dark-1)!important;
+          .title:not(:hover) {
+            color: var(--dark-font-0);
+          }
+          .username {
+            color: var(--dark-font-1);
+          }
+        }
+      }
+    }
+    .history-dlg {
+      background-color: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      .dlg-txt {
+        color: var(--dark-font-0)!important;
+      }
+      .cancel {
+        height: 32px!important;
+        background-color: var(--dark-5)!important;
+        &:not(:hover) {
+          color: var(--dark-font-1)!important;
+          border-color: var(--dark-5)!important;
+        }
+      }
+    }
+    .go-top-m .go-top {
+      background-color: var(--dark-4)!important;
+      border-color: var(--dark-4)!important;
+    }
+    `;
+
+export {HomeDarkModeStyle, WatchLaterDarkModeStyle, HistoryDarkModeStyle}

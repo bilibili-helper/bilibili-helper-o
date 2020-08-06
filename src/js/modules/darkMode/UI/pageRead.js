@@ -78,8 +78,8 @@ const ReadDarkModeStyle = createGlobalStyle`
     
     //侧边按钮
     .to-top {
-      background-color: var(--dark-card)!important;
-      border-color: var(--dark-card)!important;
+      background-color: var(--dark-4)!important;
+      border-color: var(--dark-4)!important;
     }
 
     //帮助按钮修正
@@ -110,7 +110,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     //文字 重
     .nav-tab-bar .tab-item, .follow-btn-holder .follow-btn, .up-info-right-block .up-name, .rightside-article-list-btn .label, .up-article-list-block .block-title, .article-item .article-title, .more .top-bar, .more .title,
-    .title-container .title, .article-holder, .article-holder h1, .article-list-plane .button .label {
+    .title-container .title, .article-holder, .article-holder h1, .article-list-plane .button .label, .article-holder .card-container .title {
       color: var(--dark-font-3)!important;
     }
  
@@ -127,20 +127,28 @@ const ReadCVDarkModeStyle = createGlobalStyle`
       border-color: var(--dark-1)!important;
     }
     
-    //关注按钮
-    .follow-btn-holder .follow-btn.followed, .follow-btn-holder .follow-btn.followed:hover {
-      background-color: var(--dark-5)!important;
-      border-color: var(--dark-5)!important;
+    //文章视频引用
+    .article-holder .card-container {
+      .card, .video-info {
+        background-color: #1515154d!important;
+      }
+      a:after, .slim-video-card{
+        border-color: var(--dark-4)!important;
+      }
     }
     
+    //关注按钮
     .follow-btn-holder .follow-btn {
       background-color: #00a1d6!important;
       border-color: #00a1d6!important;
-    }
-    
-    .follow-btn-holder .follow-btn:hover {
-      background-color: #00b5e5!important;
-      border-color: #00b5e5!important;
+      &:hover {
+        background-color: #00b5e5!important;
+        border-color: #00b5e5!important;
+      }
+      &.followed, &.followed:hover {
+        background-color: var(--dark-5)!important;
+        border-color: var(--dark-5)!important;
+      }
     }
     
     //文章目录
@@ -184,8 +192,8 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     // 侧边按钮
     .right-side-bar .to-comment, .right-side-bar .to-top, .right-side-bar .to-comment .comment-num {
-      background-color: var(--dark-card)!important;
-      border-color: var(--dark-card)!important;
+      background-color: var(--dark-4)!important;
+      border-color: var(--dark-4)!important;
     }
     
     //评论区

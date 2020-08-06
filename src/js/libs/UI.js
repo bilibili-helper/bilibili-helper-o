@@ -17,6 +17,7 @@ const PAGE_REGEXP = {
     space: /^https?:\/\/space\.bilibili\.com\//,
     message: /^https?:\/\/message\.bilibili\.com\//,
     watchLater: /^https?:\/\/www\.bilibili\.com\/watchlater\//,
+    history: /^https?:\/\/www\.bilibili\.com\/account\/history/,
 };
 
 export class UI {
@@ -131,6 +132,7 @@ export class UI {
             for (const item in PAGE_REGEXP) {
                 const pageUrl = new RegExp(PAGE_REGEXP[item]);
                 if (pageUrl.test(url)) {
+                    console.error(pageUrl.test(url));
                     return item;
                 }
             }

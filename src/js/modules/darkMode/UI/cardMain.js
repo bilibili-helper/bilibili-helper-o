@@ -45,8 +45,12 @@ const CommentMain = `
           .user .name {
             color: var(--dark-font-1);
           }
-          .text {
+          .text, div .text-area .text-content {
             color: var(--dark-font-3);
+          }
+          .vote-container {
+            border-color: var(--dark-4)!important;
+            box-shadow: 0 3px 10px 0 var(--dark-1)!important;
           }
           .info {
             .reply:hover {
