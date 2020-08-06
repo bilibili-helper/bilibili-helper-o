@@ -3,7 +3,7 @@
         "message": "深色模式（常用页面）"
     },
     "darkMode_description": {
-        "message": "由于官方改动频繁，可能会出现失效或奇怪样式"
+        "message": "可能出现失效或者部分错误的情况，请联系我们进行修复"
     },
     "darkMode_follow_system": {
         "message": "跟随系统"

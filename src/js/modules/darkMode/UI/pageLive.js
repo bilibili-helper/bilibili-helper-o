@@ -141,6 +141,10 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       filter: brightness(0.9);
     }
     
+    .pophover>p:first-child {
+      color: var(--dark-font-1)!important;
+    }
+    
     ${DynamicMain}
     `;
 
