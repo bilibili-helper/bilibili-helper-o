@@ -46,7 +46,7 @@ export default () => {
       outline: none;
       & .no-data {}
     `;
-    const UnloadList =  styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
+    const UnloadList = styled.div.attrs({className: 'bilibili-helper-danmu-list'})`
       position: relative;
       height: 200px;
       margin-left: 4px;
@@ -299,27 +299,34 @@ export default () => {
         };
 
         getNewDANMUList = (oid, pid, segmentIndex = 1) => {
-            if (oid) {
-                // 检测到新的分段弹幕需要加载
-                if (segmentIndex === 1 && this.segmentDanmuOid !== oid) {
-                    this.segmentDanmuOid = oid;
-                    this.segmentDanmuList = [];
-                    Promise.all([
-                        this.getNewDanmuOption(oid, pid, 1),
-                        this.getVideoDuration(),
-                    ]).then(([pageSize, duration]) => {
-                        this.segmentDanmuPageSize = pageSize;
-                        this.segmentSize = Math.ceil(duration / (pageSize / 1000));
-                        this.currentOid = oid;
-                        this.currentPid = pid;
-                    });
+            return new Promise((resolve, reject) => {
+                if (oid) {
+                    // 检测到新的分段弹幕需要加载
+                    if (segmentIndex === 1 && this.segmentDanmuOid !== oid) {
+                        this.segmentDanmuOid = oid;
+                        this.segmentDanmuList = [];
+                        this.getNewDanmuOption(oid, pid, 1)
+                            .then(({pageSize, total}) => {
+                            this.segmentDanmuPageSize = pageSize;
+                            this.segmentSize = total;
+                            this.currentOid = oid;
+                            this.currentPid = pid;
+                            this.setState({
+                                needLoadByHandle: true,
+                                loading: false,
+                                loadingText: '',
+                            }, () => resolve());
+                        });
+                    } else resolve();
+                } else {
                     this.setState({
                         needLoadByHandle: true,
                         loading: false,
                         loadingText: '',
                     });
+                    reject();
                 }
-            }
+            });
         };
 
         getDanmuData = (oid, pid, segmentIndex) => {
@@ -340,7 +347,10 @@ export default () => {
                             console.error(danmu);
                         }
                     }
-                    return {rowId, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, progress, time: parseTime(progress || 0)};
+                    return {
+                        rowId, content: danmu, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, progress: (progress || 0),
+                        time: parseTime(progress || 0),
+                    };
                 });
                 const data = this.sortJSONByTime(targetData);
                 this.segmentDanmuList[segmentIndex - 1] = data;
@@ -369,6 +379,28 @@ export default () => {
             });
         };
 
+        getVideoInitialData = () => {
+            return new Promise((resolve, reject) => {
+                this.injectScript(`
+                    (()=>{
+                        if (window.__INITIAL_STATE__ && window.__INITIAL_STATE__.epInfo) {
+                            const pid = window.__INITIAL_STATE__.epInfo.aid;
+                            const oid = window.__INITIAL_STATE__.epInfo.cid;
+                            window.postMessage({command: 'setVideoInitialData', pid, oid}, '*');
+                        }
+                    })();
+                `, 5000);
+                const messageCallback = (event) => {
+                    const {data} = event;
+                    if (data.command === 'setVideoInitialData') {
+                        window.removeEventListener('message', messageCallback);
+                        data ? resolve(data) : reject();
+                    }
+                };
+                window.addEventListener('message', messageCallback);
+            });
+        };
+
         getVideoDuration = () => {
             return new Promise((resolve, reject) => {
                 window.postMessage({command: 'getVideoDuration'}, '*');
@@ -377,6 +409,7 @@ export default () => {
                         const messageCallback = (event) => {
                             const {data} = event;
                             if (data.command === 'getVideoDuration') {
+                                console.log(window.player.getDuration());
                                 window.postMessage({command: 'setDuration', duration: window.player.getDuration()}, '*');
                                 window.removeEventListener('message', messageCallback);
                             }
@@ -625,6 +658,7 @@ export default () => {
                 command: type === 'ass' ? 'downloadDanmuASS' : 'downloadDanmuXML',
                 cid: this.state.currentCid,
                 danmuDocumentStr: this.danmuDocumentStr,
+                danmuJSON: this.orderedJSON,
                 date: this.danmuDate,
                 filename: getFilename(document),
                 origin: type === 'ass' ? document.location.href : null,
@@ -632,15 +666,30 @@ export default () => {
         };
 
         handleOnClickLoadDanmu = () => {
-            this.setState({
-                loading: true,
-                loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
-                needLoadByHandle: false,
-            }, () => {
-                for (let i = 0; i < this.segmentSize; ++i) {
-                    this.getDanmuData(this.currentOid, this.currentPid, i + 1);
+            new Promise((resolve) => {
+                if (!this.currentPid || !this.currentOid) {
+                    this.getVideoInitialData().then(({oid, pid}) => {
+                        this.currentOid = oid;
+                        this.currentPid = pid;
+                        resolve();
+                    });
+                } else {
+                    resolve();
                 }
-            });
+            }).then(() => {
+                this.setState({
+                    loading: true,
+                    loadingText: '弹幕加载中~(๑•̀ㅂ•́)و',
+                    needLoadByHandle: false,
+                }, () => {
+                    this.getNewDANMUList(this.currentOid, this.currentPid).then(() => {
+                        console.log(this.segmentSize);
+                        for (let i = 0; i < this.segmentSize; ++i) {
+                            this.getDanmuData(this.currentOid, this.currentPid, i + 1);
+                        }
+                    });
+                });
+            }).catch((reason) => console.error(reason));
         };
 
         createCardDOM = (data) => {
