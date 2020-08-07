@@ -6,9 +6,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import ToolContentBuilder from './ToolContent';
+import DarkModeBtnBuilder from './DarkModeBtn';
 
 export default () => {
     const ToolContent = ToolContentBuilder();
+    const DarkModeBtn = DarkModeBtnBuilder();
     const HelperBtn = styled.span`
       display: inline-block;
       padding: 0 15px;
@@ -77,7 +79,9 @@ export default () => {
                     >
                         {this.isOldPage ? '哔哩哔哩助手' : '助手'}
                     </HelperBtn>
-                    <ToolContent/>
+                    <ToolContent>
+                        <DarkModeBtn/>
+                    </ToolContent>
                 </React.Fragment>
             );
         }

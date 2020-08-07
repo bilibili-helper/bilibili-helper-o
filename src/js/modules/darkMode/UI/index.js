@@ -4,10 +4,11 @@
  * Description:
  */
 
+import _ from "lodash";
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode} from './DarkMode';
+import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, ReadRankDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode, HistoryDarkMode, LivePlayDarkMode} from './DarkMode';
 
 export class DarkModeUI extends UI {
     constructor() {
@@ -19,6 +20,9 @@ export class DarkModeUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) { return Promise.resolve(); }
         return new Promise(resolve => {
+            const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
+            const sysDark = matchMedia("(prefers-color-scheme: dark)");
+            if (darkFollowSys.on && !sysDark.matches) { return resolve(); }
             const wrapper = document.createElement('style');
             const pageName = this.isPage();
             switch (pageName) {
@@ -31,6 +35,9 @@ export class DarkModeUI extends UI {
                 case 'readCV' :
                     ReactDOM.render(<ReadCVDarkMode/>, wrapper, resolve);
                     break;
+                case 'readRank' :
+                    ReactDOM.render(<ReadRankDarkMode/>, wrapper, resolve);
+                    break;
                 case 'read' :
                     ReactDOM.render(<ReadDarkMode/>, wrapper, resolve);
                     break;
@@ -42,6 +49,12 @@ export class DarkModeUI extends UI {
                     break;
                 case 'watchLater' :
                     ReactDOM.render(<WatchLaterDarkMode/>, wrapper, resolve);
+                    break;
+                case 'history' :
+                    ReactDOM.render(<HistoryDarkMode/>, wrapper, resolve);
+                    break;
+                case 'livePlay' :
+                    ReactDOM.render(<LivePlayDarkMode/>, wrapper, resolve);
                     break;
             }
         });

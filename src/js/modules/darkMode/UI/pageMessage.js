@@ -1,6 +1,33 @@
 import {createGlobalStyle} from "styled-components";
 import {getURL} from "Utils/functions";
 
+const messagelist = `
+    .message-list {
+      background-color: var(--dark-3)!important;
+      .msg-item .message {
+        color: var(--dark-font-0);
+        .message-content {
+          background-color: var(--dark-4)!important;
+          &.is-me {
+            background-color: #6f9dca!important;
+          }
+        }
+      }
+      .msg-notify, .msg-push {
+        background: var(--dark-4)!important;
+        .content {
+          color: var(--dark-font-1);
+        }
+        hr {
+          background: var(--dark-1)!important;
+        }
+        .link {
+          color: var(--dark-font-0);
+        }
+      }
+    }
+    `;
+
 const MessageDarkModeStyle = createGlobalStyle`
     html {
       background: url(//s2.hdslb.com/bfs/static/blive/blfe-message-web/static/img/infocenterbg.a1a0d152.jpg) top/cover no-repeat fixed;
@@ -71,6 +98,9 @@ const MessageDarkModeStyle = createGlobalStyle`
           background-color: var(--dark-card)!important;
           -webkit-box-shadow: 0 2px 4px 0 #1313138a!important;
           box-shadow: 0 2px 4px 0 #1313138a!important;
+          .header::after {
+            background: var(--divider)!important;
+          }
           .loading .link-progress-tv {
             background-color: unset!important;
           }
@@ -144,30 +174,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                 color: var(--dark-font-0);
                 border-color: var(--dark-1);
               }
-              .message-list {
-                background-color: var(--dark-3)!important;
-                .msg-item .message {
-                  color: var(--dark-font-0);
-                  .message-content {
-                    background-color: var(--dark-4)!important;
-                    &.is-me {
-                      background-color: #6f9dca!important;
-                    }
-                  }
-                }
-                .msg-notify {
-                  background: var(--dark-4)!important;
-                  .content {
-                    color: var(--dark-font-1);
-                  }
-                  hr {
-                    background: var(--dark-1)!important;
-                  }
-                  .link {
-                    color: var(--dark-font-0);
-                  }
-                }
-              }
+              ${messagelist}
             }
           }
         }
@@ -220,30 +227,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                 }
               }
             }
-            .message-list {
-              background-color: var(--dark-3)!important;
-              .msg-item .message {
-                color: var(--dark-font-0);
-                .message-content {
-                  background-color: var(--dark-4)!important;
-                  &.is-me {
-                    background-color: #6f9dca!important;
-                  }
-                }
-              }
-              .msg-notify {
-                background: var(--dark-4)!important;
-                .content {
-                  color: var(--dark-font-1);
-                }
-                hr {
-                  background: var(--dark-1)!important;
-                }
-                .link {
-                  color: var(--dark-font-0);
-                }
-              }
-            }
+            ${messagelist}
             .new-message-tip {
               .text, &::after {
                 background-color: var(--dark-4)!important;

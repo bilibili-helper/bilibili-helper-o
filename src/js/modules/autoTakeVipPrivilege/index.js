@@ -13,7 +13,7 @@ export class AutoTakeVipPrivilege extends Feature {
     constructor() {
         super({
             name: 'autoTakeVipPrivilege',
-            kind: 'vipPrivilege',
+            kind: 'global',
             permissions: ['login'],
             settings: {
                 on: true,

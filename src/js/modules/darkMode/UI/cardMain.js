@@ -27,19 +27,8 @@ const CommentMain = `
       background-color: unset!important;
       .comment-header {
         border-color: var(--dark-3)!important;
-        .tabs-order li {
-          color: var(--dark-font-0);
-        }
-        .paging-box {
-          span.result, span.dian {
-            color: var(--dark-font-1);
-          }
-          a.tcd-number, a.next, a.prev {
-            color: var(--dark-font-1);
-            &:hover {
-              color: #00a1d6;
-            }
-          }
+        .tabs-order li:not(.on):not(:hover) {
+          color: var(--dark-font-3)!important;
         }
       }
       .comment-send .comment-emoji {
@@ -56,8 +45,12 @@ const CommentMain = `
           .user .name {
             color: var(--dark-font-1);
           }
-          .text {
-            color: var(--dark-font-0);
+          .text, div .text-area .text-content {
+            color: var(--dark-font-3);
+          }
+          .vote-container {
+            border-color: var(--dark-4)!important;
+            box-shadow: 0 3px 10px 0 var(--dark-1)!important;
           }
           .info {
             .reply:hover {
@@ -95,6 +88,17 @@ const CommentMain = `
       }
       .bottom-page.center {
         border-color: var(--dark-2)!important;
+      }
+      .paging-box {
+        span.result, span.dian {
+          color: var(--dark-font-1);
+        }
+        a.tcd-number, a.next, a.prev {
+          color: var(--dark-font-1);
+          &:hover {
+            color: #00a1d6;
+          }
+        }
       }
       .paging-box-big {
         a.tcd-number, a.next, a.prev {
