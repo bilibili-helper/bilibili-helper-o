@@ -14,15 +14,34 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
     }
     // 创作团队
-    .members-info .members-info__header {
-      background-color: var(--dark-1);
-      .title {
-        color: #99a2aa;
+    .members-info {
+      .members-info__header {
+        background-color: var(--dark-1);
+        .title {
+          color: #99a2aa;
+        }
+      }
+      .up-card .attention {
+        background-color: var(--dark-5)!important;
       }
     }
     // up信息
-    .up-info .btn .b-cd {
-      background: var(--dark-3)!important;
+    #v_upinfo {
+      .btn .b-cd {
+        background: var(--dark-3)!important;
+      }
+      .u-info .name {
+        .username {
+          color: var(--dark-font-1);
+        }
+        .message {
+          color: var(--dark-font-1);
+        }
+      }
+      .btn-panel .following {
+        background-color: var(--dark-5);
+        border-color: var(--dark-5);
+      }
     }
     .bili-header-m .nav-menu .nav-mask {
       background-color: var(--dark-1)!important;
@@ -34,6 +53,33 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
      .media-right > *:not(.media-tool-bar),
     .media-right > *:not(.media-tool-bar) a, .media-right > *:not(.media-tool-bar) span {
       color: var(--dark-font-0)!important;
+    }
+    .main-container .media-info .media-right .media-tool-bar {
+      .btn-rating {
+        background-color: var(--dark-5);
+        border-color: var(--dark-5);
+        color: var(--dark-font-1)!important;
+        &:hover {
+          background-color: var(--dark-4);
+        }
+      }
+      .btn-follow.active {
+        background-color: var(--dark-5)!important;
+      }
+      .bangumi-options .opt-list {
+        background: var(--dark-3)!important;
+        border-color: var(--dark-3)!important;
+        li {
+          color: var(--dark-font-0)!important;
+          &:hover {
+            color: #00a1d6!important;
+            background-color: var(--dark-2)!important;
+          }
+          &.disabled, &.disabled:hover {
+            color: #666666!important;
+          }
+        }
+      }
     }
     #bilibiliPlayer {
       box-shadow: 0 0 8px var(--dark-1)!important; 
@@ -274,14 +320,8 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     
     // 右侧视频推荐区
     #recom_module {
-      .recom-list {
-        .video-title {
-          color: var(--dark-font-0);
-        }
-      }
-      .recom-title, .recom-item .info-wrapper a, .video-title {
-        color: var(--dark-font-0);
-        font-weight: 400;
+      .recom-title, .recom-list .video-title {
+        color: var(--dark-font-3);
       }
       .expand-more {
         background-color: var(--dark-1);
@@ -302,30 +342,20 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     }
     // 番剧剧集信息
     #seasonlist_module {
-      .series-title {
-        color: var(--dark-font-1);
+      .series-title, .ss-list-wrapper .ss-item .ss-info .ss-title {
+        color: var(--dark-font-3);
       }
-      .ss-list-wrapper .ss-item .ss-info .ss-title {
-        color: var(--dark-font-1);
+      .ss-list-wrapper .ss-item .ss-info {
+        .ss-title {
+          color: var(--dark-font-3);
+        }
+        .pub-info {
+          color: var(--dark-font-3);
+        }
       }
       .expand-more {
         background-color: var(--dark-1);
         color: var(--dark-font-1);
-      }
-    }
-    // up信息
-    #v_upinfo {
-      .u-info .name {
-        .username {
-          color: var(--dark-font-1);
-        }
-        .message {
-          color: var(--dark-font-1);
-        }
-      }
-      .btn-panel .following {
-        background-color: var(--dark-5);
-        border-color: var(--dark-5);
       }
     }
     // 直播推荐 
@@ -337,17 +367,19 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
     }
     // 侧边按钮
-    .float-nav .nav-menu .item {
+    .float-nav .nav-menu .item, .main-container .nav-tools .tool-item {
       background-color: var(--dark-4);
       border-color: var(--dark-4);
     }
     
     //评论区
-    #comment .common {
-      .b-head{
+    #comment_module, #comment .common{
+      border-color: var(--dark-1)!important;
+      .b-head {
         color: var(--dark-font-1);
       }
-      .comment {
+    }
+    .comm, .comment {
         ${CommentMain}
         .textarea-container {
           textarea {
@@ -364,7 +396,6 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
           background-color: var(--dark-1)!important;
         }
       }
-    }
     `;
 
 export {VideoPlayDarkModeStyle};
