@@ -10,6 +10,7 @@ import {List} from 'react-virtualized';
 import {createTab} from 'Utils';
 import 'react-virtualized/styles.css';
 import {theme} from 'Styles';
+import {getURL} from 'Utils';
 
 export default () => {
     const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
@@ -118,14 +119,16 @@ export default () => {
 
         }
 
-        handleOnClick = (link) => {
-            chrome.runtime.sendMessage({
-                command: 'setGAEvent',
-                action: 'click',
-                category: 'dynamicCheck',
-                label: 'dynamicCheck',
-            });
-            createTab(link);
+        handleOnClick = (e, link) => {
+            if (e.button !== 2) {
+                chrome.runtime.sendMessage({
+                    command: 'setGAEvent',
+                    action: 'click',
+                    category: 'dynamicCheck',
+                    label: 'dynamicCheck',
+                });
+                createTab(link, e.button === 0);
+            }
         };
 
         createLinkByType = (type, data) => {
@@ -143,7 +146,7 @@ export default () => {
 
         // up投稿
         renderType8 = ({index, link, owner, title, pic, duration, desc}) => (
-            <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedBox href={link} key={index} onMouseDown={(e) => this.handleOnClick(e, link)}>
                 <FeedImg style={{backgroundImage: `url(${pic})`}}/>
                 <FeedInfo>
                     <span
@@ -156,7 +159,7 @@ export default () => {
 
         // up小视频
         renderType16 = ({index, link, item, user}) => (
-            <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedBox href={link} key={index} onMouseDown={(e) => this.handleOnClick(e, link)}>
                 <FeedImg style={{backgroundImage: `url(${item.cover.default})`}}/>
                 <FeedInfo>
                     <span title={user.name}>{user.name}</span>
@@ -168,7 +171,7 @@ export default () => {
 
         // 专栏
         renderType64 = ({index, link, author, title, banner_url}) => (
-            <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedBox href={link} key={index} onMouseDown={(e) => this.handleOnClick(e, link)}>
                 <FeedImg style={{backgroundImage: `url(${banner_url})`}}/>
                 <FeedInfo>
                     <span title={author.name}>{author.name}</span>
@@ -180,7 +183,7 @@ export default () => {
 
         // 番剧
         renderType512 = ({index, link, new_desc, cover, apiSeasonInfo}) => (
-            <FeedBox key={index} onClick={() => this.handleOnClick(link)}>
+            <FeedBox href={link} key={index} onMouseDown={(e) => this.handleOnClick(e, link)}>
                 <FeedImg style={{backgroundImage: `url(${cover})`}}/>
                 <FeedInfo>
                     <span title={apiSeasonInfo.title}>{apiSeasonInfo.title}</span>

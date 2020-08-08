@@ -7,9 +7,8 @@ import _ from 'lodash';
 import URLParse from 'url-parse';
 import {Feature} from 'Libs/feature';
 import {MessageStore} from 'Libs/messageStore';
-import {GenerateASS} from 'Libs/bilibili_ASS_Danmaku_Downloader';
+import {GenerateASSByOriginData} from 'Libs/bilibili_ASS_Danmaku_Downloader';
 import {__, fetchFromHelper} from 'Utils';
-import {DanmuDecoder, DanmuOptionDecoder} from './danmuDecoder';
 import {DmWebViewReplyDecoder, DmSegMobileReplyDecoder} from './protobufjs';
 
 export {DanmuUI} from './UI/index';
@@ -119,7 +118,7 @@ export class Danmu extends Feature {
                 .then(res => res.arrayBuffer())
                 .then(res => {
                     const danmuViewOption = DmWebViewReplyDecoder(res);
-                    sendResponse(danmuViewOption.dmSge.pageSize)
+                    sendResponse(danmuViewOption.dmSge)
                 });
             } else if (message.command === 'fetchNewTypeDanmu' && message.url) {
                 fetchFromHelper(message.url)
@@ -151,10 +150,7 @@ export class Danmu extends Feature {
                     filename: filename.replace(/\s/g, '').replace(/[|"*?:<>\s~/]/g, '_'),
                 });
             } else if (message.command === 'downloadDanmuASS' && message.cid) {
-                const parser = new DOMParser();
-                const parsedXML = parser.parseFromString(
-                    message.danmuDocumentStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/ug, ''), 'text/xml');
-                const assData = '\ufeff' + GenerateASS(parsedXML, {
+                const assData = '\ufeff' + GenerateASSByOriginData(message.danmuJSON.list, {
                     'title': message.filename,
                     'ori': message.origin,
                 });

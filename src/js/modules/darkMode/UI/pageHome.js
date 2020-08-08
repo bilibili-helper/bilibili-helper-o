@@ -10,7 +10,7 @@ const HomeDarkModeStyle = createGlobalStyle`
     }
     
     .first-screen img, .storey-box img {
-      filter: contrast(0.93) brightness(0.86);
+      filter: contrast(0.93) brightness(0.89);
     }
     
     a, .storey-title .no-link {

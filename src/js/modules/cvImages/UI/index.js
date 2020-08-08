@@ -20,7 +20,7 @@ export class CvImagesUI extends UI {
         const that = this;
         if (!settings.on) return Promise.resolve();
         return new Promise(resolve => {
-            $('.page-container .img-box img').wrap('<div class="bilibili-ct-wrapper"></div>')
+            $('.page-container .img-box img:not(.article-card):not(.video-card)').wrap('<div class="bilibili-ct-wrapper"></div>')
 
             const btn = document.createElement('button');
             btn.innerText = __('cvImages_UI_downloadBtn');
@@ -67,13 +67,9 @@ export class CvImagesUI extends UI {
             });
 
             // 解除复制限制
-            this.interval('.article-holder').then(container => {
-                const wrapper = container;
-                const articleContent = Array.from(wrapper.children);
-                const replaceWrapper = document.createElement('div');
-                replaceWrapper.classList.add('article-holder', 'unable-reprint');
-                replaceWrapper.append(...articleContent);
-                wrapper.replaceWith(replaceWrapper);
+            $('.article-holder').on('copy', function (i) {
+                const text = window.getSelection().toString();
+                i.originalEvent.clipboardData.setData('text/plain', text);
             });
             resolve(containers);
         });
