@@ -1,168 +1,167 @@
 {
-  "version": "1.2.22.8",
-  "manifest_version": 2,
-  "minimum_chrome_version": "56.0.0",
-  "name": "__MSG_extensionName__",
-  "short_name": "__MSG_ShortName__",
-  "default_locale": "zh_CN",
-  "description": "__MSG_extensionDescription__",
-  "options_ui": {
-    "page": "config.html",
-    "open_in_tab": true
-  },
-  "options_page": "config.html",
-  "background": {
-    "scripts": [
-      "vendors.bundle.js",
-      "features.bundle.js",
-      "background.js"
+    "version": "1.2.22.8",
+    "manifest_version": 2,
+    "minimum_chrome_version": "56.0.0",
+    "name": "__MSG_extensionName__",
+    "short_name": "__MSG_ShortName__",
+    "default_locale": "zh_CN",
+    "description": "__MSG_extensionDescription__",
+    "options_ui": {
+        "page": "config.html",
+        "open_in_tab": true
+    },
+    "options_page": "config.html",
+    "background": {
+        "scripts": [
+            "vendors.bundle.js",
+            "features.bundle.js",
+            "background.js"
+        ],
+        "persistent": true
+    },
+    "browser_action": {
+        "default_icon": {
+            "19": "statics/imgs/bilibili-cat-256.png",
+            "38": "statics/imgs/bilibili-cat-256.png"
+        },
+        "default_popup": "popup.html",
+        "default_title": "__MSG_ShortName__"
+    },
+    "content_scripts": [
+        {
+            "all_frames": false,
+            "js": [
+                "video.js",
+                "vendors.bundle.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://*.bilibili.com/bangumi/play/ss*",
+                "*://*.bilibili.com/bangumi/play/ep*",
+                "*://*.bilibili.com/video/av*",
+                "*://*.bilibili.com/video/bv*",
+                "*://*.bilibili.com/video/BV*",
+                "*://www.bilibili.com/medialist/*",
+                "*://www.bilibili.com/blackboard/*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "all_frames": true,
+            "js": [
+                "vendors.bundle.js",
+                "live.js",
+                "features.bundle.js",
+                "statics/js/ocrad.min.js"
+            ],
+            "matches": [
+                "*://live.bilibili.com/*",
+                "*://*.bilibili.com/blackboard/*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "global.js",
+                "features.bundle.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://*.bilibili.com/*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "website.js"
+            ],
+            "matches": [
+                "*://localhost/*",
+                "*://helper.drowsyflesh.com/*",
+                "*://bilibili-helper.github.io/*"
+            ],
+            "run_at": "document_start"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "cv.js",
+                "features.bundle.js"
+            ],
+            "matches": [
+                "*://www.bilibili.com/read/cv*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "tbilibili.js",
+                "features.bundle.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://t.bilibili.com/*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "videoList.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://space.bilibili.com/*/favlist*"
+            ],
+            "run_at": "document_end"
+        }
     ],
-    "persistent": true
-  },
-  "browser_action": {
-    "default_icon": {
-      "19": "statics/imgs/bilibili-cat-256.png",
-      "38": "statics/imgs/bilibili-cat-256.png"
+    "icons": {
+        "16": "statics/imgs/bilibili-cat-256.png",
+        "32": "statics/imgs/bilibili-cat-256.png",
+        "128": "statics/imgs/bilibili-cat-256.png"
     },
-    "default_popup": "popup.html",
-    "default_title": "__MSG_ShortName__"
-  },
-  "content_scripts": [
-    {
-      "all_frames": false,
-      "js": [
-        "video.js",
-        "vendors.bundle.js"
-      ],
-      "css": [
-        "styles/vendors.css",
-        "styles/features.css"
-      ],
-      "matches": [
-        "*://*.bilibili.com/bangumi/play/ss*",
-        "*://*.bilibili.com/bangumi/play/ep*",
-        "*://*.bilibili.com/video/av*",
-        "*://*.bilibili.com/video/bv*",
-        "*://*.bilibili.com/video/BV*",
-        "*://www.bilibili.com/medialist/*",
-        "*://www.bilibili.com/blackboard/*"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "all_frames": true,
-      "js": [
-        "vendors.bundle.js",
-        "live.js",
-        "features.bundle.js",
-        "statics/js/ocrad.min.js"
-      ],
-      "matches": [
-        "*://live.bilibili.com/*",
-        "*://*.bilibili.com/blackboard/*"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "website.js"
-      ],
-      "matches": [
-        "*://localhost/*",
-        "*://helper.drowsyflesh.com/*",
-        "*://bilibili-helper.github.io/*"
-      ],
-      "run_at": "document_start"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "cv.js",
-        "features.bundle.js"
-      ],
-      "matches": [
-        "*://www.bilibili.com/read/cv*"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "tbilibili.js",
-        "features.bundle.js"
-      ],
-      "css": [
-        "styles/vendors.css",
-        "styles/features.css"
-      ],
-      "matches": [
-        "*://t.bilibili.com/*"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "videoList.js"
-      ],
-      "css": [
-        "styles/vendors.css",
-        "styles/features.css"
-      ],
-      "matches": [
-        "*://space.bilibili.com/*/favlist*"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "vipPrivilege.js",
-        "darkMode.js",
-        "features.bundle.js"
-      ],
-      "css": [
-        "styles/vendors.css",
-        "styles/features.css"
-      ],
-      "matches": [
-        "*://*.bilibili.com/*"
-      ],
-      "run_at": "document_end"
-    }
-  ],
-  "icons": {
-    "16": "statics/imgs/bilibili-cat-256.png",
-    "32": "statics/imgs/bilibili-cat-256.png",
-    "128": "statics/imgs/bilibili-cat-256.png"
-  },
-  "permissions": [
-    "downloads",
-    "alarms",
-    "contextMenus",
-    "cookies",
-    "notifications",
-    "storage",
-    "tabs",
-    "webRequest",
-    "webRequestBlocking",
-    "*://*.acgvideo.com/*",
-    "*://*.bilibili.com/*",
-    "*://bilibili-helper.github.io/*",
-    "*://*.hdslb.com/*",
-    "*://*.bilivideo.com/*"
-  ],
-  "web_accessible_resources": [
-    "statics/*",
-    "bilibili-helper.woff",
-    "at.alicdn.com/t/*",
-    "libs/*",
-    "js/*"
-  ]
+    "permissions": [
+        "downloads",
+        "alarms",
+        "contextMenus",
+        "cookies",
+        "notifications",
+        "storage",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "*://*.acgvideo.com/*",
+        "*://*.bilibili.com/*",
+        "*://bilibili-helper.github.io/*",
+        "*://*.hdslb.com/*",
+        "*://*.bilivideo.com/*"
+    ],
+    "web_accessible_resources": [
+        "statics/*",
+        "bilibili-helper.woff",
+        "at.alicdn.com/t/*",
+        "libs/*",
+        "js/*"
+    ]
 }

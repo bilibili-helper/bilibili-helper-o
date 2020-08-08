@@ -12,12 +12,20 @@ export class DarkMode extends Feature {
     constructor() {
         super({
             name: 'darkMode',
-            kind: 'darkMode',
+            kind: 'global',
             settings: {
                 on: false,
                 hasUI: true,
                 title: __('darkMode_name'),
                 description:__('darkMode_description'),
+                type: 'checkbox',
+                options: [
+                    {
+                        key: 'darkFollowSys',
+                        on: true,
+                        title: __('darkMode_follow_system'),
+                    },
+                ],
             },
         });
     }

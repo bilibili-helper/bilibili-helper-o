@@ -18,6 +18,7 @@ const DarkModeStyle = createGlobalStyle`
       --dark-font-0: #e8e8e8;
       --dark-font-1: #99a2aa;
       --dark-font-2: #879199;
+      --dark-font-3: #d9d9d9;
     }
     
     body {
@@ -189,7 +190,6 @@ const FooterDarkModeStyle_2 = createGlobalStyle`
 const UserPopperDarkModeStyle = createGlobalStyle`
     .user-card, .userinfo-content {
       background: var(--dark-3)!important;
-      color: var(--dark-font-2)!important;
       .face {
         border-color: var(--dark-3)!important;
       }
@@ -212,11 +212,19 @@ const UserPopperDarkModeStyle = createGlobalStyle`
           }
         }
       }
-      .info .user .name {
-        color: var(--dark-font-2)!important;
-      }
-      .info .user .name.vip {
-        color: #fb7299!important;
+      .info {
+        .user .name {
+          color: var(--dark-font-0)!important;
+          &.vip, &.vip-red-name {
+            color: #fb7299!important;
+          }
+          &:hover {
+            color: #00A1D6!important;
+          }
+        }
+        .social a, .sign {
+          color: var(--dark-font-1)!important;
+        }
       }
     }
     

@@ -590,6 +590,22 @@ let parseXML = function(content, data) {
     });
 };
 
+let createDataByOrigin = function(data) {
+    return data.map((d) => {
+        let {content: text, progress,  mode, fontsize: size, color, weight} = d;
+        mode = [undefined, 'R2L', 'R2L', 'R2L', 'BOTTOM', 'TOP'][mode];
+        color = RRGGBB(color);
+        return {
+            text,
+            time: (progress || 0) / 1000,
+            mode,
+            size,
+            color,
+            bottom: weight > 0,
+        }
+    });
+};
+
 // 获取当前cid
 var getCid = function(callback) {
     debug('get cid...');
@@ -656,4 +672,8 @@ initFont();
 
 export function GenerateASS(parsedXML, options) {
     return generateASS(setPosition(parseXML('', parsedXML)), options);
+}
+
+export function GenerateASSByOriginData(data, options) {
+    return generateASS(setPosition(createDataByOrigin(data)), options);
 }
