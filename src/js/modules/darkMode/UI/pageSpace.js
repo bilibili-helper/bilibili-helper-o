@@ -284,6 +284,9 @@ const SpaceDarkModeStyle = createGlobalStyle`
       .modal-title, .title {
         border-color: var(--dark-1)!important;
       }
+      .modal-title p {
+        color: var(--dark-font-0)!important;
+      }
       .btn.default {
         background-color: var(--dark-5)!important;
         border-color: var(--dark-5)!important;

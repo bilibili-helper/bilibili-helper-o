@@ -2,6 +2,7 @@ import {Button} from 'Components/common/Button';
 import React from 'react';
 import styled from 'styled-components';
 import {VideoPlayDarkMode} from 'Modules/darkMode/UI/DarkMode';
+import _ from "lodash";
 
 /**
  * Author: DrowsyFlesh
@@ -40,9 +41,7 @@ export default () => {
     constructor(props) {
       super(props);
       this.state = {
-        settings: {
-          on: false,
-        },
+        showDark: false,
       };
       this.isOldPageOrWatchLater = !!document.querySelector('#__bofqi,.view-later-module, #bangumi_detail');
     }
@@ -52,28 +51,28 @@ export default () => {
         command: 'getSetting',
         feature: 'darkMode',
       }, (settings) => {
-        this.setState({settings});
+        if (settings.on) {
+          const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
+          if (darkFollowSys.on) {
+            const sysDark = matchMedia("(prefers-color-scheme: dark)");
+            this.setState({showDark: sysDark.matches});
+            sysDark.onchange = () => {
+              this.setState({showDark: sysDark.matches});
+            };
+          } else {
+            this.setState({showDark: true});
+          }
+        }
       });
     }
 
     handleOnClick = () => {
-      const {on} = this.state.settings;
-      this.setState({settings: {...this.state.settings, on: !on}});
-      chrome.runtime.sendMessage({
-        command: 'setSetting',
-        feature: 'darkMode',
-        settings: {...this.state.settings, on: !on},
-      });
-      chrome.runtime.sendMessage({
-        command: 'setGAEvent',
-        action: 'click',
-        category: 'darkMode',
-        label: 'darkMode',
-      });
+      const on = this.state.showDark;
+      this.setState({showDark: !on});
     };
 
     render() {
-      const {on} = this.state.settings;
+      const on = this.state.showDark;
       return (
           <React.Fragment>
             <DarkModeBtnBox>

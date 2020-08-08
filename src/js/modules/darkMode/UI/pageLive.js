@@ -7,7 +7,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .link-navbar-ctnr, .link-navbar-vm, .link-navbar, .head-info-section, .gift-control-section, .rank-list-section, .rank-list-ctnr, .chat-history-panel, .announcement-cntr, .chat-control-panel,
-    .gift-sender-panel, .count-choice, .common-popup-wrap, .gift-panel-box, .content-wrapper, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
+    .gift-sender-panel, .count-choice, .gift-panel-box, .content-wrapper, .link-progress-tv, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
     .user-panel, .link-panel-ctnr, .calendar-checkin, .calendar-checkin .title, .calendar-checkin .calendar-wrapper, .download-panel-ctnr, .side-bar-popup-cntr {
       background-color: var(--dark-card)!important;
     }
@@ -17,9 +17,10 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .choice-item, .danmaku-menu, .logout-btn, .load-more-btn, .checkin-btn, .link-popup-panel {
-      background-color: var(--dark-4)!important;
+      background-color: var(--dark-3)!important;
     }
     
+    .common-popup-wrap, .gVPoeh,
     .gift-item.buy:hover, .gift-panel-switch:hover, .download-item:hover, .item.self, .rank-list-ctnr .own {
       background-color: var(--dark-3)!important;
     }
@@ -29,7 +30,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .item, .daily-record-title, .daily-text, .gift-info-expScore, .seeds-wrap, .tab-candidate, .room-introduction-scroll-wrapper,
-    .username-info, .calendar-checkin .calendar-wrapper, .download-panel-ctnr a {
+    .username-info, .calendar-checkin .calendar-wrapper, .download-panel-ctnr a, .list-unit {
       color: var(--dark-font-1)!important;
     }
     
@@ -38,7 +39,8 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .link-navbar .main-ctnr .nav-logo, .link-navbar .nav-item, .shortcuts-ctnr, .room-title, .tab-list .item.active, .rank-list-box a, .chat-item.danmaku-item,
-    .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username, .user-row, .gift-component-effect-rule {
+    .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username, .user-row,
+    .gift-component-effect-rule, .share-addr-name, th.list-head-text {
       color: var(--dark-font-0)!important;
     }
     
@@ -57,14 +59,26 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       color: #23ade5!important;
     }
     
-    .head-info-section, .gift-control-section, .rank-list-ctnr, .aside-area, .announcement-cntr,
-    .gift-sender-panel.arrow-bottom:before, .common-popup-wrap, .common-popup-wrap.arrow-bottom:before, .gift-panel-box,
-    .content-wrapper, .card, .live-record-list-cntr, .common-popup-wrap.arrow-bottom:after, .side-bar-popup-cntr {
+    .head-info-section, .gift-control-section, .aside-area, .announcement-cntr,
+    .gift-sender-panel.arrow-bottom:before, .gift-panel-box,
+    .content-wrapper, .card, .live-record-list-cntr, .side-bar-popup-cntr {
       border-color: var(--dark-card)!important;
     }
     
-    .tab-list .item, .l-line, .r-line, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr, .footer-line {
+    .tab-list .item, .l-line, .r-line, .rank-list-ctnr, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr, .footer-line {
       border-color: var(--dark-5)!important;
+    }
+    
+    .common-popup-wrap {
+      border-color: var(--dark-3)!important;
+    }
+    
+    .common-popup-wrap.arrow-bottom:after, .common-popup-wrap.arrow-bottom:before {
+      border-color: var(--dark-3) transparent transparent !important;
+    }
+  
+    .common-popup-wrap.arrow-top:after, .common-popup-wrap.arrow-top:before {
+      border-color: transparent transparent var(--dark-3) !important;
     }
     
     .arrow {
@@ -75,8 +89,8 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       box-shadow: 0 0 5px 1px var(--dark-card)!important;
     }
     
-    .gift-sender-panel, .common-popup-wrap, .side-bar-popup-cntr {
-      box-shadow: 0 6px 12px 0 var(--dark-card)!important;
+    .gift-sender-panel, .common-popup-wrap, .side-bar-popup-cntr, .gVPoeh {
+      box-shadow: 0 6px 12px 0 var(--dark-1)!important;
     }
     
     .link-navbar .panel-shadow {
