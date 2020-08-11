@@ -83,7 +83,7 @@ export default () => {
                 chat: '.chat-item:not(.hover).danmaku-item{display:none;}',
                 small: '.chat-item:not(.hover):not(.system-msg) > a, .chat-item .guard-icon{display:none !important;}',
                 gift: '.chat-item:not(.hover).gift-item,.bilibili-live-player-video-area > .bilibili-live-player-video-gift{display:none !important;}',
-                enterMsg: '.chat-item:not(.hover).welcome-msg,.chat-item.welcome-guard{display: none !important;}',
+                enterMsg: '.chat-item.important-prompt-item,.chat-item:not(.hover).welcome-msg,.chat-item.welcome-guard{display: none !important;}',
                 medal: '.chat-item:not(.hover) .fans-medal-item-ctnr{display:none !important;}',
                 achievement: '.chat-item:not(.hover) .title-label{display:none !important;}',
                 level: '.chat-item:not(.hover) .user-level-icon{display:none !important;}',

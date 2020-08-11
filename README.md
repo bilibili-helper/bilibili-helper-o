@@ -1,4 +1,11 @@
-# bilibili-helper
+<h1 align="center">
+  <br>
+  <a href="https://bilibili-helper.github.io/"><img src="https://github.com/bilibili-helper/bilibili-helper-o/raw/master/src/statics/imgs/bilibili-cat-256.png" alt="Bilibili Helper" width="100"></a>
+  <br>
+  Bilibili Helper
+  <br>
+</h1>
+
 [![LICENSE](https://img.shields.io/github/license/bilibili-helper/bilibili-helper-o)](LICENSE)
 [![Build Status](https://img.shields.io/travis/zacyu/bilibili-helper.svg)](https://travis-ci.org/zacyu/bilibili-helper)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kpbnombpnpcffllnianjibmpadjolanh.svg)](https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh)
