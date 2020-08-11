@@ -371,6 +371,54 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-4);
       border-color: var(--dark-4);
     }
+    //投币弹出
+    .coin-operated-m {
+      background-color: var(--dark-3);
+      .coin-title, .like-checkbox {
+        color: var(--dark-font-0);
+      }
+    }
+    //收藏弹出
+    .collection-m {
+      background-color: var(--dark-3);
+      .title {
+        border-color: var(--dark-1)!important;
+        color: var(--dark-font-0)!important;
+      }
+      .content .group-list {
+        li .fav-title {
+          color: var(--dark-font-0);
+        }
+        ul .collection-mask {
+          background-color: unset!important;
+        }
+      }
+      .add-group {
+        .add-btn {
+          color: var(--dark-font-1)!important;
+          border-color: var(--dark-1)!important;
+        }
+        .input-group {
+          background-color: var(--dark-2)!important;
+          input {
+            background: var(--dark-2)!important;
+            border-color: var(--dark-1)!important;
+            color: var(--dark-font-0);
+          }
+          .submit {
+            background: #d9f1f933!important;
+          }
+        }
+      }
+      .bottom {
+        border-color: var(--dark-1)!important;
+        .btn.disable {
+          background-color: var(--dark-4)!important;
+          border-color: var(--dark-4)!important;
+          color: var(--dark-font-2)!important;
+        }
+      }
+    }
     
     //评论区
     #comment_module, #comment .common{

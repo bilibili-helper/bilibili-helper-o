@@ -21,40 +21,39 @@ export class DarkModeUI extends UI {
         if (!settings.on) { return Promise.resolve(); }
         return new Promise(resolve => {
             const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
-            const sysDark = matchMedia("(prefers-color-scheme: dark)");
-            if (darkFollowSys.on && !sysDark.matches) { return resolve(); }
+            const t = {darkFollowSys: darkFollowSys.on};
             const wrapper = document.createElement('style');
             const pageName = this.isPage();
             switch (pageName) {
                 case 'home' :
-                    ReactDOM.render(<HomeDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<HomeDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'dynamic' :
-                    ReactDOM.render(<DynamicDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<DynamicDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'readCV' :
-                    ReactDOM.render(<ReadCVDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<ReadCVDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'readRank' :
-                    ReactDOM.render(<ReadRankDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<ReadRankDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'read' :
-                    ReactDOM.render(<ReadDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<ReadDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'message' :
-                    ReactDOM.render(<MessageDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<MessageDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'space' :
-                    ReactDOM.render(<SpaceDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<SpaceDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'watchLater' :
-                    ReactDOM.render(<WatchLaterDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<WatchLaterDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'history' :
-                    ReactDOM.render(<HistoryDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<HistoryDarkMode {...t}/>, wrapper, resolve);
                     break;
                 case 'livePlay' :
-                    ReactDOM.render(<LivePlayDarkMode/>, wrapper, resolve);
+                    ReactDOM.render(<LivePlayDarkMode {...t}/>, wrapper, resolve);
                     break;
             }
         });

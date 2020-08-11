@@ -1,3 +1,5 @@
+import {UserPopperDarkModeStyle} from "Modules/darkMode/UI/basicStyle";
+
 const HomeBase = `
     .international-header a {
       color: var(--dark-font-0);
@@ -8,7 +10,7 @@ const HomeBase = `
     .page-tab .con li {
       border-color: var(--bg)!important;
     }
-    .van-popover {
+    .van-popover.van-popper-channel {
       background: var(--dark-3)!important;
       border-color: var(--dark-3)!important;
       .popper__arrow, .popper__arrow::after {
@@ -50,7 +52,9 @@ const CommentMain = `
           }
           .vote-container {
             border-color: var(--dark-4)!important;
-            box-shadow: 0 3px 10px 0 var(--dark-1)!important;
+            &:hover .text-area {
+              box-shadow: 0 3px 10px 0 var(--dark-1)!important;
+            }
           }
           .info {
             .reply:hover {
@@ -140,6 +144,9 @@ const CommentMain = `
       background: var(--dark-3)!important;
       border-color: var(--dark-3)!important;
       box-shadow: 0 11px 12px 0 var(--dark-1)!important;
+      &:before {
+        background: unset!important;
+      }
       .emoji-text {
         color: var(--dark-font-3)!important;
       }

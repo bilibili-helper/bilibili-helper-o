@@ -14,6 +14,25 @@ import {SpaceDarkModeStyle} from 'Modules/darkMode/UI/pageSpace';
 import {VideoPlayDarkModeStyle} from 'Modules/darkMode/UI/pageVideo';
 import {LivePlayDarkModeStyle} from 'Modules/darkMode/UI/pageLive';
 
+class ClassRender extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            showDark: true,
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.darkFollowSys) {
+            const sysDark = matchMedia("(prefers-color-scheme: dark)");
+            this.setState({showDark: sysDark.matches});
+            sysDark.onchange = () => {
+                this.setState({showDark: sysDark.matches});
+            };
+        }
+    }
+}
+
 const StyleRender = (style, withFooter = false, withoutBanner = true, withCustomTopBar = true) => {
     return (
         <React.Fragment>
@@ -22,48 +41,81 @@ const StyleRender = (style, withFooter = false, withoutBanner = true, withCustom
     );
 };
 
-function HomeDarkMode() {
-    return StyleRender([<HomeDarkModeStyle/>], true, false);
+class HomeDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<HomeDarkModeStyle/>], true, false);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function DynamicDarkMode() {
-    return StyleRender([<DynamicDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
+class DynamicDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<DynamicDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function ReadDarkMode() {
-    return StyleRender([<ReadDarkModeStyle/>]);
+class ReadDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<ReadDarkModeStyle/>]);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function ReadCVDarkMode() {
-    return StyleRender([<ReadCVDarkModeStyle/>, <UserPopperDarkModeStyle/>], true);
+class ReadCVDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<ReadCVDarkModeStyle/>, <UserPopperDarkModeStyle/>], true);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function ReadRankDarkMode() {
-    return StyleRender([<ReadRankDarkModeStyle/>], true);
+class ReadRankDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<ReadRankDarkModeStyle/>], true);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function MessageDarkMode() {
-    return StyleRender([<MessageDarkModeStyle/>]);
+class MessageDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<MessageDarkModeStyle/>]);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function SpaceDarkMode() {
-    return StyleRender([<SpaceDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
+class SpaceDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<SpaceDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function WatchLaterDarkMode() {
-    return StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+class WatchLaterDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function HistoryDarkMode() {
-    return StyleRender([<HistoryDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+class HistoryDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<HistoryDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function VideoPlayDarkMode() {
-    return StyleRender([<VideoPlayDarkModeStyle/>]);
+class VideoPlayDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<VideoPlayDarkModeStyle/>, <UserPopperDarkModeStyle/>]);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
-function LivePlayDarkMode() {
-    return StyleRender([<LivePlayDarkModeStyle/>], false, false, false);
+class LivePlayDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<LivePlayDarkModeStyle/>, <UserPopperDarkModeStyle/>], false, false, false);
+        return this.state.showDark ? StyleMain : null
+    }
 }
 
 export {
