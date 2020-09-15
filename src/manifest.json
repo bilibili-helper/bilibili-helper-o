@@ -73,7 +73,9 @@
       "matches": [
         "*://localhost/*",
         "*://helper.drowsyflesh.com/*",
-        "*://bilibili-helper.github.io/*"
+        "*://bilibili-helper.github.io/*",
+        "*://*.bilibilihelper.com/*",
+        "*://bilibilihelper.com/*"
       ],
       "run_at": "document_start"
     },
@@ -156,7 +158,8 @@
     "*://*.bilibili.com/*",
     "*://bilibili-helper.github.io/*",
     "*://*.hdslb.com/*",
-    "*://*.bilivideo.com/*"
+    "*://*.bilivideo.com/*",
+    "*://*.bilibilihelper.com/*"
   ],
   "web_accessible_resources": [
     "statics/*",
