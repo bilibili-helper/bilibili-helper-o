@@ -74,6 +74,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-avatar .level-info .progress, .van-popper-avatar .count-item .item-key,
     .van-popper-favorite .tab-item--normal, .van-popper-favorite .tab-item--normal .num, .van-popper-favorite .empty-list,
     .header-video-card .video-info .info,
+    .header-video-card .video-info .desc,
     .van-popper-history .tab-item,
     .van-popper-history .date-title {
       color: var(--dark-font-1)!important;
@@ -86,6 +87,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-avatar .logout, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
     .vip-m .bubble-traditional .recommand .title,
     .van-popper-favorite .view-all, .van-popper-favorite .play-all,
+    .header-video-card .video-info .line-1,
     .header-video-card .video-info .line-2,
     .van-popper-history .tab-item.tab-item--active,
     .van-popper-history .tab-item.tab-item--active:hover {

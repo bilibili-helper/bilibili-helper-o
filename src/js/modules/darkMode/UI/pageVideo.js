@@ -26,13 +26,13 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
     }
     // up信息
-    #v_upinfo {
+    .up-info {
       .btn .b-cd {
         background: var(--dark-3)!important;
       }
-      .u-info .name {
+      .up-info_right .name {
         .username {
-          color: var(--dark-font-1);
+          color: var(--dark-font-0);
         }
         .message {
           color: var(--dark-font-1);
@@ -417,6 +417,21 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
           border-color: var(--dark-4)!important;
           color: var(--dark-font-2)!important;
         }
+      }
+    }
+    //转发弹出
+    .video-toolbar .ops .share .share-pos {
+      background-color: var(--dark-card)!important;
+      border-color: var(--dark-card)!important;
+      color: var(--dark-font-1);
+      .box-a .share-down .share-btn {
+        color: var(--dark-font-1);
+      }
+      .share-address .t {
+        color: var(--dark-font-3);
+      }
+      .box-b {
+        border-color: var(--dark-6)!important;
       }
     }
     

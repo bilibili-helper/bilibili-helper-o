@@ -7,7 +7,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .link-navbar-ctnr, .link-navbar-vm, .link-navbar, .head-info-section, .gift-control-section, .rank-list-section, .rank-list-ctnr, .chat-history-panel, .announcement-cntr, .chat-control-panel,
-    .gift-sender-panel, .count-choice, .gift-panel-box, .content-wrapper, .link-progress-tv, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
+    .gift-sender-panel, .count-choice, .gift-panel-box, .content-wrapper, .link-progress-tv, .pay-note-panel, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
     .user-panel, .link-panel-ctnr, .calendar-checkin, .calendar-checkin .title, .calendar-checkin .calendar-wrapper, .download-panel-ctnr, .side-bar-popup-cntr {
       background-color: var(--dark-card)!important;
     }
