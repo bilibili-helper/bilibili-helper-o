@@ -7,7 +7,7 @@ import {Background} from './background';
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
 import {DoSign} from './doSign';
-import {Treasure, TreasureUI} from './treasure';
+//import {Treasure, TreasureUI} from './treasure';
 import {GoogleAnalytics} from './googleAnalytics';
 import {Debug} from './debug';
 import {Danmu, DanmuUI} from './danmu';
@@ -42,7 +42,7 @@ export const Features = {
     Background,
     Debug,
     PopupAnchor,
-    Treasure,
+    //Treasure,
     Menu,
     GoogleAnalytics,
     VideoAnchor,
@@ -73,7 +73,7 @@ export const Features = {
 
 export const UIs = {
     PopupAnchorUI,
-    TreasureUI,
+    //TreasureUI,
     MenuUI,
     VideoAnchorUI,
     DanmuUI,
