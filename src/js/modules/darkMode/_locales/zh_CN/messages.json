@@ -1,0 +1,11 @@
+{
+    "darkMode_name": {
+        "message": "深色模式（首页、动态、专栏（首页，阅读，排行），消息中心，个人主页，稍后再看，历史记录，直播观看）"
+    },
+    "darkMode_description": {
+        "message": "可能出现失效或者部分错误的情况，请联系我们进行修复"
+    },
+    "darkMode_follow_system": {
+        "message": "跟随系统"
+    }
+}
