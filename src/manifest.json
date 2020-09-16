@@ -44,7 +44,6 @@
         "*://*.bilibili.com/video/av*",
         "*://*.bilibili.com/video/bv*",
         "*://*.bilibili.com/video/BV*",
-        "*://www.bilibili.com/watchlater*",
         "*://www.bilibili.com/medialist/*",
         "*://www.bilibili.com/blackboard/*"
       ],
@@ -68,12 +67,32 @@
       "all_frames": false,
       "js": [
         "vendors.bundle.js",
+        "global.js",
+        "features.bundle.js"
+      ],
+      "css": [
+        "styles/vendors.css",
+        "styles/features.css"
+      ],
+      "matches": [
+        "*://*.bilibili.com/*"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "all_frames": false,
+      "js": [
+        "vendors.bundle.js",
         "website.js"
       ],
       "matches": [
         "*://localhost/*",
         "*://helper.drowsyflesh.com/*",
-        "*://bilibili-helper.github.io/*"
+        "*://bilibili-helper.github.io/*",
+        "*://bilibili-helper.com/*",
+        "*://*.bilibili-helper.com/*",
+        "*://bilibilihelper.com/*",
+        "*://*.bilibilihelper.com/*"
       ],
       "run_at": "document_start"
     },
@@ -119,22 +138,6 @@
         "*://space.bilibili.com/*/favlist*"
       ],
       "run_at": "document_end"
-    },
-    {
-      "all_frames": false,
-      "js": [
-        "vendors.bundle.js",
-        "vipPrivilege.js",
-        "features.bundle.js"
-      ],
-      "css": [
-        "styles/vendors.css",
-        "styles/features.css"
-      ],
-      "matches": [
-        "*://*.bilibili.com/*"
-      ],
-      "run_at": "document_end"
     }
   ],
   "icons": {
@@ -156,7 +159,11 @@
     "*://*.bilibili.com/*",
     "*://bilibili-helper.github.io/*",
     "*://*.hdslb.com/*",
-    "*://*.bilivideo.com/*"
+    "*://*.bilivideo.com/*",
+    "*://bilibili-helper.com/*",
+    "*://*.bilibili-helper.com/*",
+    "*://bilibilihelper.com/*",
+    "*://*.bilibilihelper.com/*"
   ],
   "web_accessible_resources": [
     "statics/*",

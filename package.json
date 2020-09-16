@@ -6,6 +6,7 @@
   "dependencies": {
     "color": "^3.0.0",
     "fetch-progress": "^1.2.0",
+    "ffmpeg.js": "^3.1.9001",
     "history": "^4.7.2",
     "jquery": "^3.4.0",
     "lodash": "^4.17.10",
@@ -16,6 +17,7 @@
     "mobx-react-router": "^4.0.4",
     "moment": "^2.22.2",
     "npm": "^6.6.0",
+    "ocradjs-browser.js": "^1.0.2",
     "prop-types": "^15.6.2",
     "protobufjs": "^6.9.0",
     "react": "^16.4.1",

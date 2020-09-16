@@ -5,6 +5,21 @@
  */
 import _ from 'lodash';
 
+const PAGE_REGEXP = {
+    home: /^https?:\/\/www\.bilibili\.com\/(\?spm_id_from(.*)$|$)/,
+    dynamic: /^https?:\/\/t\.bilibili\.com\//,
+    videoPlay: /^https?:\/\/www\.bilibili\.com\/(video\/(av|bv|BV)|bangumi\/play\/(ss|ep))(.*)/,
+    livePlay: /^https?:\/\/live\.bilibili\.com\/([0-9]+)/,
+    live: /^https?:\/\/live\.bilibili\.com\//,
+    readCV: /^https?:\/\/www\.bilibili\.com\/read\/cv(.*)/,
+    readRank: /^https?:\/\/www\.bilibili\.com\/read\/ranking(.*)/,
+    read: /^https?:\/\/www\.bilibili\.com\/read\//,
+    space: /^https?:\/\/space\.bilibili\.com\//,
+    message: /^https?:\/\/message\.bilibili\.com\//,
+    watchLater: /^https?:\/\/www\.bilibili\.com\/watchlater\//,
+    history: /^https?:\/\/www\.bilibili\.com\/account\/history/,
+};
+
 export class UI {
     constructor({name, dependencies = []}) {
         this.name = name;
@@ -110,4 +125,21 @@ export class UI {
             }, interval);
         });
     };
+
+    isPage = (pageName = false) => {
+        const url = window.location.href;
+        if (!pageName) {
+            for (const item in PAGE_REGEXP) {
+                const pageUrl = new RegExp(PAGE_REGEXP[item]);
+                if (pageUrl.test(url)) {
+                    return item;
+                }
+            }
+            return false;
+        } else {
+            if (!PAGE_REGEXP[pageName]) { return false; }
+            const pageUrl = new RegExp(PAGE_REGEXP[pageName]);
+            return pageUrl.test(url);
+        }
+    }
 }
