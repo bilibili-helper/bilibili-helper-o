@@ -20,6 +20,14 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-3)!important;
     }
     
+    .danmaku-item .user-name {
+        color: var(--dark-font-1)!important;
+    }
+    
+    .selector-box {
+      color: var(--dark-font-0)!important;
+    }
+    
     .common-popup-wrap, .gVPoeh,
     .gift-item.buy:hover, .gift-panel-switch:hover, .download-item:hover, .item.self, .rank-list-ctnr .own {
       background-color: var(--dark-3)!important;

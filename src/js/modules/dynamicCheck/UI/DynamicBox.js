@@ -10,7 +10,7 @@ import {List} from 'react-virtualized';
 import {createTab} from 'Utils';
 import 'react-virtualized/styles.css';
 import {theme} from 'Styles';
-import {getURL} from 'Utils';
+import {av2bv} from 'Utils';
 
 export default () => {
     const FeedsContainer = styled.div.attrs({className: 'feeds-container'})`
@@ -134,7 +134,11 @@ export default () => {
         createLinkByType = (type, data) => {
             switch (type) {
                 case 8:
-                    return 'https://www.bilibili.com/video/av' + data.stat.aid;
+                    if (this.props.useBvid) {
+                        return 'https://www.bilibili.com/video/' + av2bv(data.stat.aid);
+                    } else {
+                        return 'https://www.bilibili.com/video/av' + data.stat.aid;
+                    }
                 case 16:
                     return 'https://vc.bilibili.com/video/' + data.item.id;
                 case 64:

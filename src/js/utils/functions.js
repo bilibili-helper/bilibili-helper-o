@@ -43,7 +43,7 @@ export const createTab = (url, active = true) => {
  */
 export const version = chrome.runtime.getManifest().version;
 
-export const appName =  chrome.runtime.getManifest().name;
+export const appName = chrome.runtime.getManifest().name;
 
 /**
  * 根据资源名获取扩展程序内部资源
@@ -194,5 +194,36 @@ export const fetchFromHelper = (url, options) => {
         });
     }
 
-    return fetch(decodeURIComponent(urlObject.href), options).catch((e)=> console.error(url, e));
+    return fetch(decodeURIComponent(urlObject.href), options).catch((e) => console.error(url, e));
+};
+
+// 来源 https://www.zhihu.com/question/381784377/answer/1099438784
+const avbv = {
+    table: 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF',
+    map: JSON.parse(`{"1":13,"2":12,"3":46,"4":31,"5":43,"6":18,"7":40,"8":28,"9":5,"f":0,"Z":1,"o":2,"d":3,"R":4,"X":6,"Q":7,"D":8,"S":9,"U":10,"m":11,"y":14,"C":15,"k":16,"r":17,"z":19,"B":20,"q":21,"i":22,"v":23,"e":24,"Y":25,"a":26,"h":27,"b":29,"t":30,"x":32,"s":33,"W":34,"p":35,"H":36,"n":37,"J":38,"E":39,"j":41,"L":42,"V":44,"G":45,"g":47,"u":48,"M":49,"T":50,"K":51,"N":52,"P":53,"A":54,"w":55,"c":56,"F":57}`),
+    s: [11, 10, 3, 8, 4, 6],
+    xor: 177451812,
+    add: 8728348608,
+};
+
+export const av2bv = (avid) => {
+    if (typeof avid === 'number') {
+        avid = (avid ^ avbv.xor) + avbv.add;
+        const r = ['B', 'V', '1', ' ', ' ', '4', ' ', '1', ' ', '7', ' ', ' '];
+        for (let i = 0; i < 6; ++i) {
+            r[avbv.s[i]] = avbv.table[Math.floor(avid / 58 ** i) % 58];
+        }
+        return r.join('');
+    } else {
+        console.warn('wrong id:' + avid);
+    }
+};
+
+export const bv2av = (bvid) => {
+    let r = 0;
+    for (let i = 0; i < 6; ++i) {
+        r += avbv.map[bvid[avbv.s[i]]] * 58 ** i;
+    }
+
+    return (r - avbv.add) ^ avbv.xor;
 };

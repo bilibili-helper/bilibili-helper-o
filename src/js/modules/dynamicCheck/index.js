@@ -31,6 +31,11 @@ export class DynamicCheck extends Feature {
                         on: false,
                     },
                     {
+                        title: __('dynamicCheck_options_bvToggle'),
+                        key: 'bvToggle',
+                        on: true,
+                    },
+                    {
                         title: __('dynamicCheck_options_dynamicCheckBox'),
                         key: 'dynamicCheckBox',
                         on: true,

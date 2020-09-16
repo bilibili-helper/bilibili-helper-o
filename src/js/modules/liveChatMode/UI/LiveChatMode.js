@@ -53,6 +53,7 @@ export default () => {
         pointer-events: auto;
         background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 15%, transparent 75%);
         background-color: unset;
+        background-color: transparent!important;
       }
       .hide-aside-area .live-room-app .app-content .app-body .player-and-aside-area .aside-area .chat-history-panel .chat-history-list::-webkit-scrollbar {
         display: none;

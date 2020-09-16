@@ -8,6 +8,9 @@
     "dynamicCheck_options_notification": {
         "message": "推送通知"
     },
+    "dynamicCheck_options_bvToggle": {
+        "message": "以BV号打开视频页面"
+    },
     "dynamicCheck_options_dynamicCheckBox": {
         "message": "最近推送列表"
     },

@@ -8,6 +8,9 @@
     "dynamicCheck_options_notification": {
         "message": "推送通知"
     },
+    "dynamicCheck_options_bvToggle": {
+        "message": "Open video page by BVID"
+    },
     "dynamicCheck_options_dynamicCheckBox": {
         "message": "Recent notify list"
     },
