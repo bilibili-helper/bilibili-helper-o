@@ -240,6 +240,11 @@ const MessageDarkModeStyle = createGlobalStyle`
                 border-color: var(--dark-5)!important;
                 background-color: var(--dark-5)!important;
                 color: var(--dark-font-2)!important;
+                &.active {
+                  background-color: #1389bf!important;
+                  border-color: #1389bf!important;
+                  color: #fff!important;
+                }
               }
               .input-box textarea {
                   color: var(--dark-font-0);
