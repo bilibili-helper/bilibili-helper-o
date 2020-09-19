@@ -17,12 +17,20 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     .members-info {
       .members-info__header {
         background-color: var(--dark-1);
-        .title {
-          color: #99a2aa;
+        .title, .btn {
+          color: var(--dark-font-1);
         }
       }
-      .up-card .attention {
-        background-color: var(--dark-5)!important;
+      .up-card {
+        .avatar .info-tag {
+          background-color: var(--dark-4)!important;
+        }
+        .avatar-name {
+          color: var(--dark-font-0);
+        }
+        .attention {
+          background-color: var(--dark-5)!important;
+        }
       }
     }
     // up信息
@@ -119,6 +127,8 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function [class*=player-auxiliary-danmaku-btn-],
     .player-auxiliary-area .player-auxiliary-danmaku .player-auxiliary-danmaku-function,
     .danmaku-wrap {
+      background: #191919!important;
+      color: var(--dark-font-1)!important;
       .player-auxiliary-area {
         .player-auxiliary-danmaku-wrap, .player-auxiliary-danmaku-btn-history, .player-auxiliary-danmaku-btn-footer {
           background: #191919!important;
@@ -233,13 +243,16 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
     }
     // 播放器工具栏
+    .bilibili-player {
+      background: unset!important;
+    }
     .bilibili-player-video-bottom-area {
       :before {
         background: var(--dark-2)!important;
       }
     }
     .bilibili-player-video-sendbar {
-      background-color: transparent!important;
+      background: transparent!important;
       .bilibili-player-video-inputbar {
         background-color: unset!important;
         .bilibili-player-video-inputbar-wrap {
@@ -249,6 +262,9 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
         .bilibili-player-video-danmaku-input {
           color: var(--dark-font-1)!important;
         }
+      }
+      .bilibili-player-video-sendbar-left, .bilibili-player-video-sendbar-right {
+        background-color: var(--dark-1)!important;
       }
     }
     
@@ -329,9 +345,16 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
     }
     #reco_list {
-      .rec-title,
-      .rec-list .card-box .info .title {
+      .rec-title {
         color: var(--dark-font-3);
+      }
+      .rec-list .card-box {
+        .pic-box {
+          background: var(--dark-1)!important;
+        }
+        .info .title {
+          color: var(--dark-font-3);
+        }
       }
       a:hover {
         color: #00a1d6!important;

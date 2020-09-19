@@ -191,11 +191,11 @@ const DynamicMain = `
       color: var(--dark-font-2)!important;
     }
     
-    .text-area .content, .imagesbox .boost-control li {
+    .text-area .content, .imagesbox .boost-control li, .text-box .count-box {
       color: var(--dark-font-1)!important;
     }
     
-    .text-area .title, .user-name, .user-name a {
+    .text-area .title, .user-name, .user-name a, .text-box .title {
       color: var(--dark-font-0)!important;
     }
     
@@ -245,8 +245,9 @@ const DynamicMain = `
       }
     }
     
-    //视频Card, 番剧Card, 文章Card
-    .video-container, .bangumi-container, .article-container, .live-container {
+    //视频Card, 番剧Card, 文章Card, 收藏Card
+    .video-container, .bangumi-container, .article-container, .live-container,
+    .media-list .content {
       border-color: var(--dark-3)!important;
       background: var(--dark-card)!important;
     }
@@ -264,6 +265,11 @@ const DynamicMain = `
     //活动Card, 投票Card, 音乐Card
     .h5share-container, .vote-container, .music-container {
       border-color: var(--dark-3)!important;
+    }
+    
+    //收藏Card图片背景
+    .media-list .content .cover-box {
+      background: var(--dark-card)!important;
     }
     
     //Card阴影
