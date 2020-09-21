@@ -125,7 +125,7 @@ export default () => {
         margin-bottom: 3px;
         width: 100%;
         height: auto;
-        background-color: unset;
+        background-color: unset!important;
         pointer-events: none!important;
         z-index: 9;
       }
