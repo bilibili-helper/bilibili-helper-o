@@ -21,7 +21,7 @@ export class VideoWidenUI extends UI {
         return new Promise(resolve => {
             const option = settings.subPage.value;
             this.setWide(option);
-            const player = document.querySelector('#bofqi');
+            const player = document.querySelector('#bofqi, #bilibiliPlayer');
             if (player) {
 
                 new MutationObserver((mutationList) => {
