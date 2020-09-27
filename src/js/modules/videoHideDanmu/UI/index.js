@@ -22,7 +22,7 @@ export class VideoHideDanmuUI extends UI {
         }
         return new Promise(resolve => {
             this.hide();
-            const player = document.querySelector('#bofqi');
+            const player = document.querySelector('#bofqi, #bilibiliPlayer');
             player && new MutationObserver((mutationList) => {
                 mutationList.forEach((mutation) => {
                     if (mutation.addedNodes.length > 0) {
