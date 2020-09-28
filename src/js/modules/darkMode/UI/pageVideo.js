@@ -32,6 +32,31 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
           background-color: var(--dark-5)!important;
         }
       }
+      .wide-members {
+        .wide-members__title {
+          color: var(--dark-font-1);
+        }
+        .avatar {
+          border-color: var(--dark-5);
+          .info-tag {
+            background-color: var(--dark-4)!important;
+          }
+          .up-name {
+            color: var(--dark-font-0);
+          }
+        }
+        .van-icon-general_back_s, .van-icon-general_enter_s {
+          &:before {
+            background-color: var(--dark-6);
+          }
+        }
+        .van-icon-general_back_s:after {
+          background: linear-gradient(-270deg,#000,hsla(0,0%,100%,0))!important;
+        }
+        .van-icon-general_enter_s:after {
+          background: linear-gradient(270deg,#000,hsla(0,0%,100%,0))!important;
+        }
+      }
     }
     // up信息
     .up-info {
@@ -88,6 +113,12 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
           }
         }
       }
+    }
+    .main-container .pre-mask, .main-container .season-list .ss-list-wrapper .ss-item .ss-cover, .main-container .media-info .media-cover {
+      background-color: var(--dark-1)!important;
+    }
+    .player-module .player-tool-bar {
+      background: unset!important;
     }
     #bilibiliPlayer {
       box-shadow: 0 0 8px var(--dark-1)!important; 
