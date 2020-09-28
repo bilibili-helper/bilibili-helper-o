@@ -44,6 +44,7 @@ export class Menu extends Feature {
                         {key: 'live', title: __('menu_subPage_options_live'), on: true},
                         {key: 'dynamic', title: __('menu_subPage_options_dynamic'), on: true},
                         {key: 'favourite', title: __('menu_subPage_options_favourite'), on: true},
+                        {key: 'history', title: __('menu_subPage_options_history'), on: true},
                         {
                             key: 'linker',
                             title: __('menu_subPage_options_linker'),

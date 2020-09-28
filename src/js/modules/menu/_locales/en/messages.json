@@ -29,6 +29,9 @@
     "menu_subPage_options_favourite": {
         "message": "Favourites"
     },
+    "menu_subPage_options_history": {
+        "message": "History"
+    },
     "menu_subPage_options_linker": {
         "message": "Query video by avid or other source"
     },
@@ -54,6 +57,10 @@
     "goFavourite": {
         "message": "Favourites",
         "description": "Popup Button: go_favourite"
+    },
+    "goHistory": {
+        "message": "History",
+        "description": "Popup Button: go_history"
     },
     "goOption": {
         "message": "Options",

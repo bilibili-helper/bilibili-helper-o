@@ -21,7 +21,6 @@ export default () => {
       padding: 8px 10px;
       flex-direction: column;
       align-items: flex-end;
-      transition: all 0.3s;
       &.extend {
         margin-bottom: 0;
       }
@@ -313,11 +312,12 @@ export default () => {
 
         render() {
             const {newWatchPageLink, menuOptions, linkerError, lastSearch, permissionMap, options} = this.state;
-            const {video, live, dynamic, favourite, linker} = menuOptions;
+            const {video, live, dynamic, favourite, history, linker} = menuOptions;
+            const maxHeight = [video, live, dynamic, favourite, history, linker].filter(Boolean).length * 44 + 38;
             const shortModeOption = options ? _.find(options, (o) => o.key === 'shortMode') : {};
             const shortMode = shortModeOption ? shortModeOption.on : false;
             return (
-                <MenuView>
+                <MenuView style={{maxHeight: maxHeight + 'px'}}>
                     {video && <MenuButton
                         shortMode={shortMode}
                         onClick={() => this.handleOnClick('video', getLink('video'))}
@@ -326,7 +326,7 @@ export default () => {
                         shortMode={shortMode}
                         onClick={() => this.handleOnClick('live', getLink('live'))}
                     >{__('goBiliLive')}</MenuButton>}
-                    {/* 登录后显示“我的关注”和“我的收藏” */}
+                    {/* 登录后显示"我的关注"、"我的收藏"和"历史记录" */}
                     {permissionMap.login && permissionMap.login.pass ? <React.Fragment>
                         {dynamic && <MenuButton
                             shortMode={shortMode}
@@ -336,6 +336,10 @@ export default () => {
                             shortMode={shortMode}
                             onClick={() => this.handleOnClick('favourite', getLink('favourite'))}
                         >{__('goFavourite')}</MenuButton>}
+                        {history && <MenuButton
+                            shortMode={shortMode}
+                            onClick={() => this.handleOnClick('history', getLink('history'))}
+                        >{__('goHistory')}</MenuButton>}
                     </React.Fragment> : <MenuButton>{__('notLogin')}</MenuButton>}
                     {linker && <LinkerWrapper>
                         <Linker

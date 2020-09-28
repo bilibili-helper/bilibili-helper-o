@@ -29,6 +29,9 @@
     "menu_subPage_options_favourite": {
         "message": "我的收藏"
     },
+    "menu_subPage_options_history": {
+        "message": "历史记录"
+    },
     "menu_subPage_options_linker": {
         "message": "视频快速跳转"
     },
@@ -54,6 +57,10 @@
     "goFavourite": {
         "message": "收藏",
         "description": "Popup Button: go_favourite"
+    },
+    "goHistory": {
+        "message": "历史",
+        "description": "Popup Button: go_history"
     },
     "goOption": {
         "message": "设置",
