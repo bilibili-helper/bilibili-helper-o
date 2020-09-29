@@ -75,6 +75,8 @@ export const getLink = (url_name) => {
             return chrome.extension.getURL('config.html');
         case 'favourite':
             return 'https://space.bilibili.com/';
+        case 'history':
+            return 'https://www.bilibili.com/account/history';
     }
 };
 

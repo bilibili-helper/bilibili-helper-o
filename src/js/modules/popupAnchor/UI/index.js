@@ -13,7 +13,6 @@ const UIBuilder = () => {
       display: flex;
       flex-direction: row-reverse;
       background-color: rgb(250,250,250);
-      max-height: 290px;
     `;
 
     const GlobalStyle = createGlobalStyle`
