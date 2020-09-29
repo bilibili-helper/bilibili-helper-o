@@ -148,6 +148,11 @@ const TopBarDarkModeStyle = createGlobalStyle`
         color: var(--dark-font-0)!important;
       }
     }
+    
+    //历史查看更多
+    .van-popper-history .view-all {
+      background: var(--dark-5)!important;
+    }
     `;
 
 //底栏
@@ -190,7 +195,7 @@ const FooterDarkModeStyle_2 = createGlobalStyle`
 
 //用户卡片popper
 const UserPopperDarkModeStyle = createGlobalStyle`
-    .user-card, .userinfo-content {
+    .user-card, .user-card-m, .userinfo-content {
       background: var(--dark-3)!important;
       .face {
         border-color: var(--dark-3)!important;
@@ -230,8 +235,12 @@ const UserPopperDarkModeStyle = createGlobalStyle`
       }
     }
     
-    .user-card, .userinfo-wrapper {
-       border-color: var(--dark-3)!important;
+    .user-card, .user-card-m, .userinfo-wrapper {
+      border-color: var(--dark-3)!important;
+    }
+    
+    .user-card-m .loading div {
+      background: var(--dark-3)!important;
     }
     
     .nameplate-card {
