@@ -92,7 +92,7 @@ class SpaceDarkMode extends ClassRender {
 
 class WatchLaterDarkMode extends ClassRender {
     render() {
-        const StyleMain = StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+        const StyleMain = StyleRender([<WatchLaterDarkModeStyle/>], true, false);
         return this.state.showDark ? StyleMain : null
     }
 }

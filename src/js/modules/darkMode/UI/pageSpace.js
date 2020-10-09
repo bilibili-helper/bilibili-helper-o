@@ -99,6 +99,10 @@ const SpaceDarkModeStyle = createGlobalStyle`
       }
     }
     
+    .feed-title {
+      border-bottom: 1px solid var(--divider);
+    }
+    
     //空收藏夹
     .fav-covers.empty {
       background-image: url(${getURL('/statics/imgs/playlistbg.png')})!important;

@@ -110,7 +110,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     //文字 重
     .nav-tab-bar .tab-item, .follow-btn-holder .follow-btn, .up-info-right-block .up-name, .rightside-article-list-btn .label, .up-article-list-block .block-title, .article-item .article-title, .more .top-bar, .more .title,
-    .title-container .title, .article-holder, .article-holder h1, .article-list-plane .button .label, .article-holder .card-container .title {
+    .title-container .title, .article-holder, .article-holder h1, .article-holder .color-default, .article-list-plane .button .label, .article-holder .card-container .title {
       color: var(--dark-font-3)!important;
     }
  
