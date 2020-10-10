@@ -1,5 +1,3 @@
-import {UserPopperDarkModeStyle} from "Modules/darkMode/UI/basicStyle";
-
 const HomeBase = `
     .international-header a {
       color: var(--dark-font-0);

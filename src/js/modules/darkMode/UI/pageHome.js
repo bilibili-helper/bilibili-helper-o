@@ -74,6 +74,7 @@ const HomeDarkModeStyle = createGlobalStyle`
 const WatchLaterDarkModeStyle = createGlobalStyle`
     ${HomeBase}
     html {
+      background: unset!important;
       color: var(--dark-font-0);
     }
     .watch-later-list header {
