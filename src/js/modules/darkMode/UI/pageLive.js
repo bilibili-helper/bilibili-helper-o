@@ -7,12 +7,12 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .link-navbar-ctnr, .link-navbar-vm, .link-navbar, .head-info-section, .gift-control-section, .rank-list-section, .rank-list-ctnr, .chat-history-panel, .announcement-cntr, .chat-control-panel,
-    .gift-sender-panel, .count-choice, .gift-panel-box, .content-wrapper, .link-progress-tv, .pay-note-panel, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
+    .gift-sender-panel, .count-choice, .gift-panel-box, .content-wrapper, .link-progress-tv, .pay-note-panel, .feed-title, .card, .live-record-list-cntr, .flip-view-image, .bg-white, .live-player-ctnr.minimal,
     .user-panel, .link-panel-ctnr, .calendar-checkin, .calendar-checkin .title, .calendar-checkin .calendar-wrapper, .download-panel-ctnr, .side-bar-popup-cntr {
       background-color: var(--dark-card)!important;
     }
     
-    .daily-record-title, .choice-item.active, .choice-item:hover, .divider, .more-btn-cntr {
+    .daily-record-title, .choice-item.active, .choice-item:hover, .divider, .more-btn-cntr,  .animation-list .icon-arrow-left, .animation-list .icon-arrow-right {
       background-color: var(--dark-5)!important;
     }
     
@@ -21,10 +21,14 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     }
     
     .danmaku-item .user-name {
-        color: var(--dark-font-1)!important;
+      color: var(--dark-font-1)!important;
     }
     
-    .selector-box {
+    body{
+      color: var(--dark-font-0);
+    }
+    
+    .selector-box, .feed-title, .glory-name {
       color: var(--dark-font-0)!important;
     }
     
@@ -50,10 +54,6 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username, .user-row,
     .gift-component-effect-rule, .share-addr-name, th.list-head-text {
       color: var(--dark-font-0)!important;
-    }
-    
-    body{
-      color: var(--dark-font-0);
     }
     
     .calendar-checkin .calendar-wrapper .calendar .date-ctnr .day-item {
@@ -141,9 +141,9 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       background-color: unset!important;
       .link-footer {
         background-color: unset!important;
-        border-color: var(--dark-1)!important;
+        border-color: var(--divider)!important;
         .footer-linker-line {
-          background-color: var(--dark-1)!important;
+          background-color: var(--divider)!important;
         }
       }
     }
@@ -165,6 +165,10 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     
     .pophover>p:first-child {
       color: var(--dark-font-1)!important;
+    }
+    
+    .feed-title {
+      border-bottom: 1px solid var(--divider);
     }
     
     ${DynamicMain}

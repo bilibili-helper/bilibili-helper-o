@@ -22,7 +22,7 @@ export class DarkMode extends Feature {
                 options: [
                     {
                         key: 'darkFollowSys',
-                        on: true,
+                        on: false,
                         title: __('darkMode_follow_system'),
                     },
                 ],

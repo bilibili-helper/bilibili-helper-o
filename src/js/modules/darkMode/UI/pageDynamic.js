@@ -57,6 +57,15 @@ const DynamicDarkModeStyle = createGlobalStyle`
       color: #00a1d6!important;
     }
     
+    //输入框
+    .hash-popup {
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      .topic-container .item.is-selected {
+        background: var(--dark-2)!important;
+      }
+    }
+    
     //新动态
     .new-notice-bar {
       background: #d7d4b8!important;

@@ -836,7 +836,7 @@ export default () => {
 
         renderList = () => <DanmuList
             ref={i => this.danmuListRef = i}
-            width={414}
+            width={418}
             height={200}
             rowCount={this.state.danmuJSON.list.length}
             rowHeight={this.getRowHeight}

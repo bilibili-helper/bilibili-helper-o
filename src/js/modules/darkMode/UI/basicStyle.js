@@ -83,8 +83,8 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //文字 重
     .van-popover a,
     .van-popper-avatar .level-info .grade, .van-popper-avatar .level-intro, .van-popper-avatar .coins,
-    .van-popper-avatar .lang-change .lang-title, .van-popper-avatar .lang-change .lang-intro,
-    .van-popper-avatar .logout, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
+    .van-popper-avatar .lang-change .lang-title, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
+    .van-popper-avatar .lang-change .lang-intro, .van-popper-avatar .logout, .van-popper-avatar .logout span:hover,
     .vip-m .bubble-traditional .recommand .title,
     .van-popper-favorite .view-all, .van-popper-favorite .play-all,
     .header-video-card .video-info .line-1,
@@ -120,6 +120,9 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .channel-menu-mini .box a:hover,
     .van-popper-avatar .links .link-item:hover,
     .van-popper-avatar .logout a:hover,
+    .van-popper-avatar .lang-change .lang-item:hover,
+    .van-popper-avatar .lang-change .lang-intro-item:hover,
+    .van-popper-avatar .logout span:hover,
     .van-popper-favorite .tab-item--normal:hover,
     .van-popper-favorite .view-all:hover,
     .van-popper-favorite .play-all:hover,
@@ -160,7 +163,7 @@ const FooterDarkModeStyle = createGlobalStyle`
     .international-footer {
       background-color: var(--bg)!important;
       .link-box .link-item {
-        border-color: var(--dark-1);
+        border-color: var(--divider);
         .bt {
           color: var(--dark-font-2);
         }
@@ -179,7 +182,7 @@ const FooterDarkModeStyle_2 = createGlobalStyle`
         padding-bottom: 70px!important;
       }
       .boston-postcards li {
-        border-color: var(--dark-1);
+        border-color: var(--divider);
         .tips {
           color: var(--dark-font-2);
         }

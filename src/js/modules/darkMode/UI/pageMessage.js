@@ -136,6 +136,9 @@ const MessageDarkModeStyle = createGlobalStyle`
           .divider, div::after {
             border-color: var(--divider)!important;
           }
+          .divider-last::before, .divider-last::after {
+            background-color: var(--divider)!important;
+          }
           //系统通知
           &.system-item {
             .title {

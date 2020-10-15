@@ -34,7 +34,7 @@ const ReadDarkModeStyle = createGlobalStyle`
     
     //框线
     .article-item, .rank-module .rank-tabs-bar, .up-list .title, .more .top-bar, .categories-bar {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     
     //按钮
@@ -110,7 +110,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     //文字 重
     .nav-tab-bar .tab-item, .follow-btn-holder .follow-btn, .up-info-right-block .up-name, .rightside-article-list-btn .label, .up-article-list-block .block-title, .article-item .article-title, .more .top-bar, .more .title,
-    .title-container .title, .article-holder, .article-holder h1, .article-list-plane .button .label, .article-holder .card-container .title {
+    .title-container .title, .article-holder, .article-holder h1, .article-holder .color-default, .article-list-plane .button .label, .article-holder .card-container .title {
       color: var(--dark-font-3)!important;
     }
  
@@ -124,7 +124,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     //框线
     .up-article-list-block .block-title, .more .top-bar, .article-action, #article-list-btn .title, #article-list-btn .label, .rightside-article-list-btn .label {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     
     //文章视频引用

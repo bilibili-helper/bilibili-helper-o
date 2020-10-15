@@ -8,7 +8,7 @@ import _ from "lodash";
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, ReadRankDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode, HistoryDarkMode, LivePlayDarkMode} from './DarkMode';
+import {HomeDarkMode, DynamicDarkMode, ReadDarkMode, ReadCVDarkMode, ReadRankDarkMode, MessageDarkMode, SpaceDarkMode, WatchLaterDarkMode, HistoryDarkMode, LivePlayDarkMode, SearchDarkMode} from './DarkMode';
 
 export class DarkModeUI extends UI {
     constructor() {
@@ -54,6 +54,9 @@ export class DarkModeUI extends UI {
                     break;
                 case 'livePlay' :
                     ReactDOM.render(<LivePlayDarkMode {...t}/>, wrapper, resolve);
+                    break;
+                case 'search' :
+                    ReactDOM.render(<SearchDarkMode {...t}/>, wrapper, resolve);
                     break;
             }
         });

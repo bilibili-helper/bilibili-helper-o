@@ -9,6 +9,11 @@ const HomeDarkModeStyle = createGlobalStyle`
       }
     }
     
+    .video-card-common .card-pic a .count, .live-card .pic .count {
+      z-index: 1;
+      color: var(--dark-font-0);
+    }
+    
     .first-screen img, .storey-box img {
       filter: contrast(0.93) brightness(0.89);
     }
@@ -74,6 +79,7 @@ const HomeDarkModeStyle = createGlobalStyle`
 const WatchLaterDarkModeStyle = createGlobalStyle`
     ${HomeBase}
     html {
+      background: unset!important;
       color: var(--dark-font-0);
     }
     .watch-later-list header {
@@ -87,7 +93,7 @@ const WatchLaterDarkModeStyle = createGlobalStyle`
       }
     }
     .watch-later-list .list-box .av-item .av-about{
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       .t {
         color: var(--dark-font-0);
       }
@@ -132,7 +138,7 @@ const HistoryDarkModeStyle = createGlobalStyle`
       .r-info {
         background: unset!important;
         .r-txt {
-          border-color: var(--dark-1)!important;
+          border-color: var(--divider)!important;
           .title:not(:hover) {
             color: var(--dark-font-0);
           }

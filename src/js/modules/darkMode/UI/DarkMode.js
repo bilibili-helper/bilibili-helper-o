@@ -13,6 +13,7 @@ import {MessageDarkModeStyle} from 'Modules/darkMode/UI/pageMessage';
 import {SpaceDarkModeStyle} from 'Modules/darkMode/UI/pageSpace';
 import {VideoPlayDarkModeStyle} from 'Modules/darkMode/UI/pageVideo';
 import {LivePlayDarkModeStyle} from 'Modules/darkMode/UI/pageLive';
+import {SearchDarkModeStyle} from 'Modules/darkMode/UI/pageSearch';
 
 class ClassRender extends React.Component {
     constructor(props){
@@ -92,7 +93,7 @@ class SpaceDarkMode extends ClassRender {
 
 class WatchLaterDarkMode extends ClassRender {
     render() {
-        const StyleMain = StyleRender([<WatchLaterDarkModeStyle/>, <FooterDarkModeStyle_2/>], false, false);
+        const StyleMain = StyleRender([<WatchLaterDarkModeStyle/>], true, false);
         return this.state.showDark ? StyleMain : null
     }
 }
@@ -118,6 +119,13 @@ class LivePlayDarkMode extends ClassRender {
     }
 }
 
+class SearchDarkMode extends ClassRender {
+    render() {
+        const StyleMain = StyleRender([<SearchDarkModeStyle/>], true);
+        return this.state.showDark ? StyleMain : null
+    }
+}
+
 export {
     HomeDarkMode,
     DynamicDarkMode,
@@ -130,4 +138,5 @@ export {
     HistoryDarkMode,
     VideoPlayDarkMode,
     LivePlayDarkMode,
+    SearchDarkMode,
 }

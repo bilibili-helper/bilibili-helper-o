@@ -20,7 +20,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //文字 重
-    body, .n .n-data .n-data-v, .section-title, .large-item .title,
+    body, .n .n-data .n-data-v, .section-title, .large-item .title, #page-video .play-all-btn,
     #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-bottom li, #page-fav .fav-main .fav-action-bottom li:hover,
     .article-title, #page-fav .fav-main .fav-content .fav-pugv-list .pugv-item .item-infos p.main-title,
     .sub-tabs span, .sub-tabs .filter-content {
@@ -28,7 +28,8 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //高优先
-    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .my-album .title, .fav-sidenav, .nav-title .text,
+    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item,
+    .my-album .tab-list .tab:not(.active) .name, .my-album .title, .fav-sidenav, .nav-title .text,
     .fav-main .filter-item, .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
     .pgc-item-title, .pgc-item-desc, .setting-privacy-item .setting-privacy-name, .channel-title .channel-name, .album-title, .follow-item {
       color: var(--dark-font-0)!important;
@@ -75,7 +76,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //hover深
-    #submit-video-type-filter,
+    #submit-video-type-filter, .my-album .tab-list,
     .contribution-sidenav .contribution-item:hover,
     .fav-item:hover,
     .follow-item:hover {
@@ -97,6 +98,10 @@ const SpaceDarkModeStyle = createGlobalStyle`
       .text {
         color: var(--dark-font-1);
       }
+    }
+    
+    .feed-title {
+      border-bottom: 1px solid var(--divider);
     }
     
     //空收藏夹

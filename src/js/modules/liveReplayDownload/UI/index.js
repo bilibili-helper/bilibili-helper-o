@@ -13,7 +13,7 @@ export class LiveReplayDownloadUI extends UI {
     }
 
     createBtns = () => {
-        this.interval('.left-container .live-record-list-cntr', 1000).then((list) => {
+        this.interval('.left-container .live-record-list-cntr, .live-record-list .live-record-list-cntr', 1000).then((list) => {
             Array.from(list.querySelectorAll('.card')).forEach((card) => {
                 const href = card.querySelector('a').href;
                 if (href) {
@@ -70,7 +70,10 @@ export class LiveReplayDownloadUI extends UI {
             if (!settings.on) {
                 return resolve();
             }
-            this.interval('#sections-vm .room-feed .tabs', 1000).then((container) => {
+            this.interval('#sections-vm .room-feed .tabs, #section-ctnr .room-feed .tabs', 1000).then((container) => {
+                if (!container) {
+                    return;
+                }
                 new MutationObserver((mutationList) => {
                     let same = false;
                     mutationList.forEach((mutation) => {
