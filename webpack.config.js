@@ -15,7 +15,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
-const WriteJsonPlugin = require('write-json-webpack-plugin');
+const WriteJsonPlugin = require('./write-json-webpack-plugin');
 
 const srcPath = path.resolve('src');
 const buildPath = path.resolve('build');
