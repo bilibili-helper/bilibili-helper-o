@@ -114,7 +114,13 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
         }
       }
     }
-    .main-container .pre-mask, .main-container .season-list .ss-list-wrapper .ss-item .ss-cover, .main-container .media-info .media-cover {
+    .main-container .plp-l .player-mask .player-limit-mask {
+      background-color: var(--dark-0)!important;
+    }
+    .main-container .plp-l .player-mask .bar-wrapper {
+      background-color: var(--dark-5)!important;
+    }
+    .main-container .pre-mask, .main-container .season-list .ss-list-wrapper .ss-item .ss-cover, .main-container .media-info .media-cover, .main-container .plp-l .player-mask .bar-wrapper .left-bar, .main-container .plp-l .player-mask .bar-wrapper .right-bar {
       background-color: var(--dark-1)!important;
     }
     .player-module .player-tool-bar {
@@ -122,6 +128,9 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     }
     #bilibiliPlayer {
       box-shadow: 0 0 8px var(--dark-1)!important; 
+    }
+    #bilibili-player.mini-player:before {
+      box-shadow: 0 0 5px var(--dark-1)!important; 
     }
     #paybar_module {
       .vip a.btn-pay.active {
@@ -138,7 +147,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     }
     // tags
     #v_tag {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       ul li {
         background-color: var(--dark-1)!important;
         border-color: var(--dark-1)!important;
@@ -174,6 +183,12 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     }
     .player-auxiliary-area {
       background: #191919!important;
+    }
+    .player-auxiliary-danmaku-load-status {
+      background: unset!important;
+      &.disabled {
+        color: var(--dark-font-1)!important;
+      }
     }
     .danmaku-wrap .player-auxiliary-area .player-auxiliary-danmaku-wrap .bscroll-vertical-scrollbar {
       background-color: black !important;
@@ -301,7 +316,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     
     // 交互栏
     #arc_toolbar_report, #toolbar_module, #media_module, .main-container .review-module {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       .more-ops-list {
         background-color: var(--dark-1)!important;
         border-color: var(--dark-1)!important;
@@ -312,7 +327,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
         }
       }
       .media-desc i {
-        background-color: var(--dark-1);
+        background-color: var(--bg);
       }
     }
     .media-tool-bar {
@@ -325,7 +340,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     // 活动
     #activity_vote .inside-wrp {
       border-color: var(--dark-1);
-          background-color: var(--dark-1);
+      background-color: var(--dark-1);
       .left {
         color: var(--dark-font-1);
       }
@@ -336,7 +351,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     
     // 评价
     #review_module {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       .review-list .review-item .review-body {
         background-color: var(--dark-1)!important;
        .review-header .review-author, .review-title {
@@ -350,7 +365,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     
     // 承包榜
     #sponsor_module {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       .sponsor-rank-header {
         h3, .sponsor-rank-tab li {
           color: var(--dark-font-1)!important;
@@ -491,7 +506,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     
     //评论区
     #comment_module, #comment .common{
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
       .b-head {
         color: var(--dark-font-1);
       }

@@ -34,7 +34,7 @@ const ReadDarkModeStyle = createGlobalStyle`
     
     //框线
     .article-item, .rank-module .rank-tabs-bar, .up-list .title, .more .top-bar, .categories-bar {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     
     //按钮
@@ -124,7 +124,7 @@ const ReadCVDarkModeStyle = createGlobalStyle`
     
     //框线
     .up-article-list-block .block-title, .more .top-bar, .article-action, #article-list-btn .title, #article-list-btn .label, .rightside-article-list-btn .label {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     
     //文章视频引用

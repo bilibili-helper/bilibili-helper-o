@@ -18,6 +18,7 @@ const PAGE_REGEXP = {
     message: /^https?:\/\/message\.bilibili\.com\//,
     watchLater: /^https?:\/\/www\.bilibili\.com\/watchlater\//,
     history: /^https?:\/\/www\.bilibili\.com\/account\/history/,
+    search: /^https?:\/\/search\.bilibili\.com\//,
 };
 
 export class UI {

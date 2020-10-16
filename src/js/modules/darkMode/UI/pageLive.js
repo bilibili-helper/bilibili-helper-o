@@ -12,7 +12,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       background-color: var(--dark-card)!important;
     }
     
-    .daily-record-title, .choice-item.active, .choice-item:hover, .divider, .more-btn-cntr {
+    .daily-record-title, .choice-item.active, .choice-item:hover, .divider, .more-btn-cntr,  .animation-list .icon-arrow-left, .animation-list .icon-arrow-right {
       background-color: var(--dark-5)!important;
     }
     
@@ -28,7 +28,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       color: var(--dark-font-0);
     }
     
-    .selector-box, .feed-title {
+    .selector-box, .feed-title, .glory-name {
       color: var(--dark-font-0)!important;
     }
     
@@ -141,9 +141,9 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       background-color: unset!important;
       .link-footer {
         background-color: unset!important;
-        border-color: var(--dark-1)!important;
+        border-color: var(--divider)!important;
         .footer-linker-line {
-          background-color: var(--dark-1)!important;
+          background-color: var(--divider)!important;
         }
       }
     }

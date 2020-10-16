@@ -3,7 +3,7 @@ const HomeBase = `
       color: var(--dark-font-0);
     }
     .tab-line-itnl {
-      border-color: var(--dark-1)!important;
+      border-color: var(--divider)!important;
     }
     .page-tab .con li {
       border-color: var(--bg)!important;
@@ -26,7 +26,7 @@ const CommentMain = `
     .bb-comment {
       background-color: unset!important;
       .comment-header {
-        border-color: var(--dark-3)!important;
+        border-color: var(--divider)!important;
         .tabs-order li:not(.on):not(:hover) {
           color: var(--dark-font-3)!important;
         }
@@ -41,7 +41,7 @@ const CommentMain = `
           color: var(--dark-font-2);
         }
         .con {
-          border-color: var(--dark-1)!important;
+          border-color: var(--divider)!important;
           .user .name {
             color: var(--dark-font-1);
           }
