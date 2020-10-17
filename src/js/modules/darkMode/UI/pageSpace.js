@@ -21,6 +21,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //文字 重
     body, .n .n-data .n-data-v, .section-title, .large-item .title, #page-video .play-all-btn,
+    .breadcrumb .follow-tabs, .breadcrumb .batch, #page-follows .follow-main .follow-action-top .back-to-info, #page-follows .follow-main .follow-action-bottom li, #page-follows .follow-main .follow-action-bottom ul.filter-disable li:hover,
     #page-fav .fav-main .fav-action-top .back-to-info, #page-fav .fav-main .fav-action-bottom li, #page-fav .fav-main .fav-action-bottom li:hover,
     .article-title, #page-fav .fav-main .fav-content .fav-pugv-list .pugv-item .item-infos p.main-title,
     .sub-tabs span, .sub-tabs .filter-content {
@@ -46,6 +47,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     .card,
     .col-full,
     .channel-option.no-channel, .channel-add-video,
+    .follow-main .follow-action-bottom .follow-action-fixtop,
     #page-fav .fav-main .fav-action-bottom .fav-action-fixtop, #page-fav .fav-main .small-item:hover {
       background-color: var(--dark-card)!important;
     }
@@ -62,7 +64,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //框线
     .section, .section-title, .i-pin-v .be-tab, .i-m-upload, .i-m-r2, .user .tags, .contribution-sidenav, .contribution-sidenav~.main-content,
-    .album-content, .filter, .channel-detail .channel-action-row .be-dropdown,
+    .album-content, .filter, .channel-detail .channel-action-row .be-dropdown, .follow-main .follow-action-top, .follow-main .follow-action-top .back-to-info,
     .fav-sidenav,.fav-sidenav .nav-container, .fav-sidenav .watch-later, .fav-main .favList-info,
     .fav-main .filter-item.search, .fav-main .search-types, .fav-main .fav-action-top .back-to-info, .fav-main .fav-action-top,
     .article-content, .s-content, .setting-index-container, .setting-index-module,

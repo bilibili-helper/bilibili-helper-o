@@ -33,6 +33,9 @@ const SearchDarkModeStyle = createGlobalStyle`
     }
     .keyword-wrap .keyword {
       color: var(--dark-font-0);
+      &.focus {
+        background-color: var(--dark-3);
+      }
     }
   }
   //主页

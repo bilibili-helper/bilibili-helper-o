@@ -123,6 +123,19 @@ const MessageDarkModeStyle = createGlobalStyle`
           .text-box {
             color: var(--dark-font-2)!important;
           }
+          &.detail .content:not(:hover) span {
+            color: var(--dark-font-0)!important;
+          }
+          .follow-btn {
+            color: var(--dark-font-1);
+            &.active {
+              background: var(--dark-6);
+              border-color: var(--dark-6);
+            }
+            &.inactive {
+              background: var(--dark-4);
+            }
+          }
           .reply-box {
             textarea {
               background-color: var(--dark-3);
