@@ -23,7 +23,7 @@ const UIBuilder = () => {
       }
     `;
     return {Main, GlobalStyle};
-}
+};
 
 export class PopupAnchorUI extends UI {
     constructor() {
@@ -34,6 +34,16 @@ export class PopupAnchorUI extends UI {
 
     load = () => {
         return new Promise(resolve => {
+            chrome.tabs.query({currentWindow: true}, (tabs) => {
+                const tabId = tabs[0].id;
+                if (tabs && tabId) {
+                    chrome.tabs.getZoom((zoomFactor) => {
+                        if (zoomFactor > 1.45) {
+                            document.body.style.zoom = (1 / zoomFactor) * 1.45;
+                        }
+                    });
+                }
+            });
             const {Main, GlobalStyle} = UIBuilder();
             ReactDOM.render(
                 <Main>
