@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
 import {UI} from 'Libs/UI';
 
-const UIBuilder = () => {
+const UIBuilder = (zoomFactor) => {
     const Main = styled.div.attrs({className: 'bilibili-helper-popup-main'})`
       display: flex;
       flex-direction: row-reverse;
@@ -16,6 +16,9 @@ const UIBuilder = () => {
     `;
 
     const GlobalStyle = createGlobalStyle`
+      * {
+        font-size: ${zoomFactor > 1.45 ? 14 : 12}px!important;
+      }
       body {
         margin: 0;
         padding: 0;
@@ -41,18 +44,17 @@ export class PopupAnchorUI extends UI {
                         if (zoomFactor > 1.45) {
                             document.body.style.zoom = (1 / zoomFactor) * 1.45;
                         }
+                        const {Main, GlobalStyle} = UIBuilder(zoomFactor);
+                        ReactDOM.render(
+                            <Main>
+                                <GlobalStyle/>
+                            </Main>,
+                            document.getElementById('root'),
+                            () => resolve(document.querySelector('.bilibili-helper-popup-main')),
+                        );
                     });
                 }
             });
-            const {Main, GlobalStyle} = UIBuilder();
-            ReactDOM.render(
-                <Main>
-                    <GlobalStyle/>
-                </Main>,
-                document.getElementById('root'),
-                () => resolve(document.querySelector('.bilibili-helper-popup-main')),
-            );
-
         });
     };
 }
