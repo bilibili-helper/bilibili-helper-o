@@ -26,7 +26,7 @@ export class ProxyForWebsite extends Feature {
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {initiator, requestHeaders, url} = details;
             const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
-            if ((/^chrome-extension:\/\//.test(initiator) || fromHelper) && url.match('/reply/add')) {
+            if ((/^chrome-extension:\/\//.test(initiator) || fromHelper) && url.match(/\/reply\/(?:add|action)/)) {
                 const originHeader = requestHeaders.find((h) => h.name.toLowerCase() === 'origin');
                 if (originHeader) {
                     originHeader.value = 'https://h.bilibili.com';
@@ -40,6 +40,7 @@ export class ProxyForWebsite extends Feature {
             }
         }, {
             urls: [
+                'https://api.bilibili.com/x/v2/reply/action?*',
                 'https://api.bilibili.com/x/v2/reply/add?*',
             ],
         }, ['blocking', 'requestHeaders', 'extraHeaders']);

@@ -1,5 +1,5 @@
 {
-    "version": "1.2.24.1",
+    "version": "1.2.24.2",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
     "name": "__MSG_extensionName__",
