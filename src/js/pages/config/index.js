@@ -145,7 +145,6 @@ class PageConfig extends React.Component {
         this.settings = {
             video: {title: __('config_type_main'), map: {}},
             live: {title: __('config_type_live'), map: {}},
-            home: {title: __('config_type_home'), map: {}},
             popup: {title: __('config_type_menu'), map: {}},
             other: {title: __('config_type_other'), map: {}},
         };
@@ -198,7 +197,7 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
-        const thisKindOfFeatures = this.state[kind];
+        const thisKindOfFeatures = this.state[kind] || this.state.other;
         if (thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
             const settingObject = thisKindOfFeatures.map[featureName]; // one feature in this kind of list
             if (!settingName && !on) { // 一级开关
