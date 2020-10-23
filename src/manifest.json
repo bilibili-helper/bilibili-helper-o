@@ -138,6 +138,23 @@
                 "*://space.bilibili.com/*/favlist*"
             ],
             "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "home.js",
+                "features.bundle.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://bilibili.com/",
+                "*://www.bilibili.com/"
+            ],
+            "run_at": "document_end"
         }
     ],
     "icons": {

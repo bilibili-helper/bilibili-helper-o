@@ -22,6 +22,9 @@
     "config_type_live": {
         "message": "Live Streams"
     },
+    "config_type_home": {
+        "message": "Home"
+    },
     "config_type_menu": {
         "message": "Popup Menu"
     },

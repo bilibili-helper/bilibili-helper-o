@@ -145,6 +145,7 @@ class PageConfig extends React.Component {
         this.settings = {
             video: {title: __('config_type_main'), map: {}},
             live: {title: __('config_type_live'), map: {}},
+            home: {title: __('config_type_home'), map: {}},
             popup: {title: __('config_type_menu'), map: {}},
             other: {title: __('config_type_other'), map: {}},
         };
