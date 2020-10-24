@@ -197,7 +197,7 @@ class PageConfig extends React.Component {
      * 设置配置
      */
     handleSetSetting = ({kind = '', featureName, settingName, subPage = false, on}) => {
-        const thisKindOfFeatures = this.state[kind];
+        const thisKindOfFeatures = this.state[kind] || this.state.other;
         if (thisKindOfFeatures.map[featureName]) { // find it (*≧∪≦)
             const settingObject = thisKindOfFeatures.map[featureName]; // one feature in this kind of list
             if (!settingName && !on) { // 一级开关
@@ -281,7 +281,9 @@ class PageConfig extends React.Component {
             pageType,
         };
 
-        this.setState(newState);
+        this.setState(newState, () => {
+            document.body.style.overflow = subPageOn ? '' : 'hidden';
+        });
     };
 
     createSubPage = (pageType) => {

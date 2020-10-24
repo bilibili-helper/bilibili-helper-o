@@ -85,7 +85,7 @@ export default () => {
     `;
 
     const RoomName = styled.h6`
-      max-width: 182px;
+      max-width: 230px;
       position: absolute;
       left: 7px;
       bottom: 5px;
