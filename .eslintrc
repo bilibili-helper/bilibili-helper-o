@@ -23,6 +23,7 @@
         }
     },
     "rules": {
+        "no-extra-semi": 0,
         "comma-dangle": [1, "always-multiline"],
         "block-spacing": 1,
         "camelcase": 0,

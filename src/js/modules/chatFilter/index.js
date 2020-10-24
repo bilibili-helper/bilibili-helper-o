@@ -56,11 +56,6 @@ export class ChatFilter extends Feature {
                             on: true,
                         },
                         {
-                            key: 'level',
-                            title: __('charFilter_subPage_options_level'),
-                            on: true,
-                        },
-                        {
                             key: '2233',
                             title: __('charFilter_subPage_options_2233'),
                             on: true,
