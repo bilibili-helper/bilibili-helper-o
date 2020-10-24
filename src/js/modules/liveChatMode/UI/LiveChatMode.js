@@ -334,9 +334,6 @@ export default () => {
             new MutationObserver(() => {
                 const {on, currentState} = this.state;
                 if (on && classList.contains('player-full-win') && currentState !== 1) { // 当前是网页全屏 且之前并不是该状态
-                    if (!classList.contains('hide-aside-area')) {
-                        document.querySelector('.aside-area-toggle-btn button').click();
-                    }
                     if (hideBtn.getAttribute('data-title') === '隐藏弹幕') {
                         hideBtn.click();
                     }
@@ -377,6 +374,7 @@ export default () => {
                     locationOption[this.roomId] = true;
                 } else {
                     delete locationOption[this.roomId];
+                    document.querySelector('.aside-area-toggle-btn button').click();
                 }
                 chrome.runtime.sendMessage({
                     command: 'setGAEvent',
