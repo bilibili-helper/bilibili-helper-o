@@ -73,7 +73,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
       border-color: var(--dark-card)!important;
     }
     
-    .tab-list .item, .l-line, .r-line, .rank-list-ctnr, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr, .footer-line {
+    .tab-list .item, .l-line, .r-line, .rank-list-ctnr, .count-choice, .choice-item, .gift-reveal-header, .announcement-cntr .content, .room-introduction-tags, .info-item-ctnr, .footer-line, .edit-button {
       border-color: var(--dark-5)!important;
     }
     

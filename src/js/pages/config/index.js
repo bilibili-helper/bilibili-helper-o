@@ -281,7 +281,9 @@ class PageConfig extends React.Component {
             pageType,
         };
 
-        this.setState(newState);
+        this.setState(newState, () => {
+            document.body.style.overflow = subPageOn ? '' : 'hidden';
+        });
     };
 
     createSubPage = (pageType) => {

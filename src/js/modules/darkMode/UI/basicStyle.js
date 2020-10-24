@@ -55,7 +55,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
       background: var(--dark-card)!important;
       border-color: var(--dark-card)!important;
       li {
-        &:hover {
+        &:hover, &.focus {
           background-color: var(--dark-3)!important;
         }
         a {

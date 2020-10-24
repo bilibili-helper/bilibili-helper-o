@@ -47,8 +47,6 @@ export class PartitionFilterUI extends UI {
         if (!settings.on) { return Promise.resolve(); }
 
         return new Promise(resolve => {
-
-            if ('home' === this.isPage()) {
                 let listBox = document.querySelectorAll(".item.sortable");
 
                 if (listBox.length > 0) {
@@ -61,7 +59,6 @@ export class PartitionFilterUI extends UI {
                         this.filterMain(v.key);
                         this.filterListBox(v.key);
                     });
-                }
             }
             resolve();
         });

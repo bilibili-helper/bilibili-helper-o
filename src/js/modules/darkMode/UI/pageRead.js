@@ -69,7 +69,7 @@ const ReadDarkModeStyle = createGlobalStyle`
         }
         .suggest-item, .history-item {
           color: var(--dark-font-0);
-          &:hover {
+          &:hover, &.focus {
             background-color: var(--dark-3)!important;
           }
         }
