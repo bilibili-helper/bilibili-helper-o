@@ -2,6 +2,10 @@ import {createGlobalStyle} from "styled-components";
 import {CommentMain} from "Modules/darkMode/UI/cardMain";
 
 const VideoPlayDarkModeStyle = createGlobalStyle`
+    body {
+      color: var(--dark-font-0);
+    }
+    
     // 播放器mini窗口
     #bofqi.mini-player:before {
       box-shadow: #000000 0 0 8px;
@@ -25,7 +29,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
         .avatar .info-tag {
           background-color: var(--dark-4)!important;
         }
-        .avatar-name {
+        .avatar-name__container .name-text {
           color: var(--dark-font-0);
         }
         .attention {
@@ -199,6 +203,45 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       }
       &.danmaku-info-row-block {
         opacity: 0.3!important;
+      }
+    }
+    .player-auxiliary-area .player-auxiliary-filter .player-auxiliary-setting-menu-wrap {
+      background-color: var(--dark-1)!important;
+      border-color: var(--dark-1)!important;
+      .player-auxiliary-setting-menu-list {
+        background-color: var(--dark-1)!important;
+        color: var(--dark-font-1)!important;
+        &:hover {
+          background-color: var(--dark-3)!important;
+        }
+      }
+    }
+    .danmaku-wrap .player-auxiliary-block .player-auxiliary-block-tabpanel {
+      .player-auxiliary-block-tabpanel-row {
+        &.special-title .player-auxiliary-block-label {
+          color: var(--dark-font-1)!important;
+        }
+        &.player-auxiliary-border {
+          background-color: var(--dark-3)!important;
+        }
+      }
+      .player-auxiliary-block-string-short {
+        background: var(--dark-4)!important;
+        border-color: var(--dark-4)!important;
+        &:focus {
+          color: var(--dark-font-0)!important;
+        }
+      }
+      .bui-button.bui-button-gray:not(:hover) {
+        background: var(--dark-5)!important;
+        color: var(--dark-font-1)!important;
+      }
+      .bui-tabs .bui-tabs-header .bui-tabs-header-item:not(.bui-tabs-header-item-active) {
+        color: var(--dark-font-1);
+      }
+      .player-auxiliary-block-list-wrap .player-auxiliary-block-list .player-auxiliary-block-line {
+        color: var(--dark-font-3)!important;
+        background: var(--dark-4)!important;
       }
     }
     // 弹幕列表管理菜单
