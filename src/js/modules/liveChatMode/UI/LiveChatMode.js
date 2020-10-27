@@ -377,6 +377,7 @@ export default () => {
                     locationOption[this.roomId] = true;
                 } else {
                     delete locationOption[this.roomId];
+                    document.querySelector('.aside-area-toggle-btn button').click();
                 }
                 chrome.runtime.sendMessage({
                     command: 'setGAEvent',
