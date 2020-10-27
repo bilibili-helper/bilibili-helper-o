@@ -55,7 +55,7 @@ export default () => {
             this.video = document.querySelector('.bilibili-live-player-video video, .blrp-video video');
             this.addListener(this.video);
             const video = document.querySelector('.bilibili-live-player-video, .blrp-video');
-            video.addEventListener('DOMNodeInserted', function(e) {
+            video && video.addEventListener('DOMNodeInserted', function(e) {
                 if (e.target.localName === 'video' && that.video !== e.target) {
                     that.video = e.target;
                     that.addListener(that.video);

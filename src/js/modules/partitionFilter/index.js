@@ -9,7 +9,7 @@ import {__} from 'Utils/functions';
 
 export {PartitionFilterUI} from './UI';
 
-export class PartitionFilter extends Feature{
+export class PartitionFilter extends Feature {
     constructor() {
         super({
             name: 'partitionFilter',

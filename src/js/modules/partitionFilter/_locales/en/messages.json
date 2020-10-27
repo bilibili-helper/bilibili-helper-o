@@ -1,15 +1,15 @@
 {
   "partitionFilter_name": {
-    "message": "屏蔽主页分区"
+    "message": "A filter for navigation of home page"
   },
   "partitionFilter_subPage_title": {
-    "message": "屏蔽主页分区"
+    "message": "A filter for navigation of home page"
   },
   "partitionFilter_subPage_description": {
-    "message": "在这里设置要屏蔽的分区，打开状态为屏蔽"
+    "message": "Open to hide"
   },
   "partitionFilter_subPage_options_live": {
-    "message": "直播"
+    "message": "Live"
   },
   "partitionFilter_subPage_options_guochuang": {
     "message": "国创"
@@ -21,54 +21,54 @@
     "message": "动画"
   },
   "partitionFilter_subPage_options_music": {
-    "message": "音乐"
+    "message": "Music"
   },
   "partitionFilter_subPage_options_dance": {
-    "message": "舞蹈"
+    "message": "Dance"
   },
   "partitionFilter_subPage_options_game": {
-    "message": "游戏"
+    "message": "Game"
   },
   "partitionFilter_subPage_options_technology": {
-    "message": "知识"
+    "message": "Technology"
   },
   "partitionFilter_subPage_options_cheese": {
     "message": "课堂"
   },
   "partitionFilter_subPage_options_digital": {
-    "message": "数码"
+    "message": "Digital"
   },
   "partitionFilter_subPage_options_life": {
-    "message": "生活"
+    "message": "Life"
   },
   "partitionFilter_subPage_options_kichiku": {
-    "message": "鬼畜"
+    "message": "kichiku"
   },
   "partitionFilter_subPage_options_fashion": {
-    "message": "时尚"
+    "message": "Fashion"
   },
   "partitionFilter_subPage_options_information": {
-    "message": "资讯"
+    "message": "Information"
   },
   "partitionFilter_subPage_options_ent": {
-    "message": "娱乐"
+    "message": "Entertainment"
   },
   "partitionFilter_subPage_options_movie": {
-    "message": "电影"
+    "message": "Movie"
   },
   "partitionFilter_subPage_options_cinephile": {
-    "message": "影视"
+    "message": "Film"
   },
   "partitionFilter_subPage_options_read": {
-    "message": "专栏"
+    "message": "Article"
   },
   "partitionFilter_subPage_options_teleplay": {
-    "message": "TV剧"
+    "message": "TV"
   },
   "partitionFilter_subPage_options_manga": {
-    "message": "漫画"
+    "message": "Manga"
   },
   "partitionFilter_subPage_options_documentary": {
-    "message": "纪录片"
+    "message": "Documentary"
   }
 }

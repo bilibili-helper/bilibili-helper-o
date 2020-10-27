@@ -5,7 +5,7 @@
  */
 
 import {UI} from 'Libs/UI';
-import _ from  'lodash';
+import _ from 'lodash';
 import $ from 'jquery';
 
 export class PartitionFilterUI extends UI {
@@ -16,49 +16,48 @@ export class PartitionFilterUI extends UI {
         });
     }
 
-    keyToListBoxText =  {
-        "life":"生活",
-        "live":"直播",
-        "ent":"娱乐",
-        "read":"专栏",
-        "game":"游戏",
-        "music":"音乐",
-        "dance":"舞蹈",
-        "anime":"番剧",
-        "duoga":"动画",
-        "digital":"数码",
-        "movie":"电影",
-        "manga":"漫画",
-        "cheese":"课堂",
-        "kichiku":"鬼畜",
-        "fashion":"时尚",
-        "teleplay":"电视剧",
-        "cinephile":"影视",
-        "guochuang":"国创",
-        "technology":"知识",
-        "information":"资讯",
-        "documentary":"纪录片",
+    keyToListBoxText = {
+        'life': '生活',
+        'live': '直播',
+        'ent': '娱乐',
+        'read': '专栏',
+        'game': '游戏',
+        'music': '音乐',
+        'dance': '舞蹈',
+        'anime': '番剧',
+        'duoga': '动画',
+        'digital': '数码',
+        'movie': '电影',
+        'manga': '漫画',
+        'cheese': '课堂',
+        'kichiku': '鬼畜',
+        'fashion': '时尚',
+        'teleplay': '电视剧',
+        'cinephile': '影视',
+        'guochuang': '国创',
+        'technology': '知识',
+        'information': '资讯',
+        'documentary': '纪录片',
     };
 
     listBoxTextToItem = {};
-
 
     load = (containers, settings) => {
         if (!settings.on) { return Promise.resolve(); }
 
         return new Promise(resolve => {
-                let listBox = document.querySelectorAll(".item.sortable");
+            let listBox = document.querySelectorAll('.item.sortable');
 
-                if (listBox.length > 0) {
-                    _.forEach (listBox, (item) => {
-                        this.listBoxTextToItem[item.innerText] = item;
-                    });
+            if (listBox.length > 0) {
+                _.forEach(listBox, (item) => {
+                    this.listBoxTextToItem[item.innerText] = item;
+                });
 
-                    const filterList = _.filter(settings.subPage.options, (o) => o.on === true);
-                    _.forEach (filterList, (v) => {
-                        this.filterMain(v.key);
-                        this.filterListBox(v.key);
-                    });
+                const filterList = _.filter(settings.subPage.options, (o) => o.on === true);
+                _.forEach(filterList, (v) => {
+                    this.filterMain(v.key);
+                    this.filterListBox(v.key);
+                });
             }
             resolve();
         });
@@ -69,7 +68,7 @@ export class PartitionFilterUI extends UI {
     };
 
     filterMain = (key) => {
-        $("#bili_" + key).hide();
+        $('#bili_' + key).hide();
     };
 
     filterListBox = (key) => {
