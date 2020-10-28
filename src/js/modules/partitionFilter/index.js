@@ -39,8 +39,8 @@ export class PartitionFilter extends Feature {
                             on: false,
                         },
                         {
-                            key: 'duoga',
-                            title: __('partitionFilter_subPage_options_duoga'),
+                            key: 'douga',
+                            title: __('partitionFilter_subPage_options_douga'),
                             on: false,
                         },
                         {
@@ -77,6 +77,11 @@ export class PartitionFilter extends Feature {
                             key: 'life',
                             title: __('partitionFilter_subPage_options_life'),
                             on: false,
+                        },
+                        {
+                            key: 'food',
+                            title: __('partitionFilter_subPage_options_food'),
+                            on: false,  
                         },
                         {
                             key: 'kichiku',

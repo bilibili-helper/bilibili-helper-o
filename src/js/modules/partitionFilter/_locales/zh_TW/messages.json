@@ -17,7 +17,7 @@
   "partitionFilter_subPage_options_anime": {
     "message": "番劇"
   },
-  "partitionFilter_subPage_options_duoga": {
+  "partitionFilter_subPage_options_douga": {
     "message": "動畫"
   },
   "partitionFilter_subPage_options_music": {
@@ -40,6 +40,9 @@
   },
   "partitionFilter_subPage_options_life": {
     "message": "生活"
+  },
+  "partitionFilter_subPage_options_food": {
+    "message": "美食"
   },
   "partitionFilter_subPage_options_kichiku": {
     "message": "鬼畜"
