@@ -25,19 +25,20 @@ export class PartitionFilterUI extends UI {
         'music': '音乐',
         'dance': '舞蹈',
         'anime': '番剧',
-        'duoga': '动画',
+        'douga': '动画',
         'digital': '数码',
         'movie': '电影',
         'manga': '漫画',
         'cheese': '课堂',
         'kichiku': '鬼畜',
         'fashion': '时尚',
-        'teleplay': '电视剧',
+        'teleplay': 'TV剧',
         'cinephile': '影视',
         'guochuang': '国创',
         'technology': '知识',
         'information': '资讯',
         'documentary': '纪录片',
+        'food': '美食',
     };
 
     listBoxTextToItem = {};

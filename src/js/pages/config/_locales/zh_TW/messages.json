@@ -22,9 +22,6 @@
     "config_type_live": {
         "message": "直播"
     },
-    "config_type_home": {
-        "message": "主页"
-    },
     "config_type_menu": {
         "message": "菜单栏"
     },
