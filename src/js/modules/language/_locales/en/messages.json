@@ -2,8 +2,14 @@
     "language_name": {
         "message": "Language"
     },
+    "language_description": {
+        "message": "Take effect after restart extension or browser"
+    },
     "language_subPage_title": {
         "message": "Language Config"
+    },
+    "language_subPage_description": {
+        "message": "Take effect after restart extension or browser"
     },
     "language_subPage_options_auto": {
         "message": "Auto / Follow browser"

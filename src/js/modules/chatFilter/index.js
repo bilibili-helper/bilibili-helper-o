@@ -14,7 +14,6 @@ export class ChatFilter extends Feature {
         super({
             name: 'chatFilter',
             kind: 'live',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 title: __('charFilter_name'),

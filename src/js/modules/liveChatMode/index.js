@@ -13,7 +13,6 @@ export class LiveChatMode extends Feature {
         super({
             name: 'liveChatMode',
             kind: 'live',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 title: __('liveChatMode_name'),

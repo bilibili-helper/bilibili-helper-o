@@ -31,10 +31,10 @@ let i18nCacheTimer;
 /**
  * i18n工具函数
  * @description 配合language模块重新写了一下
- * @param t {string}
- * @param options {object}
+ * @param string {string}
+ * @param [options] {object}
  */
-export const __ = (string, options) => {
+export const __ = (string, options = null) => {
     // 做一次短暂缓存，用于响应语言设置变化
     if (!i18nCacheTimer) {
         i18nCacheTimer = setTimeout(() => {
@@ -43,7 +43,7 @@ export const __ = (string, options) => {
             i18nCacheTimer = null;
         }, i18nCacheValidTime);
     }
-    if (lang === 'auto' || lang === navigator.language) {
+    if (lang === 'auto' || lang === chrome.i18n.getUILanguage()) {
         return chrome.i18n.getMessage(string, options);
     } else if (window.i18nMap && (lang in window.i18nMap)) {
         const target = window.i18nMap[lang][string];
@@ -63,6 +63,7 @@ export const __ = (string, options) => {
                     }
                 });
             }
+            console.warn(string, resultMessage);
             return resultMessage;
         } else {
             return '';
@@ -277,10 +278,17 @@ export const bv2av = (bvid) => {
 export const initI18n = () => {
     return new Promise(resolve => {
         if (!window.i18nMap) {
-            chrome.runtime.getBackgroundPage((win) => {
-                window.i18nMap = win.i18nMap;
-                resolve();
-            });
+            if (chrome.runtime.getBackgroundPage) {
+                chrome.runtime.getBackgroundPage((win) => {
+                    window.i18nMap = win.i18nMap;
+                    resolve();
+                });
+            } else {
+                chrome.runtime.sendMessage({command: 'getI18nMap'}, (i18nMap) => {
+                    window.i18nMap = i18nMap;
+                    resolve();
+                })
+            }
         }
     });
 };
@@ -300,4 +308,4 @@ export const getUID = () => {
             }
         });
     });
-}
+};

@@ -12,7 +12,6 @@ export class Debug extends Feature {
         super({
             name: 'debug',
             kind: 'other',
-            dependencies: ['language'],
             settings: {
                 on: process.env.DEBUG || false,
                 toggle: !process.env.DEBUG,

@@ -13,7 +13,6 @@ export class GoogleAnalytics extends Feature {
         super({
             name: 'googleAnalytics',
             kind: 'other',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 //toggle: false,

@@ -14,9 +14,8 @@ export class PartitionFilter extends Feature {
         super({
             name: 'partitionFilter',
             kind: 'home',
-            dependencies: ['language'],
             settings: {
-                on: false,
+                on: true,
                 title: __('partitionFilter_name'),
                 hasUI: true,
                 subPage: {
@@ -82,7 +81,7 @@ export class PartitionFilter extends Feature {
                         {
                             key: 'food',
                             title: __('partitionFilter_subPage_options_food'),
-                            on: false,  
+                            on: false,
                         },
                         {
                             key: 'kichiku',
@@ -110,8 +109,8 @@ export class PartitionFilter extends Feature {
                             on: false,
                         },
                         {
-                            key: 'cinephile',
-                            title: __('partitionFilter_subPage_options_cinephile'),
+                            key: 'film',
+                            title: __('partitionFilter_subPage_options_film'),
                             on: false,
                         },
                         {

@@ -11,7 +11,6 @@ export class Background extends Feature {
         super({
             name: 'background',
             kind: 'other',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 hide: true,

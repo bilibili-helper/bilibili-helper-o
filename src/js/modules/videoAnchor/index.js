@@ -11,7 +11,6 @@ export class VideoAnchor extends Feature {
         super({
             name: 'videoAnchor',
             kind: 'video',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 hide: true,

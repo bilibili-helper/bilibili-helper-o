@@ -21,9 +21,11 @@ export class Language extends Feature {
                 on: true,
                 toggle: false,
                 title: __('language_name'),
+                description: __('language_description'),
                 subPage: {
                     type: 'radio',
                     title: __('language_subPage_title'),
+                    description: __('language_subPage_description'),
                     options: [
                         {key: 'auto', title: __('language_subPage_options_auto')},
                         {key: 'zh-CN', title: __('language_subPage_options_zhCN')},
@@ -46,5 +48,14 @@ export class Language extends Feature {
             langOption.lang = window.navigator.language;
             langOption.t = Date.now();
         }
+    };
+
+    addListener = () => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.command === 'getI18nMap') {
+                sendResponse(window.i18nMap);
+            }
+            return true;
+        });
     };
 };

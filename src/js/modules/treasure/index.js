@@ -16,7 +16,6 @@ export class Treasure extends Feature {
         super({
             name: 'treasure',
             kind: 'live',
-            dependencies: ['language'],
             permissions: ['login', 'notifications'],
             settings: {
                 on: true,

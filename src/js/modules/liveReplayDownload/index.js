@@ -16,7 +16,6 @@ export class LiveReplayDownload extends Feature {
         super({
             name: 'liveReplayDownload',
             kind: 'live',
-            dependencies: ['language'],
             permissions: ['downloads'],
             settings: {
                 on: true,

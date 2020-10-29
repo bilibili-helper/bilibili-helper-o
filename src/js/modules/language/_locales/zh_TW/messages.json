@@ -2,8 +2,14 @@
     "language_name": {
         "message": "語言"
     },
+    "language_description": {
+        "message": "重啟擴展或瀏覽器後生效"
+    },
     "language_subPage_title": {
         "message": "語言設定"
+    },
+    "language_subPage_description": {
+        "message": "重啟擴展或瀏覽器後生效"
     },
     "language_subPage_options_auto": {
         "message": "自動 / 跟隨瀏覽器"

@@ -13,7 +13,6 @@ export class DoSign extends Feature {
         super({
             name: 'doSign',
             kind: 'live',
-            dependencies: ['language'],
             permissions: ['login'],
             settings: {
                 on: true,

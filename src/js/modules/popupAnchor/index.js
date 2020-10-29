@@ -12,7 +12,6 @@ export class PopupAnchor extends Feature {
         super({
             name: 'popupAnchor',
             kind: 'popup',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 hide: true,

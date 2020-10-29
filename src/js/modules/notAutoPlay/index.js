@@ -13,7 +13,6 @@ export class NotAutoPlay extends Feature {
         super({
             name: 'notAutoPlay',
             kind: 'tbilibili',
-            dependencies: ['language'],
             settings: {
                 on: true,
                 hasUI: true,

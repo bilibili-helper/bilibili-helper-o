@@ -7,6 +7,7 @@
 import {UI} from 'Libs/UI';
 import _ from 'lodash';
 import $ from 'jquery';
+import {__} from 'Utils/functions';
 
 export class PartitionFilterUI extends UI {
 
@@ -17,28 +18,28 @@ export class PartitionFilterUI extends UI {
     }
 
     keyToListBoxText = {
-        'life': '生活',
-        'live': '直播',
-        'ent': '娱乐',
-        'read': '专栏',
-        'game': '游戏',
-        'music': '音乐',
-        'dance': '舞蹈',
-        'anime': '番剧',
-        'douga': '动画',
-        'digital': '数码',
-        'movie': '电影',
-        'manga': '漫画',
-        'cheese': '课堂',
-        'kichiku': '鬼畜',
-        'fashion': '时尚',
-        'teleplay': 'TV剧',
-        'cinephile': '影视',
-        'guochuang': '国创',
-        'technology': '知识',
-        'information': '资讯',
-        'documentary': '纪录片',
-        'food': '美食',
+        'life': __('partitionFilter_subPage_options_life'),
+        'live': __('partitionFilter_subPage_options_live'),
+        'ent': __('partitionFilter_subPage_options_ent'),
+        'read': __('partitionFilter_subPage_options_read'),
+        'game': __('partitionFilter_subPage_options_game'),
+        'music': __('partitionFilter_subPage_options_music'),
+        'dance': __('partitionFilter_subPage_options_dance'),
+        'anime': __('partitionFilter_subPage_options_anime'),
+        'douga': __('partitionFilter_subPage_options_douga'),
+        'digital': __('partitionFilter_subPage_options_digital'),
+        'movie': __('partitionFilter_subPage_options_movie'),
+        'manga': __('partitionFilter_subPage_options_manga'),
+        'cheese': __('partitionFilter_subPage_options_cheese'),
+        'kichiku': __('partitionFilter_subPage_options_kichiku'),
+        'fashion': __('partitionFilter_subPage_options_fashion'),
+        'teleplay': __('partitionFilter_subPage_options_teleplay'),
+        'film': __('partitionFilter_subPage_options_film'),
+        'guochuang': __('partitionFilter_subPage_options_guochuang'),
+        'technology': __('partitionFilter_subPage_options_technology'),
+        'information': __('partitionFilter_subPage_options_information'),
+        'documentary': __('partitionFilter_subPage_options_documentary'),
+        'food': __('partitionFilter_subPage_options_food'),
     };
 
     listBoxTextToItem = {};
