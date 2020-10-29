@@ -7,6 +7,7 @@
 import {UI} from 'Libs/UI';
 import _ from 'lodash';
 import $ from 'jquery';
+import {__} from 'Utils/functions';
 
 export class PartitionFilterUI extends UI {
 
@@ -23,28 +24,28 @@ export class PartitionFilterUI extends UI {
     }
 
     keyToListBoxText = {
-        'life': this.getListBoxText('生活'),
-        'live': this.getListBoxText('直播'),
-        'ent': this.getListBoxText('娱乐', '娛樂'),
-        'read': this.getListBoxText('专栏', '專欄'),
-        'game': this.getListBoxText('游戏', '遊戲'),
-        'music': this.getListBoxText('音乐', '音樂'),
-        'dance': this.getListBoxText('舞蹈'),
-        'anime': this.getListBoxText('番剧', '番劇'),
-        'douga': this.getListBoxText('动画', '動畫'),
-        'digital': this.getListBoxText('数码', '数位'),
-        'movie': this.getListBoxText('电影', '電影'),
-        'manga': this.getListBoxText('漫画', '漫畫'),
-        'cheese': this.getListBoxText('课堂', '課堂'),
-        'kichiku': this.getListBoxText('鬼畜'),
-        'fashion': this.getListBoxText('时尚', '時尚'),
-        'teleplay': this.getListBoxText('TV剧', 'TV劇'),
-        'cinephile': this.getListBoxText('影视', '影視'),
-        'guochuang': this.getListBoxText('国创', '國創'),
-        'technology': this.getListBoxText('知识', '知識'),
-        'information': this.getListBoxText('资讯', '資訊'),
-        'documentary': this.getListBoxText('纪录片', '紀錄片'),
-        'food': this.getListBoxText('美食'),
+        'life': __('partitionFilter_subPage_options_life'),
+        'live': __('partitionFilter_subPage_options_live'),
+        'ent': __('partitionFilter_subPage_options_ent'),
+        'read': __('partitionFilter_subPage_options_read'),
+        'game': __('partitionFilter_subPage_options_game'),
+        'music': __('partitionFilter_subPage_options_music'),
+        'dance': __('partitionFilter_subPage_options_dance'),
+        'anime': __('partitionFilter_subPage_options_anime'),
+        'douga': __('partitionFilter_subPage_options_douga'),
+        'digital': __('partitionFilter_subPage_options_digital'),
+        'movie': __('partitionFilter_subPage_options_movie'),
+        'manga': __('partitionFilter_subPage_options_manga'),
+        'cheese': __('partitionFilter_subPage_options_cheese'),
+        'kichiku': __('partitionFilter_subPage_options_kichiku'),
+        'fashion': __('partitionFilter_subPage_options_fashion'),
+        'teleplay': __('partitionFilter_subPage_options_teleplay'),
+        'film': __('partitionFilter_subPage_options_film'),
+        'guochuang': __('partitionFilter_subPage_options_guochuang'),
+        'technology': __('partitionFilter_subPage_options_technology'),
+        'information': __('partitionFilter_subPage_options_information'),
+        'documentary': __('partitionFilter_subPage_options_documentary'),
+        'food': __('partitionFilter_subPage_options_food'),
     };
 
     listBoxTextToItem = {};

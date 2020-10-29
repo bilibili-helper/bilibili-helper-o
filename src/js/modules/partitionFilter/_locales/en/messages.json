@@ -1,77 +1,77 @@
 {
-  "partitionFilter_name": {
-    "message": "A filter for navigation of home page"
-  },
-  "partitionFilter_subPage_title": {
-    "message": "A filter for navigation of home page"
-  },
-  "partitionFilter_subPage_description": {
-    "message": "Open to hide"
-  },
-  "partitionFilter_subPage_options_live": {
-    "message": "Live"
-  },
-  "partitionFilter_subPage_options_guochuang": {
-    "message": "国创"
-  },
-  "partitionFilter_subPage_options_anime": {
-    "message": "番剧"
-  },
-  "partitionFilter_subPage_options_douga": {
-    "message": "动画"
-  },
-  "partitionFilter_subPage_options_music": {
-    "message": "Music"
-  },
-  "partitionFilter_subPage_options_dance": {
-    "message": "Dance"
-  },
-  "partitionFilter_subPage_options_game": {
-    "message": "Game"
-  },
-  "partitionFilter_subPage_options_technology": {
-    "message": "Technology"
-  },
-  "partitionFilter_subPage_options_cheese": {
-    "message": "课堂"
-  },
-  "partitionFilter_subPage_options_digital": {
-    "message": "Digital"
-  },
-  "partitionFilter_subPage_options_life": {
-    "message": "Life"
-  },
-  "partitionFilter_subPage_options_food": {
-    "message": "Food"
-  },
-  "partitionFilter_subPage_options_kichiku": {
-    "message": "kichiku"
-  },
-  "partitionFilter_subPage_options_fashion": {
-    "message": "Fashion"
-  },
-  "partitionFilter_subPage_options_information": {
-    "message": "Information"
-  },
-  "partitionFilter_subPage_options_ent": {
-    "message": "Entertainment"
-  },
-  "partitionFilter_subPage_options_movie": {
-    "message": "Movie"
-  },
-  "partitionFilter_subPage_options_cinephile": {
-    "message": "Film"
-  },
-  "partitionFilter_subPage_options_read": {
-    "message": "Article"
-  },
-  "partitionFilter_subPage_options_teleplay": {
-    "message": "TV"
-  },
-  "partitionFilter_subPage_options_manga": {
-    "message": "Manga"
-  },
-  "partitionFilter_subPage_options_documentary": {
-    "message": "Documentary"
-  }
+    "partitionFilter_name": {
+        "message": "A filter for navigation of home page"
+    },
+    "partitionFilter_subPage_title": {
+        "message": "A filter for navigation of home page"
+    },
+    "partitionFilter_subPage_description": {
+        "message": "Open to hide"
+    },
+    "partitionFilter_subPage_options_live": {
+        "message": "直播"
+    },
+    "partitionFilter_subPage_options_guochuang": {
+        "message": "国创"
+    },
+    "partitionFilter_subPage_options_anime": {
+        "message": "番剧"
+    },
+    "partitionFilter_subPage_options_douga": {
+        "message": "动画"
+    },
+    "partitionFilter_subPage_options_music": {
+        "message": "音乐"
+    },
+    "partitionFilter_subPage_options_dance": {
+        "message": "舞蹈"
+    },
+    "partitionFilter_subPage_options_game": {
+        "message": "游戏"
+    },
+    "partitionFilter_subPage_options_technology": {
+        "message": "知识"
+    },
+    "partitionFilter_subPage_options_cheese": {
+        "message": "课堂"
+    },
+    "partitionFilter_subPage_options_digital": {
+        "message": "数码"
+    },
+    "partitionFilter_subPage_options_life": {
+        "message": "生活"
+    },
+    "partitionFilter_subPage_options_food": {
+        "message": "美食"
+    },
+    "partitionFilter_subPage_options_kichiku": {
+        "message": "鬼畜"
+    },
+    "partitionFilter_subPage_options_fashion": {
+        "message": "时尚"
+    },
+    "partitionFilter_subPage_options_information": {
+        "message": "资讯"
+    },
+    "partitionFilter_subPage_options_ent": {
+        "message": "娱乐"
+    },
+    "partitionFilter_subPage_options_movie": {
+        "message": "电影"
+    },
+    "partitionFilter_subPage_options_film": {
+        "message": "影视"
+    },
+    "partitionFilter_subPage_options_read": {
+        "message": "专栏"
+    },
+    "partitionFilter_subPage_options_teleplay": {
+        "message": "TV剧"
+    },
+    "partitionFilter_subPage_options_manga": {
+        "message": "漫画"
+    },
+    "partitionFilter_subPage_options_documentary": {
+        "message": "纪录片"
+    }
 }

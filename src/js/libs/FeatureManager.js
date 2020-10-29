@@ -13,19 +13,29 @@ export class FeatureManager {
         this.features = {};
         this.waitQueue = [];
         this.addListener();
-        this.permissionManager = new PermissionManager();
-        this.instantiateFeatures().then(this.loadFeatures);
+        this.init();
+    }
+
+    init = () => {
         this.retryMax = _.keys(Features).length;
         this.retryTime = 0;
-    }
+        this.permissionManager = new PermissionManager();
+        this.instantiateFeatures().then(this.loadFeatures);
+    };
 
     // 实例化所有Feature，not include init function
     instantiateFeatures = () => {
         return new Promise(resolve => {
             _.each(Features, (FeatureClass, featureName) => {
                 if (!this.features[_.lowerFirst(featureName)]) {
-                    if (!FeatureClass) { console.warn(`Feature ${featureName}'s feature class is not defined!`); } else { this.features[_.lowerFirst(featureName)] = new FeatureClass(); }
-                } else { throw `Feature ${featureName} has instantiated!`; }
+                    if (!FeatureClass) {
+                        console.warn(`Feature ${featureName}'s feature class is not defined!`);
+                    } else {
+                        this.features[_.lowerFirst(featureName)] = new FeatureClass();
+                    }
+                } else {
+                    throw `Feature ${featureName} has instantiated!`;
+                }
             });
             resolve();
         });
