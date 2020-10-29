@@ -14,6 +14,7 @@ export class PartitionFilter extends Feature {
         super({
             name: 'partitionFilter',
             kind: 'home',
+            dependencies: ['language'],
             settings: {
                 on: false,
                 title: __('partitionFilter_name'),

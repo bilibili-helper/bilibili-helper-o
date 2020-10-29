@@ -14,6 +14,7 @@ export class VideoWiden extends Feature {
         super({
             name: 'videoWiden',
             kind: 'video',
+            dependencies: ['language'],
             settings: {
                 on: true,
                 title: __('videoWiden_name'),

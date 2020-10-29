@@ -18,6 +18,7 @@ export class LiveUpCheck extends Feature {
         super({
             name: 'liveUpCheck',
             kind: 'popup',
+            dependencies: ['language'],
             permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function

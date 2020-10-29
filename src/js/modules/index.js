@@ -3,6 +3,7 @@
  * Create: 2018-06-12
  * Description: 功能点打包入口
  */
+import {Language} from 'Modules/language';
 import {Background} from './background';
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
@@ -40,6 +41,7 @@ import {PartitionFilter, PartitionFilterUI} from "Modules/partitionFilter";
 //} catch (e) {``;}
 
 export const Features = {
+    Language,
     Background,
     Debug,
     PopupAnchor,

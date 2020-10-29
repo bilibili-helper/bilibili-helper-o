@@ -1,0 +1,20 @@
+{
+    "language_name": {
+        "message": "语言"
+    },
+    "language_subPage_title": {
+        "message": "语言设定"
+    },
+    "language_subPage_options_auto": {
+        "message": "自动 / 跟随浏览器"
+    },
+    "language_subPage_options_zhCN": {
+        "message": "中文（简体）"
+    },
+    "language_subPage_options_zhTW": {
+        "message": "中文（繁体）"
+    },
+    "language_subPage_options_en": {
+        "message": "英文"
+    }
+}

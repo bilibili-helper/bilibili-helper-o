@@ -11,6 +11,7 @@ export class QuickSearch extends Feature {
         super({
             name: 'quickSearch',
             kind: 'other',
+            dependencies: ['language'],
             settings: {
                 on: true,
                 title: __('quickSearch_name'),

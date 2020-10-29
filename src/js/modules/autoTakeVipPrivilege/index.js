@@ -14,6 +14,7 @@ export class AutoTakeVipPrivilege extends Feature {
         super({
             name: 'autoTakeVipPrivilege',
             kind: 'global',
+            dependencies: ['language'],
             permissions: ['login'],
             settings: {
                 on: true,

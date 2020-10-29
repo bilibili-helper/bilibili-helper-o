@@ -13,6 +13,7 @@ export class CvImages extends Feature {
         super({
             name: 'cvImages',
             kind: 'cv',
+            dependencies: ['language'],
             settings: {
                 on: true,
                 hasUI: true,

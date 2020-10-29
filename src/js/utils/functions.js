@@ -7,6 +7,7 @@
 
 import moment from 'moment';
 import Url from 'url-parse';
+import store from 'store';
 
 /**
  * @param command {string}
@@ -23,11 +24,54 @@ export const sendMessage = (command, key, callback) => {
     });
 };
 
+let currentLangConfig = store.get('bilibili-helper-language');
+let lang = (currentLangConfig && currentLangConfig.subPage && currentLangConfig.subPage.value) || navigator.language;
+let i18nCacheValidTime = 1000; // 3s
+let i18nCacheTimer;
 /**
+ * i18n工具函数
+ * @description 配合language模块重新写了一下
  * @param t {string}
  * @param options {object}
  */
-export const __ = (t, options = null) => chrome.i18n.getMessage(t, options);
+export const __ = (string, options) => {
+    // 做一次短暂缓存，用于响应语言设置变化
+    if (!i18nCacheTimer) {
+        i18nCacheTimer = setTimeout(() => {
+            currentLangConfig = store.get('bilibili-helper-language');
+            lang = (currentLangConfig && currentLangConfig.subPage && currentLangConfig.subPage.value) || navigator.language;
+            i18nCacheTimer = null;
+        }, i18nCacheValidTime);
+    }
+    if (lang === 'auto' || lang === navigator.language) {
+        return chrome.i18n.getMessage(string, options);
+    } else if (window.i18nMap && (lang in window.i18nMap)) {
+        const target = window.i18nMap[lang][string];
+        if (target) {
+            const {message, placeholders = {}} = target;
+            let resultMessage = message;
+            // 检查替换变量
+            const replacedValue = /\$(.+?)\$/g.exec(message);
+
+            if (replacedValue) {
+                const targetRes = replacedValue.slice(1);
+                targetRes.map(t => t.toLowerCase()).map(t => {
+                    if (t in placeholders) {
+                        resultMessage = message.replaceAll(new RegExp(`\\$${t}\\$`, 'ig'), () => {
+                            return options.shift();
+                        });
+                    }
+                });
+            }
+            return resultMessage;
+        } else {
+            return '';
+        }
+    } else {
+        console.error(`not catch lang: ${lang} in string ${string}`);
+        return '';
+    }
+};
 
 /**
  * 创建新tab页面
@@ -229,3 +273,31 @@ export const bv2av = (bvid) => {
 
     return (r - avbv.add) ^ avbv.xor;
 };
+
+export const initI18n = () => {
+    return new Promise(resolve => {
+        if (!window.i18nMap) {
+            chrome.runtime.getBackgroundPage((win) => {
+                window.i18nMap = win.i18nMap;
+                resolve();
+            });
+        }
+    });
+};
+
+export const getUID = () => {
+    return new Promise(resolve => {
+        chrome.cookies.get({
+            url: 'http://interface.bilibili.com/',
+            name: 'DedeUserID',
+        }, (cookie) => {
+            const thisSecond = (new Date()).getTime() / 1000;
+            // expirationDate 是秒数
+            if (cookie && cookie.expirationDate > thisSecond) {
+                resolve(cookie.value);
+            } else {
+                resolve();
+            }
+        });
+    });
+}

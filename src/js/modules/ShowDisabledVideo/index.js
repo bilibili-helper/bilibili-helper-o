@@ -16,6 +16,7 @@ export class ShowDisabledVideo extends Feature {
         super({
             name: 'showDisabledVideo',
             kind: 'videoList',
+            dependencies: ['language'],
             settings: {
                 on: true,
                 title: __('showDisabledVideo_name'),

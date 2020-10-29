@@ -13,6 +13,7 @@ export class DarkMode extends Feature {
         super({
             name: 'darkMode',
             kind: 'global',
+            dependencies: ['language'],
             settings: {
                 on: false,
                 hasUI: true,

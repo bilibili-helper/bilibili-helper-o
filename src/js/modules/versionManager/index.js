@@ -14,6 +14,7 @@ export class VersionManager extends Feature {
         super({
             name: 'versionManager',
             kind: 'other',
+            dependencies: ['language'],
             permissions: ['notifications'],
             settings: {
                 on: true,

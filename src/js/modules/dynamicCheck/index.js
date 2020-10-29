@@ -17,6 +17,7 @@ export class DynamicCheck extends Feature {
         super({
             name: 'dynamicCheck',
             kind: 'popup',
+            dependencies: ['language'],
             permissions: ['login', 'notifications'],
             settings: { // 指该feature的配置
                 on: true, // 指feature是否执行launch function

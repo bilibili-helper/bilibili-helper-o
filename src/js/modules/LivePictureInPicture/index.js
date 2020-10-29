@@ -13,6 +13,7 @@ export class LivePictureInPicture extends Feature {
         super({
             name: 'livePictureInPicture',
             kind: 'live',
+            dependencies: ['language'],
             permissions: ['pip'],
             settings: {
                 on: true,

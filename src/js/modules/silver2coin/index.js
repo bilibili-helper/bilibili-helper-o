@@ -14,6 +14,7 @@ export class Silver2coin extends Feature {
         super({
             name: 'silver2coin',
             kind: 'live',
+            dependencies: ['language'],
             permissions: ['login', 'notifications'],
             settings: {
                 on: false,
