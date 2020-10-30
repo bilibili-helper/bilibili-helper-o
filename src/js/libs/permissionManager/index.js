@@ -6,42 +6,6 @@
 import _ from 'lodash';
 import {__, isBiggerThan} from 'Utils';
 
-/**
- * @param check 检查标记，指示该权限有没有被检查过
- */
-export const PERMISSION_STATUS = {
-    login: {
-        errorMsg: __('permissionManager_login_error_massage'),
-        description: __('permissionManager_login_description'),
-    },
-    notifications: {
-        errorMsg: __('permissionManager_notifications_error_massage'),
-        description: __('permissionManager_notifications_description'),
-    },
-    pip: {
-        errorMsg: '您的浏览器不支持画中画功能',
-        description: '您需要升级浏览器版本或者更换为更加高级的浏览器',
-    },
-    downloads: {
-        errorMsg: '助手未获取到管理下载内容的权限',
-        description: '助手需要获得管理下载内容的权限，以便于给您下载的弹幕或视频文件重命名',
-    },
-    checkChromeVersion: {
-        bigger: {
-            errorMsg: '浏览器内核版本过低，需要大于%version%',
-            description: '请更新浏览器',
-        },
-        smaller: {
-            errorMsg: '浏览器内核版本过高，需要小于%version%',
-            description: '由于浏览器升级获得的新特性导致功能受限，尝试使用更低版本的浏览器以正常使用功能',
-        },
-        noneWebkit: {
-            errorMsg: '浏览器内核版本错误',
-            description: '请使用以chrome内核的浏览器',
-        },
-    },
-};
-
 export class PermissionManager {
     constructor() {
         this.permissionMap = {};
@@ -50,6 +14,41 @@ export class PermissionManager {
         this.typeMap = {};
         this.hasCheckAll = false;
     }
+    /**
+     * @param check 检查标记，指示该权限有没有被检查过
+     */
+    PERMISSION_STATUS = {
+        login: {
+            errorMsg: __('permissionManager_login_error_massage'),
+            description: __('permissionManager_login_description'),
+        },
+        notifications: {
+            errorMsg: __('permissionManager_notifications_error_massage'),
+            description: __('permissionManager_notifications_description'),
+        },
+        pip: {
+            errorMsg: '您的浏览器不支持画中画功能',
+            description: '您需要升级浏览器版本或者更换为更加高级的浏览器',
+        },
+        downloads: {
+            errorMsg: '助手未获取到管理下载内容的权限',
+            description: '助手需要获得管理下载内容的权限，以便于给您下载的弹幕或视频文件重命名',
+        },
+        checkChromeVersion: {
+            bigger: {
+                errorMsg: '浏览器内核版本过低，需要大于%version%',
+                description: '请更新浏览器',
+            },
+            smaller: {
+                errorMsg: '浏览器内核版本过高，需要小于%version%',
+                description: '由于浏览器升级获得的新特性导致功能受限，尝试使用更低版本的浏览器以正常使用功能',
+            },
+            noneWebkit: {
+                errorMsg: '浏览器内核版本错误',
+                description: '请使用以chrome内核的浏览器',
+            },
+        },
+    }
 
     load = (feature) => {
         this.features[feature.name] = feature;
@@ -57,7 +56,7 @@ export class PermissionManager {
     };
 
     checkAll = () => {
-        const promiseArray = _.map(PERMISSION_STATUS, (value, permissionName) => {
+        const promiseArray = _.map(this.PERMISSION_STATUS, (value, permissionName) => {
             return new Promise((resolve) => {
                 switch (permissionName) {
                     case 'login':
@@ -103,9 +102,9 @@ export class PermissionManager {
             Promise.all(_.map(feature.permissions, async (permissionStr) => {
                 const permissionMap = permissionStr.split('?');
                 const permissionName = permissionMap[0];
-                if (!(permissionName in PERMISSION_STATUS)) { // 未定义权限类型
+                if (!(permissionName in this.PERMISSION_STATUS)) { // 未定义权限类型
                     return {pass: false, msg: `Undefined permission: ${permissionName}`};
-                } else if (permissionName in PERMISSION_STATUS && !this.typeMap[permissionName] && this[permissionName] && permissionMap[1]) {
+                } else if (permissionName in this.PERMISSION_STATUS && !this.typeMap[permissionName] && this[permissionName] && permissionMap[1]) {
                     this[permissionName](permissionMap[1]).then((res) => {
                         this.permissionMap[permissionName] = res;
                     });
@@ -162,7 +161,7 @@ export class PermissionManager {
                 // expirationDate 是秒数
                 if (cookie && cookie.expirationDate > thisSecond) { [pass, msg] = [true, '']; } else {
                     [pass, msg] = [
-                        false, PERMISSION_STATUS.login.errorMsg,
+                        false, this.PERMISSION_STATUS.login.errorMsg,
                     ];
                 }
 
@@ -175,7 +174,7 @@ export class PermissionManager {
     pip = () => {
         return new Promise(resolve => {
             const enabled = !!document.pictureInPictureEnabled;
-            const [pass, msg] = enabled ? [true, ''] : [false, PERMISSION_STATUS.pip.errorMsg];
+            const [pass, msg] = enabled ? [true, ''] : [false, this.PERMISSION_STATUS.pip.errorMsg];
             this.updatePermission('pip', pass, msg);
             resolve({pass, msg});
         });
@@ -184,7 +183,7 @@ export class PermissionManager {
     downloads = () => {
         return new Promise(resolve => {
             chrome.permissions.contains({permissions: ['downloads']}, (res) => {
-                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.downloads.errorMsg];
+                const [pass, msg] = res ? [true, ''] : [false, this.PERMISSION_STATUS.downloads.errorMsg];
                 this.updatePermission('downloads', pass, msg);
                 resolve({pass, msg});
             });
@@ -207,19 +206,21 @@ export class PermissionManager {
                 switch (operation) {
                     case 'bigger':
                         if (isBiggerThan(checkChrome[1], version) < 0) {
-                            [pass, msg] = [false, PERMISSION_STATUS.checkChromeVersion.bigger.errorMsg.replace('%version%', version)];
+                            [pass, msg] = [false, this.PERMISSION_STATUS.checkChromeVersion.bigger.errorMsg
+                                                                   .replace('%version%', version)];
                         }
                         break;
                     case 'smaller':
                         if (isBiggerThan(checkChrome[1], version) > 0) {
-                            [pass, msg] = [false, PERMISSION_STATUS.checkChromeVersion.smaller.errorMsg.replace('%version%', version)];
+                            [pass, msg] = [false, this.PERMISSION_STATUS.checkChromeVersion.smaller.errorMsg
+                                                                   .replace('%version%', version)];
                         }
                         break;
                     default:
                         break;
                 }
             } else {
-                [pass, msg] = [false, PERMISSION_STATUS.checkChromeVersion.noneWebkit.errorMsg];
+                [pass, msg] = [false, this.PERMISSION_STATUS.checkChromeVersion.noneWebkit.errorMsg];
             }
             resolve({pass, msg, type: operation});
         });
@@ -228,7 +229,7 @@ export class PermissionManager {
     checkNotification = () => {
         return new Promise(resolve => {
             chrome.permissions.contains({permissions: ['notifications']}, (res) => {
-                const [pass, msg] = res ? [true, ''] : [false, PERMISSION_STATUS.notifications.errorMsg];
+                const [pass, msg] = res ? [true, ''] : [false, this.PERMISSION_STATUS.notifications.errorMsg];
                 this.updatePermission('notifications', pass, msg);
                 resolve({pass, msg});
             });
@@ -239,6 +240,8 @@ export class PermissionManager {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.command === 'getPermissionMap') {
                 sendResponse(this.permissionMap);
+            } else if (message.command === 'getPermissionStatusText') {
+                sendResponse(this.PERMISSION_STATUS);
             }
             return true;
         });

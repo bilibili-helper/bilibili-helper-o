@@ -1,5 +1,5 @@
 {
-    "version": "1.2.24.2",
+    "version": "1.2.25.1",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
     "name": "__MSG_extensionName__",
@@ -138,6 +138,23 @@
                 "*://space.bilibili.com/*/favlist*"
             ],
             "run_at": "document_end"
+        },
+        {
+            "all_frames": false,
+            "js": [
+                "vendors.bundle.js",
+                "home.js",
+                "features.bundle.js"
+            ],
+            "css": [
+                "styles/vendors.css",
+                "styles/features.css"
+            ],
+            "matches": [
+                "*://bilibili.com/",
+                "*://www.bilibili.com/"
+            ],
+            "run_at": "document_end"
         }
     ],
     "icons": {
@@ -160,10 +177,10 @@
         "*://bilibili-helper.github.io/*",
         "*://*.hdslb.com/*",
         "*://*.bilivideo.com/*",
-        "*://bilibili-helper.com/*",
-        "*://*.bilibili-helper.com/*",
-        "*://bilibilihelper.com/*",
-        "*://*.bilibilihelper.com/*"
+        "*://*.bilibilihelper.com/*",
+        "*://*.helper.icu/*",
+        "*://*.crx.wiki/*",
+        "*://*.crx.plus/*"
     ],
     "web_accessible_resources": [
         "statics/*",

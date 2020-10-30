@@ -5,7 +5,7 @@
  */
 import _ from 'lodash';
 import {UIs} from 'Modules';
-import {consoleLogo} from 'Utils';
+import {consoleLogo, initI18n} from 'Utils';
 
 export class UIManager {
     constructor(kind) {
@@ -19,7 +19,10 @@ export class UIManager {
     }
 
     init = () => {
-        return this.getUIList().then(this.instantiateUIs).then(this.loadUIs);
+        return initI18n()
+        .then(this.getUIList)
+        .then(this.instantiateUIs)
+        .then(this.loadUIs);
     };
 
     /**

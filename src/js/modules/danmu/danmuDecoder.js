@@ -113,7 +113,7 @@ export const DanmuOptionDecoder = (viewData, length) => {
             case 7:
                 break;
             default:
-                console.log(reader.pos, reader.len);
+                //console.log(reader.pos, reader.len);
                 reader.skipType(pos & 7);
                 break;
         }

@@ -9,9 +9,8 @@ import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled, {createGlobalStyle} from 'styled-components';
-import {consoleLogo, createTab, version, __} from 'Utils';
+import {consoleLogo, createTab, version, __, initI18n} from 'Utils';
 import {Button, Icon, CheckBoxButton, Modal} from 'Components';
-import {PERMISSION_STATUS} from 'Libs/permissionManager';
 import {
     Body,
     List,
@@ -166,6 +165,7 @@ class PageConfig extends React.Component {
             broadcast: this.defaultBroadcast, // header下的通知条
 
             permissionMap: {},
+            permissionStatusTextObject: {},
 
             checkingVersion: false,
         };
@@ -179,6 +179,10 @@ class PageConfig extends React.Component {
                 if (this.settings[kind]) { this.settings[kind].map[name] = setting; } else { this.settings.other.map[name] = setting; }
             });
             this.setState(this.settings);
+        });
+
+        chrome.runtime.sendMessage({command: 'getPermissionStatusText'}, (permissionStatusTextObject) => {
+            this.setState({permissionStatusTextObject});
         });
 
         chrome.runtime.sendMessage({command: 'inIncognitoContext'}, (inIncognitoContext) => {
@@ -356,7 +360,7 @@ class PageConfig extends React.Component {
         });
     };
     renderSettingDOM = () => {
-        const {permissionMap} = this.state;
+        const {permissionMap, permissionStatusTextObject} = this.state;
         return _.map(this.settings, (e, kind) => {
             const list = this.state[kind];
             return !_.isEmpty(list.map) ? <List key={kind} title={list.title} ref={i => this[`${kind}Ref`] = i}>
@@ -376,7 +380,7 @@ class PageConfig extends React.Component {
                         const nameMap = nameStr.split('?');
                         if (nameMap.length > 0) {
                             const name = nameMap[0];
-                            const description = PERMISSION_STATUS[name].description || (permissionMap[name] && PERMISSION_STATUS[name][permissionMap[name].type].description);
+                            const description = (permissionStatusTextObject[name] && permissionStatusTextObject[name].description) || (permissionMap[name] && permissionStatusTextObject[name][permissionMap[name].type].description);
                             if ((name in permissionMap && permissionMap[name].pass === false) || permissionMap[name] === undefined) {
                                 errorDescription.push(
                                     <PermissionErrorDescription>{description}</PermissionErrorDescription>,
@@ -444,14 +448,13 @@ class PageConfig extends React.Component {
 
     agreePrivatePolicy = () => {
         this.setState({modalOn: false}, () => {
-           store.set('show-private-policy', false);
+            store.set('show-private-policy', false);
         });
     };
 
     showPrivatePolicy = () => {
         this.setState({modalOn: true});
     };
-
 
     render() {
         const {
@@ -515,9 +518,11 @@ class PageConfig extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <PageConfig/>,
-    document.getElementById('root'),
-    consoleLogo,
-);
+initI18n().then(() => {
+    ReactDOM.render(
+        <PageConfig/>,
+        document.getElementById('root'),
+        consoleLogo,
+    );
+});
 

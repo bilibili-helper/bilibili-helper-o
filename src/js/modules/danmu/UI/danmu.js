@@ -683,7 +683,7 @@ export default () => {
                     needLoadByHandle: false,
                 }, () => {
                     this.getNewDANMUList(this.currentOid, this.currentPid).then(() => {
-                        console.log(this.segmentSize);
+                        //console.log(this.segmentSize);
                         for (let i = 0; i < this.segmentSize; ++i) {
                             this.getDanmuData(this.currentOid, this.currentPid, i + 1);
                         }

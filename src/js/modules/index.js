@@ -3,6 +3,7 @@
  * Create: 2018-06-12
  * Description: 功能点打包入口
  */
+import {Language} from 'Modules/language';
 import {Background} from './background';
 import {DynamicCheck, DynamicCheckUI} from './dynamicCheck';
 import {VideoAnchor, VideoAnchorUI} from './videoAnchor';
@@ -32,6 +33,7 @@ import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureI
 import {AutoTakeVipPrivilege, AutoTakeVipPrivilegeUI} from 'Modules/autoTakeVipPrivilege';
 import {LiveReplayDownload, LiveReplayDownloadUI} from 'Modules/liveReplayDownload';
 import {DarkMode, DarkModeUI} from "Modules/darkMode";
+import {PartitionFilter, PartitionFilterUI} from "Modules/partitionFilter";
 
 //let VideoUnblock;
 //try {
@@ -39,6 +41,7 @@ import {DarkMode, DarkModeUI} from "Modules/darkMode";
 //} catch (e) {``;}
 
 export const Features = {
+    Language,
     Background,
     Debug,
     PopupAnchor,
@@ -60,6 +63,7 @@ export const Features = {
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
+    PartitionFilter,
     //VideoUnblock,
     ProxyForWebsite,
     CvImages,
@@ -93,4 +97,5 @@ export const UIs = {
     AutoTakeVipPrivilegeUI,
     LiveReplayDownloadUI,
     DarkModeUI,
+    PartitionFilterUI,
 };
