@@ -152,7 +152,10 @@
             ],
             "matches": [
                 "*://bilibili.com/",
-                "*://www.bilibili.com/"
+                "*://www.bilibili.com/",
+                "*://bilibili.com/?spm_id_from=*",
+                "*://bilibili.com/?spm_id_from=*",
+                "*://www.bilibili.com/?spm_id_from=*"
             ],
             "run_at": "document_end"
         }

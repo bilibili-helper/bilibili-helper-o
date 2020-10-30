@@ -26,7 +26,7 @@ export const sendMessage = (command, key, callback) => {
 
 let currentLangConfig = store.get('bilibili-helper-language');
 let lang = (currentLangConfig && currentLangConfig.subPage && currentLangConfig.subPage.value) || navigator.language;
-let i18nCacheValidTime = 1000; // 3s
+let i18nCacheValidTime = 1000; // 1s
 let i18nCacheTimer;
 /**
  * i18n工具函数
@@ -63,7 +63,6 @@ export const __ = (string, options = null) => {
                     }
                 });
             }
-            console.warn(string, resultMessage);
             return resultMessage;
         } else {
             return '';

@@ -5,95 +5,75 @@
  */
 
 import {UI} from 'Libs/UI';
-import _ from 'lodash';
-import $ from 'jquery';
-import {__} from 'Utils/functions';
 
 export class PartitionFilterUI extends UI {
-
     constructor() {
         super({
             name: 'PartitionFilter',
         });
     }
 
-    isTW = navigator.language === 'zh-TW';
-
-    getListBoxText = (cn, tw) => {
-        return this.isTW && tw ? tw : cn;
-    }
-
-    keyToListBoxText = {
-        'life': __('partitionFilter_subPage_options_life'),
-        'live': __('partitionFilter_subPage_options_live'),
-        'ent': __('partitionFilter_subPage_options_ent'),
-        'read': __('partitionFilter_subPage_options_read'),
-        'game': __('partitionFilter_subPage_options_game'),
-        'music': __('partitionFilter_subPage_options_music'),
-        'dance': __('partitionFilter_subPage_options_dance'),
-        'anime': __('partitionFilter_subPage_options_anime'),
-        'douga': __('partitionFilter_subPage_options_douga'),
-        'digital': __('partitionFilter_subPage_options_digital'),
-        'movie': __('partitionFilter_subPage_options_movie'),
-        'manga': __('partitionFilter_subPage_options_manga'),
-        'cheese': __('partitionFilter_subPage_options_cheese'),
-        'kichiku': __('partitionFilter_subPage_options_kichiku'),
-        'fashion': __('partitionFilter_subPage_options_fashion'),
-        'teleplay': __('partitionFilter_subPage_options_teleplay'),
-        'cinephile': __('partitionFilter_subPage_options_cinephile'),
-        'guochuang': __('partitionFilter_subPage_options_guochuang'),
-        'technology': __('partitionFilter_subPage_options_technology'),
-        'information': __('partitionFilter_subPage_options_information'),
-        'documentary': __('partitionFilter_subPage_options_documentary'),
-        'food': __('partitionFilter_subPage_options_food'),
+    kindNameMap = {
+        'life': ['生活'],
+        'live': ['直播'],
+        'ent': ['娱乐', '娛樂'],
+        'read': ['专栏', '專欄'],
+        'game': ['游戏', '遊戲'],
+        'music': ['音乐', '音樂'],
+        'dance': ['舞蹈'],
+        'anime': ['番剧', '番劇'],
+        'douga': ['动画', '動畫'],
+        'digital': ['数码', '数位'],
+        'movie': ['电影', '電影'],
+        'manga': ['漫画', '漫畫'],
+        'cheese': ['课堂', '課堂'],
+        'kichiku': ['鬼畜'],
+        'fashion': ['时尚', '時尚'],
+        'teleplay': ['TV剧', 'TV劇'],
+        'cinephile': ['影视', '影視'],
+        'guochuang': ['国创', '國創'],
+        'technology': ['知识', '知識'],
+        'information': ['资讯', '資訊'],
+        'documentary': ['纪录片', '紀錄片'],
+        'food': ['美食'],
     };
 
-    listBoxTextToItem = {};
+    kindDOMMap = {};
 
     load = (containers, settings) => {
         if (!settings.on) { return Promise.resolve(); }
-
         return new Promise(resolve => {
-            let listBox = document.querySelectorAll('.item.sortable');
+            let kindDOMList = Array.from(document.querySelectorAll('.item.sortable'));
 
-            if (listBox.length > 0) {
-                this.attack(settings, listBox);
-            } else {                               //有些浏览器会在该脚本加载完成后才加载分区
-                var mo = new MutationObserver(() => {
-                    listBox =  document.querySelectorAll('.item.sortable');
-                    if (listBox.length > 0) {
-                        mo.disconnect();
-                        this.attack(settings, listBox);
-                    }
+            if (kindDOMList.length > 0) {
+                kindDOMList.forEach((kindDOM) => {
+                    this.kindDOMMap[kindDOM.innerText] = kindDOM;
                 });
 
-                mo.observe($('.list-box')[0].firstChild, {childList: true, subtree: true});
+                const filterList = settings.subPage.options.filter((o) => o.on === true);
+                filterList.map(item => item.key).map(key => {
+                    this.filterMain(key);
+                    this.filterListBox(key);
+                });
             }
             resolve();
         });
     };
 
-    attack = (settings ,listBox) => {
-        _.forEach(listBox, (item) => {
-            this.listBoxTextToItem[item.innerText] = item;
-        });
-
-        const filterList = _.filter(settings.subPage.options, (o) => o.on === true);
-        _.forEach(filterList, (v) => {
-            this.filterMain(v.key);
-            this.filterListBox(v.key);
-        });
-    }
-
-    getFilterItemInListBox = (key) => {
-        return this.listBoxTextToItem[this.keyToListBoxText[key]];
-    };
+    getFilterItemInListBox = (key) => this.kindDOMMap[this.kindNameMap[key]];
 
     filterMain = (key) => {
-        $('#bili_' + key).hide();
-    };
+        const target = document.getElementById('bili_' + key);
+        target && target.hide();
+    }
 
     filterListBox = (key) => {
-        this.getFilterItemInListBox(key).style.display = 'none';
+        const nameList = this.kindNameMap[key];
+        nameList.forEach(name => {
+            let box = this.kindDOMMap[name];
+            if (box) {
+                box.style.display = 'none';
+            }
+        });
     };
 }

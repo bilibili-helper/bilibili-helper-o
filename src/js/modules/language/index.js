@@ -40,7 +40,7 @@ export class Language extends Feature {
 
     launch = () => {
         langOption = {
-            lang: (this.store && this.store.subPage && this.store.subPage.value) || navigator.language,
+            lang: (this.store && this.store.subPage && this.store.subPage.value) || navigator.language || chrome.i18n.getUILanguage(),
             t: Date.now(),
         };
 

@@ -47,7 +47,6 @@ export const Features = {
     PopupAnchor,
     //Treasure,
     Menu,
-    GoogleAnalytics,
     VideoAnchor,
     Danmu,
     DynamicCheck,
@@ -58,12 +57,12 @@ export const Features = {
     VideoWiden,
     VideoSubtitleDownload,
     VersionManager,
+    PartitionFilter,
     Silver2coin,
     DarkMode,
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
-    PartitionFilter,
     //VideoUnblock,
     ProxyForWebsite,
     CvImages,
@@ -73,6 +72,7 @@ export const Features = {
     LivePictureInPicture,
     AutoTakeVipPrivilege,
     LiveReplayDownload,
+    GoogleAnalytics,
 };
 
 export const UIs = {
