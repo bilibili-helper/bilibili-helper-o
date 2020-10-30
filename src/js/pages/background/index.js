@@ -5,10 +5,11 @@
  */
 import 'babel-polyfill';
 import {FeatureManager} from 'Libs/FeatureManager';
+import localesSupportList from '../../../../localesSupportList.json';
 
 new Promise((resolve) => {
     chrome.i18n.getAcceptLanguages((acceptLanguages) => {
-        const languages = acceptLanguages.map((str) => str.replace('-', '_'));
+        const languages = localesSupportList || [];
         const urls = languages.map(lang => `_locales/${lang}/messages.json`);
         const requests = urls.map(url => fetch(url).then(res => res.json()));
         Promise.all(requests).then((langObjects) => {
