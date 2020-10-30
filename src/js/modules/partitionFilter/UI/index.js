@@ -40,7 +40,7 @@ export class PartitionFilterUI extends UI {
         'kichiku': __('partitionFilter_subPage_options_kichiku'),
         'fashion': __('partitionFilter_subPage_options_fashion'),
         'teleplay': __('partitionFilter_subPage_options_teleplay'),
-        'film': __('partitionFilter_subPage_options_film'),
+        'cinephile': __('partitionFilter_subPage_options_cinephile'),
         'guochuang': __('partitionFilter_subPage_options_guochuang'),
         'technology': __('partitionFilter_subPage_options_technology'),
         'information': __('partitionFilter_subPage_options_information'),

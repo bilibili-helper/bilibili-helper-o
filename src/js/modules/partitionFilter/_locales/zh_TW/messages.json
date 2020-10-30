@@ -1,77 +1,77 @@
 {
-  "partitionFilter_name": {
-    "message": "屏蔽主頁分區"
-  },
-  "partitionFilter_subPage_title": {
-    "message": "屏蔽主頁分區"
-  },
-  "partitionFilter_subPage_description": {
-    "message": "在這裏設置要屏蔽的分區，打開狀態爲屏蔽"
-  },
-  "partitionFilter_subPage_options_live": {
-    "message": "直播"
-  },
-  "partitionFilter_subPage_options_guochuang": {
-    "message": "國創"
-  },
-  "partitionFilter_subPage_options_anime": {
-    "message": "番劇"
-  },
-  "partitionFilter_subPage_options_douga": {
-    "message": "動畫"
-  },
-  "partitionFilter_subPage_options_music": {
-    "message": "音樂"
-  },
-  "partitionFilter_subPage_options_dance": {
-    "message": "舞蹈"
-  },
-  "partitionFilter_subPage_options_game": {
-    "message": "遊戲"
-  },
-  "partitionFilter_subPage_options_technology": {
-    "message": "知識"
-  },
-  "partitionFilter_subPage_options_cheese": {
-    "message": "課堂"
-  },
-  "partitionFilter_subPage_options_digital": {
-    "message": "数位"
-  },
-  "partitionFilter_subPage_options_life": {
-    "message": "生活"
-  },
-  "partitionFilter_subPage_options_food": {
-    "message": "美食"
-  },
-  "partitionFilter_subPage_options_kichiku": {
-    "message": "鬼畜"
-  },
-  "partitionFilter_subPage_options_fashion": {
-    "message": "時尚"
-  },
-  "partitionFilter_subPage_options_information": {
-    "message": "資訊"
-  },
-  "partitionFilter_subPage_options_ent": {
-    "message": "娛樂"
-  },
-  "partitionFilter_subPage_options_movie": {
-    "message": "電影"
-  },
-  "partitionFilter_subPage_options_cinephile": {
-    "message": "影視"
-  },
-  "partitionFilter_subPage_options_read": {
-    "message": "專欄"
-  },
-  "partitionFilter_subPage_options_teleplay": {
-    "message": "TV劇"
-  },
-  "partitionFilter_subPage_options_manga": {
-    "message": "漫畫"
-  },
-  "partitionFilter_subPage_options_documentary": {
-    "message": "紀錄片"
-  }
+    "partitionFilter_name": {
+        "message": "屏蔽主頁分區"
+    },
+    "partitionFilter_subPage_title": {
+        "message": "屏蔽主頁分區"
+    },
+    "partitionFilter_subPage_description": {
+        "message": "在這裏設置要屏蔽的分區，打開狀態爲屏蔽"
+    },
+    "partitionFilter_subPage_options_live": {
+        "message": "直播"
+    },
+    "partitionFilter_subPage_options_guochuang": {
+        "message": "國創"
+    },
+    "partitionFilter_subPage_options_anime": {
+        "message": "番劇"
+    },
+    "partitionFilter_subPage_options_douga": {
+        "message": "動畫"
+    },
+    "partitionFilter_subPage_options_music": {
+        "message": "音樂"
+    },
+    "partitionFilter_subPage_options_dance": {
+        "message": "舞蹈"
+    },
+    "partitionFilter_subPage_options_game": {
+        "message": "遊戲"
+    },
+    "partitionFilter_subPage_options_technology": {
+        "message": "知識"
+    },
+    "partitionFilter_subPage_options_cheese": {
+        "message": "課堂"
+    },
+    "partitionFilter_subPage_options_digital": {
+        "message": "数位"
+    },
+    "partitionFilter_subPage_options_life": {
+        "message": "生活"
+    },
+    "partitionFilter_subPage_options_food": {
+        "message": "美食"
+    },
+    "partitionFilter_subPage_options_kichiku": {
+        "message": "鬼畜"
+    },
+    "partitionFilter_subPage_options_fashion": {
+        "message": "時尚"
+    },
+    "partitionFilter_subPage_options_information": {
+        "message": "資訊"
+    },
+    "partitionFilter_subPage_options_ent": {
+        "message": "娛樂"
+    },
+    "partitionFilter_subPage_options_movie": {
+        "message": "電影"
+    },
+    "partitionFilter_subPage_options_cinephile": {
+        "message": "影視"
+    },
+    "partitionFilter_subPage_options_read": {
+        "message": "專欄"
+    },
+    "partitionFilter_subPage_options_teleplay": {
+        "message": "TV劇"
+    },
+    "partitionFilter_subPage_options_manga": {
+        "message": "漫畫"
+    },
+    "partitionFilter_subPage_options_documentary": {
+        "message": "紀錄片"
+    }
 }

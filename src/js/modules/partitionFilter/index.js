@@ -109,8 +109,8 @@ export class PartitionFilter extends Feature {
                             on: false,
                         },
                         {
-                            key: 'film',
-                            title: __('partitionFilter_subPage_options_film'),
+                            key: 'cinephile',
+                            title: __('partitionFilter_subPage_options_cinephile'),
                             on: false,
                         },
                         {
