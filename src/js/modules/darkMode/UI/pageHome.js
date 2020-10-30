@@ -18,7 +18,7 @@ const HomeDarkModeStyle = createGlobalStyle`
       filter: contrast(0.93) brightness(0.89);
     }
     
-    a, .storey-title .no-link, .manga-panel .manga-list-box .manga-card .manga-title {
+    a, .storey-title .no-link, .manga-panel .manga-list-box .manga-card .manga-title, .rank-header .name {
       color: var(--dark-font-0);
     }
     

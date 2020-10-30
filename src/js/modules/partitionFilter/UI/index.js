@@ -55,19 +55,18 @@ export class PartitionFilterUI extends UI {
                     this.filterMain(key);
                     this.filterListBox(key);
                 });
+                document.querySelector('div.proxy-box').style.minHeight = 'unset';
             }
             resolve();
         });
     };
-
-    getFilterItemInListBox = (key) => this.kindDOMMap[this.kindNameMap[key]];
 
     filterMain = (key) => {
         const target = document.getElementById('bili_' + key);
         if (target) {
             target.style.display = 'none';
         }
-    }
+    };
 
     filterListBox = (key) => {
         const nameList = this.kindNameMap[key];

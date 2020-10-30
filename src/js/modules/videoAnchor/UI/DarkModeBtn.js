@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {VideoPlayDarkMode} from 'Modules/darkMode/UI/DarkMode';
 import _ from "lodash";
+import store from 'store';
 
 /**
  * Author: DrowsyFlesh
@@ -40,8 +41,10 @@ export default () => {
   return class DarkModeButton extends React.Component {
     constructor(props) {
       super(props);
+      this.darkStore = store.get('videoDark');
+      this.darkDis_two_factor = store.get('videoDarkDisTF');
       this.state = {
-        showDark: false,
+        showDark: this.darkStore,
       };
       this.isOldPageOrWatchLater = !!document.querySelector('#__bofqi,.view-later-module, #bangumi_detail');
     }
@@ -51,7 +54,8 @@ export default () => {
         command: 'getSetting',
         feature: 'darkMode',
       }, (settings) => {
-        if (settings.on) {
+        this.darkGlobal = settings.on;
+        if (settings.on && !this.darkDis_two_factor) {
           const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
           if (darkFollowSys.on) {
             const sysDark = matchMedia("(prefers-color-scheme: dark)");
@@ -66,9 +70,16 @@ export default () => {
       });
     }
 
-    handleOnClick = () => {
-      const on = this.state.showDark;
-      this.setState({showDark: !on});
+     handleOnClick = () => {
+      const on = !this.state.showDark;
+      this.setState({showDark: on});
+      store.set('videoDark', on);
+      if (!on && !this.darkStore && this.darkGlobal && !this.darkDis_two_factor) {
+        store.set('videoDarkDisTF', true);
+      }
+      if (on && !this.darkGlobal && this.darkDis_two_factor) {
+        store.set('videoDarkDisTF', false);
+      }
     };
 
     render() {
