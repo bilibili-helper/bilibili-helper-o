@@ -1,5 +1,5 @@
 {
-    "version": "1.2.25",
+    "version": "1.2.25.1",
     "manifest_version": 2,
     "minimum_chrome_version": "56.0.0",
     "name": "__MSG_extensionName__",
@@ -177,10 +177,10 @@
         "*://bilibili-helper.github.io/*",
         "*://*.hdslb.com/*",
         "*://*.bilivideo.com/*",
-        "*://bilibili-helper.com/*",
-        "*://*.bilibili-helper.com/*",
-        "*://bilibilihelper.com/*",
-        "*://*.bilibilihelper.com/*"
+        "*://*.bilibilihelper.com/*",
+        "*://*.helper.icu/*",
+        "*://*.crx.wiki/*",
+        "*://*.crx.plus/*"
     ],
     "web_accessible_resources": [
         "statics/*",
