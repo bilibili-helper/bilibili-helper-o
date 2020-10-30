@@ -64,7 +64,9 @@ export class PartitionFilterUI extends UI {
 
     filterMain = (key) => {
         const target = document.getElementById('bili_' + key);
-        target && target.hide();
+        if (target) {
+            target.style.display = 'none';
+        }
     }
 
     filterListBox = (key) => {
