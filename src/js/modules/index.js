@@ -32,7 +32,7 @@ import {ShowDisabledVideo, ShowDisabledVideoUI} from 'Modules/ShowDisabledVideo'
 import {LivePictureInPicture, LivePictureInPictureUI} from 'Modules/LivePictureInPicture';
 import {AutoTakeVipPrivilege, AutoTakeVipPrivilegeUI} from 'Modules/autoTakeVipPrivilege';
 import {LiveReplayDownload, LiveReplayDownloadUI} from 'Modules/liveReplayDownload';
-import {DarkMode, DarkModeUI} from "Modules/darkMode";
+import {DarkMode, DarkModeUI, VideoDarkBtn, VideoDarkBtnUI} from "Modules/darkMode";
 import {PartitionFilter, PartitionFilterUI} from "Modules/partitionFilter";
 
 //let VideoUnblock;
@@ -60,6 +60,7 @@ export const Features = {
     PartitionFilter,
     Silver2coin,
     DarkMode,
+    VideoDarkBtn,
     QuickSearch,
     VideoHideDanmu,
     LiveChatMode,
@@ -97,5 +98,6 @@ export const UIs = {
     AutoTakeVipPrivilegeUI,
     LiveReplayDownloadUI,
     DarkModeUI,
+    VideoDarkBtnUI,
     PartitionFilterUI,
 };

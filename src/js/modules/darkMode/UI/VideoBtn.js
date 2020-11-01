@@ -1,9 +1,8 @@
-import {Button} from 'Components/common/Button';
 import React from 'react';
-import styled from 'styled-components';
-import {VideoPlayDarkMode} from 'Modules/darkMode/UI/DarkMode';
-import _ from "lodash";
 import store from 'store';
+import styled from 'styled-components';
+import {Button} from 'Components/common/Button';
+import {VideoPlayDarkMode} from 'Modules/darkMode/UI/DarkMode';
 
 /**
  * Author: DrowsyFlesh
@@ -12,13 +11,6 @@ import store from 'store';
  */
 
 export default () => {
-  const DarkModeBtnBox = styled.div.attrs({
-    className: 'bilibili-helper-video-dark-mode',
-  })`
-      position: static;
-      margin: 0;
-      z-index: 1;
-    `;
   const VideoDarkModeButton = styled(Button).attrs({
     className: `bilibili-helper-video-dark-mode-btn`,
   })`
@@ -38,11 +30,11 @@ export default () => {
       }
     `;
 
-  return class DarkModeButton extends React.Component {
+  return class VideoBtn extends React.Component {
     constructor(props) {
       super(props);
       this.darkStore = store.get('videoDark');
-      this.darkDis_two_factor = store.get('videoDarkDisTF');
+      this.darkTwoFactor = store.get('videoDarkTwoFactor');
       this.state = {
         showDark: this.darkStore,
       };
@@ -55,8 +47,8 @@ export default () => {
         feature: 'darkMode',
       }, (settings) => {
         this.darkGlobal = settings.on;
-        if (settings.on && !this.darkDis_two_factor) {
-          const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
+        if (settings.on && !this.darkTwoFactor) {
+          const darkFollowSys = settings.options.filter((item) => item.key === 'darkFollowSys')[0];
           if (darkFollowSys.on) {
             const sysDark = matchMedia("(prefers-color-scheme: dark)");
             this.setState({showDark: sysDark.matches});
@@ -66,6 +58,16 @@ export default () => {
           } else {
             this.setState({showDark: true});
           }
+          if (this.darkStore === false) {
+            let time = store.get('videoDarkTime');
+            time = time !== undefined ? ++time : 1;
+            if (time > 3) {
+              store.remove('videoDark');
+              store.remove('videoDarkTime');
+            } else {
+              store.set('videoDarkTime', time);
+            }
+          }
         }
       });
     }
@@ -74,11 +76,11 @@ export default () => {
       const on = !this.state.showDark;
       this.setState({showDark: on});
       store.set('videoDark', on);
-      if (!on && !this.darkStore && this.darkGlobal && !this.darkDis_two_factor) {
-        store.set('videoDarkDisTF', true);
+      if (!on && this.darkStore === false && this.darkGlobal && !this.darkTwoFactor) {
+        store.set('videoDarkTwoFactor', true);
       }
-      if (on && !this.darkGlobal && this.darkDis_two_factor) {
-        store.set('videoDarkDisTF', false);
+      if (on && !this.darkGlobal && this.darkTwoFactor) {
+        store.set('videoDarkTwoFactor', false);
       }
     };
 
@@ -86,10 +88,8 @@ export default () => {
       const on = this.state.showDark;
       return (
           <React.Fragment>
-            <DarkModeBtnBox>
               <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPageOrWatchLater}>深色模式</VideoDarkModeButton>
               {on && !this.isOldPageOrWatchLater && <VideoPlayDarkMode/>}
-            </DarkModeBtnBox>
           </React.Fragment>
       );
     }
