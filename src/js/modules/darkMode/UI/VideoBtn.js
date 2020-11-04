@@ -11,9 +11,9 @@ import {VideoPlayDarkMode} from 'Modules/darkMode/UI/DarkMode';
  */
 
 export default () => {
-  const VideoDarkModeButton = styled(Button).attrs({
-    className: `bilibili-helper-video-dark-mode-btn`,
-  })`
+    const VideoDarkModeButton = styled(Button).attrs({
+        className: `bilibili-helper-video-dark-mode-btn`,
+    })`
       position: absolute;
       right: 66px;
       top: 14px;
@@ -30,68 +30,69 @@ export default () => {
       }
     `;
 
-  return class VideoBtn extends React.Component {
-    constructor(props) {
-      super(props);
-      this.darkStore = store.get('videoDark');
-      this.darkTwoFactor = store.get('videoDarkTwoFactor');
-      this.state = {
-        showDark: this.darkStore,
-      };
-      this.isOldPageOrWatchLater = !!document.querySelector('#__bofqi,.view-later-module, #bangumi_detail');
-    }
-
-    componentDidMount() {
-      chrome.runtime.sendMessage({
-        command: 'getSetting',
-        feature: 'darkMode',
-      }, (settings) => {
-        this.darkGlobal = settings.on;
-        if (settings.on && !this.darkTwoFactor) {
-          const darkFollowSys = settings.options.filter((item) => item.key === 'darkFollowSys')[0];
-          if (darkFollowSys.on) {
-            const sysDark = matchMedia("(prefers-color-scheme: dark)");
-            this.setState({showDark: sysDark.matches});
-            sysDark.onchange = () => {
-              this.setState({showDark: sysDark.matches});
+    return class VideoBtn extends React.Component {
+        constructor(props) {
+            super(props);
+            this.darkStore = store.get('videoDark');
+            this.darkTwoFactor = store.get('videoDarkTwoFactor');
+            this.state = {
+                showDark: this.darkStore,
             };
-          } else {
-            this.setState({showDark: true});
-          }
-          if (this.darkStore === false) {
-            let time = store.get('videoDarkTime');
-            time = time !== undefined ? ++time : 1;
-            if (time > 3) {
-              store.remove('videoDark');
-              store.remove('videoDarkTime');
-            } else {
-              store.set('videoDarkTime', time);
-            }
-          }
+            this.isOldPageOrWatchLater = !!document.querySelector('#__bofqi,.view-later-module, #bangumi_detail');
         }
-      });
-    }
 
-     handleOnClick = () => {
-      const on = !this.state.showDark;
-      this.setState({showDark: on});
-      store.set('videoDark', on);
-      if (!on && this.darkStore === false && this.darkGlobal && !this.darkTwoFactor) {
-        store.set('videoDarkTwoFactor', true);
-      }
-      if (on && !this.darkGlobal && this.darkTwoFactor) {
-        store.set('videoDarkTwoFactor', false);
-      }
+        componentDidMount() {
+            chrome.runtime.sendMessage({
+                command: 'getSetting',
+                feature: 'darkMode',
+            }, (settings) => {
+                this.darkGlobal = settings.on;
+                if (settings.on && !this.darkTwoFactor) {
+                    const darkFollowSys = settings.options.filter((item) => item.key === 'darkFollowSys')[0];
+                    if (darkFollowSys.on) {
+                        const sysDark = matchMedia("(prefers-color-scheme: dark)");
+                        this.setState({showDark: sysDark.matches});
+                        sysDark.onchange = () => {
+                            this.setState({showDark: sysDark.matches});
+                        };
+                    } else {
+                        this.setState({showDark: true});
+                    }
+                    if (this.darkStore === false) {
+                        let time = store.get('videoDarkTime');
+                        time = time !== undefined ? ++time : 1;
+                        if (time > 3) {
+                            store.remove('videoDark');
+                            store.remove('videoDarkTime');
+                        } else {
+                            store.set('videoDarkTime', time);
+                        }
+                    }
+                }
+            });
+        }
+
+        handleOnClick = () => {
+            const on = !this.state.showDark;
+            this.setState({showDark: on});
+            store.set('videoDark', on);
+            if (!on && this.darkStore === false && this.darkGlobal && !this.darkTwoFactor) {
+                store.set('videoDarkTwoFactor', true);
+            }
+            if (on && !this.darkGlobal && this.darkTwoFactor) {
+                store.set('videoDarkTwoFactor', false);
+            }
+        };
+
+        render() {
+            const on = this.state.showDark;
+            return (
+                <React.Fragment>
+                    <VideoDarkModeButton onClick={this.handleOnClick}
+                                         on={on && !this.isOldPageOrWatchLater}>深色模式</VideoDarkModeButton>
+                    {on && !this.isOldPageOrWatchLater && <VideoPlayDarkMode/>}
+                </React.Fragment>
+            );
+        }
     };
-
-    render() {
-      const on = this.state.showDark;
-      return (
-          <React.Fragment>
-              <VideoDarkModeButton onClick={this.handleOnClick} on={on && !this.isOldPageOrWatchLater}>深色模式</VideoDarkModeButton>
-              {on && !this.isOldPageOrWatchLater && <VideoPlayDarkMode/>}
-          </React.Fragment>
-      );
-    }
-  };
 }

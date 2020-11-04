@@ -74,11 +74,6 @@ const DynamicDarkModeStyle = createGlobalStyle`
       }
     }
     
-    //展开相关动态 
-    .fold-box {
-      border-color: var(--dark-1)!important;
-    }
-    
     //常看列表
     .card-list .most-viewed-panel .list-content .most-viewed-item .section {
       .icon-all, .avatar {
