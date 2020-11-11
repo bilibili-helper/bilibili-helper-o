@@ -137,7 +137,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     }
     
     //Card顶上的小尖尖
-    .van-popper {
+    .van-popper-vip, .van-popper-favorite, .van-popper-history, .van-popper-upload, .popover-app-download {
       .popper__arrow, .popper__arrow::after {
         border-bottom-color: var(--dark-3)!important;
       }
@@ -247,14 +247,15 @@ const UserPopperDarkModeStyle = createGlobalStyle`
     }
     
     .nameplate-card {
-     background: var(--dark-3)!important;
-     border-color: var(--dark-3)!important;
-     .nameplate-text {
-       border-color: var(--dark-1)!important;
-       .n-name, .n-title {
-         color: var(--dark-font-0)!important;
-       }
-     }
+      background: var(--dark-3)!important;
+      border-color: var(--dark-3)!important;
+      .nameplate-text {
+        border-color: var(--dark-1)!important;
+        .n-name, .n-title {
+          color: var(--dark-font-0)!important;
+        }
+      }
+    }
     `;
 
 export {

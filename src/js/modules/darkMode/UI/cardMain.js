@@ -310,6 +310,11 @@ const DynamicMain = `
     .dynamic-list-item-wrap, .forw-more {
       border-color: var(--dark-2)!important;
     }
+    
+    //展开相关动态 
+    .fold-box {
+      border-color: var(--divider)!important;
+    }
     `;
 
 export {

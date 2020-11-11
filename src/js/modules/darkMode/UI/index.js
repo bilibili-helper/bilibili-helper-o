@@ -4,7 +4,6 @@
  * Description:
  */
 
-import _ from "lodash";
 import {UI} from 'Libs/UI';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -21,7 +20,7 @@ export class DarkModeUI extends UI {
     load = (containers, settings) => {
         if (!settings.on) { return Promise.resolve(); }
         return new Promise(resolve => {
-            const darkFollowSys =  _.find(settings.options, {key: 'darkFollowSys'});
+            const darkFollowSys = settings.options.filter((item) => item.key === 'darkFollowSys')[0];
             const t = {darkFollowSys: darkFollowSys.on};
             const wrapper = document.createElement('style');
             const pageName = this.isPage();
