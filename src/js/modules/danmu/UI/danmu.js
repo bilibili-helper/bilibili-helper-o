@@ -13,8 +13,7 @@ import styled from 'styled-components';
 import {Button} from 'Components/common/Button';
 import {Crc32Engine} from 'Libs/crc32';
 import {List} from 'react-virtualized';
-import {getFilename} from 'Utils';
-import {parseTime} from 'Utils';
+import {getFilename, parseTime, encodeHTMLEntries} from 'Utils';
 import {theme} from 'Styles';
 import './styles.scss';
 import 'react-virtualized/styles.css';
@@ -373,7 +372,7 @@ export default () => {
                     let xmlStr = `<?xml version="1.0" encoding="UTF-8"?><i><chatserver></chatserver><chatid>${oid}</chatid><mission></mission><maxlimit></maxlimit><state></state><real_name></real_name><source></source>`;
                     this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
                         const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
-                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${danmu}</d>`;
+                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${encodeHTMLEntries(danmu)}</d>`;
                     }, xmlStr) + '</i>';
                 });
             });

@@ -486,7 +486,7 @@ export default () => {
                              </LinkGroupTitle> : null}
                             <a
                                 key={i}
-                                href={o.url}
+                                href={o.url.replace('http://', 'https://')}
                                 referrerPolicy="unsafe-url"
                                 target="__blank"
                                 download

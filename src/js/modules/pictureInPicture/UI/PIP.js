@@ -40,9 +40,9 @@ export default () => {
 
         componentDidMount() {
             const that = this;
-            this.video = document.querySelector('#bofqi .bilibili-player-video video');
+            this.video = document.querySelector('#bofqi .bilibili-player-video video, #bilibili-player video');
             this.addListener(this.video);
-            const player = document.querySelector('#bofqi');
+            const player = document.querySelector('#bofqi, #bilibili-player');
             player && player.addEventListener('DOMNodeInserted', function(e) {
                 if (e.target.localName === 'video' && that.video !== e.target) {
                     that.video = e.target;
@@ -77,7 +77,7 @@ export default () => {
         // 将事件绑定到点击事件上，因为新版页面可能会对this.video重新赋值
         handleOnClick = (next = false) => {
             if (!this.video) {
-                this.video = document.querySelector('#bofqi .bilibili-player-video video');
+                this.video = document.querySelector('#bofqi .bilibili-player-video video, #bilibili-player video');
                 this.addListener(this.video);
             }
             if (!this.video || !this.video.requestPictureInPicture) return;

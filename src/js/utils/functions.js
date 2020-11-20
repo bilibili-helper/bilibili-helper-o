@@ -286,7 +286,7 @@ export const initI18n = () => {
                 chrome.runtime.sendMessage({command: 'getI18nMap'}, (i18nMap) => {
                     window.i18nMap = i18nMap;
                     resolve();
-                })
+                });
             }
         }
     });
@@ -307,4 +307,29 @@ export const getUID = () => {
             }
         });
     });
+};
+
+/**
+ * 将部分HTML实体字符转化为名称
+ * @param string
+ * @return {*}
+ */
+export const encodeHTMLEntries = (string) => {
+    return string.replaceAll(/(["'&<>])/g, (char) => {
+        switch (char) {
+            case '"':
+                return '&quot;';
+            case '\'':
+                return '&apos;';
+            case '&':
+                return '&amp;';
+            case '<':
+                return '&lt;';
+            case '>':
+                return '&gt;';
+            default:
+                return char;
+        }
+    });
+
 };
