@@ -47,7 +47,7 @@ export class LiveReplayDownloadUI extends UI {
                                         fragmentBtn.setAttribute('download', '');
                                         fragmentBtn.setAttribute('target', '__blank');
                                         fragmentBtn.setAttribute('referrerPolicy', 'unsafe-url');
-                                        fragmentBtn.href = fragment.url;
+                                        fragmentBtn.href = fragment.url.replace(/^http:\/\//, 'https://');
                                         fragmentBtn.innerText = `${index + 1}`;
                                         dom.appendChild(fragmentBtn);
                                     });

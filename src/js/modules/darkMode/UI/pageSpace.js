@@ -30,7 +30,7 @@ const SpaceDarkModeStyle = createGlobalStyle`
     
     //高优先
     .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item,
-    .my-album .tab-list .tab:not(.active) .name, .my-album .title, .fav-sidenav, .nav-title .text,
+    .my-album .tab-list .tab:not(.active) .name, .my-album .title, .fav-sidenav, .nav-title .text,.i-live .i-live-text,
     .fav-main .filter-item, .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
     .pgc-item-title, .pgc-item-desc, .setting-privacy-item .setting-privacy-name, .channel-title .channel-name, .album-title, .follow-item {
       color: var(--dark-font-0)!important;

@@ -6,7 +6,7 @@
 
 import {Feature} from 'Libs/feature';
 import {__} from 'Utils/functions';
-export {DarkModeUI} from './UI/index';
+export {DarkModeUI, VideoDarkBtnUI} from './UI/index';
 
 export class DarkMode extends Feature {
     constructor() {
@@ -26,6 +26,21 @@ export class DarkMode extends Feature {
                         title: __('darkMode_follow_system'),
                     },
                 ],
+            },
+        });
+    }
+}
+
+export class VideoDarkBtn extends Feature {
+    constructor() {
+        super({
+            name: 'videoDarkBtn',
+            kind: 'video',
+            dependencies: ['videoAnchor'],
+            settings: {
+                on: true,
+                hide: true,
+                hasUI: true,
             },
         });
     }

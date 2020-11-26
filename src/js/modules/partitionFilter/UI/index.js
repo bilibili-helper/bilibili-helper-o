@@ -5,10 +5,8 @@
  */
 
 import {UI} from 'Libs/UI';
-import $ from 'jquery';
 
 export class PartitionFilterUI extends UI {
-
     constructor() {
         super({
             name: 'PartitionFilter',
@@ -57,14 +55,18 @@ export class PartitionFilterUI extends UI {
                     this.filterMain(key);
                     this.filterListBox(key);
                 });
+                document.querySelector('div.proxy-box').style.minHeight = 'unset';
             }
             resolve();
         });
     };
 
-    getFilterItemInListBox = (key) => this.kindDOMMap[this.kindNameMap[key]];
-
-    filterMain = (key) => $('#bili_' + key).hide();
+    filterMain = (key) => {
+        const target = document.getElementById('bili_' + key);
+        if (target) {
+            target.style.display = 'none';
+        }
+    };
 
     filterListBox = (key) => {
         const nameList = this.kindNameMap[key];
@@ -75,5 +77,4 @@ export class PartitionFilterUI extends UI {
             }
         });
     };
-
 }

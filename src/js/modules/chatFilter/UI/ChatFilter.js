@@ -80,7 +80,7 @@ export default () => {
         constructor(props) {
             super(props);
             this.styleList = {
-                chat: '.chat-item:not(.hover).danmaku-item{display:none;}',
+                chat: '.chat-item:not(.hover).danmaku-item{display:none!important;}',
                 small: '.chat-item:not(.hover):not(.system-msg) > a, .chat-item .guard-icon{display:none !important;}',
                 gift: '.chat-item:not(.hover).gift-item,.bilibili-live-player-video-area > .bilibili-live-player-video-gift{display:none !important;}',
                 enterMsg: '.chat-item.important-prompt-item,.chat-item:not(.hover).welcome-msg,.chat-item.welcome-guard{display: none !important;}',

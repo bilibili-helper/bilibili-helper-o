@@ -437,7 +437,7 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       .rec-title {
         color: var(--dark-font-3);
       }
-      .rec-list .card-box {
+      .card-box {
         .pic-box {
           background: var(--dark-1)!important;
         }
