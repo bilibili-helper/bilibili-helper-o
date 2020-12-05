@@ -23,7 +23,7 @@ const videoDataCache = {
     new: {},
 };
 
-const hasCopyright = () => !!location.href.match(/^https:\/\/www\.bilibili\.com\/bangumi\/play/);
+const hasCopyright = () => !!location.href.match(/^https:\/\/www\.bilibili\.com\/bangumi\/play\/ep/);
 
 export default () => {
     const {color} = theme;
@@ -42,7 +42,6 @@ export default () => {
     const Description = styled.p`
       font-size: 12px;
       min-width: unset;
-      max-width: 100%;
       color: rgb(255, 255, 255);
       background-color: rgb(251, 114, 153);
       padding: 0px 4px;
@@ -51,7 +50,7 @@ export default () => {
       border-color: rgb(251, 114, 153);
       border-image: initial;
       border-radius: 4px;
-      width: max-content;
+      width: 450px;
       transform: translate(4px, 0px) scale(0.9);
       transform-origin: left;
     `;
@@ -201,7 +200,7 @@ export default () => {
                     sendResponse();
                 } else if (message.command === 'videoDownloadSendVideoRequest') {
                     let {data, url, method, type} = message;
-                    const {cid, avid, bvid, qn = '', fourk = 0} = data;
+                    let {cid, avid, bvid, qn = '', fourk = 0} = data;
                     if (type === 'new') {
                         if (location.href.indexOf('bangumi') >= 0) {
                             url = new Url(bangumiFlvDownloadURL);
@@ -337,16 +336,26 @@ export default () => {
             } else {
                 const scriptHTML = document.createElement('script');
                 scriptHTML.innerHTML = `
-                fetch('${url}&requestFrom=bilibili-helper', {
-                    method: 'get',
-                    credentials: 'include',
-                })
-                .then(res => res.json())
-                .then(res => {
-                    window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}', url: '${url}'}}, '*');
-                }).catch(e => {
-                    console.log(e);
-                });
+                (function(){
+                    let url = '${url}';
+                    let currentQuality = __GetCookie("CURRENT_QUALITY");
+                    if (/&qn=&/.test(url)) {
+                        url = url.replace(/qn=(&)?/, 'qn=' + currentQuality + '$1');
+                        if (+currentQuality === 120) {
+                            url = url.replace(/fourk=0(&)?/, 'fourk=1$1');
+                        }
+                    }
+                    fetch(\`\${url}&requestFrom=bilibili-helper\`, {
+                        method: 'get',
+                        credentials: 'include',
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        window.postMessage({command:'bilibili-helper-video-download-get-flv-url', res: {...res, type: '${type}', url: '${url}'}}, '*');
+                    }).catch(e => {
+                        console.log(e);
+                    });
+                })();
                 `;
                 document.body.appendChild(scriptHTML);
             }

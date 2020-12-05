@@ -92,6 +92,7 @@ export class VideoDownload extends Feature {
                 //const newUrl = new Url(flvDownloadURL);
                 //const {cid, avid, qn = ''} = data;
                 //newUrl.set('query', {cid, avid, otype: 'json', qn});
+                console.warn(url);
                 tabData.queue.push({
                     command: 'videoDownloadSendVideoRequest',
                     type: 'new',

@@ -16,7 +16,7 @@ import {PopupAnchor, PopupAnchorUI} from './popupAnchor';
 import {Menu, MenuUI} from './menu';
 import {ChatFilter, ChatFilterUI} from 'Modules/chatFilter';
 import {VideoDownload, VideoDownloadUI} from 'Modules/videoDownload';
-import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
+//import {PictureInPicture, PictureInPictureUI} from 'Modules/pictureInPicture';
 import {VideoWiden, VideoWidenUI} from 'Modules/videoWiden';
 import {VideoSubtitleDownload, VideoSubtitleDownloadUI} from 'Modules/videoSubtitleDownload';
 import {VersionManager} from 'Modules/versionManager';
@@ -53,7 +53,7 @@ export const Features = {
     ChatFilter,
     VideoDownload,
     DoSign,
-    PictureInPicture,
+    //PictureInPicture,
     VideoWiden,
     VideoSubtitleDownload,
     VersionManager,
@@ -85,7 +85,7 @@ export const UIs = {
     DynamicCheckUI,
     ChatFilterUI,
     VideoDownloadUI,
-    PictureInPictureUI,
+    //PictureInPictureUI,
     VideoWidenUI,
     VideoSubtitleDownloadUI,
     VideoHideDanmuUI,
