@@ -57,7 +57,7 @@ export const __ = (string, options = null) => {
                 const targetRes = replacedValue.slice(1);
                 targetRes.map(t => t.toLowerCase()).map(t => {
                     if (t in placeholders) {
-                        resultMessage = message.replaceAll(new RegExp(`\\$${t}\\$`, 'ig'), () => {
+                        resultMessage = message.replace(new RegExp(`\\$${t}\\$`, 'ig'), () => {
                             return options.shift();
                         });
                     }
@@ -315,7 +315,7 @@ export const getUID = () => {
  * @return {*}
  */
 export const encodeHTMLEntries = (string) => {
-    return string.replaceAll(/(["'&<>])/g, (char) => {
+    return string.replace(/(["'&<>])/g, (char) => {
         switch (char) {
             case '"':
                 return '&quot;';
