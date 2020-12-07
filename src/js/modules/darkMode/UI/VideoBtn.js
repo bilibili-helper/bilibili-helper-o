@@ -15,7 +15,7 @@ export default () => {
         className: `bilibili-helper-video-dark-mode-btn`,
     })`
       position: absolute;
-      right: 14px;
+      right: 64px;
       top: 14px;
       border-radius: 4px;
       button {

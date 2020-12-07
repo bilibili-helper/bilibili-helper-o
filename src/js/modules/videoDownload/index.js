@@ -140,7 +140,7 @@ export class VideoDownload extends Feature {
             if (filenameObject) {
                 const {filename: originFilename, cid} = filenameObject;
                 const filename = originFilename.replace(/[|"*?:<>]/g, '_');
-                const targetData = _.find(responseHeaders, (o) => o.name === 'Content-Disposition');
+                const targetData = _.find(responseHeaders, (o) => o.name.toLowerCase() === 'content-disposition');
                 const nameValue = `attachment; filename="${encodeURIComponent(filename)}.${cid}.flv"; filename*="utf-8' '${encodeURIComponent(filename)}.${cid}.flv"`.replace('/', '%2f');
                 if (targetData) {
                     targetData.value = nameValue;
@@ -155,7 +155,7 @@ export class VideoDownload extends Feature {
         }, {
             urls: [
                 '*://*.acgvideo.com/*',
-                '*://*.bilivideo.com/*'
+                '*://*.bilivideo.com/*',
             ],
         }, ['responseHeaders', 'blocking']);
     };
