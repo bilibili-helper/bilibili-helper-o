@@ -87,6 +87,7 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-avatar .level-info .grade, .van-popper-avatar .level-intro, .van-popper-avatar .coins,
     .van-popper-avatar .lang-change .lang-title, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
     .van-popper-avatar .lang-change .lang-intro, .van-popper-avatar .logout, .van-popper-avatar .logout span:hover,
+    .van-popper-avatar .nickname,
     .vip-m .bubble-traditional .recommand .title,
     .van-popper-favorite .view-all, .van-popper-favorite .play-all,
     .header-video-card .video-info .line-1,
