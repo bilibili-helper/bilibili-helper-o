@@ -262,7 +262,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                   color: #fff!important;
                 }
               }
-              .input-box textarea {
+              .input-box #editor {
                   color: var(--dark-font-0);
               }
             }
