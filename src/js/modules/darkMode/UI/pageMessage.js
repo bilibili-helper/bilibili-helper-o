@@ -211,8 +211,11 @@ const MessageDarkModeStyle = createGlobalStyle`
               .last-word {
                 color: var(--dark-font-2);
               }
+              &.top {
+                background-color: var(--dark-3);
+              }
               &.active, &:hover {
-                background-color: var(--dark-3)!important;
+                background-color: var(--dark-5)!important;
               }
             }
             .lds-spinner div:after {
