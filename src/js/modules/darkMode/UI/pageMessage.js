@@ -289,6 +289,9 @@ const MessageDarkModeStyle = createGlobalStyle`
             &::before {
               background: var(--dark-1)!important;
             }
+            label.type-selector.radio-selector {
+              color: var(--dark-font-0);
+            }
           }
         }
       }
