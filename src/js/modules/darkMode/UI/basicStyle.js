@@ -66,12 +66,14 @@ const TopBarDarkModeStyle = createGlobalStyle`
     
     //弹出Popper
     .channel-menu-mini, .van-popper-avatar, .van-popper-avatar .level-intro, .van-popper-avatar .coins .info .login-award, .van-popper-avatar .lang-change .lang-intro,
+    .van-popper-avatar .coins .contact-tips,
     .van-popper-vip, .van-popper-favorite, .van-popper-favorite .view-all, .van-popper-favorite .play-all, .van-popper-history, .van-popper-upload {
       background-color: var(--dark-3)!important;
     }
     
     //文字 轻
     .van-popper-avatar .level-info .progress, .van-popper-avatar .count-item .item-key,
+    .van-popper-avatar .coins .contact-tips,
     .van-popper-favorite .tab-item--normal, .van-popper-favorite .tab-item--normal .num, .van-popper-favorite .empty-list,
     .header-video-card .video-info .info,
     .header-video-card .video-info .desc,
