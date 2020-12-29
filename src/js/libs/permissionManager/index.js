@@ -153,7 +153,7 @@ export class PermissionManager {
     hasLogin = () => {
         return new Promise((resolve) => {
             chrome.cookies.get({
-                url: 'http://interface.bilibili.com/',
+                url: 'https://www.bilibili.com/',
                 name: 'DedeUserID',
             }, (cookie) => {
                 const thisSecond = (new Date()).getTime() / 1000;

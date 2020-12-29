@@ -331,5 +331,4 @@ export const encodeHTMLEntries = (string) => {
                 return char;
         }
     });
-
 };
