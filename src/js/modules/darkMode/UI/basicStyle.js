@@ -85,6 +85,8 @@ const TopBarDarkModeStyle = createGlobalStyle`
     .van-popper-avatar .level-info .grade, .van-popper-avatar .level-intro, .van-popper-avatar .coins,
     .van-popper-avatar .lang-change .lang-title, .van-popper-avatar .count-item .item-value, .van-popper-avatar .links .link-title,
     .van-popper-avatar .lang-change .lang-intro, .van-popper-avatar .logout, .van-popper-avatar .logout span:hover,
+    .van-popper-avatar .nickname,
+    .van-popper-avatar .coins .contact-tips,
     .vip-m .bubble-traditional .recommand .title,
     .van-popper-favorite .view-all, .van-popper-favorite .play-all,
     .header-video-card .video-info .line-1,
@@ -155,6 +157,23 @@ const TopBarDarkModeStyle = createGlobalStyle`
     //历史查看更多
     .van-popper-history .view-all {
       background: var(--dark-5)!important;
+    }
+
+    //邮箱、手机绑定的悬浮提示框
+    .van-popper-avatar .coins .contact-tips {
+      background-color: var(--dark-5)!important;
+      border-color: var(--dark-5)!important;
+      //箭头
+      &::after {
+        transform: rotate(45deg);
+        background: var(--dark-5)!important;
+      }
+      &.email-tips::after {
+        right: -5px!important;
+      }
+      &.phone-tips::after {
+        left: -5px!important;
+      }
     }
     `;
 
