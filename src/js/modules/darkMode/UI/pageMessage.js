@@ -211,8 +211,11 @@ const MessageDarkModeStyle = createGlobalStyle`
               .last-word {
                 color: var(--dark-font-2);
               }
+              &.top {
+                background-color: var(--dark-3);
+              }
               &.active, &:hover {
-                background-color: var(--dark-3)!important;
+                background-color: var(--dark-5)!important;
               }
             }
             .lds-spinner div:after {
@@ -262,8 +265,41 @@ const MessageDarkModeStyle = createGlobalStyle`
                   color: #fff!important;
                 }
               }
-              .input-box textarea {
+              .input-box #editor {
                   color: var(--dark-font-0);
+              }
+            }
+            .im-popup .im-popup-shell {
+              background-color: var(--dark-3);
+              .content {
+                .content-text {
+                  color: var(--dark-font-0);
+                }
+                .selector-box .type-selector {
+                  color: var(--dark-font-0);
+                  .css-1xneiug {
+                    .content {
+                      fill: var(--dark-5);
+                    }
+                    .border {
+                      fill-opacity: 0.5;
+                    }
+                  }
+                }
+                .report-tip {
+                  color: var(--dark-font-1);
+                }
+                .input-box {
+                  border-color: var(--dark-5);
+                  background-color: var(--dark-5);
+                  textarea {
+                    color: var(--dark-font-0);
+                  }
+                }
+              }
+              .popup-btn-ctnr .bl-button--primary:disabled {
+                background-color: var(--dark-4);
+                color: var(--dark-font-2);
               }
             }
           }
