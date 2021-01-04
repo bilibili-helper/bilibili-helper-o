@@ -29,9 +29,9 @@ const SpaceDarkModeStyle = createGlobalStyle`
     }
     
     //高优先
-    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item,
+    .feed-title, .section .user-auth.no-auth .no-auth-title .goto-auth, .user-auth .auth-description, .contribution-sidenav, .breadcrumb .item, .album-list__title
     .my-album .tab-list .tab:not(.active) .name, .my-album .title, .fav-sidenav, .nav-title .text,.i-live .i-live-text,
-    .fav-main .filter-item, .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, 
+    .fav-main .filter-item, .fav-main .filter-item .filter-type .be-dropdown-item span, .favInfo-box .favInfo-details .fav-name, .my-notebook .note-header .note-title .note-text,
     .pgc-item-title, .pgc-item-desc, .setting-privacy-item .setting-privacy-name, .channel-title .channel-name, .album-title, .follow-item {
       color: var(--dark-font-0)!important;
     }
@@ -242,6 +242,30 @@ const SpaceDarkModeStyle = createGlobalStyle`
         background-color: var(--dark-2)!important;
         color: var(--dark-font-0)!important;
       }
+    }
+    
+    //笔记
+    .my-notebook {
+      .note-header, .note-single-item {
+        border-color: var(--divider)!important;
+      }
+      .note-single-item {
+        .note-item__detail--title {
+          color: var(--dark-font-0)!important;
+        }
+        .note-item__detail--summary {
+          color: var(--dark-font-1)!important;
+        }
+        .note-item__detail--info .update-mtime {
+          color: var(--dark-font-2)!important;
+        }
+      }
+      .note-single-item--selected {
+        background: var(--dark-3)!important;
+      }
+    }
+    .note-editor {
+      color: #222;
     }
     
     //个人标签

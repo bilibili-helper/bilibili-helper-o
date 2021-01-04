@@ -18,6 +18,14 @@ const messagelist = `
         .content {
           color: var(--dark-font-1);
         }
+        .modules .module {
+          .mtitle {
+            color: var(--dark-font-1);
+          }
+          .detail {
+            color: var(--dark-font-0);
+          }  
+        }
         hr {
           background: var(--dark-1)!important;
         }
@@ -215,7 +223,7 @@ const MessageDarkModeStyle = createGlobalStyle`
                 background-color: var(--dark-3);
               }
               &.active, &:hover {
-                background-color: var(--dark-5)!important;
+                background-color: var(--dark-3)!important;
               }
             }
             .lds-spinner div:after {
