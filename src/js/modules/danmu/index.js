@@ -125,7 +125,7 @@ export class Danmu extends Feature {
                 .then(res => res.arrayBuffer())
                 .then(res => {
                     const danmu = DmSegMobileReplyDecoder(res);
-                    sendResponse(danmu.elems);
+                    sendResponse(danmu.elems || []);
                 }, (res) => {
                     console.error(res);
                     sendResponse(res);

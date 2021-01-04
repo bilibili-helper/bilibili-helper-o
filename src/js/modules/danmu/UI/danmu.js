@@ -306,17 +306,19 @@ export default () => {
                         this.segmentDanmuList = [];
                         this.getNewDanmuOption(oid, pid, 1)
                             .then(({pageSize, total}) => {
-                            this.segmentDanmuPageSize = pageSize;
-                            this.segmentSize = total;
-                            this.currentOid = oid;
-                            this.currentPid = pid;
-                            this.setState({
-                                needLoadByHandle: true,
-                                loading: false,
-                                loadingText: '',
-                            }, () => resolve());
-                        });
-                    } else resolve();
+                                this.segmentDanmuPageSize = pageSize;
+                                this.segmentSize = total;
+                                this.currentOid = oid;
+                                this.currentPid = pid;
+                                this.setState({
+                                    needLoadByHandle: true,
+                                    loading: false,
+                                    loadingText: '',
+                                }, () => resolve());
+                            });
+                    } else {
+                        resolve();
+                    }
                 } else {
                     this.setState({
                         needLoadByHandle: true,
@@ -328,7 +330,7 @@ export default () => {
             });
         };
 
-        getDanmuData = (oid, pid, segmentIndex) => {
+        getDanmuData = async (oid, pid, segmentIndex) => {
             const url = new Url(apis.seg);
             url.set('query', {
                 type: 1,
@@ -336,46 +338,56 @@ export default () => {
                 pid,
                 segment_index: segmentIndex,
             });
-            chrome.runtime.sendMessage({command: 'fetchNewTypeDanmu', url: url.toString()}, (danmuArray) => {
-                const targetData = danmuArray.map(({id: rowId, content: danmu, midHash: authorHash, mode, progress, fontsize, color, ctime, idStr, weight}) => {
-                    if (mode === 7) {
-                        try {
-                            danmu = danmu.replace(/[\n\r]/g, '');
-                            danmu = JSON.parse(danmu)[4];
-                        } catch (e) {
-                            console.error(danmu);
-                        }
+            return new Promise(resolve => {
+                chrome.runtime.sendMessage({command: 'fetchNewTypeDanmu', url: url.toString()}, (danmuArray) => {
+                    if (!danmuArray || danmuArray.length === 0) {
+                        return resolve(false);
                     }
-                    return {
-                        rowId, content: danmu, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, progress: (progress || 0),
-                        time: parseTime(progress || 0),
+                    const targetData = danmuArray.map(({id: rowId, content: danmu, midHash: authorHash, mode, progress, fontsize, color, ctime, idStr, weight}) => {
+                        if (mode === 7) {
+                            try {
+                                danmu = danmu.replace(/[\n\r]/g, '');
+                                danmu = JSON.parse(danmu)[4];
+                            } catch (e) {
+                                console.error(danmu);
+                            }
+                        }
+                        return {
+                            rowId, content: danmu, danmu, authorHash, fontsize, color, mode, ctime, idStr, weight, progress: (progress || 0),
+                            time: parseTime(progress || 0),
+                        };
+                    });
+                    const data = this.sortJSONByTime(targetData);
+                    this.segmentDanmuList[segmentIndex - 1] = data;
+                    const currentFullList = this.segmentDanmuList.reduce((res, segment) => {
+                        return res.push(...segment), res;
+                    }, []);
+                    const danmuJSON = {
+                        count: currentFullList.length,
+                        list: currentFullList,
+                        cid: oid,
                     };
-                });
-                const data = this.sortJSONByTime(targetData);
-                this.segmentDanmuList[segmentIndex - 1] = data;
-                const currentFullList = this.segmentDanmuList.reduce((res, segment) => {
-                    return res.push(...segment), res;
-                }, []);
-                const danmuJSON = {
-                    count: currentFullList.length,
-                    list: currentFullList,
-                    cid: oid,
-                };
-                this.orderedJSON = {...danmuJSON};
+                    this.orderedJSON = {...danmuJSON};
 
-                this.setState({
-                    danmuJSON: danmuJSON,
-                    loaded: true,
-                    loading: false,
-                    currentCid: oid,
-                }, () => {
-                    let xmlStr = `<?xml version="1.0" encoding="UTF-8"?><i><chatserver></chatserver><chatid>${oid}</chatid><mission></mission><maxlimit></maxlimit><state></state><real_name></real_name><source></source>`;
-                    this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
-                        const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
-                        return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${encodeHTMLEntries(danmu)}</d>`;
-                    }, xmlStr) + '</i>';
+                    this.setState({
+                        danmuJSON: danmuJSON,
+                        loaded: true,
+                        loading: false,
+                        currentCid: oid,
+                    }, () => {
+                        let xmlStr = `<?xml version="1.0" encoding="UTF-8"?><i><chatserver></chatserver><chatid>${oid}</chatid><mission></mission><maxlimit></maxlimit><state></state><real_name></real_name><source></source>`;
+                        this.danmuDocumentStr = currentFullList.reduce((xml, line) => {
+                            const {danmu, authorHash, mode, progress, fontsize, color, ctime, idStr, weight} = line;
+                            return xmlStr += `<d p="${(progress || 0) / 1000},${mode},${fontsize},${color},${ctime},${weight},${authorHash},${idStr}">${encodeHTMLEntries(danmu)}</d>`;
+                        }, xmlStr) + '</i>';
+                        resolve(true);
+                    });
                 });
-            });
+            }).then(hasMore => {
+                if (hasMore && segmentIndex < this.segmentSize) {
+                    return this.getDanmuData(oid, pid, segmentIndex + 1);
+                }
+            })
         };
 
         getVideoInitialData = () => {
@@ -682,10 +694,7 @@ export default () => {
                     needLoadByHandle: false,
                 }, () => {
                     this.getNewDANMUList(this.currentOid, this.currentPid).then(() => {
-                        //console.log(this.segmentSize);
-                        for (let i = 0; i < this.segmentSize; ++i) {
-                            this.getDanmuData(this.currentOid, this.currentPid, i + 1);
-                        }
+                        return this.getDanmuData(this.currentOid, this.currentPid, 1);
                     });
                 });
             }).catch((reason) => console.error(reason));
