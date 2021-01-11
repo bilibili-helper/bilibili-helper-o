@@ -9,10 +9,11 @@ const HomeBase = `
       border-color: var(--bg)!important;
     }
     .van-popover.van-popper-channel {
-      background: var(--dark-3)!important;
-      border-color: var(--dark-3)!important;
+      background: var(--dark-2)!important;
+      border-color: var(--dark-2)!important;
       .popper__arrow, .popper__arrow::after {
-        border-top-color: var(--dark-3)!important;
+        border-top-color: var(--dark-2)!important;
+        border-bottom-color: var(--dark-2)!important;
       }
     }
     .bili-banner .taper-line {
@@ -253,6 +254,9 @@ const DynamicMain = `
     //转发Card
     .repost {
       background: var(--dark-3)!important;
+      .deleted {
+        background: unset!important;
+      }
     }
     
     //图片预览Card

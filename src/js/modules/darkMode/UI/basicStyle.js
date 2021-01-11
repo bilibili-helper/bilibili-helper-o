@@ -28,7 +28,7 @@ const DarkModeStyle = createGlobalStyle`
 
 //导航栏
 const TopBarWithoutBanner = createGlobalStyle`
-    .international-header .mini-type {
+    .international-header .mini-type, .mini-header {
       background: var(--dark-card)!important;
     }
     

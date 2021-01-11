@@ -75,9 +75,14 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
           color: var(--dark-font-1);
         }
       }
-      .btn-panel .following {
-        background-color: var(--dark-5);
-        border-color: var(--dark-5);
+      .btn-panel {
+        .following {
+          background-color: var(--dark-5);
+          border-color: var(--dark-5);
+        }
+        .default-btn:not(.btn-transition) {
+          background-color: var(--dark-1);
+        }
       }
     }
     .bili-header-m .nav-menu .nav-mask {
@@ -331,6 +336,20 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
         }
       }
     }
+    
+    //广告
+    .slide-ad .slide-gg {
+      background: var(--dark-1)!important;
+    }
+    a.ad-report {
+      color: var(--dark-font-3);
+      .vcd {
+        .cover {
+          background: var(--dark-1)!important;
+        }
+      }
+    }
+    
     // 播放器工具栏
     .bilibili-player {
       background: unset!important;
@@ -381,14 +400,19 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
     }
     
     // 活动
-    #activity_vote .inside-wrp {
-      border-color: var(--dark-1);
-      background-color: var(--dark-1);
-      .left {
+    .activity-m {
+      .onlytip {
         color: var(--dark-font-1);
       }
-      .right .inside-bg:before {
-        background-image: linear-gradient(90deg,var(--dark-1),transparent 30%);
+      .inside-wrp {
+        border-color: var(--dark-1);
+        background-color: var(--dark-1);
+        .left {
+          color: var(--dark-font-1);
+        }
+        .right .inside-bg:before {
+          background-image: linear-gradient(90deg,var(--dark-1),transparent 30%);
+        }
       }
     }
     
@@ -545,6 +569,11 @@ const VideoPlayDarkModeStyle = createGlobalStyle`
       .box-b {
         border-color: var(--dark-6)!important;
       }
+    }
+    
+    //笔记
+    .video-editor .ql-toolbar {
+      color: #222;
     }
     
     //评论区

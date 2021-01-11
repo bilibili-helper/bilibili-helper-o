@@ -103,6 +103,10 @@ const SearchDarkModeStyle = createGlobalStyle`
     .fold:hover {
       background-color: var(--dark-2);
     }
+    .sub-filter {
+      background-color: var(--dark-2);
+      border-color: var(--dark-2);
+    }
   }
   #all-list .mixin-list ul:not(:last-child) {
     border-color: var(--divider);
@@ -228,16 +232,19 @@ const SearchDarkModeStyle = createGlobalStyle`
     }
   }
   //用户
-  #user-list .dropdown-wrap .select-wrap .bili-dropdown {
-    color: var(--dark-font-0);
-    .selected {
-      color: var(--dark-font-2);
-    }
-    .dropdown-list {
-      background: var(--dark-3);
-      border-color: var(--dark-3);
-      .dropdown-item:hover {
-        background: var(--dark-2);
+  #user-list .dropdown-wrap .select-wrap {
+    border-color: var(--divider);
+    .bili-dropdown {
+      color: var(--dark-font-0);
+      .selected {
+        color: var(--dark-font-2);
+      }
+      .dropdown-list {
+        background: var(--dark-3);
+        border-color: var(--dark-3);
+        .dropdown-item:hover {
+          background: var(--dark-2);
+        }
       }
     }
   }
