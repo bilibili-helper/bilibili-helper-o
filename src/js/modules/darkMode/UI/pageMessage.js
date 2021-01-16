@@ -220,7 +220,10 @@ const MessageDarkModeStyle = createGlobalStyle`
                 color: var(--dark-font-2);
               }
               &.top {
-                background-color: var(--dark-3);
+                background-color: transparent;
+                background-image: linear-gradient(-45deg, transparent 0% 50%, var(--dark-4) 50% 100%);
+                background-size: 15px 15px;
+                background-repeat: no-repeat;
               }
               &.active, &:hover {
                 background-color: var(--dark-3)!important;
