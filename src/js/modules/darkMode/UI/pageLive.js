@@ -52,6 +52,7 @@ const LivePlayDarkModeStyle = createGlobalStyle`
     
     .link-navbar .main-ctnr .nav-logo, .link-navbar .nav-item, .shortcuts-ctnr, .room-title, .tab-list .item.active, .rank-list-box a.live-skin-main-a-text, .chat-item.danmaku-item,
     .gift-item .label, .gift-info-title, .choice-item, .announcement-cntr .content, .record-title, .live-player-ctnr, .area-list-panel .list-item, .username, .user-row,
+    .top3-name, .top3-score, .name, .score, 
     .gift-component-effect-rule, .share-addr-name, th.list-head-text {
       color: var(--dark-font-0)!important;
     }
