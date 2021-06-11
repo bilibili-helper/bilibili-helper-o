@@ -154,7 +154,7 @@ module.exports = (env) => {
                 'process.env': {
                     DEBUG: (env && Boolean(env.DEBUG)) || false,
                 },
-                TARGET_ORIGIN: "'https://bilibili-helper.github.io/'",
+                TARGET_ORIGIN: "'https://bilibilihelper.com/'",
             }),
             new webpack.EnvironmentPlugin({
                 'DEBUG': false,

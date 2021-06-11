@@ -21,7 +21,7 @@ import {
     UpdateList,
 } from 'Components/configPage';
 import {theme} from 'Styles';
-import announcementList from 'Statics/json/announcement.json';
+//import announcementList from 'Statics/json/announcement.json';
 import store from 'store';
 import 'Styles/scss/config.scss';
 import {PrivatePolicy} from './privatePolicy';
@@ -347,7 +347,11 @@ class PageConfig extends React.Component {
     //};
 
     handleOpenWebsite = () => {
-        createTab('https://bilibili-helper.github.io/');
+        createTab('https://bilibilihelper.com/');
+    };
+
+    handleOpAnnouncement = () => {
+        createTab('https://bilibilihelper.com/#announcement');
     };
 
     handleCheckVersion = () => {
@@ -431,7 +435,10 @@ class PageConfig extends React.Component {
                         <Button loading={checkingVersion} normal onClick={this.handleCheckVersion}>{__('config_checking')}</Button>
                     }
                 />
-                {_.map(announcementList, (list, title) => <UpdateList key={title} title={title} data={list}/>)}
+                <ListItem
+                    onClick={this.handleOpAnnouncement}
+                    operation={<Button icon="arrowRight"></Button>}
+                >查看功能调整记录</ListItem>
                 <ListItem
                     onClick={this.showPrivatePolicy}
                     operation={<Button icon="arrowRight"></Button>}
@@ -481,8 +488,8 @@ class PageConfig extends React.Component {
                 </Header>
                 <Broadcast>
                     <div>{__('config_commonNotify')}</div>
-                    <p>{__('config_websiteNotify')}<a href="https://bilibili-helper.github.io/" target="_blank"
-                                                      rel="noopener noreferrer">https://bilibili-helper.github.io/</a></p>
+                    <p>{__('config_websiteNotify')}<a href="https://bilibilihelper.com/" target="_blank"
+                                                      rel="noopener noreferrer">https://bilibilihelper.com/</a></p>
                     {broadcast && (<React.Fragment>{broadcast}<br/></React.Fragment>)}
                     {/*调试模式下会显示该标志<PermissionTag>Name</PermissionTag>，代表功能需要拥有的相关权限或浏览器特性*/}
                 </Broadcast>
@@ -498,7 +505,7 @@ class PageConfig extends React.Component {
                 {this.renderAboutList()}
                 <Footer>
                     <a href="https://github.com/zacyu/bilibili-helper">Github</a>
-                    <a href="https://bilibili-helper.github.io/">Website</a>
+                    <a href="https://bilibilihelper.com/">Website</a>
                     {!this.isEdge() && <a href="https://chrome.google.com/webstore/detail/kpbnombpnpcffllnianjibmpadjolanh">Chrome
                         WebStore</a>}
                     <span>

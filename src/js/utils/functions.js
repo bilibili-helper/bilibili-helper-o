@@ -225,18 +225,18 @@ export const createNotification = (id, options, callback) => {
 export const fetchFromHelper = (url, options) => {
     if (options) {
         if (options.headers) {
-            options.headers = {...options.headers, 'From': 'bilibili-helper'};
+            options.headers = {...options.headers, 'From': 'bilibili-helper1.2.31'};
         } else {
-            options.headers = {'From': 'bilibili-helper'};
+            options.headers = {'From': 'bilibili-helper1.2.31'};
         }
     } else {
-        options = {headers: {'From': 'bilibili-helper'}};
+        options = {headers: {'From': 'bilibili-helper1.2.31'}};
     }
     const urlObject = new Url(url, '', true);
     if (!urlObject.query || !urlObject.query.requestFrom) {
         urlObject.set('query', {
             ...urlObject.query,
-            requestFrom: 'bilibili-helper',
+            requestFrom: 'bilibili-helper1.2.31',
         });
     }
 

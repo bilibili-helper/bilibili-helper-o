@@ -45,7 +45,7 @@ const MessageDarkModeStyle = createGlobalStyle`
     }
     //左栏
     .space-left {
-      background-color: #151515cc!important
+      background-color: #151515cc!important;
       .side-bar {
         .title {
           color: var(--dark-font-0);

@@ -25,7 +25,7 @@ export class ProxyForWebsite extends Feature {
     addListener = () => {
         chrome.webRequest.onBeforeSendHeaders.addListener(details => {
             const {initiator, requestHeaders, url} = details;
-            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'));
+            const fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper1.2.31'));
             if ((/^chrome-extension:\/\//.test(initiator) || fromHelper) && url.match(/\/reply\/(?:add|action)/)) {
                 const originHeader = requestHeaders.find((h) => h.name.toLowerCase() === 'origin');
                 if (originHeader) {

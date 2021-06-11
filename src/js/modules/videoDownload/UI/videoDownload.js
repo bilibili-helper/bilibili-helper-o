@@ -1,4 +1,4 @@
-/* global require */
+///* global require */
 /**
  * Author: DrowsyFlesh
  * Create: 2018/11/12
@@ -97,12 +97,12 @@ export default () => {
       }
       cursor: pointer;
     `;
-    const Suggest = styled.p`
+    /*const Suggest = styled.p`
       margin-bottom: 6px;
       margin-left: 5px;
       font-size: 10px;
       color: ${color('bilibili-pink')};
-    `;
+    `;*/
     const Progress = styled.div`
       position: absolute;
       bottom: 0;
@@ -317,6 +317,7 @@ export default () => {
 
             this.setState({currentCid, currentQuality: qn});
             if (videoData[currentCid] && videoData[currentCid][qn] && !videoData[currentCid][qn].dash) {
+                //
             } else {
                 this.getFlvResponse('get', url);
             }
@@ -345,7 +346,7 @@ export default () => {
                             url = url.replace(/fourk=0(&)?/, 'fourk=1$1');
                         }
                     }
-                    fetch(\`\${url}&requestFrom=bilibili-helper\`, {
+                    fetch(\`\${url}&requestFrom=bilibili-helper1.2.31\`, {
                         method: 'get',
                         credentials: 'include',
                     })
@@ -377,7 +378,7 @@ export default () => {
             const container = this.getContainer('mp4', currentCid, currentQuality, videoData);
             container.download((percentage) => {
                 this.setState({percentage});
-            }).then((downloadData) => {
+            }).then((/*downloadData*/) => {
                 //let [buffers, [videoCodec, audioCodec]] = downloadData;
                 this.setState({downloading: false});
                 //console.warn(window.ffmpeg_run);

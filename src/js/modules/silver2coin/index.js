@@ -69,7 +69,7 @@ export class Silver2coin extends Feature {
                     data: {
                         platform: 'pc',
                         csrf_token: cookie.value,
-                        requestFrom: 'bilibili-helper',
+                        requestFrom: 'bilibili-helper1.2.31',
                     },
                     success: (res) => {
                         // TODO 这里不应该请求成功就记作已兑换，还要考虑银瓜子暂时不够但之后又足够兑换的情况

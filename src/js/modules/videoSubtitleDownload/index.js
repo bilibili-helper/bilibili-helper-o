@@ -36,7 +36,7 @@ export class VideoSubtitleDownload extends Feature {
         };
         chrome.webRequest.onSendHeaders.addListener(details => {
             const {tabId, initiator, requestHeaders} = details;
-            let fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper'))
+            let fromHelper = !_.isEmpty(_.find(requestHeaders, ({name, value}) => name === 'From' && value === 'bilibili-helper1.2.31'))
                 || details.url.match('from=bilibili-helper');
             if (/^chrome-extension:\/\//.test(initiator) || fromHelper) return;
 

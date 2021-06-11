@@ -54,7 +54,7 @@ export class DoSign extends Feature {
         } // 隐身模式
         let {day} = this.store || {};
         if (day !== this.getTodayDate()) {
-            this.settings.on && hasLogin && fetchFromHelper(`${apis.doSign}?requestFrom=bilibili-helper`, {
+            this.settings.on && hasLogin && fetchFromHelper(`${apis.doSign}?requestFrom=bilibili-helper1.2.31`, {
                 method: 'get',
             }).then(res => res.json())
               .then((res) => {

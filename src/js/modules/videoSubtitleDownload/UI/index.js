@@ -84,7 +84,7 @@ const UIBuilder = () => {
                         mode: 'cors',
                         method: 'get',
                         referrer: window.location.href,
-                        //headers: {'From': 'bilibili-helper'},
+                        //headers: {'From': 'bilibili-helper1.2.31'},
                         credentials: "include",
                     }).then(res => res.text()).then(res => {
                         const regExpRes = /<subtitle>(.+)<\/subtitle>/.exec(res);

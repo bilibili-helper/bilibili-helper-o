@@ -32,7 +32,7 @@ export class LiveReplayDownload extends Feature {
             if (this.cache.has(message.rid)) {
                 sendResponse(this.cache.get(message.rid));
             } else {
-                fetch(`${Apis.getLiveRecord}?rid=${message.rid}&platform=html5&requestFrom=bilibili-helper`)
+                fetch(`${Apis.getLiveRecord}?rid=${message.rid}&platform=html5&requestFrom=bilibili-helper1.2.31`)
                 .then(res => res.json())
                 .then((res) => {
                     if (res.code === 0) {

@@ -39,7 +39,7 @@ export class AutoTakeVipPrivilegeUI extends UI {
                             script += `
                             fetchObjects.push(fetch("${apis.receive}", {
                                 method: 'post',
-                                body: 'type=${type}&csrf=${cookie.value}&requestFrom=bilibili-helper',
+                                body: 'type=${type}&csrf=${cookie.value}&requestFrom=bilibili-helper1.2.31',
                                 credentials: 'include',
                                 mode: 'cors',
                                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
